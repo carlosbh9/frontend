@@ -6,14 +6,14 @@
     </a>
     <ul class="mt-4">
         <li class="mb-1">
-            <a href="#" (click)="toggleDropdown()" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md">
+            <a (click)="toggleDropdown()" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md">
                 <i class='bx bx-user mr-3 text-lg'></i>
                 <span class="text-sm">Tarifario General</span>
                 <i class="ri-arrow-right-s-line ml-auto" [class.rotate-90]="isDropdownOpen"></i>
             </a>
             <ul *ngIf="isDropdownOpen" class="pl-7 mt-2">
                 <li class="mb-4">
-                    <a href="#" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">
+                    <a  routerLink="entrances" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">
                         Entrances
                     </a>
                 </li>
@@ -33,7 +33,7 @@
                     </a>
                 </li>
                 <li class="mb-4">
-                    <a routerLink="/hotel" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">
+                    <a routerLink="hotel" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">
                         Hotels
                     </a>
                 </li>
@@ -48,7 +48,7 @@
                     </a>
                 </li>
                 <li class="mb-4">
-                    <a routerLink="/train" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">
+                    <a routerLink="train" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">
                         Trains
                     </a>
                 </li>
