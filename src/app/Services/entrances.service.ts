@@ -8,11 +8,13 @@ import { firstValueFrom } from 'rxjs';
 })
 export class EntrancesService {
 
-  private baseUrl = environment.apiUrl;
+private baseUrl = `${environment.apiUrl}/entrances`
 
+//  private baseUrl = 'http://localhost:3000/api/entrances';
   constructor(private http: HttpClient) { }
 
 //  private baseUrl = environment.apiUrl;
+
 async getAllEntrances(): Promise<any[]> {
   try {
     const res = await firstValueFrom(this.http.get<any[]>(this.baseUrl));
@@ -22,6 +24,7 @@ async getAllEntrances(): Promise<any[]> {
     throw error;
   }
 }
+
 
 // Método para obtener una entrada por ID
 async getEntranceById(id: string): Promise<any> {
@@ -66,4 +69,5 @@ async deleteEntrance(id: string): Promise<any> {
     throw error;
   }
 }
+
 }

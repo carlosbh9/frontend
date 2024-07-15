@@ -1,88 +1,55 @@
-<p>train works!</p>
 <div class="p-6 relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 dark:bg-gray-800 w-full shadow-lg rounded">
-    <div class="rounded-t mb-0 px-0 border-0">
-      <div class="flex flex-wrap items-center px-4 py-2">
-        <div class="relative w-full max-w-full flex-grow flex-1">
-          <h3 class="font-semibold text-base text-gray-900 dark:text-gray-50">Users</h3>
-        </div>
+  <div class="rounded-t mb-0 px-0 border-0">
+    <div class="flex flex-wrap items-center px-4 py-2">
+      <div class="relative w-full max-w-full flex-grow flex-1">
+        <h3 class="font-semibold text-base text-gray-900 dark:text-gray-50">Entrances</h3>
       </div>
-      <div class="block w-full overflow-x-auto">
-        <table class="items-center w-full bg-transparent border-collapse">
-          <thead>
-            <tr>
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Role</th>
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Amount</th>
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="text-gray-700 dark:text-gray-100">
-              <th class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">Administrator</th>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">1</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <div class="flex items-center">
-                  <span class="mr-2">70%</span>
-                  <div class="relative w-full">
-                    <div class="overflow-hidden h-2 text-xs flex rounded bg-blue-200">
-                      <div style="width: 70%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-600"></div>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr class="text-gray-700 dark:text-gray-100">
-              <th class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">User</th>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">6</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <div class="flex items-center">
-                  <span class="mr-2">40%</span>
-                  <div class="relative w-full">
-                    <div class="overflow-hidden h-2 text-xs flex rounded bg-blue-200">
-                      <div style="width: 40%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr class="text-gray-700 dark:text-gray-100">
-              <th class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">User</th>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">5</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <div class="flex items-center">
-                  <span class="mr-2">45%</span>
-                  <div class="relative w-full">
-                    <div class="overflow-hidden h-2 text-xs flex rounded bg-pink-200">
-                      <div style="width: 45%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-pink-500"></div>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr class="text-gray-700 dark:text-gray-100">
-              <th class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">User</th>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">4</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <div class="flex items-center">
-                  <span class="mr-2">60%</span>
-                  <div class="relative w-full">
-                    <div class="overflow-hidden h-2 text-xs flex rounded bg-red-200">
-                      <div style="width: 60%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-red-500"></div>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="relative w-full max-w-full flex-grow flex-1 text-right">
+        <input 
+          type="text" 
+          [(ngModel)]="filterText" 
+          (input)="filterEntrances()" 
+          placeholder="Filter entrances..."
+          class="p-2 border border-gray-300 rounded"
+        />
       </div>
     </div>
+    <div class="block w-full overflow-x-auto">
+      <table class="items-center w-full bg-transparent border-collapse">
+        <thead>
+          <tr>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Description</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Price per person</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Child Rate</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Take Note</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let entrance of filteredEntrances" class="text-gray-700 dark:text-gray-100">
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ entrance.description }}</td>
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ entrance.price_pp }}</td>
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+              <div>
+                <span *ngIf="entrance.childRate.pp">Price per person: {{ entrance.childRate.pp }}</span>,
+                <span *ngIf="entrance.childRate.upTo">Up to age: {{ entrance.childRate.upTo }}</span>
+              </div>
+            </td>
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ entrance.take_note }}</td>
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+              <button (click)="editEntrance(entrance._id)" class="text-blue-500 hover:text-blue-700">Edit</button>
+              <button (click)="deleteEntrance(entrance._id)" class="text-red-500 hover:text-red-700 ml-2">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
+</div>
 
 
-  <!-- <h2>Entrances List</h2>
   <ul>
     <li *ngFor="let entrance of entrances">
-      {{ entrance.name }} - {{ entrance.description }}
-      <button>Delete</button>
+      {{ entrance | json }}
     </li>
-  </ul> -->
+  </ul>

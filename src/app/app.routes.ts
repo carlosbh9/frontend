@@ -14,7 +14,7 @@ export const routes: Routes = [
         children:[
             {   path:'train', component: TrainComponent},
             {   path:'hotel', component: HotelComponent},
-            {   path:'entrances', component: EntrancesComponent}
+            {   path:'entrance', component:EntrancesComponent}
         ]
     }
    
