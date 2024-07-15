@@ -13,6 +13,10 @@
           class="p-2 border border-gray-300 rounded"
         />
       </div>
+      <td>
+     <!-- Botón para abrir el modal -->
+        <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Add Entrance</button>
+      </td>
     </div>
     <div class="block w-full overflow-x-auto">
       <table class="items-center w-full bg-transparent border-collapse">
@@ -47,9 +51,100 @@
   </div>
 </div>
 
+<!-- add Modal -->
+<div *ngIf="showModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
+  <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+    <div class="modal-content py-4 text-left px-6">
+      <!-- Title -->
+      <div class="flex justify-between items-center pb-3">
+        <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Add Entrance</p>
+        <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
+          <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+          </svg>
+        </div>
+      </div>
+      <!-- Body -->
+      <div class="my-5 mr-5 ml-5 flex justify-center">
+        <form (submit)="onSubmit()" id="add_entrance_form" class="w-full">
+          <div class="">
+            <div class="mb-4">
+              <label for="description" class="block text-md text-gray-600 dark:text-gray-50">Description</label>
+              <input type="text" id="description" name="description" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Description" [(ngModel)]="newEntrance.description" required>
+            </div>
+            <div class="mb-4">
+              <label for="price_pp" class="block text-md text-gray-600 dark:text-gray-50">Price per person</label>
+              <input type="number" id="price_pp" name="price_pp" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Price per person" [(ngModel)]="newEntrance.price_pp" required>
+            </div>
+            <div class="mb-4">
+              <label for="child_pp" class="block text-md text-gray-600 dark:text-gray-50">Child Rate Price per person</label>
+              <input type="number" id="child_pp" name="child_pp" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Child Rate Price per person" [(ngModel)]="newEntrance.childRate.pp">
+            </div>
+            <div class="mb-4">
+              <label for="child_upTo" class="block text-md text-gray-600 dark:text-gray-50">Child Rate Up to age</label>
+              <input type="number" id="child_upTo" name="child_upTo" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Child Rate Up to age" [(ngModel)]="newEntrance.childRate.upTo">
+            </div>
+            <div class="mb-4">
+              <label for="take_note" class="block text-md text-gray-600 dark:text-gray-50">Take Note</label>
+              <input type="text" id="take_note" name="take_note" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take Note" [(ngModel)]="newEntrance.take_note">
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- Footer -->
+      <div class="flex justify-end pt-2 space-x-14">
+        <button class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" (click)="closeModal()">Cancel</button>
+        <button type="submit" form="add_entrance_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <ul>
-    <li *ngFor="let entrance of entrances">
-      {{ entrance | json }}
-    </li>
-  </ul>
+<!-- adit Modal -->
+<div *ngIf="showModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
+  <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+    <div class="modal-content py-4 text-left px-6">
+      <!-- Title -->
+      <div class="flex justify-between items-center pb-3">
+        <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Edit Entrance</p>
+        <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
+          <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+          </svg>
+        </div>
+      </div>
+      <!-- Body -->
+      <div class="my-5 mr-5 ml-5 flex justify-center">
+        <form (submit)="onSubmit()" id="add_entrance_form" class="w-full">
+          <div class="">
+            <div class="mb-4">
+              <label for="description" class="block text-md text-gray-600 dark:text-gray-50">Description</label>
+              <input type="text" id="description" name="description" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Description" [(ngModel)]="newEntrance.description" required>
+            </div>
+            <div class="mb-4">
+              <label for="price_pp" class="block text-md text-gray-600 dark:text-gray-50">Price per person</label>
+              <input type="number" id="price_pp" name="price_pp" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Price per person" [(ngModel)]="newEntrance.price_pp" required>
+            </div>
+            <div class="mb-4">
+              <label for="child_pp" class="block text-md text-gray-600 dark:text-gray-50">Child Rate Price per person</label>
+              <input type="number" id="child_pp" name="child_pp" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Child Rate Price per person" [(ngModel)]="newEntrance.childRate.pp">
+            </div>
+            <div class="mb-4">
+              <label for="child_upTo" class="block text-md text-gray-600 dark:text-gray-50">Child Rate Up to age</label>
+              <input type="number" id="child_upTo" name="child_upTo" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Child Rate Up to age" [(ngModel)]="newEntrance.childRate.upTo">
+            </div>
+            <div class="mb-4">
+              <label for="take_note" class="block text-md text-gray-600 dark:text-gray-50">Take Note</label>
+              <input type="text" id="take_note" name="take_note" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take Note" [(ngModel)]="newEntrance.take_note">
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- Footer -->
+      <div class="flex justify-end pt-2 space-x-14">
+        <button class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" (click)="closeModal()">Cancel</button>
+        <button type="submit" form="add_entrance_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>

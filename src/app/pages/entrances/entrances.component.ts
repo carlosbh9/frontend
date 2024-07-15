@@ -2,7 +2,7 @@ import { Component , OnInit} from '@angular/core';
 import { EntrancesService } from '../../Services/entrances.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-//import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 
 
 @Component({
@@ -16,6 +16,17 @@ export class EntrancesComponent implements OnInit{
   entrances: any[] = [];
   filteredEntrances: any[] = [];
   filterText: string = '';
+  showModal = false;
+  newEntrance = {
+    description: '',
+    price_pp: null,
+    childRate: {
+      pp: null,
+      upTo: null
+    },
+    take_note: ''
+  };
+
   constructor(private entrancesService: EntrancesService) { }
 
   ngOnInit(): void {
@@ -32,7 +43,6 @@ export class EntrancesComponent implements OnInit{
       console.error('Error fetching entrances', error);
     }
   }
-
 
 
   filterEntrances() {
@@ -53,4 +63,41 @@ export class EntrancesComponent implements OnInit{
   editEntrance(id: string) {
     // Aquí puedes redirigir a una página de edición o abrir un modal para editar la entrada
   }
+
+
+
+  openModal() {
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+   this.emptyEntrance();
+  }
+
+  emptyEntrance(): void {
+    this.newEntrance = {
+      description: '',
+      price_pp: null,
+      childRate: {
+        pp: null,
+        upTo: null
+      },
+      take_note: ''
+    };
+  }
+  onSubmit() {
+    this.entrancesService.createEntrance(this.newEntrance).then(
+      response => {
+        console.log('Entrance added', response);
+        this.fetchEntrances();
+        this.showModal= false;
+        this.emptyEntrance();
+      },
+      error => {
+        console.error('Error adding entrance', error);
+      }
+    );
+  }
+
 }
