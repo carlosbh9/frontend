@@ -16,8 +16,21 @@ export class EntrancesComponent implements OnInit{
   entrances: any[] = [];
   filteredEntrances: any[] = [];
   filterText: string = '';
-  showModal = false;
+  showAddModal = false;
+  showEditModal= false;
+
   newEntrance = {
+    description: '',
+    price_pp: null,
+    childRate: {
+      pp: null,
+      upTo: null
+    },
+    take_note: ''
+  };
+
+  selectedEntrance = {
+    _id: '',
     description: '',
     price_pp: null,
     childRate: {
@@ -60,18 +73,28 @@ export class EntrancesComponent implements OnInit{
     }
   }
 
-  editEntrance(id: string) {
-    // Aquí puedes redirigir a una página de edición o abrir un modal para editar la entrada
+  openEditModal(entrance: any) {
+    this.selectedEntrance = { ...entrance }; // Clona la entrada seleccionada
+    this.showEditModal = true;
   }
 
+  closeEditModal() {
+    this.showEditModal = false;
+  }
 
+  editEntrance(id: string) {
+    const entrance = this.filteredEntrances.find(e => e._id === id);
+    if (entrance) {
+      this.openEditModal(entrance);
+    }
+  }
 
   openModal() {
-    this.showModal = true;
+    this.showAddModal = true;
   }
 
   closeModal() {
-    this.showModal = false;
+    this.showAddModal = false;
    this.emptyEntrance();
   }
 
@@ -91,7 +114,7 @@ export class EntrancesComponent implements OnInit{
       response => {
         console.log('Entrance added', response);
         this.fetchEntrances();
-        this.showModal= false;
+        this.showAddModal= false;
         this.emptyEntrance();
       },
       error => {
@@ -100,4 +123,16 @@ export class EntrancesComponent implements OnInit{
     );
   }
 
+  onEditSubmit() {
+    this.entrancesService.updateEntrance(this.selectedEntrance._id, this.selectedEntrance).then(
+      response => {
+        console.log('Entrance updated', response);
+        this.fetchEntrances();
+        this.showEditModal = false; // Cierra el modal después de enviar el formulario
+      },
+      error => {
+        console.error('Error updating entrance', error);
+      }
+    );
+  }
 }

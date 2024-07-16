@@ -8,13 +8,11 @@ import { firstValueFrom } from 'rxjs';
 })
 export class EntrancesService {
 
-private baseUrl = `${environment.apiUrl}/entrances`
+  private baseUrl = `${environment.apiUrl}/entrances`
 
-//  private baseUrl = 'http://localhost:3000/api/entrances';
   constructor(private http: HttpClient) { }
 
 //  private baseUrl = environment.apiUrl;
-
 async getAllEntrances(): Promise<any[]> {
   try {
     const res = await firstValueFrom(this.http.get<any[]>(this.baseUrl));
@@ -24,7 +22,6 @@ async getAllEntrances(): Promise<any[]> {
     throw error;
   }
 }
-
 
 // Método para obtener una entrada por ID
 async getEntranceById(id: string): Promise<any> {
@@ -51,7 +48,7 @@ async createEntrance(entrance: any): Promise<any> {
 // Método para actualizar una entrada existente
 async updateEntrance(id: string, entrance: any): Promise<any> {
   try {
-    const res = await firstValueFrom(this.http.put<any>(`${this.baseUrl}/${id}`, entrance));
+    const res = await firstValueFrom(this.http.patch<any>(`${this.baseUrl}/${id}`, entrance));
     return res;
   } catch (error) {
     console.log('Error while trying to update Entrance: ', error);
@@ -69,5 +66,4 @@ async deleteEntrance(id: string): Promise<any> {
     throw error;
   }
 }
-
 }
