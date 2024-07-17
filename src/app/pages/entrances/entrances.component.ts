@@ -82,12 +82,6 @@ export class EntrancesComponent implements OnInit{
     this.showEditModal = false;
   }
 
-  editEntrance(id: string) {
-    const entrance = this.filteredEntrances.find(e => e._id === id);
-    if (entrance) {
-      this.openEditModal(entrance);
-    }
-  }
 
   openModal() {
     this.showAddModal = true;

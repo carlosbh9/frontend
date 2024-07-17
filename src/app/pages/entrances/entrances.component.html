@@ -26,11 +26,11 @@
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Price per person</th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Child Rate</th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Take Note</th>
-            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Actions</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let entrance of filteredEntrances" class="text-gray-700 dark:text-gray-100">
+          <tr *ngFor="let entrance of filteredEntrances" class="text-gray-700 dark:text-gray-100" >
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ entrance.description }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ entrance.price_pp }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
@@ -39,10 +39,10 @@
                 <span *ngIf="entrance.childRate.upTo">Up to age: {{ entrance.childRate.upTo }}</span>
               </div>
             </td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ entrance.take_note }}</td>
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 max-h-24 overflow-y-auto block">{{ entrance.take_note }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-              <button class="px-4 bg-blue-500 dark:bg-blue-700 p-2 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800 mr-2" (click)="openEditModal(entrance)" class="text-blue-500 hover:text-blue-700">Edit</button>
-              <button class="px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800" (click)="deleteEntrance(entrance._id)" class="text-red-500 hover:text-red-700 ml-2">Delete</button>
+              <button class="px-4 bg-blue-500 dark:bg-blue-700 p-2 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800 mr-2" (click)="openEditModal(entrance)">Edit</button>
+              <button class="px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800" (click)="deleteEntrance(entrance._id)">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -86,7 +86,7 @@
             </div>
             <div class="mb-4">
               <label for="take_note" class="block text-md text-gray-600 dark:text-gray-50">Take Note</label>
-              <input type="text" id="take_note" name="take_note" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take Note" [(ngModel)]="newEntrance.take_note">
+              <textarea type="text" id="take_note" name="take_note" class="h-15 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take Note" [(ngModel)]="newEntrance.take_note"></textarea>
             </div>
           </div>
         </form>
@@ -115,7 +115,7 @@
       </div>
       <!-- Body -->
       <div class="my-5 mr-5 ml-5 flex justify-center">
-        <form (submit)="onEditSubmit()" id="add_entrance_form" class="w-full">
+        <form (submit)="onEditSubmit()" id="edit_entrance_form" class="w-full">
           <div class="">
             <div class="mb-4">
               <label for="description" class="block text-md text-gray-600 dark:text-gray-50">Description</label>
@@ -135,7 +135,7 @@
             </div>
             <div class="mb-4">
               <label for="take_note" class="block text-md text-gray-600 dark:text-gray-50">Take Note</label>
-              <input type="text" id="take_note" name="take_note" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take Note" [(ngModel)]="selectedEntrance.take_note">
+              <textarea type="text" id="take_note" name="take_note" class="h-15 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take Note" [(ngModel)]="selectedEntrance.take_note"></textarea>
             </div>
           </div>
         </form>
@@ -143,8 +143,11 @@
       <!-- Footer -->
       <div class="flex justify-end pt-2 space-x-14">
         <button class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" (click)="closeEditModal()">Cancel</button>
-        <button type="submit" form="add_entrance_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
+        <button type="submit" form="edit_entrance_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
       </div>
     </div>
   </div>
 </div>
+
+
+

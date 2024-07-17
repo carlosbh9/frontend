@@ -36,7 +36,7 @@ export class ExpeditionsService {
   // Actualizar una expedición existente
   async updateExpedition(id: string, expedition: any): Promise<any> {
     try {
-      const res = await firstValueFrom(this.http.put<any>(`${this.baseUrl}/${id}`, expedition));
+      const res = await firstValueFrom(this.http.patch<any>(`${this.baseUrl}/${id}`, expedition));
       return res;
     } catch (error) {
       console.log('Error while trying to update Expedition', error);

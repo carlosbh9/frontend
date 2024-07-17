@@ -18,17 +18,15 @@ export class ExpeditionsComponent implements OnInit{
   showEditModal= false;
 
   newExpedition: any = {
-    description: '',
-    duration: '',
-    price: 0,
-    date: ''
+    name: '',
+    price_pp: 0,
+    remarks: '',
   };
 
   selectedExpedition: any = {
-    description: '',
-    duration: '',
-    price: 0,
-    date: ''
+    name: '',
+    price_pp: 0,
+    remarks: '',
   };
 
   constructor(private expeditionService: ExpeditionsService) { }
@@ -50,7 +48,7 @@ export class ExpeditionsComponent implements OnInit{
 
   filterExpedition() {
     this.filteredExpeditions = this.expeditions.filter(expedition =>
-      expedition.description.toLowerCase().includes(this.filterText.toLowerCase())
+      expedition.name.toLowerCase().includes(this.filterText.toLowerCase())
     );
   }
 
@@ -72,13 +70,6 @@ export class ExpeditionsComponent implements OnInit{
     this.showEditModal = false;
   }
 
-  editExpedition(id: string) {
-    const expedition = this.filteredExpeditions.find(e => e._id === id);
-    if (expedition) {
-      this.openEditModal(expedition);
-    }
-  }
-
   openModal() {
     this.showAddModal = true;
   }
@@ -90,13 +81,9 @@ export class ExpeditionsComponent implements OnInit{
 
   emptyExpedition(): void {
     this.newExpedition = {
-      description: '',
-      price_pp: null,
-      childRate: {
-        pp: null,
-        upTo: null
-      },
-      take_note: ''
+      name: '',
+      price_pp: 0,
+      remarks: '',
     };
   }
   onSubmit() {
@@ -118,6 +105,7 @@ export class ExpeditionsComponent implements OnInit{
       response => {
         console.log('Expedition updated', response);
         this.fetchExpeditions();
+        
         this.showEditModal = false; // Cierra el modal después de enviar el formulario
       },
       error => {
