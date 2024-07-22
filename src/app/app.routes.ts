@@ -18,7 +18,8 @@ export const routes: Routes = [
             {   path:'hotel', component: HotelComponent},
             {   path:'entrance', component:EntrancesComponent},
             {   path:'expeditions', component: ExpeditionsComponent},
-            {   path: 'experiences', component: ExperiencesComponent}
+            {   path: 'experiences', component: ExperiencesComponent},
+            {   path: 'restaurant', component: RestaurantComponent}
         ]
     }
 

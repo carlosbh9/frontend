@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormGroup, FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ExperiencesService } from '../../Services/experiences.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { ExperiencesService } from '../../Services/experiences.service';
   templateUrl: './experiences.component.html',
   styleUrl: './experiences.component.css'
 })
-export class ExperiencesComponent {
+export class ExperiencesComponent implements OnInit {
   experiences: any[] = [];
   filteredExperiences: any[] = [];
   filterText: string = '';

@@ -1,1 +1,258 @@
-<p>restaurant works!</p>
+<div class="p-6 relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 dark:bg-gray-800 w-full shadow-lg rounded">
+    <div class="rounded-t mb-0 px-0 border-0">
+      <div class="flex flex-wrap items-center px-4 py-2">
+        <div class="relative w-full max-w-full flex-grow flex-1">
+          <h3 class="font-semibold text-base text-gray-900 dark:text-gray-50">Restaurants</h3>
+        </div>
+        <div class="relative w-full max-w-full flex-grow flex-1 text-right">
+          <input
+            type="text"
+            [(ngModel)]="filterText"
+            (input)="filterRestaurant()"
+            placeholder="Filter restaurants..."
+            class="p-2 border border-gray-300 rounded"
+          />
+        </div>
+        <td>
+          <!-- Button to open modal -->
+          <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Add Restaurant</button>
+        </td>
+      </div>
+      <div class="block w-full overflow-x-auto">
+        <table class="items-center w-full bg-transparent border-collapse">
+          <thead>
+            <tr>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Name</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Price per Person</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Child rate</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">GUIDE & DRIVER</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Special Dates</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Closing Dates</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Schedules</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Location</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Take note</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">What's near?</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Politicas de cancelaciones/OPE</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Contact Phone</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let restaurant of filteredRestaurants" class="text-gray-700 dark:text-gray-100">
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.name }}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.price_pp }}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                <div>
+                  <span *ngIf="restaurant.child_rate[0].price_pp">Price per person: {{ restaurant.child_rate[0].price_pp }} $</span>,
+                  <span *ngIf="restaurant.child_rate[0].upTo">Up to age: {{ restaurant.child_rate[0].upTo }}</span>
+                </div>
+              </td>
+              <!-- <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.child_rate[0].price_pp }} (up to {{ restaurant.child_rate[0].upTo}} years old)</td> -->
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.price_guide_pp }}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 ">
+                <ul>
+                  <li *ngFor="let date of restaurant.special_dates">{{ date.date | date }} - {{ date.price_add }}</li>
+                </ul>
+              </td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 ">
+                <ul>
+                  <li *ngFor="let date of restaurant.closing_date">{{ date.date | date }} - {{ date.price_add }}</li>
+                </ul>
+              </td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.schedules }}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.location }}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.take_notes }}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.nearby_places }}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.politica_canc}}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.contac_phone}}</td>
+
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                <button class="px-4 bg-blue-500 dark:bg-blue-700 p-2 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800 mr-2" (click)="openEditModal(restaurant)">Edit</button>
+                <button class="px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800" (click)="deleteRestaurant(restaurant._id)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Add Modal -->
+  <div *ngIf="showAddModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
+    <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+      <div class="modal-content py-4 text-left px-6">
+        <!-- Title -->
+        <div class="flex justify-between items-center pb-3">
+          <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Add Restaurant</p>
+          <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
+            <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+              <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+            </svg>
+          </div>
+        </div>
+        <!-- Body -->
+        <div class="my-5 mr-5 ml-5 flex justify-center">
+          <form (submit)="onSubmit()" id="add_restaurant_form" class="w-full">
+            <div class="">
+              <div class="mb-4">
+                <label for="name" class="block text-md text-gray-600 dark:text-gray-50">Name</label>
+                <input type="text" id="name" name="name" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Restaurant Name" [(ngModel)]="newRestaurant.name" required>
+              </div>
+              <div class="mb-4">
+                <label for="price_pp" class="block text-md text-gray-600 dark:text-gray-50">Price per person</label>
+                <input type="number" id="price_pp" name="price_pp" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Price per person" [(ngModel)]="newRestaurant.price_pp" required>
+              </div>
+              <div class="mb-4">
+                <label for="child_rate" class="block text-md text-gray-600 dark:text-gray-50">Child Rate</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" id="child_rate" name="child_rate" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Price pp" [(ngModel)]="newRestaurant.child_rate[0].price_pp" required>
+                    <input type="number" id="child_rate" name="child_rate" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Up to" [(ngModel)]="newRestaurant.child_rate[0].upTo" required>
+                </div>
+              </div>
+              <div class="mb-4">
+                <label for="price_guide_pp" class="block text-md text-gray-600 dark:text-gray-50">GUIDE & DRIVER</label>
+                <input type="number" id="price_guide_pp" name="price_guide_pp" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="GUIDE & DRIVER" [(ngModel)]="newRestaurant.price_guide_pp" required>
+              </div>
+              <div class="mb-4">
+                <label for="special_dates" class="block text-md text-gray-600 dark:text-gray-50">Special date</label>
+                <div *ngFor="let date of newRestaurant.special_dates let i = index" class="grid grid-cols-3 gap-3">
+                  <input type="date" [(ngModel)]="date.date" placeholder="Date" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="date-{{i}}" required>
+                  <input type="number" [(ngModel)]="date.price_add" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price_add{{i}}" required>
+                  <button type="button" (click)="removeSpecialdateField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
+                </div>
+                <button type="button" (click)="addSpecialdateField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Special date</button>
+            </div>
+            <div class="mb-4">
+                <label for="closing_date" class="block text-md text-gray-600 dark:text-gray-50">Closing date</label>
+                <div *ngFor="let date of newRestaurant.closing_date let i = index" class="grid grid-cols-3 gap-3">
+                  <input type="date" [(ngModel)]="date.date" placeholder="Date" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="date-{{i}}" required>
+                  <input type="number" [(ngModel)]="date.price_add" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price_add{{i}}" required>
+                  <button type="button" (click)="removeClosingdateField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
+                </div>
+                <button type="button" (click)="addClosingdateField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Closing date</button>
+            </div>
+              <div class="mb-4">
+                <label for="schedules" class="block text-md text-gray-600 dark:text-gray-50">Schedules</label>
+                <input type="text" id="schedules" name="schedules" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Schedules" [(ngModel)]="newRestaurant.schedules" required>
+              </div>
+              <div class="mb-4">
+                <label for="location" class="block text-md text-gray-600 dark:text-gray-50">Location</label>
+                <input type="text" id="location" name="location" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Location" [(ngModel)]="newRestaurant.location" required>
+              </div>
+              <div class="mb-4">
+                <label for="take_notes" class="block text-md text-gray-600 dark:text-gray-50">Take notes</label>
+                <input type="text" id="take_notes" name="take_notes" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take notes" [(ngModel)]="newRestaurant.take_notes" required>
+              </div>
+              <div class="mb-4">
+                <label for="nearby_places" class="block text-md text-gray-600 dark:text-gray-50">WHAT'S NEAR?</label>
+                <input type="text" id="nearby_places" name="nearby_places" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="WHAT'S NEAR?" [(ngModel)]="newRestaurant.nearby_places" required>
+              </div>
+              <div class="mb-4">
+                <label for="politica_canc" class="block text-md text-gray-600 dark:text-gray-50">POLITICAS DE CANCELACIONES/OPE</label>
+                <input type="text" id="politica_canc" name="politica_canc" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="POLITICAS DE CANCELACIONES" [(ngModel)]="newRestaurant.politica_canc" required>
+              </div>
+              <div class="mb-4">
+                <label for="contac_phone" class="block text-md text-gray-600 dark:text-gray-50">Contact Phone</label>
+                <input type="text" id="contac_phone" name="contac_phone" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Contact Phone" [(ngModel)]="newRestaurant.contac_phone" required>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="flex justify-end pt-2 space-x-14">
+          <button class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" (click)="closeModal()">Cancel</button>
+          <button type="submit" form="add_restaurant_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+ <!-- Edit Modal -->
+
+<div *ngIf="showEditModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
+    <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+      <div class="modal-content py-4 text-left px-6">
+        <!-- Title -->
+        <div class="flex justify-between items-center pb-3">
+          <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Edit Restaurant</p>
+          <div class="modal-close cursor-pointer z-50" (click)="closeEditModal()">
+            <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+              <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+            </svg>
+          </div>
+        </div>
+        <!-- Body -->
+        <div class="my-5 mr-5 ml-5 flex justify-center">
+          <form (submit)="onEditSubmit()" id="edit_restaurant_form" class="w-full">
+            <div class="">
+              <div class="mb-4">
+                <label for="name" class="block text-md text-gray-600 dark:text-gray-50">Name</label>
+                <input type="text" id="name" name="name" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Restaurant Name" [(ngModel)]="selectedRestaurant.name" required>
+              </div>
+              <div class="mb-4">
+                <label for="price_pp" class="block text-md text-gray-600 dark:text-gray-50">Price per person</label>
+                <input type="number" id="price_pp" name="price_pp" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Price per person" [(ngModel)]="selectedRestaurant.price_pp" required>
+              </div>
+              <div class="mb-4">
+                <label for="child_rate" class="block text-md text-gray-600 dark:text-gray-50">Child Rate</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" id="child_rate" name="child_rate" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Price pp" [(ngModel)]="selectedRestaurant.child_rate[0].price_pp" required>
+                    <input type="number" id="child_rate" name="child_rate" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Up to" [(ngModel)]="selectedRestaurant.child_rate[0].upTo" required>
+                </div>
+              </div>
+              <div class="mb-4">
+                <label for="price_guide_pp" class="block text-md text-gray-600 dark:text-gray-50">GUIDE & DRIVER</label>
+                <input type="number" id="price_guide_pp" name="price_guide_pp" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="GUIDE & DRIVER" [(ngModel)]="selectedRestaurant.price_guide_pp" required>
+              </div>
+              <div class="mb-4">
+                <label for="special_dates" class="block text-md text-gray-600 dark:text-gray-50">Special date</label>
+                <div *ngFor="let date of selectedRestaurant.special_dates let i = index" class="grid grid-cols-3 gap-3">
+                  <input type="date" [(ngModel)]="date.date" placeholder="Date" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="date-{{i}}" required>
+                  <input type="number" [(ngModel)]="date.price_add" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price_add{{i}}" required>
+                  <button type="button" (click)="removeSpecialdateField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
+                </div>
+                <button type="button" (click)="addEditSpecialDateField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Special date</button>
+            </div>
+            <div class="mb-4">
+                <label for="closing_date" class="block text-md text-gray-600 dark:text-gray-50">Closing date</label>
+                <div *ngFor="let date of selectedRestaurant.closing_date let i = index" class="grid grid-cols-3 gap-3">
+                  <input type="date" [(ngModel)]="date.date" placeholder="Date" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="date-{{i}}" required>
+                  <input type="number" [(ngModel)]="date.price_add" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price_add{{i}}" required>
+                  <button type="button" (click)="removeClosingdateField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
+                </div>
+                <button type="button" (click)="addEditClosingDateField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Closing date</button>
+            </div>
+              <div class="mb-4">
+                <label for="schedules" class="block text-md text-gray-600 dark:text-gray-50">Schedules</label>
+                <input type="text" id="schedules" name="schedules" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Schedules" [(ngModel)]="selectedRestaurant.schedules" required>
+              </div>
+              <div class="mb-4">
+                <label for="location" class="block text-md text-gray-600 dark:text-gray-50">Location</label>
+                <input type="text" id="location" name="location" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Location" [(ngModel)]="selectedRestaurant.location" required>
+              </div>
+              <div class="mb-4">
+                <label for="take_notes" class="block text-md text-gray-600 dark:text-gray-50">Take notes</label>
+                <input type="text" id="take_notes" name="take_notes" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take notes" [(ngModel)]="selectedRestaurant.take_notes" required>
+              </div>
+              <div class="mb-4">
+                <label for="nearby_places" class="block text-md text-gray-600 dark:text-gray-50">WHAT'S NEAR?</label>
+                <input type="text" id="nearby_places" name="nearby_places" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="WHAT'S NEAR?" [(ngModel)]="selectedRestaurant.nearby_places" required>
+              </div>
+              <div class="mb-4">
+                <label for="politica_canc" class="block text-md text-gray-600 dark:text-gray-50">POLITICAS DE CANCELACIONES/OPE</label>
+                <input type="text" id="politica_canc" name="politica_canc" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="POLITICAS DE CANCELACIONES" [(ngModel)]="selectedRestaurant.politica_canc" required>
+              </div>
+              <div class="mb-4">
+                <label for="contac_phone" class="block text-md text-gray-600 dark:text-gray-50">Contact Phone</label>
+                <input type="text" id="contac_phone" name="contac_phone" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Contact Phone" [(ngModel)]="selectedRestaurant.contac_phone" required>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="flex justify-end pt-2 space-x-14">
+          <button class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" (click)="closeEditModal()">Cancel</button>
+          <button type="submit" form="edit_restaurant_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
