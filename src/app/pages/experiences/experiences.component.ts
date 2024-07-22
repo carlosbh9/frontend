@@ -66,9 +66,10 @@ export class ExperiencesComponent {
 
   filterExperiences() {
     this.filteredExperiences = this.experiences.filter(experience =>
-      experience.name.toLowerCase().includes(this.filterText.toLowerCase())
+      experience.name.toLowerCase().includes(this.filterText.toLowerCase()) || experience.category.toLowerCase().includes(this.filterText.toLowerCase())
     );
   }
+
 
   async deleteExperience(id: string) {
     try {
@@ -123,10 +124,27 @@ export class ExperiencesComponent {
 addEditPriceField() {
   this.selectedExperience.prices.push({ groupSize: null, pricePerPerson: null });
 }
-// removeEditPriceField(index: number) {
-//   const control = <FormArray>this.editExperienceForm.controls['prices'];
-//   control.removeAt(index);
-// }
+removePriceField(index: number) {
+
+  if (this.newExperience.prices.length > 1) { // Prevent removing the only price field
+    this.newExperience.prices.splice(index, 1);
+  } else {
+    // Handle the case of removing the only price field (optional: clear values or display a message)
+    console.warn('Cannot remove the only price field.');
+  }
+
+}
+
+removeeditPriceField(index: number) {
+
+  if (this.selectedExperience.prices.length > 1) { // Prevent removing the only price field
+    this.selectedExperience.prices.splice(index, 1);
+  } else {
+    // Handle the case of removing the only price field (optional: clear values or display a message)
+    console.warn('Cannot remove the only price field.');
+  }
+
+}
 
   onSubmit() {
     this.experienceService.addExperience(this.newExperience).then(

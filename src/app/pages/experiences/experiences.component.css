@@ -3,7 +3,7 @@
   overflow-y: auto; /* Habilitar el scroll vertical cuando sea necesario */
 }
 table td {
-  /* border: 1px solid #978a8a;
-  padding: 8px; */
+  border: 1px solid #978a8a;
+  /*padding: 8px; */
   font-weight: bold; /* Aplica negrita al texto dentro de las celdas */
 }

@@ -28,10 +28,8 @@
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Guide Price</th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Approximate Duration</th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Take notes</th>
-            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-              Cancellation policy</th>
-            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                Contact phone</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Cancellation policy</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Contact phone</th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Actions</th>
           </tr>
         </thead>
@@ -41,13 +39,13 @@
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ experience.category }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
               <div *ngFor="let price of experience.prices">
-                Group Size: {{ price.groupSize }} - Price Per Person: {{ price.pricePerPerson }}
+                Group Size: {{ price.groupSize }} - Price Per Person: {{ price.pricePerPerson }} $
               </div>
             </td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ experience.guide_price }}</td>
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ experience.guide_price }} $</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ experience.approximateDuration }}</td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 max-h-24 overflow-y-auto block">{{ experience.take_notes }}</td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 max-h-24 overflow-y-auto block">{{ experience.politica_canc }}</td>
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs max-h-24 overflow-y-auto block p-4 ">{{ experience.take_notes }}</td>
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">{{ experience.politica_canc }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ experience.contac_phone }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
               <button class="px-4 bg-blue-500 dark:bg-blue-700 p-2 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800 mr-2" (click)="openEditModal(experience)">Edit</button>
@@ -95,13 +93,13 @@
             </div>
             <div class="mb-4">
               <label for="prices" class="block text-md text-gray-600 dark:text-gray-50">Prices</label>
-              <div *ngFor="let price of newExperience.prices; let i = index">
+              <div *ngFor="let price of newExperience.prices; let i = index" class="grid grid-cols-3 gap-3">
                 <input type="number" [(ngModel)]="price.groupSize" placeholder="Group Size" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="groupSize-{{i}}" required>
                 <input type="number" [(ngModel)]="price.pricePerPerson" placeholder="Price per Person" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="pricePerPerson-{{i}}" required>
+                <button type="button" (click)="removePriceField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
               </div>
               <button type="button" (click)="addPriceField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Price</button>
-              <button type="button" >Remove</button>
-            </div>
+          </div>
             <div class="mb-4">
               <label for="childRate" class="block text-md text-gray-600 dark:text-gray-50">Child Rate</label>
               <input type="number" [(ngModel)]="newExperience.childRate.pp" placeholder="Price per Person" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="childRate-pp" required>
@@ -167,9 +165,10 @@
             </div>
             <div class="mb-4">
               <label for="prices" class="block text-md text-gray-600 dark:text-gray-50">Prices</label>
-              <div *ngFor="let price of selectedExperience.prices; let i = index">
+              <div *ngFor="let price of selectedExperience.prices; let i = index" class="grid grid-cols-3 gap-3">
                 <input type="number" [(ngModel)]="price.groupSize" placeholder="Group Size" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="groupSize-{{i}}" required>
                 <input type="number" [(ngModel)]="price.pricePerPerson" placeholder="Price per Person" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="pricePerPerson-{{i}}" required>
+                <button type="button" (click)="removeeditPriceField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
               </div>
               <button type="button" (click)="addEditPriceField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Price</button>
             </div>
