@@ -87,6 +87,7 @@ export class RestaurantComponent implements OnInit{
   // Función para agregar un nuevo campo de Special date en el formulario de editar restaurant
   addEditSpecialDateField() {
     this.selectedRestaurant.special_dates.push({ date: null, price_add: null });
+
   }
   removeSpecialdateField(index: number) {
     if (this.newRestaurant.special_dates.length > 1) { // Prevent removing the only special date
@@ -95,7 +96,17 @@ export class RestaurantComponent implements OnInit{
       // Handle the case of removing the only price field (optional: clear values or display a message)
       console.warn('Cannot remove the only price field.');
     }
-  
+
+  }
+
+  removeEditSpecialdateField(index: number) {
+    if (this.selectedRestaurant.special_dates.length > 1) { // Prevent removing the only special date
+      this.selectedRestaurant.special_dates.splice(index, 1);
+    } else {
+      // Handle the case of removing the only price field (optional: clear values or display a message)
+      console.warn('Cannot remove the only price field.');
+    }
+
   }
 
 
@@ -107,15 +118,24 @@ export class RestaurantComponent implements OnInit{
     this.selectedRestaurant.closing_date.push({ date: null, price_add: null });
   }
   removeClosingdateField(index: number) {
+    if (this.newRestaurant.closing_date.length > 1) { // Prevent removing the only special date
+      this.newRestaurant.closing_date.splice(index, 1);
+    } else {
+      // Handle the case of removing the only price field (optional: clear values or display a message)
+      console.warn('Cannot remove the only price field.');
+    }
+
+  }
+
+  removeEditClosingdateField(index: number) {
     if (this.selectedRestaurant.closing_date.length > 1) { // Prevent removing the only special date
       this.selectedRestaurant.closing_date.splice(index, 1);
     } else {
       // Handle the case of removing the only price field (optional: clear values or display a message)
       console.warn('Cannot remove the only price field.');
     }
-  
-  }
 
+  }
 
   openEditModal(restaurant: any) {
     this.selectedRestaurant = { ...restaurant };
@@ -174,6 +194,7 @@ export class RestaurantComponent implements OnInit{
         console.log('Restaurant updated', response);
         this.fetchRestaurants();
         this.showEditModal = false;
+        console.log(this.selectedRestaurant)
       },
       error => {
         console.error('Error updating restaurant', error);

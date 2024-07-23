@@ -76,7 +76,7 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Add Modal -->
   <div *ngIf="showAddModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
     <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
@@ -165,7 +165,7 @@
       </div>
     </div>
   </div>
-  
+
  <!-- Edit Modal -->
 
 <div *ngIf="showEditModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
@@ -206,9 +206,9 @@
               <div class="mb-4">
                 <label for="special_dates" class="block text-md text-gray-600 dark:text-gray-50">Special date</label>
                 <div *ngFor="let date of selectedRestaurant.special_dates let i = index" class="grid grid-cols-3 gap-3">
-                  <input type="date" [(ngModel)]="date.date" placeholder="Date" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="date-{{i}}" required>
+                  <input type="date" [(ngModel)]="date.date " placeholder="Date" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="date-{{i}}" required>
                   <input type="number" [(ngModel)]="date.price_add" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price_add{{i}}" required>
-                  <button type="button" (click)="removeSpecialdateField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
+                  <button type="button" (click)="removeEditSpecialdateField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
                 </div>
                 <button type="button" (click)="addEditSpecialDateField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Special date</button>
             </div>
@@ -217,7 +217,7 @@
                 <div *ngFor="let date of selectedRestaurant.closing_date let i = index" class="grid grid-cols-3 gap-3">
                   <input type="date" [(ngModel)]="date.date" placeholder="Date" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="date-{{i}}" required>
                   <input type="number" [(ngModel)]="date.price_add" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price_add{{i}}" required>
-                  <button type="button" (click)="removeClosingdateField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
+                  <button type="button" (click)="removeEditClosingdateField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
                 </div>
                 <button type="button" (click)="addEditClosingDateField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Closing date</button>
             </div>
@@ -255,4 +255,3 @@
       </div>
     </div>
   </div>
-  
