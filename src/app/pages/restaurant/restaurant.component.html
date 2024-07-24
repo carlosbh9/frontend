@@ -30,7 +30,7 @@
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Closing Dates</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Schedules</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Location</th>
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Take note</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left ">Take note</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">What's near?</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Politicas de cancelaciones/OPE</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Contact Phone</th>
@@ -39,34 +39,34 @@
           </thead>
           <tbody>
             <tr *ngFor="let restaurant of filteredRestaurants" class="text-gray-700 dark:text-gray-100">
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.name }}</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.price_pp }}</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.name }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.price_pp }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">
                 <div>
                   <span *ngIf="restaurant.child_rate[0].price_pp">Price per person: {{ restaurant.child_rate[0].price_pp }} $</span>,
                   <span *ngIf="restaurant.child_rate[0].upTo">Up to age: {{ restaurant.child_rate[0].upTo }}</span>
                 </div>
               </td>
               <!-- <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.child_rate[0].price_pp }} (up to {{ restaurant.child_rate[0].upTo}} years old)</td> -->
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.price_guide_pp }}</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 ">
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.price_guide_pp }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4 whitespace-nowrap">
                 <ul>
-                  <li *ngFor="let date of restaurant.special_dates">{{ date.date | date }} - {{ date.price_add }}</li>
+                  <li *ngFor="let date of restaurant.special_dates">{{ date.date | date }} -> {{ date.price_add }}</li>
                 </ul>
               </td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 ">
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 whitespace-nowrap ">
                 <ul>
-                  <li *ngFor="let date of restaurant.closing_date">{{ date.date | date }} - {{ date.price_add }}</li>
+                  <li *ngFor="let date of restaurant.closing_date">{{ date.date | date }} -> {{ date.price_add }}</li>
                 </ul>
               </td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.schedules }}</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.location }}</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.take_notes }}</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.nearby_places }}</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.politica_canc}}</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.contac_phone}}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.schedules }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.location }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4 max-h-24 overflow-y-auto block ">{{ restaurant.take_notes }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.nearby_places }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.politica_canc}}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.contac_phone}}</td>
 
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <button class="px-4 bg-blue-500 dark:bg-blue-700 p-2 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800 mr-2" (click)="openEditModal(restaurant)">Edit</button>
                 <button class="px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800" (click)="deleteRestaurant(restaurant._id)">Delete</button>
               </td>
@@ -117,7 +117,7 @@
                 <label for="special_dates" class="block text-md text-gray-600 dark:text-gray-50">Special date</label>
                 <div *ngFor="let date of newRestaurant.special_dates let i = index" class="grid grid-cols-3 gap-3">
                   <input type="date" [(ngModel)]="date.date" placeholder="Date" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="date-{{i}}" required>
-                  <input type="number" [(ngModel)]="date.price_add" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price_add{{i}}" required>
+                  <input type="number" [(ngModel)]="date.price_add" placeholder="Price or discount" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price_add{{i}}" required>
                   <button type="button" (click)="removeSpecialdateField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
                 </div>
                 <button type="button" (click)="addSpecialdateField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Special date</button>
@@ -126,7 +126,7 @@
                 <label for="closing_date" class="block text-md text-gray-600 dark:text-gray-50">Closing date</label>
                 <div *ngFor="let date of newRestaurant.closing_date let i = index" class="grid grid-cols-3 gap-3">
                   <input type="date" [(ngModel)]="date.date" placeholder="Date" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="date-{{i}}" required>
-                  <input type="number" [(ngModel)]="date.price_add" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price_add{{i}}" required>
+                  <input type="number" [(ngModel)]="date.price_add" placeholder="Price or discount" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price_add{{i}}" required>
                   <button type="button" (click)="removeClosingdateField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
                 </div>
                 <button type="button" (click)="addClosingdateField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Closing date</button>
@@ -141,8 +141,8 @@
               </div>
               <div class="mb-4">
                 <label for="take_notes" class="block text-md text-gray-600 dark:text-gray-50">Take notes</label>
-                <input type="text" id="take_notes" name="take_notes" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take notes" [(ngModel)]="newRestaurant.take_notes" required>
-              </div>
+                <textarea type="text" id="take_notes" name="take_notes" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take notes" [(ngModel)]="newRestaurant.take_notes" required></textarea>
+                </div>
               <div class="mb-4">
                 <label for="nearby_places" class="block text-md text-gray-600 dark:text-gray-50">WHAT'S NEAR?</label>
                 <input type="text" id="nearby_places" name="nearby_places" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="WHAT'S NEAR?" [(ngModel)]="newRestaurant.nearby_places" required>
@@ -207,8 +207,8 @@
                 <label for="special_dates" class="block text-md text-gray-600 dark:text-gray-50">Special date</label>
                 <div *ngFor="let date of selectedRestaurant.special_dates let i = index" class="grid grid-cols-3 gap-3">
                   <input type="date" [(ngModel)]="date.date" placeholder="Date" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="date-{{i}}" required>
-                  <input type="number" [(ngModel)]="date.price_add" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price_add{{i}}" required>
-                  <button type="button" (click)="removeSpecialdateField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
+                  <input type="number" [(ngModel)]="date.price_add" placeholder="Price or discount" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price_add{{i}}" required>
+                  <button type="button" (click)="removeEditSpecialdateField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
                 </div>
                 <button type="button" (click)="addEditSpecialDateField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Special date</button>
             </div>
@@ -216,8 +216,8 @@
                 <label for="closing_date" class="block text-md text-gray-600 dark:text-gray-50">Closing date</label>
                 <div *ngFor="let date of selectedRestaurant.closing_date let i = index" class="grid grid-cols-3 gap-3">
                   <input type="date" [(ngModel)]="date.date" placeholder="Date" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="date-{{i}}" required>
-                  <input type="number" [(ngModel)]="date.price_add" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price_add{{i}}" required>
-                  <button type="button" (click)="removeClosingdateField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
+                  <input type="number" [(ngModel)]="date.price_add" placeholder="Price or discount" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price_add{{i}}" required>
+                  <button type="button" (click)="removeEditClosingdateField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
                 </div>
                 <button type="button" (click)="addEditClosingDateField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Closing date</button>
             </div>
@@ -231,7 +231,7 @@
               </div>
               <div class="mb-4">
                 <label for="take_notes" class="block text-md text-gray-600 dark:text-gray-50">Take notes</label>
-                <input type="text" id="take_notes" name="take_notes" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take notes" [(ngModel)]="selectedRestaurant.take_notes" required>
+                <textarea type="text" id="take_notes" name="take_notes" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take notes" [(ngModel)]="selectedRestaurant.take_notes" required></textarea>
               </div>
               <div class="mb-4">
                 <label for="nearby_places" class="block text-md text-gray-600 dark:text-gray-50">WHAT'S NEAR?</label>

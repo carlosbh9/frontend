@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../enviroment/environment';
-import { firstValueFrom } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { catchError, firstValueFrom, Observable, throwError } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,17 @@ export class RestaurantService {
       throw error;
     }
   }
+
+  // getAllRestaurants(): Observable<Restaurant[]> {
+  //   return this.http.get<Restaurant[]>(this.baseUrl).pipe(
+  //     catchError(this.handleError)
+  //   );
+  // }
+
+  // private handleError(error: HttpErrorResponse): Observable<never> {
+  //   console.error('Error fetching restaurants:', error);
+  //   return throwError('Error fetching restaurants. Please try again later.');
+  // }
 
   // Agregar un nuevo restaurante
   async addRestaurant(restaurant: any): Promise<any> {

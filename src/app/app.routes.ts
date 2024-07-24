@@ -8,6 +8,9 @@ import { RestaurantComponent } from './pages/restaurant/restaurant.component';
 import { EntrancesComponent } from './pages/entrances/entrances.component';
 import { ExpeditionsComponent } from './pages/expeditions/expeditions.component';
 import { ExperiencesComponent } from './pages/experiences/experiences.component';
+import { GuidesComponent } from './pages/guides/guides.component';
+import { OperatorsComponent } from './pages/operators/operators.component';
+import { TransportComponent } from './pages/transport/transport.component';
 
 
 export const routes: Routes = [
@@ -15,11 +18,15 @@ export const routes: Routes = [
     {   path:'',component: LayoutComponent,
         children:[
             {   path:'train', component: TrainComponent},
-            {   path:'hotel', component: HotelComponent},
             {   path:'entrance', component:EntrancesComponent},
             {   path:'expeditions', component: ExpeditionsComponent},
             {   path: 'experiences', component: ExperiencesComponent},
-            {   path: 'restaurant', component: RestaurantComponent}
+            {   path: 'restaurant', component: RestaurantComponent},
+            {   path:'guides', component:GuidesComponent},
+            {   path:'operators', component:OperatorsComponent},
+            {   path:'train', component:TrainComponent},
+            {   path:'transport', component:TransportComponent},
+            {   path:'hotel', component: HotelComponent},
         ]
     }
 
