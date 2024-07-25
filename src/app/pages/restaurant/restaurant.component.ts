@@ -90,7 +90,7 @@ export class RestaurantComponent implements OnInit{
 
   }
   removeSpecialdateField(index: number) {
-    if (this.newRestaurant.special_dates.length > 1) { // Prevent removing the only special date
+    if (this.newRestaurant.special_dates.length >= 1) { // Prevent removing the only special date
       this.newRestaurant.special_dates.splice(index, 1);
     } else {
       // Handle the case of removing the only price field (optional: clear values or display a message)
@@ -108,27 +108,49 @@ export class RestaurantComponent implements OnInit{
     }
 
   }
+  removeEditSpecialdateField(index: number) {
+    if (this.selectedRestaurant.special_dates.length >= 1) { // Prevent removing the only special date
+      this.selectedRestaurant.special_dates.splice(index, 1);
+    } else {
+      // Handle the case of removing the only price field (optional: clear values or display a message)
+      console.warn('Cannot remove the only price field.');
+    }
+  
+  }
+
 
 
   addClosingdateField() {
     this.newRestaurant.closing_date.push({ date: null, price_add: null });
   }
-  // Función para agregar un nuevo campo de Special date en el formulario de editar restaurant
+  // Función para agregar un nuevo campo de closing date en el formulario de editar restaurant
   addEditClosingDateField() {
     this.selectedRestaurant.closing_date.push({ date: null, price_add: null });
   }
   removeClosingdateField(index: number) {
+<<<<<<< HEAD
     if (this.newRestaurant.closing_date.length > 1) { // Prevent removing the only special date
+=======
+    if (this.newRestaurant.closing_date.length >= 1) { // Prevent removing the only closing date
+>>>>>>> 4b6796748e1ce3d5f54c6ae0ce39a6de406c0be6
       this.newRestaurant.closing_date.splice(index, 1);
     } else {
       // Handle the case of removing the only price field (optional: clear values or display a message)
       console.warn('Cannot remove the only price field.');
     }
+<<<<<<< HEAD
 
   }
 
   removeEditClosingdateField(index: number) {
     if (this.selectedRestaurant.closing_date.length > 1) { // Prevent removing the only special date
+=======
+  
+  }
+
+  removeEditClosingdateField(index: number) {
+    if (this.selectedRestaurant.closing_date.length >= 1) { // Prevent removing the only closing date
+>>>>>>> 4b6796748e1ce3d5f54c6ae0ce39a6de406c0be6
       this.selectedRestaurant.closing_date.splice(index, 1);
     } else {
       // Handle the case of removing the only price field (optional: clear values or display a message)
@@ -140,6 +162,7 @@ export class RestaurantComponent implements OnInit{
   openEditModal(restaurant: any) {
     this.selectedRestaurant = { ...restaurant };
     this.showEditModal = true;
+    console.log(this.selectedRestaurant)
   }
 
   closeEditModal() {
