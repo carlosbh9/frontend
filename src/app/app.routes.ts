@@ -11,6 +11,7 @@ import { ExperiencesComponent } from './pages/experiences/experiences.component'
 import { GuidesComponent } from './pages/guides/guides.component';
 import { OperatorsComponent } from './pages/operators/operators.component';
 import { TransportComponent } from './pages/transport/transport.component';
+import { OperatorsServicesComponent } from './pages/operators-services/operators-services.component';
 
 
 export const routes: Routes = [
@@ -24,6 +25,8 @@ export const routes: Routes = [
             {   path: 'restaurant', component: RestaurantComponent},
             {   path:'guides', component:GuidesComponent},
             {   path:'operators', component:OperatorsComponent},
+            {   path:'operators/:id/services',component: OperatorsServicesComponent},
+            {   path:'services/:id',component: OperatorsServicesComponent},
             {   path:'train', component:TrainComponent},
             {   path:'transport', component:TransportComponent},
             {   path:'hotel', component: HotelComponent},

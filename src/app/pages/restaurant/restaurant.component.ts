@@ -99,15 +99,15 @@ export class RestaurantComponent implements OnInit{
 
   }
 
-  removeEditSpecialdateField(index: number) {
-    if (this.selectedRestaurant.special_dates.length > 1) { // Prevent removing the only special date
-      this.selectedRestaurant.special_dates.splice(index, 1);
-    } else {
-      // Handle the case of removing the only price field (optional: clear values or display a message)
-      console.warn('Cannot remove the only price field.');
-    }
+  // removeEditSpecialdateField(index: number) {
+  //   if (this.selectedRestaurant.special_dates.length > 1) { // Prevent removing the only special date
+  //     this.selectedRestaurant.special_dates.splice(index, 1);
+  //   } else {
+  //     // Handle the case of removing the only price field (optional: clear values or display a message)
+  //     console.warn('Cannot remove the only price field.');
+  //   }
 
-  }
+  // }
   removeEditSpecialdateField(index: number) {
     if (this.selectedRestaurant.special_dates.length >= 1) { // Prevent removing the only special date
       this.selectedRestaurant.special_dates.splice(index, 1);
@@ -128,29 +128,17 @@ export class RestaurantComponent implements OnInit{
     this.selectedRestaurant.closing_date.push({ date: null, price_add: null });
   }
   removeClosingdateField(index: number) {
-<<<<<<< HEAD
     if (this.newRestaurant.closing_date.length > 1) { // Prevent removing the only special date
-=======
-    if (this.newRestaurant.closing_date.length >= 1) { // Prevent removing the only closing date
->>>>>>> 4b6796748e1ce3d5f54c6ae0ce39a6de406c0be6
       this.newRestaurant.closing_date.splice(index, 1);
     } else {
       // Handle the case of removing the only price field (optional: clear values or display a message)
       console.warn('Cannot remove the only price field.');
     }
-<<<<<<< HEAD
 
   }
 
   removeEditClosingdateField(index: number) {
     if (this.selectedRestaurant.closing_date.length > 1) { // Prevent removing the only special date
-=======
-  
-  }
-
-  removeEditClosingdateField(index: number) {
-    if (this.selectedRestaurant.closing_date.length >= 1) { // Prevent removing the only closing date
->>>>>>> 4b6796748e1ce3d5f54c6ae0ce39a6de406c0be6
       this.selectedRestaurant.closing_date.splice(index, 1);
     } else {
       // Handle the case of removing the only price field (optional: clear values or display a message)

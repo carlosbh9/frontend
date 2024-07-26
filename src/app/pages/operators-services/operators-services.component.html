@@ -1,0 +1,61 @@
+<div class="container mx-auto p-4">
+    <h2 class="text-2xl font-bold mb-4">Servicios de {{ operatorId }}</h2>
+    
+    <!-- Filtro -->
+    <div class="mb-4">
+      <input 
+        type="text" 
+        placeholder="Filtrar servicios..." 
+        [(ngModel)]="filterText" 
+        class="px-4 py-2 border rounded"
+      />
+    </div>
+  
+    <!-- Botón para agregar un nuevo servicio -->
+    <div class="mb-4">
+      <button 
+        (click)="addService()" 
+        class="bg-blue-500 text-white px-4 py-2 rounded"
+      >
+        Agregar Servicio
+      </button>
+    </div>
+  
+    <!-- Tabla de servicios -->
+    <table class="min-w-full bg-white">
+      <thead>
+        <tr>
+          <th class="py-2">Descripción</th>
+          <th class="py-2">Rango de Precios</th>
+          <th class="py-2">Observaciones</th>
+          <th class="py-2">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let service of services ">
+            <!-- | filter:filterText -->
+          <td class="py-2 px-4 border-b">{{ service.descripcion }}</td>
+          <td class="py-2 px-4 border-b">
+            <div *ngFor="let price of service.prices">
+              {{ price.range_min }} - {{ price.range_max }}: {{ price.price }} ({{ price.type_vehicle }})
+            </div>
+          </td>
+          <td class="py-2 px-4 border-b">{{ service.observaciones }}</td>
+          <td class="py-2 px-4 border-b">
+            <button 
+              (click)="editService(service)" 
+              class="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
+            >
+              Editar
+            </button>
+            <button 
+              (click)="deleteService(service._id)" 
+              class="bg-red-500 text-white px-2 py-1 rounded"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
