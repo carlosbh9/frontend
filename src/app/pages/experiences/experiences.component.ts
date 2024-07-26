@@ -126,7 +126,7 @@ addEditPriceField() {
 }
 removePriceField(index: number) {
 
-  if (this.newExperience.prices.length > 1) { // Prevent removing the only price field
+  if (this.newExperience.prices.length >= 1) { // Prevent removing the only price field
     this.newExperience.prices.splice(index, 1);
   } else {
     // Handle the case of removing the only price field (optional: clear values or display a message)
@@ -137,7 +137,7 @@ removePriceField(index: number) {
 
 removeeditPriceField(index: number) {
 
-  if (this.selectedExperience.prices.length > 1) { // Prevent removing the only price field
+  if (this.selectedExperience.prices.length >= 1) { // Prevent removing the only price field
     this.selectedExperience.prices.splice(index, 1);
   } else {
     // Handle the case of removing the only price field (optional: clear values or display a message)

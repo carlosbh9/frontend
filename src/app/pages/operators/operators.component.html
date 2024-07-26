@@ -48,3 +48,87 @@
       </div>
     </div>
   </div>
+
+
+
+  <!-- Add Modal -->
+<div *ngIf="showAddModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
+  <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+    <div class="modal-content py-4 text-left px-6">
+      <!-- Title -->
+      <div class="flex justify-between items-center pb-3">
+        <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Add Experience</p>
+        <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
+          <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+          </svg>
+        </div>
+      </div>
+      <!-- Body -->
+      <div class="my-5 mr-5 ml-5 flex justify-center">
+        <form (submit)="onSubmit()" id="add_operator_form" class="w-full">
+          <div class="">
+            <div class="mb-4">
+              <label for="operador" class="block text-md text-gray-600 dark:text-gray-50">Name operator</label>
+              <input type="text" id="operador" name="operador" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Name" [(ngModel)]="newOperator.operador" equired>
+            </div>
+            <div class="mb-4">
+              <label for="ciudad" class="block text-md text-gray-600 dark:text-gray-50">City</label>
+              <input type="text" id="ciudad" name="ciudad" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="City" [(ngModel)]="newOperator.ciudad" required>
+            </div>
+            <div class="mb-4">
+              <label for="name_service" class="block text-md text-gray-600 dark:text-gray-50">Service name</label>
+              <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service name" [(ngModel)]="newOperator.name_service" required>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- Footer -->
+      <div class="flex justify-end pt-2 space-x-14">
+        <button class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" (click)="closeModal()">Cancel</button>
+        <button type="submit" form="add_operator_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div *ngIf="showEditModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
+  <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+    <div class="modal-content py-4 text-left px-6">
+      <!-- Title -->
+      <div class="flex justify-between items-center pb-3">
+        <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Edit Experience</p>
+        <div class="modal-close cursor-pointer z-50" (click)="closeEditModal()">
+          <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+          </svg>
+        </div>
+      </div>
+      <!-- Body -->
+      <div class="my-5 mr-5 ml-5 flex justify-center">
+        <form (submit)="onEditSubmit()" id="edit_operator_form" class="w-full">
+          <div class="">
+            <div class="mb-4">
+              <label for="operador" class="block text-md text-gray-600 dark:text-gray-50">Name operator</label>
+              <input type="text" id="operador" name="operador" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Name" [(ngModel)]="selectedOperator.operador" equired>
+            </div>
+            <div class="mb-4">
+              <label for="ciudad" class="block text-md text-gray-600 dark:text-gray-50">City</label>
+              <input type="text" id="ciudad" name="ciudad" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="City" [(ngModel)]="selectedOperator.ciudad" required>
+            </div>
+            <div class="mb-4">
+              <label for="name_service" class="block text-md text-gray-600 dark:text-gray-50">Service name</label>
+              <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service name" [(ngModel)]="selectedOperator.name_service" required>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- Footer -->
+      <div class="flex justify-end pt-2 space-x-14">
+        <button class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" (click)="closeEditModal()">Cancel</button>
+        <button type="submit" form="edit_operator_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>

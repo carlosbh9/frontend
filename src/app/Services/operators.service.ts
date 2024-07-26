@@ -23,9 +23,9 @@ export class OperatorsService {
   }
 
   // Agregar un nuevo operador
-  async addOperator(restaurant: any): Promise<any> {
+  async addOperator(operator: any): Promise<any> {
     try {
-      const res = await firstValueFrom(this.http.post<any>(this.baseUrl, restaurant));
+      const res = await firstValueFrom(this.http.post<any>(this.baseUrl, operator));
       return res;
     } catch (error) {
       console.error('Error while trying to add Operator', error);
@@ -34,9 +34,9 @@ export class OperatorsService {
   }
 
   // Actualizar un operador existente
-  async updateOperator(id: string, restaurant: any): Promise<any> {
+  async updateOperator(id: string, operator: any): Promise<any> {
     try {
-      const res = await firstValueFrom(this.http.patch<any>(`${this.baseUrl}/${id}`, restaurant));
+      const res = await firstValueFrom(this.http.patch<any>(`${this.baseUrl}/${id}`, operator));
       return res;
     } catch (error) {
       console.error('Error while trying to update Operator', error);
@@ -77,12 +77,31 @@ export class OperatorsService {
 
   // Actualizar un servicio existente de un operador
   async updateService(operatorId: string, serviceId: string, service: any): Promise<any> {
-    return firstValueFrom(this.http.put<any>(`${this.baseUrl}/${operatorId}/services/${serviceId}`, service));
+    try {
+          return firstValueFrom(this.http.patch<any>(`${this.baseUrl}/${operatorId}/services/${serviceId}`, service));
+    } catch (error) {
+      console.error('Error while trying to update service by operator', error);
+      throw error;
+    }
   }
 
   // Eliminar un servicio de un operador
   async deleteService(operatorId: string, serviceId: string): Promise<any> {
-    return firstValueFrom(this.http.delete<any>(`${this.baseUrl}/${operatorId}/services/${serviceId}`));
+    try {
+          return firstValueFrom(this.http.delete<any>(`${this.baseUrl}/${operatorId}/services/${serviceId}`));
+    } catch (error) {
+      console.error('Error while trying to delete service by operator', error);
+      throw error;
+    }
+  }
+
+  async getOperatorbyId(operatorId: string): Promise<any> {
+    try {
+      return firstValueFrom(this.http.get<any>(`${this.baseUrl}/${operatorId}`))
+    } catch (error) {
+      console.error('Error get operator by Id', error);
+      throw error;
+    }
   }
 
 }
