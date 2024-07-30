@@ -74,22 +74,36 @@ export class OperatorsServicesComponent implements OnInit{
       response => {
         console.log('Service added', response);
         this.fetchServices(this.operatorId); // Actualizar la lista de servicios
+        this.showAddModal= false;
       },
       error => {
         console.error('Error adding service', error);
       }
     );
   }
-  addService2() {
-    // Implementar lógica para agregar un nuevo servicio
+ 
+  async onEditSubmit() {
+    
+    this.operatorsService.updateService(this.operatorId, this.selectService._id ,this.selectService).then(
+      response => {
+        console.log('Service update', response);
+        this.fetchServices(this.operatorId); // Actualizar la lista de servicios
+        this.showAddModal= false;
+      },
+      error => {
+        console.error('Error updating service', error);
+      }
+    );
   }
 
-  editService(service: any) {
-    // Implementar lógica para editar un servicio existente
-  }
-
-  deleteService(serviceId: string) {
-    // Implementar lógica para eliminar un servicio existente
+  async deleteService(serviceId: string) {
+    try {
+      await this.operatorsService.deleteService(this.operatorId, serviceId);
+      this.fetchServices(this.operatorId);
+  } catch (error) {
+      console.error('Error deleting service', error);
+    }
+  
   }
 
 
