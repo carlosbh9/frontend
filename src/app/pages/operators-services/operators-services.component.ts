@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './operators-services.component.css'
 })
 export class OperatorsServicesComponent implements OnInit{
-  
+
   services: any[] = [];
   filteredServices: any[] = [];
   operatorId: string = '';
@@ -61,7 +61,7 @@ export class OperatorsServicesComponent implements OnInit{
       console.error('Error fetching services', error);
     }
   }
-  
+
   filterServices() {
     this.filteredServices = this.services.filter(service =>
       service.description.toLowerCase().includes(this.filterText.toLowerCase()))
@@ -70,7 +70,7 @@ export class OperatorsServicesComponent implements OnInit{
 
   async onSubmit() {
 
-    this.operatorsService.addService(this.operatorId, this.newService).then(
+    await this.operatorsService.addService(this.operatorId, this.newService).then(
       response => {
         console.log('Service added', response);
         this.fetchServices(this.operatorId); // Actualizar la lista de servicios
@@ -81,19 +81,19 @@ export class OperatorsServicesComponent implements OnInit{
       }
     );
   }
- 
+
   async onEditSubmit() {
-    
-    this.operatorsService.updateService(this.operatorId, this.selectService._id ,this.selectService).then(
-      response => {
-        console.log('Service update', response);
+
+    try {
+      await this.operatorsService.updateService(this.operatorId, this.selectService._id ,this.selectService);
+        console.log('Service update');
         this.fetchServices(this.operatorId); // Actualizar la lista de servicios
-        this.showAddModal= false;
-      },
-      error => {
-        console.error('Error updating service', error);
-      }
-    );
+        this.showEditModal= false;
+        console.log(this.selectService)
+    } catch (error) {
+      console.error('Error updating service 222', error);
+
+    }
   }
 
   async deleteService(serviceId: string) {
@@ -103,7 +103,7 @@ export class OperatorsServicesComponent implements OnInit{
   } catch (error) {
       console.error('Error deleting service', error);
     }
-  
+
   }
 
 
@@ -144,12 +144,12 @@ export class OperatorsServicesComponent implements OnInit{
 
    // Función para agregar un nuevo campo de precio en el formulario de agregar experiencia
  addPriceField() {
-  this.newService.prices.push({ range_min: 0, range_max: 0, type_vehicle:null });
+  this.newService.prices.push({ range_min: 0, range_max: 0, type_vehicle: '' });
 }
 
 // Función para agregar un nuevo campo de precio en el formulario de editar experiencia
 addEditPriceField() {
-  this.selectService.prices.push({ groupSize: null, pricePerPerson: null });
+  this.selectService.prices.push({ range_min: 0, range_max: 0, type_vehicle: '' });
 }
 removePriceField(index: number) {
 
