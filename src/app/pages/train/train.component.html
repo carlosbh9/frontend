@@ -1,1 +1,107 @@
 <p>train works!</p>
+<div class="container mt-4">
+  <h2>Listado de Trenes</h2>
+  <div class="mb-3">
+    <input type="text" class="form-control" [(ngModel)]="filterText" (input)="filterTrains()" placeholder="Buscar trenes...">
+  </div>
+  <button class="btn btn-primary mb-3" (click)="openModal()">Agregar Tren</button>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Compañía</th>
+        <th>Servicios</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let train of filteredTrains">
+        <td>{{ train.company }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let service of train.services">
+              {{ service.serviceName }}
+            </li>
+          </ul>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-info me-2" (click)="openEditModal(train)">Editar</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteTrain(train._id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal para agregar tren -->
+<!-- <div class="modal" tabindex="-1" [ngClass]="{'show d-block': showAddModal, 'd-none': !showAddModal}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Agregar Tren</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="company" class="form-label">Compañía</label>
+            <input type="text" class="form-control" id="company" [(ngModel)]="newTrain.company" name="company" required>
+          </div>
+          <div class="mb-3">
+            <label for="serviceName" class="form-label">Nombre del Servicio</label>
+            <input type="text" class="form-control" id="serviceName" [(ngModel)]="newTrain.services[0].serviceName" name="serviceName" required>
+          </div>
+          <div class="mb-3">
+            <label for="adultPrice" class="form-label">Precio Adulto</label>
+            <input type="number" class="form-control" id="adultPrice" [(ngModel)]="newTrain.services[0].prices[0].adultPrice" name="adultPrice" required>
+          </div>
+          <div class="mb-3">
+            <label for="childPrice" class="form-label">Precio Niño</label>
+            <input type="number" class="form-control" id="childPrice" [(ngModel)]="newTrain.services[0].prices[0].childPrice" name="childPrice" required>
+          </div>
+          <div class="mb-3">
+            <label for="observations" class="form-label">Observaciones</label>
+            <textarea class="form-control" id="observations" [(ngModel)]="newTrain.services[0].observations" name="observations"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- Modal para editar tren -->
+<!-- <div class="modal" tabindex="-1" [ngClass]="{'show d-block': showEditModal, 'd-none': !showEditModal}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Tren</h5>
+        <button type="button" class="btn-close" (click)="closeEditModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="onEditSubmit()">
+          <div class="mb-3">
+            <label for="editCompany" class="form-label">Compañía</label>
+            <input type="text" class="form-control" id="editCompany" [(ngModel)]="selectedTrain.company" name="company" required>
+          </div>
+          <div class="mb-3">
+            <label for="editServiceName" class="form-label">Nombre del Servicio</label>
+            <input type="text" class="form-control" id="editServiceName" [(ngModel)]="selectedTrain.services[0].serviceName" name="serviceName" required>
+          </div>
+          <div class="mb-3">
+            <label for="editAdultPrice" class="form-label">Precio Adulto</label>
+            <input type="number" class="form-control" id="editAdultPrice" [(ngModel)]="selectedTrain.services[0].prices[0].adultPrice" name="adultPrice" required>
+          </div>
+          <div class="mb-3">
+            <label for="editChildPrice" class="form-label">Precio Niño</label>
+            <input type="number" class="form-control" id="editChildPrice" [(ngModel)]="selectedTrain.services[0].prices[0].childPrice" name="childPrice" required>
+          </div>
+          <div class="mb-3">
+            <label for="editObservations" class="form-label">Observaciones</label>
+            <textarea class="form-control" id="editObservations" [(ngModel)]="selectedTrain.services[0].observations" name="observations"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
