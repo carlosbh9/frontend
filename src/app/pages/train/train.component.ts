@@ -3,6 +3,7 @@ import { TrainService } from '../../Services/train.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -14,7 +15,7 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class TrainComponent {
 
-  constructor(private trainService: TrainService,private cdr: ChangeDetectorRef) {}
+  constructor(private trainService: TrainService,private cdr: ChangeDetectorRef,private router: Router) {}
   trains: any[] = [];
   filteredTrains: any[] = [];
   filterText: string = '';
@@ -62,7 +63,7 @@ export class TrainComponent {
   }
 
   filterTrains() {
-    this.filteredTrains = this.trains.filter(train =>
+     this.filteredTrains =  this.trains.filter(train =>
       train.name_train.toLowerCase().includes(this.filterText.toLowerCase()) || train.type_train.toLowerCase().includes(this.filterText.toLowerCase())
     );
   }
@@ -131,4 +132,18 @@ export class TrainComponent {
     );
   }
 
+
+
+  async deleteGuide(id: string) {
+    try {
+      await this.trainService.deleteTrain(id);
+      this.fetchTrains();
+    } catch (error) {
+      console.error('Error al eliminar el tren', error);
+    }
+  }
+
+  viewServices(operator: any) {
+    this.router.navigate([`/services`, operator._id]);
+  }
 }

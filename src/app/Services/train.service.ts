@@ -8,7 +8,7 @@ import { HttpClient,  } from '@angular/common/http';
   providedIn: 'root'
 })
 export class TrainService {
-  private baseUrl = `${environment.apiUrl}/train` // Reemplaza con la URL de tu API
+  private baseUrl = `${environment.apiUrl}/trains` // Reemplaza con la URL de tu API
 
   constructor(private http: HttpClient) { }
 
