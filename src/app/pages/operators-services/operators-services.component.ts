@@ -49,8 +49,13 @@ export class OperatorsServicesComponent implements OnInit{
         this.operatorId = id;
         this.fetchServices(id);
         this.getOperatorbyI(id);
+        console.log(this.operatorId)
+      }else {
+        console.log('No id')
       }
     });
+
+    console.log(this.operatorId)
   }
 
   async fetchServices(id: string) {

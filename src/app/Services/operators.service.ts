@@ -95,6 +95,7 @@ export class OperatorsService {
     }
   }
 
+  // Obtener un un operador por ID
   async getOperatorbyId(operatorId: string): Promise<any> {
     try {
       return firstValueFrom(this.http.get<any>(`${this.baseUrl}/${operatorId}`))

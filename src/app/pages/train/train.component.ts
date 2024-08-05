@@ -68,19 +68,14 @@ export class TrainComponent {
     );
   }
 
-  async deleteTrain(id: string) {
-    try {
-      await this.trainService.deleteTrain(id);
-      this.fetchTrains();
-    } catch (error) {
-      console.error('Error al eliminar el tren', error);
-    }
-  }
+
 
   openEditModal(train: any) {
     this.selectedTrain = { ...train };
     this.showEditModal = true;
     this.cdr.detectChanges();
+    console.log(this.selectedTrain);
+
   }
 
   closeEditModal() {
@@ -98,31 +93,36 @@ export class TrainComponent {
 
   emptyTrain(): void {
     this.newTrain = {
-      name_train: '',
-      type_train: 'Regular',
-      price_train: 0,
-      observations: ''
+      company: '',
+      services: [{
+        serviceName: '',
+        prices: [{
+          season: 'Regular',
+          adultPrice: 0,
+          childPrice: 0
+        }],
+        observations: ''
+      }]
     };
   }
 
-  onSubmit() {
-    this.trainService.addTrain(this.newTrain).then(
-      response => {
-        console.log('Tren añadido', response);
-        this.fetchTrains();
-        this.showAddModal = false;
-        this.emptyTrain();
-      },
-      error => {
-        console.error('Error al añadir el tren', error);
-      }
-    );
+  async onSubmit() {
+    try {
+      await this.trainService.addTrain(this.newTrain);
+      this.fetchTrains();
+      this.showAddModal = false;
+       console.log('Tren añadido',this.newTrain);
+      this.emptyTrain();
+    } catch (error) {
+      console.error('Error al añadir el tren', error);
+    }
   }
 
   onEditSubmit() {
     this.trainService.updateTrain(this.selectedTrain._id, this.selectedTrain).then(
       response => {
         console.log('Tren actualizado', response);
+        console.log('Tren actualizado', this.selectedTrain);
         this.fetchTrains();
         this.showEditModal = false;
       },
@@ -134,7 +134,7 @@ export class TrainComponent {
 
 
 
-  async deleteGuide(id: string) {
+  async deleteTrain(id: string) {
     try {
       await this.trainService.deleteTrain(id);
       this.fetchTrains();
@@ -142,6 +142,7 @@ export class TrainComponent {
       console.error('Error al eliminar el tren', error);
     }
   }
+
 
   viewServices(operator: any) {
     this.router.navigate([`/services`, operator._id]);

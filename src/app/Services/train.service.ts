@@ -66,5 +66,56 @@ export class TrainService {
     }
   }
 
- 
+  // Obtener los servicios de un tren
+  async getServicesByTrainId(trainId: string): Promise<any[]> {
+    try {
+      const response = await firstValueFrom(this.http.get<any[]>(`${this.baseUrl}/${trainId}/services`));
+      return response;
+    } catch (error) {
+      console.error('Error while trying to get services by Train', error);
+      throw error;
+    }
+  }
+
+  // Agregar un servicio a un tren
+  async addServiceToTrain(trainId: string, service: any): Promise<any> {
+    try {
+      const response = await firstValueFrom(this.http.post<any>(`${this.baseUrl}/${trainId}/services`, service));
+      return response;
+    } catch (error) {
+      console.error('Error while trying to add service to Train', error);
+      throw error;
+    }
+  }
+
+  // Actualizar un servicio de un tren
+  async updateService(trainId: string, service: any): Promise<any> {
+    try {
+      const response = await firstValueFrom(this.http.patch<any>(`${this.baseUrl}/${trainId}/services/${service.id}`, service));
+      return response;
+    } catch (error) {
+      console.error('Error while trying to update service', error);
+      throw error;
+    }
+  }
+
+  // Eliminar un servicio de un tren
+  async deleteService(trainId: string, serviceId: string): Promise<void> {
+    try {
+      await firstValueFrom(this.http.delete(`${this.baseUrl}/${trainId}/services/${serviceId}`));
+    } catch (error) {
+      console.error('Error while trying to delete service', error);
+      throw error;
+    }
+  }
+
+  // Obtener un un train por ID
+  async getTrainbyId(trainId: string): Promise<any> {
+    try {
+      return firstValueFrom(this.http.get<any>(`${this.baseUrl}/${trainId}`))
+    } catch (error) {
+      console.error('Error get Train by Id', error);
+      throw error;
+    }
+  }
 }

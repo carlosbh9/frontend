@@ -24,12 +24,19 @@ export const routes: Routes = [
             {   path: 'experiences', component: ExperiencesComponent},
             {   path: 'restaurant', component: RestaurantComponent},
             {   path:'guides', component:GuidesComponent},
-            {   path:'operators', component:OperatorsComponent},
-            {   path:'operators/:id/services',component: OperatorsServicesComponent},
-            {   path:'services/:id',component: OperatorsServicesComponent},
+            {   path:'operators', component : OperatorsComponent,
+                    children:[
+                    //   {   path:':id/services',component: OperatorsServicesComponent},
+                    
+                        {   path:'services/:id',component: OperatorsServicesComponent}  
+                ]
+            },
+           // {   path:'operators/:id/services',component: OperatorsServicesComponent},
+            //{   path:'services/:id',component: OperatorsServicesComponent},
             {   path:'train', component:TrainComponent},
             {   path:'transport', component:TransportComponent},
             {   path:'hotel', component: HotelComponent},
+
         ]
     }
 

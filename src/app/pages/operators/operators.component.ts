@@ -3,10 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { OperatorsService } from '../../Services/operators.service';
+
+import { RouterModule } from '@angular/router';
+
 @Component({
   selector: 'app-operators',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,RouterModule],
   templateUrl: './operators.component.html',
   styleUrl: './operators.component.css'
 })
@@ -120,6 +123,8 @@ export class OperatorsComponent implements OnInit {
   }
 
   viewServices(operator: any) {
-    this.router.navigate([`/services`, operator._id]);
+    this.router.navigate(['operators',`services`, operator._id]);
+    //this.router.navigate([`${operator._id}/services`,operator._id]);
+
   }
 }
