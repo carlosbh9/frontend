@@ -66,7 +66,7 @@ export class OperatorsService {
   }
 
   // Agregar un nuevo servicio a un operador
-  async addService(operatorId: string, service: any): Promise<any> {
+  async addServiceToOperator(operatorId: string, service: any): Promise<any> {
     try {
           return firstValueFrom(this.http.post<any>(`${this.baseUrl}/${operatorId}/services`, service));
     } catch (error) {
@@ -78,7 +78,7 @@ export class OperatorsService {
   // Actualizar un servicio existente de un operador
   async updateService(operatorId: string, serviceId: string, service: any): Promise<any> {
     try {
-          return firstValueFrom(this.http.patch<any>(`${this.baseUrl}/${operatorId}/services/${serviceId}`, service));
+          return await firstValueFrom(this.http.patch<any>(`${this.baseUrl}/${operatorId}/services/${serviceId}`, service));
     } catch (error) {
       console.error('Error while trying to update service by operator', error);
       throw error;

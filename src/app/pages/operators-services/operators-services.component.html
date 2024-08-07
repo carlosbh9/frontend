@@ -10,13 +10,13 @@
           type="text"
           [(ngModel)]="filterText"
           (input)="filterServices()"
-          placeholder="Filter guides..."
+          placeholder="Filter services..."
           class="p-2 border border-gray-300 rounded"
         />
       </div>
       <td>
         <!-- Botón para abrir el modal -->
-        <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Add Guide</button>
+        <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Add Service per Operator</button>
       </td>
     </div>
     <div class="block w-full overflow-x-auto">
@@ -25,7 +25,7 @@
           <tr>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Service Description </th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Price range</th>
-            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Comments</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Observations</th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Actions</th>
           </tr>
         </thead>
@@ -56,7 +56,7 @@
     <div class="modal-content py-4 text-left px-6">
       <!-- Title -->
       <div class="flex justify-between items-center pb-3">
-        <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Add Experience</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Add Service</p>
         <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
           <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
             <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
@@ -71,7 +71,7 @@
               <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service Description" [(ngModel)]="newService.descripcion" required>
             </div>
             <div class="mb-4">
-              <label for="observaciones" class="block text-md text-gray-600 dark:text-gray-50">Category</label>
+              <label for="observaciones" class="block text-md text-gray-600 dark:text-gray-50">Observations</label>
               <input type="text" id="observaciones" name="observaciones" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="observaciones" [(ngModel)]="newService.observaciones" required>
             </div>
             <div class="mb-4">
@@ -110,7 +110,7 @@
     <div class="modal-content py-4 text-left px-6">
       <!-- Title -->
       <div class="flex justify-between items-center pb-3">
-        <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Edit Experience</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Edit Service</p>
         <div class="modal-close cursor-pointer z-50" (click)="closeEditModal()">
           <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
             <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
@@ -125,7 +125,7 @@
             <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service Description" [(ngModel)]="selectService.descripcion" required>
           </div>
           <div class="mb-4">
-            <label for="observaciones" class="block text-md text-gray-600 dark:text-gray-50">Category</label>
+            <label for="observaciones" class="block text-md text-gray-600 dark:text-gray-50">Observations</label>
             <input type="text" id="observaciones" name="observaciones" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="observaciones" [(ngModel)]="selectService.observaciones" required>
           </div>
           <div class="mb-4">

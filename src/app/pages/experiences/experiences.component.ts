@@ -87,6 +87,7 @@ export class ExperiencesComponent implements OnInit {
 
   closeEditModal() {
     this.showEditModal = false;
+    this.fetchExperiences();
   }
 
   openModal() {

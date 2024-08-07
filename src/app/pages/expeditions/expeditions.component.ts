@@ -68,6 +68,7 @@ export class ExpeditionsComponent implements OnInit{
 
   closeEditModal() {
     this.showEditModal = false;
+    this.fetchExpeditions();
   }
 
   openModal() {

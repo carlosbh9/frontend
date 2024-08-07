@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TrainService } from '../../Services/train.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   templateUrl: './train.component.html',
   styleUrl: './train.component.css'
 })
-export class TrainComponent {
+export class TrainComponent implements OnInit {
 
   constructor(private trainService: TrainService,private cdr: ChangeDetectorRef,private router: Router) {}
   trains: any[] = [];
@@ -49,7 +49,7 @@ export class TrainComponent {
  };
 
 
- ngOnInit() {
+ ngOnInit(): void {
     this.fetchTrains();
   }
 
@@ -62,12 +62,12 @@ export class TrainComponent {
     }
   }
 
+
   filterTrains() {
-     this.filteredTrains =  this.trains.filter(train =>
-      train.name_train.toLowerCase().includes(this.filterText.toLowerCase()) || train.type_train.toLowerCase().includes(this.filterText.toLowerCase())
+    this.filteredTrains = this.trains.filter(train =>
+      train.company.toLowerCase().includes(this.filterText.toLowerCase())
     );
   }
-
 
 
   openEditModal(train: any) {
@@ -80,6 +80,7 @@ export class TrainComponent {
 
   closeEditModal() {
     this.showEditModal = false;
+    this.fetchTrains();
   }
 
   openModal() {
@@ -145,6 +146,6 @@ export class TrainComponent {
 
 
   viewServices(operator: any) {
-    this.router.navigate([`/services`, operator._id]);
+    this.router.navigate([`services-train`, operator._id]);
   }
 }

@@ -72,6 +72,7 @@ export class GuidesComponent {
 
   closeEditModal() {
     this.showEditModal = false;
+    this.fetchGuides();
   }
 
   openModal() {

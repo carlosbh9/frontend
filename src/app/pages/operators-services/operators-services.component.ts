@@ -75,7 +75,7 @@ export class OperatorsServicesComponent implements OnInit{
 
   async onSubmit() {
 
-    await this.operatorsService.addService(this.operatorId, this.newService).then(
+    await this.operatorsService.addServiceToOperator(this.operatorId, this.newService).then(
       response => {
         console.log('Service added', response);
         this.fetchServices(this.operatorId); // Actualizar la lista de servicios
@@ -120,14 +120,16 @@ export class OperatorsServicesComponent implements OnInit{
     }
   }
 
-  openEditModal(restaurant: any) {
-    this.selectService = { ...restaurant };
+  openEditModal(operator: any) {
+    this.selectService = { ...operator };
     this.showEditModal = true;
     console.log(this.selectService)
   }
 
   closeEditModal() {
     this.showEditModal = false;
+    this.fetchServices(this.operatorId); // Actualizar la lista de servicios
+
   }
 
   openModal() {
@@ -147,12 +149,12 @@ export class OperatorsServicesComponent implements OnInit{
     };
   }
 
-   // Función para agregar un nuevo campo de precio en el formulario de agregar experiencia
+   // Función para agregar un nuevo campo de precio en el formulario de agregar servicio
  addPriceField() {
   this.newService.prices.push({ range_min: 0, range_max: 0, type_vehicle: '' });
 }
 
-// Función para agregar un nuevo campo de precio en el formulario de editar experiencia
+// Función para agregar un nuevo campo de precio en el formulario de editar servicio
 addEditPriceField() {
   this.selectService.prices.push({ range_min: 0, range_max: 0, type_vehicle: '' });
 }

@@ -74,6 +74,7 @@ export class OperatorsComponent implements OnInit {
 
   closeEditModal() {
     this.showEditModal = false;
+    this.fetchOperators();
   }
 
   openModal() {
@@ -123,8 +124,6 @@ export class OperatorsComponent implements OnInit {
   }
 
   viewServices(operator: any) {
-    this.router.navigate(['operators',`services`, operator._id]);
-    //this.router.navigate([`${operator._id}/services`,operator._id]);
-
+    this.router.navigate([`services-operators`, operator._id]);
   }
 }

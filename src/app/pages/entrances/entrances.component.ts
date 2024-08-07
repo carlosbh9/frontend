@@ -80,6 +80,7 @@ export class EntrancesComponent implements OnInit{
 
   closeEditModal() {
     this.showEditModal = false;
+    this.fetchEntrances();
   }
 
 
