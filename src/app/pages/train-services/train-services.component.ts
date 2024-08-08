@@ -67,7 +67,7 @@ async onSubmit() {
   try {
     const response = await this.trainService.addServiceToTrain(this.trainId, this.newService);
     console.log('Servicio añadido', response);
-    await this.fetchTrainServices(this.trainId); // Actualizar la lista de servicios
+    this.fetchTrainServices(this.trainId); // Actualizar la lista de servicios
     this.showAddModal = false;
     
   } catch (error) {
@@ -80,7 +80,7 @@ async onEditSubmit() {
   try {
     await this.trainService.updateService(this.trainId, this.selectService._id, this.selectService);
     console.log('Servicio actualizado');
-    await this.fetchTrainServices(this.trainId);
+    this.fetchTrainServices(this.trainId);
     this.showEditModal = false;
   } catch (error) {
     console.error('Error al actualizar servicio', error);
@@ -91,7 +91,7 @@ async deleteService(serviceId: string) {
   try {
     await this.trainService.deleteService(this.trainId, serviceId);
     console.log('Servicio eliminado');
-    await this.fetchTrainServices(this.trainId);
+    this.fetchTrainServices(this.trainId);
   } catch (error) {
     console.error('Error al eliminar servicio', error);
   }
@@ -128,17 +128,17 @@ closeModal() {
 emptyService(): void {
   this.newService = {
     serviceName: '',
-    price: [],
+    prices: [],
     observations: ''
   };
 }
 
 addPriceField() {
-  this.newService.prices.push({season:'Regular',adultPrice:0,childPrice:0});
+  this.newService.prices.push({season:'Regular', adultPrice:0, childPrice:0});
 }
 
-addChildPriceField() {
-  this.newService.prices.push({season:'Regular',adultPrice:0,childPrice:0});
+addEditPriceField() {
+  this.selectService.prices.push({season:'Regular',adultPrice: 0, childPrice:0});
 }
 
 removePriceField(index: number) {
@@ -149,7 +149,7 @@ removePriceField(index: number) {
   }
 }
 
-removeChildPriceField(index: number) {
+removeEditPriceField(index: number) {
   if (this.selectService.prices.length >= 1) {
     this.selectService.prices.splice(index, 1);
   }else{

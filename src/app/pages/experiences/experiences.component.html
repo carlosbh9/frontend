@@ -38,9 +38,9 @@
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">{{ experience.name }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ experience.category }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-              <div *ngFor="let price of experience.prices">
-                Group Size: {{ price.groupSize }} - Price Per Person: {{ price.pricePerPerson }} $
-              </div>
+              @for (price of experience.prices; track $index) {
+                <span class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-medium text-left block">Group Size: {{ price.groupSize }} - Price Per Person: {{ price.pricePerPerson }} $</span>
+              }
             </td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ experience.guide_price }} $</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ experience.approximateDuration }}</td>

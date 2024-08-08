@@ -36,11 +36,9 @@
               
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 @for (vehicle of transport.type_vehicle; track vehicle) {
-                   
                         <span class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-medium text-left block">
                           {{ vehicle.name_type_vehicle }}: {{ vehicle.price }}
                         </span>
-               
               }
               </td>
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
@@ -51,6 +49,110 @@
             }
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Add Modal -->
+<div *ngIf="showAddModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
+  <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+    <div class="modal-content py-4 text-left px-6">
+      <!-- Title -->
+      <div class="flex justify-between items-center pb-3">
+        <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Add Transport</p>
+        <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
+          <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+          </svg>
+        </div>
+      </div>
+      <!-- Body -->
+      <div class="my-5 mr-5 ml-5 flex justify-center">
+        <form (submit)="onSubmit()" id="add_transport_form" class="w-full">
+            <div class="mb-4">
+              <label for="name_service" class="block text-md text-gray-600 dark:text-gray-50">Service Description</label>
+              <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service Description" [(ngModel)]="newTransport.nombre" required>
+            </div>
+            <div class="mb-4">
+              <label for="observaciones" class="block text-md text-gray-600 dark:text-gray-50">Type Service</label>
+              <select [(ngModel)]="newTransport.type_service" name="type_service" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Type Service" required>
+                <option value="Full Day">Full Day</option>
+                <option value="Half Day">Half Day</option>
+                <option value="Regular">Regular</option>
+            </select>
+            </div>
+            <div class="mb-4">
+              <label for="type_vehicle" class="block text-md text-gray-600 dark:text-gray-50 ">Type vehicle</label>
+              @for (vehicle of newTransport.type_vehicle; track $index) {
+                <div class="grid grid-cols-3 gap-3 py-2">
+                  <input type="text" [(ngModel)]="vehicle.name_type_vehicle" placeholder="Name Type Vehicle" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-7000 rounded-md" name="name_type_vehicle-{{$index}}" required>
+                  <input type="number" [(ngModel)]="vehicle.price" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="range_max-{{$index}}" required>
+                  <button type="button" (click)="removePriceField($index)" class="wp-full bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800ed-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
+
+                </div>
+
+              }
+                 <button type="button" (click)="addPriceField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Price</button>
+          </div>
+        </form>
+      </div>
+      <!-- Footer -->
+      <div class="flex justify-end pt-2 space-x-14">
+        <button class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" (click)="closeModal()">Cancel</button>
+        <button type="submit" form="add_transport_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Edit Modal -->
+  <div *ngIf="showEditModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
+    <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+      <div class="modal-content py-4 text-left px-6">
+        <!-- Title -->
+        <div class="flex justify-between items-center pb-3">
+          <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Edit Transport</p>
+          <div class="modal-close cursor-pointer z-50" (click)="closeEditModal()">
+            <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+              <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+            </svg>
+          </div>
+        </div>
+        <!-- Body -->
+        <div class="my-5 mr-5 ml-5 flex justify-center">
+          <form (submit)="onEditSubmit()" id="edit_transport_form" class="w-full">
+              <div class="mb-4">
+                <label for="name_service" class="block text-md text-gray-600 dark:text-gray-50">Service Description</label>
+                <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service Description" [(ngModel)]="selectedTransport.nombre" required>
+              </div>
+              <div class="mb-4">
+                <label for="observaciones" class="block text-md text-gray-600 dark:text-gray-50">Type Service</label>
+                <select [(ngModel)]="selectedTransport.type_service" name="type_service" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Type Service" required>
+                  <option value="Full Day">Full Day</option>
+                  <option value="Half Day">Half Day</option>
+                  <option value="Regular">Regular</option>
+              </select>
+              </div>
+              <div class="mb-4">
+                <label for="type_vehicle" class="block text-md text-gray-600 dark:text-gray-50 ">Type vehicle</label>
+                @for (vehicle of selectedTransport.type_vehicle; track $index) {
+                  <div class="grid grid-cols-3 gap-3 py-2">
+                    <input type="text" [(ngModel)]="vehicle.name_type_vehicle" placeholder="Name Type Vehicle" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-7000 rounded-md" name="name_type_vehicle-{{$index}}" required>
+                    <input type="number" [(ngModel)]="vehicle.price" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="range_max-{{$index}}" required>
+                    <button type="button" (click)="removeEditPriceField($index)" class="wp-full bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800ed-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
+                  </div>
+                }
+                   <button type="button" (click)="addEditPriceField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Price</button>
+            </div>
+          </form>
+        </div>
+        <!-- Footer -->
+        <div class="flex justify-end pt-2 space-x-14">
+          <button class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" (click)="closeEditModal()">Cancel</button>
+          <button type="submit" form="edit_transport_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
+        </div>
       </div>
     </div>
   </div>

@@ -88,7 +88,7 @@ export class OperatorsService {
   // Eliminar un servicio de un operador
   async deleteService(operatorId: string, serviceId: string): Promise<any> {
     try {
-          return firstValueFrom(this.http.delete<any>(`${this.baseUrl}/${operatorId}/services/${serviceId}`));
+          return await firstValueFrom(this.http.delete<any>(`${this.baseUrl}/${operatorId}/services/${serviceId}`));
     } catch (error) {
       console.error('Error while trying to delete service by operator', error);
       throw error;

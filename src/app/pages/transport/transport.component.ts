@@ -48,7 +48,7 @@ async fetchTransports() {
 }
 
 filterTransports() {
-  this.filteredTransports = this.transports.filter(transport => transport.name_service.toLowerCase().includes(this.filterText.toLowerCase()));
+  this.filteredTransports = this.transports.filter(transport => transport.nombre.toLowerCase().includes(this.filterText.toLowerCase()));
 }
 
 //delete transport
@@ -110,6 +110,30 @@ onEditSubmit(){
   });
 }
 
+addPriceField() {
+  this.newTransport.type_vehicle.push({name_type_vehicle: '', price:0});
+}
 
+addEditPriceField() {
+  this.selectedTransport.type_vehicle.push({name_type_vehicle: '', price:0});
+}
+
+removeEditPriceField(index: number) {
+  if (this.selectedTransport.type_vehicle.length >= 1) { // Prevent removing the only price field
+    this.selectedTransport.type_vehicle.splice(index, 1);
+  } else {
+    // Handle the case of removing the only price field (optional: clear values or display a message)
+    console.warn('Cannot remove the only price field.');
+  }
+}
+
+removePriceField(index: number) {
+  if (this.newTransport.type_vehicle.length >= 1) { // Prevent removing the only price field
+    this.newTransport.type_vehicle.splice(index, 1);
+  } else {
+    // Handle the case of removing the only price field (optional: clear values or display a message)
+    console.warn('Cannot remove the only price field.');
+  }
+}
 
 }

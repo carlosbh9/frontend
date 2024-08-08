@@ -30,20 +30,23 @@
             </tr>
           </thead>
           <tbody >
-  
-            <tr *ngFor="let service of filteredServices" class="text-gray-700 dark:text-gray-100">
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">{{ service.serviceName }}</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <div *ngFor="let price of service.prices">
-                {{ price.season }}: Adulto: {{ price.adultPrice }} - Niño: {{ price.childPrice }}
-              </div>
-            </td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ service.observations }}</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <button class="px-4 bg-blue-500 dark:bg-blue-700 p-2 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800 mr-2" (click)="openEditModal(service)">Edit</button>
-                <button class="px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800" (click)="deleteService(service._id)">Delete</button>
-              </td>
-            </tr>
+            @for (service of filteredServices; track $index) {
+              <tr class="text-gray-700 dark:text-gray-1000">
+                  <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">{{ service.serviceName }}</td>
+                  <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    @for (price of service.prices; track $index) {
+                      <span class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-medium text-left block">
+                      {{price.season }}:Adulto {{ price.adultPrice }}  - Niño: {{ price.childPrice }}
+                      </span>
+                    }
+                </td>
+                  <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ service.observations }}</td>
+                  <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    <button class="px-4 bg-blue-500 dark:bg-blue-700 p-2 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800 mr-2" (click)="openEditModal(service)">Edit</button>
+                    <button class="px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800" (click)="deleteService(service._id)">Delete</button>
+                  </td>
+                </tr>
+            }
           </tbody>
         </table>
       </div>
@@ -135,9 +138,9 @@
                   <option value="High">High</option>
                   <option value="Low">Low</option>
               </select>
-                <button type="button" (click)="removePriceField(i)" class="wp-full bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800ed-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
+                <button type="button" (click)="removeEditPriceField(i)" class="wp-full bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800ed-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
               </div>
-              <button type="button" (click)="addPriceField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Price</button>
+              <button type="button" (click)="addEditPriceField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Price</button>
           </div>
         </form>
       </div>

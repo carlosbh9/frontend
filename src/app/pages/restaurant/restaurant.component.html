@@ -42,22 +42,28 @@
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.name }}</td>
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.price_pp }}</td>
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">
-                <div>
-                  <span *ngIf="restaurant.child_rate[0].price_pp">Price per person: {{ restaurant.child_rate[0].price_pp }} $</span>,
-                  <span *ngIf="restaurant.child_rate[0].upTo">Up to age: {{ restaurant.child_rate[0].upTo }}</span>
-                </div>
+               
+                <table class="text-xxs border border-gray-200 dark:border-gray-500 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 uppercase font-medium">
+                  <tr class="border border-gray-200 dark:border-gray-500">
+                    <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">Price pp/up To</td>
+                  </tr>
+                  <tr class="border border-gray-200 dark:border-gray-500">
+                    <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">${{restaurant.child_rate[0].price_pp}} - {{restaurant.child_rate[0].upTo}} años</td>
+                  </tr>
+                </table>
+
               </td>
-              <!-- <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.child_rate[0].price_pp }} (up to {{ restaurant.child_rate[0].upTo}} years old)</td> -->
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ restaurant.price_guide_pp }}</td>
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4 whitespace-nowrap">
-                <ul>
-                  <li *ngFor="let date of restaurant.special_dates">{{ date.date | date }} -> {{ date.price_add }}</li>
-                </ul>
+                <span *ngFor="let date of restaurant.special_dates" class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-medium text-left block">
+                  {{ date.date | date }} -> {{ date.price_add }}
+                </span>
               </td>
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 whitespace-nowrap ">
-                <ul>
-                  <li *ngFor="let date of restaurant.closing_date">{{ date.date | date }} -> {{ date.price_add }}</li>
-                </ul>
+                <span *ngFor="let date of restaurant.closing_date" class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-medium text-left block">
+                  {{ date.date | date }} -> {{ date.price_add }}
+                </span>
+                
               </td>
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.schedules }}</td>
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.location }}</td>

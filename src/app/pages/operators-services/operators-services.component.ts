@@ -74,17 +74,14 @@ export class OperatorsServicesComponent implements OnInit{
   }
 
   async onSubmit() {
-
-    await this.operatorsService.addServiceToOperator(this.operatorId, this.newService).then(
-      response => {
-        console.log('Service added', response);
-        this.fetchServices(this.operatorId); // Actualizar la lista de servicios
-        this.showAddModal= false;
-      },
-      error => {
-        console.error('Error adding service', error);
-      }
-    );
+    try {
+      const response = await this.operatorsService.addServiceToOperator(this.operatorId, this.newService);
+      console.log('Service added', response);
+      this.fetchServices(this.operatorId);
+      this.showAddModal = false;
+    } catch (error) {
+      console.error('Error adding service', error);
+    }
   }
 
   async onEditSubmit() {
@@ -94,9 +91,9 @@ export class OperatorsServicesComponent implements OnInit{
         console.log('Service update');
         this.fetchServices(this.operatorId); // Actualizar la lista de servicios
         this.showEditModal= false;
-        console.log(this.selectService)
+        console.log(this.selectService);
     } catch (error) {
-      console.error('Error updating service 222', error);
+      console.error('Error updating service ', error);
 
     }
   }
@@ -171,7 +168,7 @@ removePriceField(index: number) {
 
 removeeditPriceField(index: number) {
 
-  if (this.selectService.prices.length > 1) { // Prevent removing the only price field
+  if (this.selectService.prices.length >= 1) { // Prevent removing the only price field
     this.selectService.prices.splice(index, 1);
   } else {
     // Handle the case of removing the only price field (optional: clear values or display a message)

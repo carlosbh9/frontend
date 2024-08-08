@@ -35,8 +35,8 @@
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ entrance.price_pp }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
               <div>
-                <span *ngIf="entrance.childRate.pp">Price per person: {{ entrance.childRate.pp }}</span>,
-                <span *ngIf="entrance.childRate.upTo">Up to age: {{ entrance.childRate.upTo }}</span>
+                <span class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-medium text-left block" *ngIf="entrance.childRate.pp">Price per person: {{ entrance.childRate.pp }}</span>,
+                <span class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-medium text-left block" *ngIf="entrance.childRate.upTo">Up to age: {{ entrance.childRate.upTo }}</span>
               </div>
             </td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 max-h-24 overflow-y-auto block">{{ entrance.take_note }}</td>

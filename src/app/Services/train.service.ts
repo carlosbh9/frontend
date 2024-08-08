@@ -95,7 +95,7 @@ export class TrainService {
   // Actualizar un servicio de un tren
   async updateService(trainId: string,serviceId: string, service: any): Promise<any> {
     try {
-      return await firstValueFrom(this.http.patch<any>(`${this.baseUrl}/${trainId}/services/${service.id}`, service));
+      return await firstValueFrom(this.http.patch<any>(`${this.baseUrl}/${trainId}/services/${serviceId}`, service));
     } catch (error) {
       console.error('Error while trying to update service by Train', error);
       throw error;
