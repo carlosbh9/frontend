@@ -136,7 +136,7 @@ removePriceField(index: number) {
 
 }
 
-removeeditPriceField(index: number) {
+removeEditPriceField(index: number) {
 
   if (this.selectedExperience.prices.length >= 1) { // Prevent removing the only price field
     this.selectedExperience.prices.splice(index, 1);

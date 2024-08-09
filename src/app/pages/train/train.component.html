@@ -26,6 +26,7 @@
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">company</th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Services</th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">observations</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -37,8 +38,8 @@
             </td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ train.observations }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-              <button class="px-4 bg-blue-500 dark:bg-blue-700 p-2 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800 mr-2" (click)="openEditModal(train)">Edit</button>
-              <button class="px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800" (click)="deleteTrain(train._id)">Delete</button>
+              <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="openEditModal(train)"></i>
+              <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteTrain(train._id)"></i>
             </td>
           </tr>}
         </tbody>
@@ -94,7 +95,7 @@
         <!-- Title -->
         <div class="flex justify-between items-center pb-3">
           <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Edit Train</p>
-          <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
+          <div class="modal-close cursor-pointer z-50" (click)="closeEditModal()">
             <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
               <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
             </svg>

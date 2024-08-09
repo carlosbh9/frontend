@@ -37,10 +37,9 @@
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <button class="px-4 bg-blue-500 dark:bg-blue-700 p-2 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="viewServices(operator)" >View Services</button>
               </td>
-              <!-- (click)="viewServices(operator)" -->
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <button class="px-4 bg-blue-500 dark:bg-blue-700 p-2 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800 mr-2" (click)="openEditModal(operator)">Edit</button>
-                <button class="px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800" (click)="deleteOperator(operator._id)">Delete</button>
+                <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="openEditModal(operator)"></i>
+                <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteOperator(operator._id)"></i>
               </td>
             </tr>
           </tbody>

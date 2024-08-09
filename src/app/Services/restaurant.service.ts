@@ -24,16 +24,6 @@ export class RestaurantService {
     }
   }
 
-  // getAllRestaurants(): Observable<Restaurant[]> {
-  //   return this.http.get<Restaurant[]>(this.baseUrl).pipe(
-  //     catchError(this.handleError)
-  //   );
-  // }
-
-  // private handleError(error: HttpErrorResponse): Observable<never> {
-  //   console.error('Error fetching restaurants:', error);
-  //   return throwError('Error fetching restaurants. Please try again later.');
-  // }
 
   // Agregar un nuevo restaurante
   async addRestaurant(restaurant: any): Promise<any> {

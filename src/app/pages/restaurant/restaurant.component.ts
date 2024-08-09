@@ -99,15 +99,7 @@ export class RestaurantComponent implements OnInit{
 
   }
 
-  // removeEditSpecialdateField(index: number) {
-  //   if (this.selectedRestaurant.special_dates.length > 1) { // Prevent removing the only special date
-  //     this.selectedRestaurant.special_dates.splice(index, 1);
-  //   } else {
-  //     // Handle the case of removing the only price field (optional: clear values or display a message)
-  //     console.warn('Cannot remove the only price field.');
-  //   }
-
-  // }
+ 
   removeEditSpecialdateField(index: number) {
     if (this.selectedRestaurant.special_dates.length >= 1) { // Prevent removing the only special date
       this.selectedRestaurant.special_dates.splice(index, 1);

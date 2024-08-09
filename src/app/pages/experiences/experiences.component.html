@@ -48,8 +48,8 @@
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">{{ experience.politica_canc }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ experience.contac_phone }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-              <button class="px-4 bg-blue-500 dark:bg-blue-700 p-2 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800 mr-2" (click)="openEditModal(experience)">Edit</button>
-              <button class="px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800" (click)="deleteExperience(experience._id)">Delete</button>
+              <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="openEditModal(experience)"></i>
+              <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteExperience(experience._id)"></i>
             </td>
           </tr>
         </tbody>
@@ -93,10 +93,10 @@
             </div>
             <div class="mb-4">
               <label for="prices" class="block text-md text-gray-600 dark:text-gray-50">Prices</label>
-              <div *ngFor="let price of newExperience.prices; let i = index" class="grid grid-cols-3 gap-3">
+              <div *ngFor="let price of newExperience.prices; let i = index" class="flex gap-3 items-center py-1">
                 <input type="number" [(ngModel)]="price.groupSize" placeholder="Group Size" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="groupSize-{{i}}" required>
                 <input type="number" [(ngModel)]="price.pricePerPerson" placeholder="Price per Person" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="pricePerPerson-{{i}}" required>
-                <button type="button" (click)="removePriceField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
+                <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removePriceField(i)"></i>
               </div>
               <button type="button" (click)="addPriceField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Price</button>
           </div>
@@ -165,10 +165,10 @@
             </div>
             <div class="mb-4">
               <label for="prices" class="block text-md text-gray-600 dark:text-gray-50">Prices</label>
-              <div *ngFor="let price of selectedExperience.prices; let i = index" class="grid grid-cols-3 gap-3">
+              <div *ngFor="let price of selectedExperience.prices; let i = index" class="flex gap-3 items-center py-1">
                 <input type="number" [(ngModel)]="price.groupSize" placeholder="Group Size" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="groupSize-{{i}}" required>
                 <input type="number" [(ngModel)]="price.pricePerPerson" placeholder="Price per Person" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="pricePerPerson-{{i}}" required>
-                <button type="button" (click)="removeeditPriceField(i)" class="mt-2 px-4 bg-red-500 dark:bg-red-700 p-2 rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Remove</button>
+                <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removeEditPriceField(i)"></i>
               </div>
               <button type="button" (click)="addEditPriceField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Price</button>
             </div>
