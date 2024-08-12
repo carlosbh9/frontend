@@ -60,7 +60,7 @@ export class OperatorsService {
     try {
           return firstValueFrom(this.http.get<any[]>(`${this.baseUrl}/${operatorId}/services`));
     } catch (error) {
-      console.error('Error while trying to delete service', error);
+      console.error('Error fetching services by operator', error);
       throw error;
     }
   }

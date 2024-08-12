@@ -158,24 +158,24 @@
                 </div>
                 <div class="mb-4">
                     <label for="special_dates" class="block text-md text-gray-600 dark:text-gray-50">Special date</label>
-                    @for (date of selectedHotel.special_dates; track $index) {
-                        <div  class="flex gap-3 items-center py-1">
-                            <input type="date" [(ngModel)]="date.date" placeholder="Date" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="date-{{$index}}" required>
-                            <input type="number" [(ngModel)]="date.price" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price{{$index}}" required>
-                            <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removeEditSpecialdateField($index)"></i>
+                  <!-- @for (date of selectedHotel.special_dates; track $index) {-->  
+                        <div *ngFor="let date of selectedHotel.special_dates; let i = index" class="flex gap-3 items-center py-1">
+                            <input type="date" [(ngModel)]="date.date" placeholder="Date" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="date-{{i}}" required>
+                            <input type="number" [(ngModel)]="date.price" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="price-{{i}}" required>
+                            <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removeEditSpecialdateField(i)"></i>
                             </div>
                             <button type="button" (click)="addEditSpecialDateField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Special date</button>
-                    }
+                    
                 </div>
                 <div class="mb-4">
                     <label class="block text-md text-gray-600 dark:text-gray-50">Información General</label>
-                    @for (info of selectedHotel.informacion_general; track $index) {
-                      <div class="flex gap-3 items-center py-1">
-                        <input type="text" [(ngModel)]="info.key" placeholder="Clave" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="info-key-{{$index}}" required>
-                        <input type="text" [(ngModel)]="info.value" placeholder="Valor" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="info-value-{{$index}}" required>
-                        <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removeEditInfoField($index)"></i>
+                <!--@for (info of selectedHotel.informacion_general; track $index) {-->
+                      <div *ngFor="let info of selectedHotel.informacion_general; let i = index" class="flex gap-3 items-center py-1">
+                        <input type="text" [(ngModel)]="info.key" placeholder="Clave" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="info-key-{{i}}" required>
+                        <input type="text" [(ngModel)]="info.value" placeholder="Valor" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="info-value-{{i}}" required>
+                        <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removeEditInfoField(i)"></i>
                       </div>
-                    }
+                    
                     <button type="button" (click)="addEditInfoField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Agregar información</button>
                   </div>
                 </div>

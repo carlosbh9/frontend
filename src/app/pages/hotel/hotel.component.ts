@@ -50,10 +50,7 @@ export class HotelComponent implements OnInit {
         price: 0
       }]
     }],
-    special_dates: [{
-      date: '',
-      price: 0
-    }],
+    special_dates: [],
     informacion_general: []
   };
   
@@ -85,9 +82,11 @@ export class HotelComponent implements OnInit {
     this.fetchHotels();
   }
   openEditModal(hotel: any) {
-    this.selectedHotel = this.hotelService.getHotelById(hotel._id);
-   // this.selectedHotel = {...hotel};
-   console.log(this.selectedHotel);
+    this.selectedHotel = {...hotel};
+    this.selectedHotel.informacion_general = hotel.informacion_general instanceof Map
+      ? Array.from(hotel.informacion_general as Map<string, any>).map(([key, value]) => ({ key, value }))
+      : Object.entries(hotel.informacion_general || {}).map(([key, value]) => ({ key, value }));
+
     this.showEditModal = true;
   }
 
@@ -148,10 +147,17 @@ export class HotelComponent implements OnInit {
     }
   }
 
+  
   onEditSubmit() {
-    this.hotelService.updateHotel(this.selectedHotel._id, this.selectedHotel).then(
+  // Convertir informacion_general de vuelta a un Map antes de enviar
+  const hotelToUpdate = {...this.selectedHotel};
+  hotelToUpdate.informacion_general = new Map(
+    this.selectedHotel.informacion_general.map(
+      (item: { key: string; value: any }) => [item.key, item.value] as [string, any]
+    )
+  );
+    this.hotelService.updateHotel(hotelToUpdate._id, hotelToUpdate).then(
       response => {
-        this.closeEditModal();
         console.log('Hotel updated successfully',response);
         this.fetchHotels();
         this.closeEditModal();
@@ -182,7 +188,6 @@ export class HotelComponent implements OnInit {
     if (this.newHotel.special_dates.length >= 1) { // Prevent removing the only special date
       this.newHotel.special_dates.splice(index, 1);
     } else {
-      // Handle the case of removing the only price field (optional: clear values or display a message)
       console.warn('Cannot remove the only price field.');
     }
 
@@ -204,21 +209,20 @@ export class HotelComponent implements OnInit {
   }
 
   removeInfoField(index: number) {
-    if (this.newHotel.informacion_general.length >= 1) { // Prevent removing the only special date
+    if (this.newHotel.informacion_general.length >= 1) { 
       this.newHotel.informacion_general.splice(index, 1);
     } else {
-      // Handle the case of removing the only price field (optional: clear values or display a message)
       console.warn('Cannot remove the only price field.');
     }
   }
 
   addEditInfoField() {
-    this.newHotel.informacion_general.push({ key: '', value: '' });
+    this.selectedHotel.informacion_general.push({ key: '', value: '' });
   }
 
   removeEditInfoField(index: number) {
-    if (this.newHotel.informacion_general.length >= 1) { // Prevent removing the only special date
-      this.newHotel.informacion_general.splice(index, 1);
+    if (this.selectedHotel.informacion_general.length >= 1) { // Prevent removing the only special date
+      this.selectedHotel.informacion_general.splice(index, 1);
     } else {
       // Handle the case of removing the only price field (optional: clear values or display a message)
       console.warn('Cannot remove the only price field.');
