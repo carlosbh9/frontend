@@ -29,7 +29,11 @@ selectedHotel: any = {
 
 newService: any = {
   name_service: '',
-  tipo_habitaciones: []
+  tipo_habitaciones: [{
+    tipo_servicio: '',
+    prices: []
+  }]
+  
 }
 
 selectedService: any = {
@@ -54,6 +58,7 @@ async fetchServices(id: string){
   try{
     this.services = await this.hotelService.getServicesByHotelId(id);
    this.filteredServices = this.services;
+   console.log('services:',this.filteredServices);
   }catch(error){
     console.error('Error fetching services:', error);
   }
@@ -124,8 +129,31 @@ closeAddModal(){
 emptyService(){
   this.newService = {
     name_service: '',
-    tipo_habitaciones: []
+    tipo_habitaciones: [{
+      tipo_servicio: '',
+      prices: []
+    }]
   }
 }
 
+addConfiPriceField(){
+  if (!this.newService.tipo_habitaciones[0]) {
+    this.newService.tipo_habitaciones[0] = {
+      tipo_servicio: '',
+      prices: []
+    };
+  }
+  this.newService.tipo_habitaciones[0].prices.push({type:'',confidential:0,rack:0});
+}
+
+addRackPriceField(){
+  if (!this.newService.tipo_habitaciones[0]) {
+    this.newService.tipo_habitaciones[0] = {
+      tipo_servicio: '',
+      prices: []
+    };
+  }
+  this.newService.tipo_habitaciones[0].prices.push({type:'',confidential:0,rack:0});
+}
+removePriceField(index: number){}
 }
