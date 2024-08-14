@@ -31,7 +31,10 @@ newService: any = {
   name_service: '',
   tipo_habitaciones: [{
     tipo_servicio: '',
-    prices: []
+    prices: [{
+      confidential:0,
+      rack:0
+    }]
   }]
   
 }
