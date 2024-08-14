@@ -136,24 +136,5 @@ emptyService(){
   }
 }
 
-addConfiPriceField(){
-  if (!this.newService.tipo_habitaciones[0]) {
-    this.newService.tipo_habitaciones[0] = {
-      tipo_servicio: '',
-      prices: []
-    };
-  }
-  this.newService.tipo_habitaciones[0].prices.push({type:'',confidential:0,rack:0});
-}
 
-addRackPriceField(){
-  if (!this.newService.tipo_habitaciones[0]) {
-    this.newService.tipo_habitaciones[0] = {
-      tipo_servicio: '',
-      prices: []
-    };
-  }
-  this.newService.tipo_habitaciones[0].prices.push({type:'',confidential:0,rack:0});
-}
-removePriceField(index: number){}
 }

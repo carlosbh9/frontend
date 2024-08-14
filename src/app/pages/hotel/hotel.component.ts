@@ -147,26 +147,50 @@ export class HotelComponent implements OnInit {
     }
   }
 
+
+  onEditSubmit2() {
+    // Crear una copia profunda del hotel seleccionado
+    const hotelToUpdate = JSON.parse(JSON.stringify(this.selectedHotel));
   
-  onEditSubmit() {
-  // Convertir informacion_general de vuelta a un Map antes de enviar
-  const hotelToUpdate = {...this.selectedHotel};
-  hotelToUpdate.informacion_general = new Map(
-    this.selectedHotel.informacion_general.map(
-      (item: { key: string; value: any }) => [item.key, item.value] as [string, any]
-    )
-  );
+    // Convertir informacion_general a un objeto plano
+    hotelToUpdate.informacion_general = this.selectedHotel.informacion_general.reduce((acc: {[key: string]: string}, item: {key: string, value: string}) => {
+      if (item.key && item.value) {
+        acc[item.key] = item.value;
+      }
+      return acc;
+    }, {});
     this.hotelService.updateHotel(hotelToUpdate._id, hotelToUpdate).then(
       response => {
-        console.log('Hotel updated successfully',response);
+        console.log('Hotel actualizado con éxito', response);
         this.fetchHotels();
         this.closeEditModal();
       }
     ).catch(error => {
-      console.error('Error updating hotel:', error);
+      console.error('Error al actualizar el hotel:', error);
     });
   }
+  async onEditSubmit() {
+    try {
+      // Crear una copia profunda del hotel seleccionado
+      const hotelToUpdate = { ...this.selectedHotel };
+  
+    // Convertir informacion_general a un objeto plano
+    hotelToUpdate.informacion_general = Object.fromEntries(
+      this.selectedHotel.informacion_general
+        .filter((item: {key: string, value: string}) => item.key && item.value)
+        .map((item: {key: string, value: string}) => [item.key, item.value])
+    );
 
+      // Actualizar el hotel
+      const response = await this.hotelService.updateHotel(hotelToUpdate._id, hotelToUpdate);
+      
+      console.log('Hotel actualizado con éxito', response);
+      this.fetchHotels();
+      this.closeEditModal();
+    } catch (error) {
+      console.error('Error al actualizar el hotel:', error);
+    }
+  }
   async deleteHotel(id: string) {
     try {
       await this.hotelService.deleteHotel(id);

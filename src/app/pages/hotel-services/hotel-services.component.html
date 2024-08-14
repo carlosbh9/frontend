@@ -124,22 +124,77 @@
               </div>
               <div class="mb-4">
                 <label for="prices" class="block text-md text-gray-600 dark:text-gray-50 ">Prices confidential</label>
-                @for (habitacion of newService.tipo_habitaciones; track $index) {
-                  @for (prices of habitacion.prices; track $index) {
-                    <div class="grid grid-cols-3 gap-3 py-2 items-center">
-                    <input type="number" [(ngModel)]="prices.confidential" placeholder="Range min" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="confidential-{{$index}}" required>
-                    <input type="number" [(ngModel)]="prices.rack" placeholder="Range min" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="rack-{{$index}}" required>
-                    <select [(ngModel)]="prices.type" name="type-{{$index}}" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Type Guide" required>
-                      <option value="SWB">SWB</option>
-                      <option value="DWB">DWB</option>
-                      <option value="TRP">TRP</option>
-                  </select>
-                  <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removePriceField($index)"></i>
+                <div class="grid grid-cols-3 gap-3 py-2 items-center">
+                  <div class="relative z-0 w-full mb-5">
+                    <input
+                      type="number"
+                      name="money"
+                      [(ngModel)]="newService.tipo_habitaciones.prices.confidential"
+                      placeholder=" "
+                      class="pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
+                    />
+                    <div class="absolute top-0 left-0 mt-3 ml-1 text-gray-400">$</div>
+                    <label for="money" class="absolute duration-300 top-3 left-5 -z-1 origin-0 text-gray-500">SWB</label>
+                  </div><div class="relative z-0 w-full mb-5">
+                    <input
+                      type="number"
+                      name="money"
+                      [(ngModel)]="newService.tipo_habitaciones.prices.confidential"
+                      placeholder=" "
+                      class="pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
+                    />
+                    <div class="absolute top-0 left-0 mt-3 ml-1 text-gray-400">$</div>
+                    <label for="money" class="absolute duration-300 top-3 left-5 -z-1 origin-0 text-gray-500">DWB</label>
                   </div>
-                  }
-                  
-                }
-                <button type="button" (click)="addConfiPriceField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Price</button>
+                <div class="relative z-0 w-full mb-5">
+                  <input
+                    type="number"
+                    name="money"
+                    [(ngModel)]="newService.tipo_habitaciones.prices.confidential"
+                    placeholder=" "
+                    class="pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
+                  />
+                  <div class="absolute top-0 left-0 mt-3 ml-1 text-gray-400">$</div>
+                  <label for="money" class="absolute duration-300 top-3 left-5 -z-1 origin-0 text-gray-500">TRP</label>
+                </div>
+                </div>
+            </div>
+            <div class="mb-4">
+              <label for="" class="block text-md text-gray-600 dark:text-gray-50">Rack Prices</label>
+              <div class="grid grid-cols-3 gap-3 py-2 items-center">
+                <div class="relative z-0 w-full mb-5">
+                  <input
+                    type="number"
+                    name="money"
+                    [(ngModel)]="newService.tipo_habitaciones.prices.rack"
+                    placeholder=" "
+                    class="pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
+                  />
+                  <div class="absolute top-0 left-0 mt-3 ml-1 text-gray-400">$</div>
+                  <label for="money" class="absolute duration-300 top-3 left-5 -z-1 origin-0 text-gray-500">SWB</label>
+                </div><div class="relative z-0 w-full mb-5">
+                  <input
+                    type="number"
+                    name="money"
+                    [(ngModel)]="newService.tipo_habitaciones.prices.rack"
+                    placeholder=" "
+                    class="pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
+                  />
+                  <div class="absolute top-0 left-0 mt-3 ml-1 text-gray-400">$</div>
+                  <label for="money" class="absolute duration-300 top-3 left-5 -z-1 origin-0 text-gray-500">DWB</label>
+                </div>
+              <div class="relative z-0 w-full mb-5">
+                <input
+                  type="number"
+                  name="money"
+                  [(ngModel)]="newService.tipo_habitaciones.prices.rack"
+                  placeholder=" "
+                  class="pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
+                />
+                <div class="absolute top-0 left-0 mt-3 ml-1 text-gray-400">$</div>
+                <label for="money" class="absolute duration-300 top-3 left-5 -z-1 origin-0 text-gray-500">TRP</label>
+              </div>
+              </div>
             </div>
           </form>
         </div>
