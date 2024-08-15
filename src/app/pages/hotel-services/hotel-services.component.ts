@@ -123,6 +123,7 @@ async getHotelId(hotelId: string){
 openEditModal(service: any){
   this.selectedService = {...service};
   this.showEditModal = true;
+  console.log('servicio a editar',this.selectedService)
 }
 
 closeEditModal(){
@@ -143,7 +144,19 @@ emptyService(){
     name_service: '',
     tipo_habitaciones: [{
       tipo_servicio: '',
-      prices: []
+      prices: [{
+        type:'SWB',
+        confidential:0,
+        rack:0
+      },{
+        type:'DWB',
+        confidential:0,
+        rack:0
+      },{
+        type:'TRP',
+        confidential:0,
+        rack:0
+      }]
     }]
   }
 }
