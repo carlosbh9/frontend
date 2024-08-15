@@ -37,7 +37,7 @@
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 @for (vehicle of transport.type_vehicle; track vehicle) {
                         <span class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-medium text-left block">
-                          {{ vehicle.name_type_vehicle }}: {{ vehicle.price }}
+                          {{ vehicle.name_type_vehicle }}: ${{ vehicle.price.toFixed(2) }}
                         </span>
               }
               </td>

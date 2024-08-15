@@ -32,6 +32,15 @@ newService: any = {
   tipo_habitaciones: [{
     tipo_servicio: '',
     prices: [{
+      type:'SWB',
+      confidential:0,
+      rack:0
+    },{
+      type:'DWB',
+      confidential:0,
+      rack:0
+    },{
+      type:'TRP',
       confidential:0,
       rack:0
     }]

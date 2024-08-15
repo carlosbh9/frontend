@@ -118,7 +118,7 @@
         <!-- Body -->
         <div class="my-5 mr-5 ml-5 flex justify-center">
           <form (submit)="onSubmit()" id="add_service_form" class="w-full">
-              <div class="mb-4">
+              <!--<div class="mb-4">
                 <label for="name_service" class="block text-md text-gray-600 dark:text-gray-50">Service Name</label>
                 <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service Description" [(ngModel)]="newService.name_service" required>
               </div>
@@ -158,8 +158,48 @@
                   <label for="money" class="absolute duration-300 top-3 left-5 -z-1 origin-0 text-gray-500">TRP</label>
                 </div>
                 </div>
-            </div>
+            </div>-->
             <div class="mb-4">
+              @for (price of newService.tipo_habitaciones[0].prices; track $index) {
+                <label for="" class="block text-md text-gray-600 dark:text-gray-50">types</label>
+                <div class="relative z-0 w-full mb-5">
+                  <input
+                    type="text"
+                    name="money"
+                    [(ngModel)]="price.type"
+                    placeholder=" "
+                    class="pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
+                  />
+                  <div class="absolute top-0 left-0 mt-3 ml-1 text-gray-400">$</div>
+                  <label for="money" class="absolute duration-300 top-3 left-5 -z-1 origin-0 text-gray-500">type</label>
+                </div>
+                <label for="" class="block text-md text-gray-600 dark:text-gray-50">confidentiall</label>
+                <div class="relative z-0 w-full mb-5">
+                  <input
+                    type="number"
+                    name="money"
+                    [(ngModel)]="price.confidential"
+                    placeholder=" "
+                    class="pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
+                  />
+                  <div class="absolute top-0 left-0 mt-3 ml-1 text-gray-400">$</div>
+                  <label for="money" class="absolute duration-300 top-3 left-5 -z-1 origin-0 text-gray-500">confidential</label>
+                </div>
+                <label for="" class="block text-md text-gray-600 dark:text-gray-50">Rack </label>
+                <div class="relative z-0 w-full mb-5">
+                  <input
+                    type="number"
+                    name="money"
+                    [(ngModel)]="price.rack"
+                    placeholder=" "
+                    class="pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
+                  />
+                  <div class="absolute top-0 left-0 mt-3 ml-1 text-gray-400">$</div>
+                  <label for="money" class="absolute duration-300 top-3 left-5 -z-1 origin-0 text-gray-500">rack</label>
+                </div>
+              }
+            </div>
+           <!-- <div class="mb-4">
               <label for="" class="block text-md text-gray-600 dark:text-gray-50">Rack Prices</label>
               <div class="grid grid-cols-3 gap-3 py-2 items-center">
                 <div class="relative z-0 w-full mb-5">
@@ -172,7 +212,8 @@
                   />
                   <div class="absolute top-0 left-0 mt-3 ml-1 text-gray-400">$</div>
                   <label for="money" class="absolute duration-300 top-3 left-5 -z-1 origin-0 text-gray-500">SWB</label>
-                </div><div class="relative z-0 w-full mb-5">
+                </div>
+                <div class="relative z-0 w-full mb-5">
                   <input
                     type="number"
                     name="money"
@@ -195,7 +236,7 @@
                 <label for="money" class="absolute duration-300 top-3 left-5 -z-1 origin-0 text-gray-500">TRP</label>
               </div>
               </div>
-            </div>
+            </div>-->
           </form>
         </div>
         <!-- Footer -->
