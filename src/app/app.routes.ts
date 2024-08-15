@@ -14,6 +14,7 @@ import { TransportComponent } from './pages/transport/transport.component';
 import { OperatorsServicesComponent } from './pages/operators-services/operators-services.component';
 import { TrainServicesComponent } from './pages/train-services/train-services.component';
 import { HotelServicesComponent } from './pages/hotel-services/hotel-services.component';
+import { QuoterComponent } from './pages-quoter/quoter/quoter.component';
 
 export const routes: Routes = [
 
@@ -33,6 +34,7 @@ export const routes: Routes = [
             {   path:'transport', component:TransportComponent},
             {   path:'hotel', component: HotelComponent},
             {   path:'services-hotel/:id',component: HotelServicesComponent},
+            {   path:'quoter-main',component: QuoterComponent}
         ]
     }
 
