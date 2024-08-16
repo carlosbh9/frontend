@@ -1,1 +1,125 @@
-<p>quoter-form works!</p>
+
+<div class="break-words bg-gray-50 dark:bg-gray-800 shadow-lg rounded ">
+    <div class="p-6 flex justify-between  ">
+    <!-- Columna Izquierda -->
+    <div class="w-1/2 space-y-4">
+        <div >
+            <label for="travel-agent" class="block text-sm font-medium text-gray-700">Travel agent</label>
+            <input type="text" id="travel-agent" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+        </div>
+        <div>
+            <label for="guest" class="block text-sm font-medium text-gray-700">Guest</label>
+            <input type="text" id="guest" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label for="travel-start-date" class="block text-sm font-medium text-gray-700">Travel Dates</label>
+                <input type="text" id="travel-start-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+            </div>
+            <div>
+                <label for="travel-end-date" class="block text-sm font-medium text-gray-700">&nbsp;</label> <!-- Etiqueta vacía para alinear -->
+                <input type="text" id="travel-end-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label for="accommodations" class="block text-sm font-medium text-gray-700">Accommodations</label>
+                <input type="text" id="accommodations" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+            </div>
+            <div>
+                <label for="number-pax" class="block text-sm font-medium text-gray-700">Number of Pax</label>
+                <input type="text" id="number-pax" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+            </div>
+        </div>
+    </div>
+
+    <!-- Columna Derecha -->
+    <div class="w-1/3  space-y-4">
+        <div>
+            <label for="issue-date" class="block text-sm font-medium text-gray-700">Fecha de emisión</label>
+            <input type="date" id="issue-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+        </div>
+    </div>
+</div>
+    <div class="grid grid-rows-2 grid-flow-row ">
+        <div class="grid justify-items-center">
+            <div class="mb-0"> <!-- Cambia mb-4 a mb-0 para eliminar el margen inferior -->
+                <button type="button" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Closing date</button>
+            </div>
+        </div>
+        <div class="mt-0">
+            <table class="items-center w-full bg-transparent border-collapse border">
+                <thead>
+                    <tr>
+                        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Day</th>
+                        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Date</th>
+                        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">City</th>
+                        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Service</th>
+                        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Price pp</th>
+                        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Price</th>
+                        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Notes</th>
+                      </tr>
+                </thead>
+                <tbody>
+                    <tr class="text-gray-700 dark:text-gray-100 text-xs border" >
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">1</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><input type="date"></td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
+                            <select name="" id="" >
+                                <option value="CUZ">CUZ</option>
+                                <option value="LIM">LIM</option>
+                                <option value="MP">MP</option>
+                            </select>
+                            
+                            <select name="" id="">
+                                <option value="CUZ">CUZ</option>
+                                <option value="LIM">LIM</option>
+                                <option value="MP">MP</option>
+                            </select>
+                        </td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><select name="" id="">
+                            <option value="jjjjjjjjjjjjjjjjjjjjjjjjj">jjjjjjjdawdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaajjjjjjjjjjjjjjjjjj</option>
+                        </select></td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
+                            <input type="number">
+                        </td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
+                            <input type="number">
+                        </td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><input type="text" placeholder="notes"></td>
+                    </tr>
+                    <tr class="text-gray-700 dark:text-gray-100 text-xs border" >
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">1</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><input type="date"></td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
+                            <select name="" id="" >
+                                <option value="CUZ">CUZ</option>
+                                <option value="LIM">LIM</option>
+                                <option value="MP">MP</option>
+                            </select>
+                            
+                            <select name="" id="">
+                                <option value="CUZ">CUZ</option>
+                                <option value="LIM">LIM</option>
+                                <option value="MP">MP</option>
+                            </select>
+                        </td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><select name="" id="">
+                            
+                        </select></td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
+                            <input type="number">
+                        </td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
+                            <input type="number">
+                        </td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><input type="text" placeholder="notes"></td>
+                    </tr>
+       
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
