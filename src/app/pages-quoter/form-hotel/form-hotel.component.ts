@@ -1,28 +1,32 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { HotelService } from '../../Services/hotel.service';
-import { FormHotelComponent } from '../form-hotel/form-hotel.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-quoter-form',
+  selector: 'app-form-hotel',
   standalone: true,
-  imports: [CommonModule, FormsModule,FormHotelComponent],
-  templateUrl: './quoter-form.component.html',
-  styleUrl: './quoter-form.component.css'
+  imports: [CommonModule, FormsModule],
+  templateUrl: './form-hotel.component.html',
+  styleUrl: './form-hotel.component.css'
 })
-export class QuoterFormComponent {
- // selectedCategory = '';
-
+export class FormHotelComponent {
   selectedCategory: string = '';
   selectedHotel: string = '';
   selectedService: string = '';
   price: number = 0;
   hotels: any[] = [];
   hotelServices: any[] = [];
-
   constructor(private hotelService: HotelService) {}
   
+  async loadHotels2() {
+    try {
+      this.hotels = await this.hotelService.getAllHotels();
+     // this.hotels = data;
+    } catch (error) {
+      console.error('Error fetching hotels:', error);
+    }
+  }
   
   ngOnInit(): void {
     this.loadHotels();
@@ -52,5 +56,4 @@ export class QuoterFormComponent {
     // Aquí agregarías la lógica para agregar el ítem a la tabla de cotización
     console.log(`Hotel: ${this.selectedHotel}, Service: ${this.selectedService}, Price: ${this.price}`);
   }
-  
 }
