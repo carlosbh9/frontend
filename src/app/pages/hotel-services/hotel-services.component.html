@@ -49,44 +49,16 @@
                       {{ service.name_service }}
                   </td>
                   <!-- Iterar sobre Tipo de Habitaciones -->
-                  @for (habitacion of service.tipo_habitaciones; track habitacion._id) {
-                    @if (habitacion.prices) {
-                        @for (price of habitacion.prices; track price.type) {
-                            @if (price.type === 'SWB') {
-                                <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">
-                                    ${{ price.confidential.toFixed(2) }}
-                                </td>
-                            }
-                            @if (price.type === 'DWB') {
-                                <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">
-                                    ${{ price.confidential.toFixed(2) }}
-                                </td>
-                            }
-                            @if (price.type === 'TRP') {
-                                <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">
-                                    ${{ price.confidential.toFixed(2) }}
-                                </td>
-                            }
-                        }
-                        @for (price of habitacion.prices; track price.type) {
-                            @if (price.type === 'SWB') {
-                                <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">
-                                    ${{ price.rack.toFixed(2) }}
-                                </td>
-                            }
-                            @if (price.type === 'DWB') {
-                                <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">
-                                    ${{ price.rack.toFixed(2) }}
-                                </td>
-                            }
-                            @if (price.type === 'TRP') {
-                                <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">
-                                    ${{ price.rack.toFixed(2) }}
-                                </td>
-                            }
-                        }
+                  @for (price of service.roomPrices; track price.confidential){
+                      <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">
+                            ${{ price.confidential.toFixed(2) }}
+                        </td>
+                      }
+                    @for (price of service.roomPrices; track price.rack) {
+                      <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">
+                        ${{ price.rack.toFixed(2) }}
+                    </td>
                     }
-                }
                   <!-- Columnas de Acciones -->
                   <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
                       <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="openEditModal(service)"></i>
@@ -123,7 +95,7 @@
                 <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service Description" [(ngModel)]="newService.name_service" required>
               </div>
             <div class="mb-4">
-              @for (price of newService.tipo_habitaciones[0].prices; track $index) {
+              @for (price of newService.roomPrices; track $index) {
                 <div class="grid grid-cols-3 gap-3 py-2 items-center">
                 <label for="" class="block text-md text-gray-600 dark:text-gray-50">{{price.type}}</label>
                 <div class="relative z-0 w-full mb-5">
@@ -185,7 +157,7 @@
                 <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service Description" [(ngModel)]="selectedService.name_service" required>
               </div>
             <div class="mb-4">
-              @for (price of selectedService.tipo_habitaciones[0].prices; track price.type) {
+              @for (price of selectedService.roomPrices; track price.type) {
                 <div class="grid grid-cols-3 gap-3 py-2 items-center">
                 <label for="" class="block text-md text-gray-600 dark:text-gray-50">{{price.type}}</label>
                 <div class="relative z-0 w-full mb-5">

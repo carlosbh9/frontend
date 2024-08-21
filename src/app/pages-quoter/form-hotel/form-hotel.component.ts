@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { HotelService } from '../../Services/hotel.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormGroup, FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-form-hotel',
@@ -11,12 +11,19 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './form-hotel.component.css'
 })
 export class FormHotelComponent {
+  
+
   selectedCategory: string = '';
   selectedHotel: string = '';
-  selectedService: string = '';
+ selectedService: string = '';
   price: number = 0;
   hotels: any[] = [];
   hotelServices: any[] = [];
+  roomTypes: any[] = [];
+  selectedRoomType: string = '';
+  selectedRoomTypePrices: any[]=[];
+
+  
   constructor(private hotelService: HotelService) {}
   
   async loadHotels2() {
@@ -28,14 +35,10 @@ export class FormHotelComponent {
     }
   }
   
+
+
   ngOnInit(): void {
     this.loadHotels();
-  }
-
-  onCategoryChange(event: any): void {
-    if (this.selectedCategory === 'Hoteles') {
-      this.loadHotels();
-    }
   }
 
   loadHotels(): void {
@@ -51,9 +54,18 @@ export class FormHotelComponent {
       this.hotelServices = selectedHotel.services;
     }
   }
-
-  addItemToQuote(): void {
-    // Aquí agregarías la lógica para agregar el ítem a la tabla de cotización
-    console.log(`Hotel: ${this.selectedHotel}, Service: ${this.selectedService}, Price: ${this.price}`);
+  onServiceChange(event: any): void {
+    const selectedService = this.hotelServices.find(service => service._id === this.selectedService);
+    if (selectedService) {
+      this.roomTypes = selectedService.roomPrices;
+    }
+    console.log('este es el ',this.roomTypes)
   }
+  onRoomTypeChange(event: any): void {
+ this.selectedRoomTypePrices = this.roomTypes
+    console.log('jajajaj 1',this.selectedRoomTypePrices)
+   
+  }
+
+  
 }

@@ -29,9 +29,8 @@ selectedHotel: any = {
 
 newService: any = {
   name_service: '',
-  tipo_habitaciones: [{
-    tipo_servicio: '',
-    prices: [{
+  roomPrices: [{
+ 
       type:'SWB',
       confidential:0,
       rack:0
@@ -44,13 +43,11 @@ newService: any = {
       confidential:0,
       rack:0
     }]
-  }]
-  
 }
 
 selectedService: any = {
   name_service: '',
-  tipo_habitaciones: []
+  roomPrices: []
 }
 
 constructor(private hotelService: HotelService, private route: ActivatedRoute) {}
@@ -142,21 +139,19 @@ closeAddModal(){
 emptyService(){
   this.newService = {
     name_service: '',
-    tipo_habitaciones: [{
-      tipo_servicio: '',
-      prices: [{
-        type:'SWB',
-        confidential:0,
-        rack:0
-      },{
-        type:'DWB',
-        confidential:0,
-        rack:0
-      },{
-        type:'TRP',
-        confidential:0,
-        rack:0
-      }]
+    roomPrices: [{
+ 
+      type:'SWB',
+      confidential:0,
+      rack:0
+    },{
+      type:'DWB',
+      confidential:0,
+      rack:0
+    },{
+      type:'TRP',
+      confidential:0,
+      rack:0
     }]
   }
 }

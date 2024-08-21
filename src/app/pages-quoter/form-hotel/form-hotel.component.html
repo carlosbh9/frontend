@@ -1,28 +1,74 @@
-<div class="m-4">
+
   <!--  @if (selectedCategory==='Hoteles') {-->
-        <div>
+     <div class="flex flex-wrap space-x-4 ">
+        <div class="w-1/4">
             <label for="hotel-select" class="block text-sm font-medium text-gray-700">Hoteles</label>
-            <select [(ngModel)]="selectedHotel" (change)="onHotelChange($event)" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" >
+            <select [(ngModel)]="selectedHotel" (change)="onHotelChange($event)" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
                 <option value="" disabled selected>Select Hotel</option>
                 @for (hotel of hotels; track hotel._id) {
                     <option [value]="hotel._id">{{hotel.name}}</option>
                 }
             </select>
-           
         </div>
-        <div>
-            <label for="service-select" class="block text-sm font-medium text-gray-700">Services</label>
-            <select [(ngModel)]="selectedService" id="" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md">
+      <!--   <div class="flex flex-row space-x-4">-->
+            <div class="w-1/4">
+                <label for="service-select" class="block text-sm font-medium text-gray-700">Services</label>
+            <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
                 <option value="" disabled selected>Select Service</option>
                 @for (service of hotelServices; track $index) {
-                    <option [value]="service._id">{{service.name_service}}</option>
+                    <option [value]="service._id">{{service.name_service}} </option>
                  
                 }
             </select>
-            @if (selectedService) {
-                <label for="price" class="block text-sm font-medium text-gray-700">Accommodations</label>
-                        <input type="text" id="accommodations" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
-            }
-          
-        </div>
-</div>
+            </div>
+            <div>
+               @if (roomTypes.length>0) {
+                <label for="price" class="block text-sm font-medium text-gray-700 pb-1">Accommodations</label>
+                <div class="space-x-4 flex flex-row border-2 h-10 border-gray-300 rounded-md">
+                    <div class="flex items-center mx-2">
+                        <select [(ngModel)]="selectedRoomType" (change)="onRoomTypeChange($event)" name="type" id="type">
+                      @for (roomType of roomTypes; track $index) {
+                        <option [value]="roomType.type">{{roomType.type}}</option>
+                      }
+                        </select>
+                    </div>
+              
+                              <div class="flex items-center mx-2">
+                                <input type="checkbox" id="rack" class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" data-price="50">
+                                <label for="rack" class="ml-2 text-sm">$ rack 600</label>
+                             </div>
+                  
+                    
+                    <div class="flex items-center mr-2">
+                      <input type="checkbox" id="confidential" class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" data-price="30">
+                      <label for="confidential" class="ml-2 mr-2 text-sm">Confidential - $30</label>
+                    </div>
+                  </div>
+                }
+     <!--   @for (price of selectedService.tipo_habitaciones[0].prices; track price.type) {
+                    <div class="flex items-center mx-2">
+                        <select name="type" id="type" [(ngModel)]="price.type">
+                            <option value="SWB">SWB</option>
+                            <option value="DWB">DWB</option>
+                            <option value="TRP">TRP</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center mx-2">
+                      <input type="checkbox" id="rack" class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" [attr.data-price]="price.rack">
+                      <label for="rack" class="ml-2 text-sm">Rack - ${{ price.rack }}</label>
+                    </div>
+                    <div class="flex items-center mr-2">
+                      <input type="checkbox" id="confidential" class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" [attr.data-price]="price.confidential">
+                      <label for="confidential" class="ml-2 mr-2 text-sm">Confidential - ${{ price.confidential }}</label>
+                    </div>
+              
+            }-->
+            </div>
+            <div>
+
+            </div>
+           
+         </div>
+   <!-- </div>--> 
+           
+       
