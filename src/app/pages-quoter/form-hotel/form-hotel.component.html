@@ -1,6 +1,9 @@
 
   <!--  @if (selectedCategory==='Hoteles') {-->
-     <div class="flex flex-wrap space-x-4 ">
+     <div class="flex flex-wrap space-x-4 " (change)="onRoomTypeChange($event)">
+     
+
+      
         <div class="w-1/4">
             <label for="hotel-select" class="block text-sm font-medium text-gray-700">Hoteles</label>
             <select [(ngModel)]="selectedHotel" (change)="onHotelChange($event)" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
@@ -15,7 +18,7 @@
                 <label for="service-select" class="block text-sm font-medium text-gray-700">Services</label>
             <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
                 <option value="" disabled selected>Select Service</option>
-                @for (service of hotelServices; track $index) {
+                @for (service of hotelServices; track service._id) {
                     <option [value]="service._id">{{service.name_service}} </option>
                  
                 }
@@ -24,50 +27,42 @@
             <div>
                @if (roomTypes.length>0) {
                 <label for="price" class="block text-sm font-medium text-gray-700 pb-1">Accommodations</label>
-                <div class="space-x-4 flex flex-row border-2 h-10 border-gray-300 rounded-md">
-                    <div class="flex items-center mx-2">
-                        <select [(ngModel)]="selectedRoomType" (change)="onRoomTypeChange($event)" name="type" id="type">
-                      @for (roomType of roomTypes; track $index) {
+                <div class="space-x-4 flex flex-row border-2 h-10 border-gray-300 rounded-md" >
+            
+                  <div class="flex items-center mx-2">
+                        <select [(ngModel)]="selectedRoomType"  name="type" id="type">
+                          <option value="" disabled selected>Select Type</option>
+                     @for (roomType of roomTypes; track $index) {
                         <option [value]="roomType.type">{{roomType.type}}</option>
-                      }
+                        }
                         </select>
                     </div>
-              
-                              <div class="flex items-center mx-2">
-                                <input type="checkbox" id="rack" class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" data-price="50">
-                                <label for="rack" class="ml-2 text-sm">$ rack 600</label>
-                             </div>
-                  
+                    @for (roomType of roomTypes; track $index) {
                     
-                    <div class="flex items-center mr-2">
-                      <input type="checkbox" id="confidential" class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" data-price="30">
-                      <label for="confidential" class="ml-2 mr-2 text-sm">Confidential - $30</label>
-                    </div>
+                  <div *ngIf="selectedRoomType === roomType.type"  class="flex items-center mr-2">
+                      <input 
+                      type="radio" 
+                      id="confidential" 
+                      [(ngModel)]="selectedPrices"
+                      [value]="{ type: roomType.type, price: roomType.confidential, accommodations: 'confidential' }"
+                      class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" >
+                      <label for="confidential" class="ml-2 mr-2 text-sm">Confidential - ${{roomType.confidential}}</label>
                   </div>
+                  <div *ngIf="selectedRoomType === roomType.type" class="flex items-center mx-2">
+                    <input
+                    type="radio" 
+                    id="rack" 
+                    [(ngModel)]="selectedPrices"
+                    [value]="{ type: roomType.type, price: roomType.rack, accommodations: 'Rack' }"
+                    class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded">
+                    <label for="Rack" class="ml-2 text-sm">Rack - ${{roomType.rack}}</label>
+                </div>
+                
                 }
-     <!--   @for (price of selectedService.tipo_habitaciones[0].prices; track price.type) {
-                    <div class="flex items-center mx-2">
-                        <select name="type" id="type" [(ngModel)]="price.type">
-                            <option value="SWB">SWB</option>
-                            <option value="DWB">DWB</option>
-                            <option value="TRP">TRP</option>
-                        </select>
-                    </div>
-                    <div class="flex items-center mx-2">
-                      <input type="checkbox" id="rack" class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" [attr.data-price]="price.rack">
-                      <label for="rack" class="ml-2 text-sm">Rack - ${{ price.rack }}</label>
-                    </div>
-                    <div class="flex items-center mr-2">
-                      <input type="checkbox" id="confidential" class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" [attr.data-price]="price.confidential">
-                      <label for="confidential" class="ml-2 mr-2 text-sm">Confidential - ${{ price.confidential }}</label>
-                    </div>
-              
-            }-->
-            </div>
-            <div>
+                </div>
 
+                }    
             </div>
-           
          </div>
    <!-- </div>--> 
            

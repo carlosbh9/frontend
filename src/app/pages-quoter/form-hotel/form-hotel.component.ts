@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output ,input, output} from '@angular/core';
 import { HotelService } from '../../Services/hotel.service';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule } from '@angular/forms';
@@ -12,17 +12,20 @@ import { FormGroup, FormsModule } from '@angular/forms';
 })
 export class FormHotelComponent {
   
+//@Output() addItem = new EventEmitter<any>();
+ 
+hotelItem = output<any>();
 
-  selectedCategory: string = '';
-  selectedHotel: string = '';
- selectedService: string = '';
-  price: number = 0;
+selectedHotel: string = '';
+  selectedService: string = '';
+  selectedRoomType: string = '';
   hotels: any[] = [];
   hotelServices: any[] = [];
   roomTypes: any[] = [];
-  selectedRoomType: string = '';
+  
+  selectedItem: any[]=[]
   selectedRoomTypePrices: any[]=[];
-
+  selectedPrices: any[] = [];
   
   constructor(private hotelService: HotelService) {}
   
@@ -49,23 +52,36 @@ export class FormHotelComponent {
 
   onHotelChange(event: any): void {
  
-    const selectedHotel = this.hotels.find(hotel => hotel._id === this.selectedHotel);
-    if (selectedHotel) {
-      this.hotelServices = selectedHotel.services;
-    }
+    //const selectedHotel = this.hotels.find(hotel => hotel._id === this.selectedHotel);
+
+      // Cambiar la llamada para esperar el resultado de la promesa
+      this.hotelService.getServicesByHotelId(this.selectedHotel).then((services: any[]) => {
+        this.hotelServices = services;
+      });
+    console.log('es el id?: ',this.selectedHotel)
+
+    //if (selectedHotel) {
+      //this.hotelServices = selectedHotel.services;
+   // }
   }
   onServiceChange(event: any): void {
-    const selectedService = this.hotelServices.find(service => service._id === this.selectedService);
+  const selectedService = this.hotelServices.find(service => service._id === this.selectedService);
+
     if (selectedService) {
       this.roomTypes = selectedService.roomPrices;
     }
-    console.log('este es el ',this.roomTypes)
-  }
-  onRoomTypeChange(event: any): void {
- this.selectedRoomTypePrices = this.roomTypes
-    console.log('jajajaj 1',this.selectedRoomTypePrices)
    
   }
-
+ async onRoomTypeChange(event: any) {
   
+this.selectedItem.push(this.selectedHotel,this.selectedService,this.selectedRoomType)
+  this.selectedItem[event] = event.target.value;
+   this.hotelItem.emit(this.selectedItem);
+}
+//enviarAlPadre(){
+  //this.hotelItem.emit(this.selectedPrices);
+//}
+
+//<button (click)="enviarAlPadre()">Enviar Datos al Padre</button>
+
 }

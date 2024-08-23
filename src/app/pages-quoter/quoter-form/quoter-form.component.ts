@@ -21,6 +21,8 @@ export class QuoterFormComponent {
   hotels: any[] = [];
   hotelServices: any[] = [];
 
+  datosrecibidos: any[]=[];
+
   constructor(private hotelService: HotelService) {}
   
   
@@ -48,9 +50,12 @@ export class QuoterFormComponent {
     }
   }
 
-  addItemToQuote(): void {
+  addItemToQuote(datos: any): void {
     // Aquí agregarías la lógica para agregar el ítem a la tabla de cotización
     console.log(`Hotel: ${this.selectedHotel}, Service: ${this.selectedService}, Price: ${this.price}`);
+    this.datosrecibidos= datos
+    console.log(this.datosrecibidos)
   }
   
+
 }

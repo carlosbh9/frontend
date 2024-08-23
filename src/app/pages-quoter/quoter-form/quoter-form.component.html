@@ -45,8 +45,9 @@
         </div>
         <h1 class="p-6">ingresar un item</h1>
         <div class="p-6 flex flex-col space-y-4">
-            <div class="w-1/4">
-                <label for="issue-date" class="block text-sm font-medium text-gray-700">Selecione la categoria</label>
+            <div class="flex flex-row justify-between">
+                <div class="basis-1/4">
+                    <label for="issue-date" class="block text-sm font-medium text-gray-700">Selecione la categoria</label>
                 <select [(ngModel)]="selectedCategory" (change)="onCategoryChange($event)" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
                     <option value="" disabled selected>Select Category</option>
                     <option value="Hoteles">Hoteles</option>
@@ -55,13 +56,20 @@
                     <option value="Experiencias">Experiencias</option>
                     <option value="Expediciones">Expediciones</option>
                 </select>
+                </div>
+                
+                <div class="">
+                    <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" >Add Item</button>
+                </div>
                   
             </div>
             <div class="">
                 @if (selectedCategory==='Hoteles') {
-                    <app-form-hotel></app-form-hotel>
+                    <app-form-hotel (hotelItem)="addItemToQuote($event)"></app-form-hotel>
                         }
-            </div>
+                        <p>Datos Recibidos:</p>
+                        <pre>{{ datosrecibidos | json }}</pre> <!-- Mostrando los datos recibidos -->   
+                    </div>
         </div>
         
       <div class="block w-full overflow-x-auto">
