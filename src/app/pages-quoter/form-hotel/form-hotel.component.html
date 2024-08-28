@@ -1,9 +1,6 @@
 
   <!--  @if (selectedCategory==='Hoteles') {-->
      <div class="flex flex-wrap space-x-4 " (change)="onRoomTypeChange($event)">
-     
-
-      
         <div class="w-1/4">
             <label for="hotel-select" class="block text-sm font-medium text-gray-700">Hoteles</label>
             <select [(ngModel)]="selectedHotel" (change)="onHotelChange($event)" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
@@ -18,7 +15,7 @@
                 <label for="service-select" class="block text-sm font-medium text-gray-700">Services</label>
             <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
                 <option value="" disabled selected>Select Service</option>
-                @for (service of hotelServices; track service._id) {
+                @for (service of hotelServices; track $index) {
                     <option [value]="service._id">{{service.name_service}} </option>
                  
                 }
@@ -43,25 +40,32 @@
                       <input 
                       type="radio" 
                       id="confidential" 
-                      [(ngModel)]="selectedPrices"
+                      [(ngModel)]="quoterItem.price"
                       [value]="{ type: roomType.type, price: roomType.confidential, accommodations: 'confidential' }"
                       class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" >
-                      <label for="confidential" class="ml-2 mr-2 text-sm">Confidential - ${{roomType.confidential}}</label>
+                      <label for="Confidential" class="ml-2 mr-2 text-sm">Confidential - ${{roomType.confidential}}</label>
                   </div>
                   <div *ngIf="selectedRoomType === roomType.type" class="flex items-center mx-2">
                     <input
                     type="radio" 
                     id="rack" 
-                    [(ngModel)]="selectedPrices"
+                    [(ngModel)]="quoterItem.price"
                     [value]="{ type: roomType.type, price: roomType.rack, accommodations: 'Rack' }"
                     class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded">
-                    <label for="Rack" class="ml-2 text-sm">Rack - ${{roomType.rack}}</label>
+                    <label for="Rack" class="ml-2 text-sm mr-2">Rack - ${{roomType.rack}}</label>
                 </div>
                 
                 }
                 </div>
 
                 }    
+            </div>
+            <div class="w-64">
+                <div>
+                     <label for="service-select" class="block text-sm font-medium text-gray-700">Notes</label>
+                    <textarea [(ngModel)]="quoterItem.notes" name="" id="" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1"></textarea>
+                </div>
+               
             </div>
          </div>
    <!-- </div>--> 

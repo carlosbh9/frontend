@@ -6,30 +6,30 @@
             <div class="w-1/2 space-y-4">
                 <div >
                     <label for="travel-agent" class="block text-sm font-medium text-gray-700">Travel agent</label>
-                    <input type="text" id="travel-agent" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+                    <input type="text" id="travel-agent" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" [(ngModel)]="newQuoter.trvale_agent" placeholder="Value">
                 </div>
                 <div>
-                    <label for="guest" class="block text-sm font-medium text-gray-700">Guest</label>
+                    <label for="guest" [(ngModel)]="newQuoter.guest" class="block text-sm font-medium text-gray-700">Guest</label>
                     <input type="text" id="guest" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="travel-start-date" class="block text-sm font-medium text-gray-700">Travel Dates</label>
-                        <input type="text" id="travel-start-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+                        <input type="date" [(ngModel)]="newQuoter.travelDate.start" id="travel-start-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
                     </div>
                     <div>
                         <label for="travel-end-date" class="block text-sm font-medium text-gray-700">&nbsp;</label> <!-- Etiqueta vacía para alinear -->
-                        <input type="text" id="travel-end-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+                        <input type="date" [(ngModel)]="newQuoter.travelDate.end" id="travel-end-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="accommodations" class="block text-sm font-medium text-gray-700">Accommodations</label>
-                        <input type="text" id="accommodations" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+                        <input type="text" [(ngModel)]="newQuoter.acomodations" id="accommodations" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
                     </div>
                     <div>
                         <label for="number-pax" class="block text-sm font-medium text-gray-700">Number of Pax</label>
-                        <input type="text" id="number-pax" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+                        <input type="number"  [(ngModel)]="newQuoter.number_paxs"  id="number-pax" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
                     </div>
                 </div>
             </div>
@@ -43,12 +43,11 @@
                
             </div>
         </div>
-        <h1 class="p-6">ingresar un item</h1>
         <div class="p-6 flex flex-col space-y-4">
             <div class="flex flex-row justify-between">
                 <div class="basis-1/4">
                     <label for="issue-date" class="block text-sm font-medium text-gray-700">Selecione la categoria</label>
-                <select [(ngModel)]="selectedCategory" (change)="onCategoryChange($event)" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
+                <select [(ngModel)]="selectedCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
                     <option value="" disabled selected>Select Category</option>
                     <option value="Hoteles">Hoteles</option>
                     <option value="Operadores">Operadores</option>
@@ -59,53 +58,45 @@
                 </div>
                 
                 <div class="">
-                    <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" >Add Item</button>
+                    <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="onSubmit()">Add Item</button>
                 </div>
                   
             </div>
             <div class="">
                 @if (selectedCategory==='Hoteles') {
-                    <app-form-hotel (hotelItem)="addItemToQuote($event)"></app-form-hotel>
+                    <app-form-hotel (hotelItem)="addItemToQuote($event)" [itemsNull]="itemsNull"></app-form-hotel>
                         }
                         <p>Datos Recibidos:</p>
                         <pre>{{ datosrecibidos | json }}</pre> <!-- Mostrando los datos recibidos -->   
-                    </div>
+            </div>
         </div>
-        
+        <h1>Hotels</h1>
       <div class="block w-full overflow-x-auto">
         <table class="items-center w-full bg-transparent border-collapse">
           <thead>
             <tr>
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Name</th>
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Price per Person</th>
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Child rate</th>
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Closing Dates</th>
-           
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Actions</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center">Day</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">Date</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">City</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left">Hotel</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">P. Conf</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">ACCOMMODATIONS AND CATEGORY</th>
             </tr>
           </thead>
-          <tbody>
-           <tr>
-            <td>holaaaaa</td>
-            <td>hjdkahwdaw</td>
-            <td>holaaaaa</td>
-            <td>hjdkahwdaw</td>
-            <td>holaaaaa</td>
-           </tr>
-           <tr>
-            <td>holaw222aaaa</td>
-            <td>hjdk22ahwdaw</td>
-            <td>holaa22aaa</td>
-            <td>hjdkahw22daw</td>
-            <td>holaaa222aa</td>
-           </tr>
-           <tr>
-            <td>holaw222aaaa</td>
-            <td>hjdk22ahwdaw</td>
-            <td>holaa22aaa</td>
-            <td>hjdkahw22daw</td>
-            <td>holaaa222aa</td>
-           </tr>
+          <tbody >
+        
+                @for (hotel of quoter.hotels; track $index) {
+                    <tr class="text-gray-700 dark:text-gray-1000">
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{$index}}</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "></td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.city}}</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.name_hotel}}</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{hotel.price.toFixed(2)}}</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{hotel.price.toFixed(2)}}</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.accomodatios_category}}</td>
+                    </tr>
+                }
           </tbody>
         </table>
       </div>
