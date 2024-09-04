@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output ,input, output} from '@angular/core';
+import { Component, EventEmitter, OnInit, Input ,inject,input, output} from '@angular/core';
 import { HotelService } from '../../Services/hotel.service';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule } from '@angular/forms';
@@ -13,10 +13,13 @@ import { NonNullAssert } from '@angular/compiler';
 })
 export class FormHotelComponent implements OnInit {
   
-//@Output() addItem = new EventEmitter<any>();
+
  
 hotelItem = output<any>();
-itemsNull = input<boolean>(false)
+
+selectedCity = input<string>();
+selectedDate =  input<string>();
+
   selectedHotel: string = '';
   selectedService: string = '';
   selectedRoomType: string = '';
@@ -30,6 +33,7 @@ itemsNull = input<boolean>(false)
 
   quoterItem: any = {
     city:'',
+    date:'',
     name_hotel:'',
     accomodatios_category: '',
     price_pp: 0,
@@ -39,10 +43,10 @@ itemsNull = input<boolean>(false)
     },
     notes:''
   }; 
+  hotelService = inject(HotelService)
+ 
   
-  constructor(private hotelService: HotelService) {}
-  
-  async loadHotels2() {
+  async loadHotels() {
     try {
       this.hotels = await this.hotelService.getAllHotels();
      // this.hotels = data;
@@ -57,17 +61,9 @@ itemsNull = input<boolean>(false)
 
   ngOnInit(): void {
     this.loadHotels();
-    if(this.itemsNull!){ // Cambiar la comparación para verificar el valor 
-      this.selectedHotel== null
-      this.selectedService == null
-      this.selectedRoomType==null
-      
-      // ... lógica adicional si es necesario
-    }
-    console.log('bbbbb',this.itemsNull)
   }
 
-  loadHotels(): void {
+  loadHotels2(): void {
     this.hotelService.getAllHotels().then((data: any[]) => {
       this.hotels = data;
     });
@@ -84,8 +80,7 @@ itemsNull = input<boolean>(false)
     //  this.hotelService.getServicesByHotelId(this.selectedHotel).then((services: any[]) => {
     //    this.hotelServices = services;
     //  });
-    console.log('ttt',this.itemsNull)
-    
+
   }
 
   onServiceChange(event: any): void {
@@ -95,16 +90,12 @@ itemsNull = input<boolean>(false)
       this.roomTypes = selectedService.roomPrices;
       
     }
+  this.quoterItem.city=this.selectedCity()
+  this.quoterItem.date=this.selectedDate()
   this.quoterItem.accomodatios_category= selectedService.name_service
   }
 
 onRoomTypeChange(event: any) {
    this.hotelItem.emit(this.quoterItem);
 }
-//enviarAlPadre(){
-  //this.hotelItem.emit(this.selectedPrices);
-//}
-
-//<button (click)="enviarAlPadre()">Enviar Datos al Padre</button>
-
 }

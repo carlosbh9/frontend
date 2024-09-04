@@ -3,7 +3,7 @@
      <div class="flex flex-wrap space-x-4 " (change)="onRoomTypeChange($event)">
         <div class="w-1/4">
             <label for="hotel-select" class="block text-sm font-medium text-gray-700">Hoteles</label>
-            <select [(ngModel)]="selectedHotel" (change)="onHotelChange($event)" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
+            <select [(ngModel)]="selectedHotel" (change)="onHotelChange($event)" name="selectedHotel" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
                 <option value="" disabled selected>Select Hotel</option>
                 @for (hotel of hotels; track hotel._id) {
                     <option [value]="hotel._id">{{hotel.name}}</option>
@@ -13,7 +13,7 @@
       <!--   <div class="flex flex-row space-x-4">-->
             <div class="w-1/4">
                 <label for="service-select" class="block text-sm font-medium text-gray-700">Services</label>
-            <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
+            <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" name="selectedService" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
                 <option value="" disabled selected>Select Service</option>
                 @for (service of hotelServices; track $index) {
                     <option [value]="service._id">{{service.name_service}} </option>
@@ -42,6 +42,7 @@
                       id="confidential" 
                       [(ngModel)]="quoterItem.price"
                       [value]="{ type: roomType.type, price: roomType.confidential, accommodations: 'confidential' }"
+                      name="confidential"
                       class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" >
                       <label for="Confidential" class="ml-2 mr-2 text-sm">Confidential - ${{roomType.confidential}}</label>
                   </div>
@@ -51,6 +52,7 @@
                     id="rack" 
                     [(ngModel)]="quoterItem.price"
                     [value]="{ type: roomType.type, price: roomType.rack, accommodations: 'Rack' }"
+                    name="Rack"
                     class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded">
                     <label for="Rack" class="ml-2 text-sm mr-2">Rack - ${{roomType.rack}}</label>
                 </div>
@@ -63,7 +65,7 @@
             <div class="w-64">
                 <div>
                      <label for="service-select" class="block text-sm font-medium text-gray-700">Notes</label>
-                    <textarea [(ngModel)]="quoterItem.notes" name="" id="" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1"></textarea>
+                    <textarea [(ngModel)]="quoterItem.notes" name="quoterItem.notes" id="" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1"></textarea>
                 </div>
                
             </div>

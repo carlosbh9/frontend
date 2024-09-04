@@ -3,21 +3,22 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QuoterService } from '../../Services/quoter.service';
 import { FormHotelComponent } from '../form-hotel/form-hotel.component';
+import { FormEntrancesComponent } from '../form-entrances/form-entrances.component';
 
 @Component({
   selector: 'app-quoter-form',
   standalone: true,
-  imports: [CommonModule, FormsModule,FormHotelComponent],
+  imports: [CommonModule, FormsModule,FormHotelComponent,FormEntrancesComponent],
   templateUrl: './quoter-form.component.html',
   styleUrl: './quoter-form.component.css'
 })
 export class QuoterFormComponent implements OnInit{
-  currentHotelIndex: number | null = null; 
-  itemsNull: boolean =  false
-  quoters: any[]=[];
+ 
+  selectedDate: string ='';
+  selectedCity: string = '';
+  
   quoter: any={}
-  filteredQuoters: any[] = [];
-  filterText: string = '';
+  
   newQuoter: any = {
     guest:'',
     FileCode: '',
@@ -61,29 +62,24 @@ export class QuoterFormComponent implements OnInit{
   constructor(private quoterService: QuoterService) {}
   
   ngOnInit(): void {
-    this.fetchOperators(); 
+    this.fetchHotels(); 
   }
 
-  async fetchOperators() {
+  async fetchHotels() {
     try {
    //   this.quoters = await this.quoterService.getAllQuoter();
       this.quoter= this.newQuoter
-      this.filteredQuoters = this.quoters;
     } catch (error) {
       console.error('Error fetching Quoters', error);
     }
   }
-  itemsNull2(){
 
-    const selectedHotel: any = null
-    const selectedService : any = null
-    const selectedRoomType : any =null
-  }
   addItemToQuote(datos: any){
 
       this.datosrecibidos ={
  
         city: datos.city,
+        date:datos.date,
         name_hotel: datos.name_hotel,
         type_hotel: datos.price.type,
         price: datos.price.price,
@@ -99,16 +95,10 @@ export class QuoterFormComponent implements OnInit{
     this.newQuoter.hotels.push(this.datosrecibidos)
     console.log('nuevo',this.newQuoter.hotels)
     console.log('nuevo',this.newQuoter)
-    this.itemsNull = !this.itemsNull;
+ 
   
   }
 
-  resetCurrentHotel(): void {
-    // Método para resetear el índice del hotel en edición
-    this.currentHotelIndex = null;
-    console.log('hoteles agregados',this.newQuoter)
-  }
-    
   
 
 
@@ -116,7 +106,7 @@ export class QuoterFormComponent implements OnInit{
     this.quoterService.addItemQuoter(this.newQuoter._id,this.newQuoter.hotels).then(
       response => {
         console.log('Quoter added',response)
-        this.fetchOperators();
+        this.fetchHotels();
       },
       error => {
         console.error('Error adding Quoter', error)

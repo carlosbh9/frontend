@@ -1,0 +1,17 @@
+
+<div class="flex flex-wrap space-x-4 " (change)="onServiceChange($event)">
+    <div class="w-1/4">
+        <label for="service-select" class="block text-sm font-medium text-gray-700">Services</label>
+            <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" name="selectedService" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
+                <option value="" disabled selected>Select Service</option>
+                @for (service of entrances; track $index) {
+                    <option [value]="service._id">{{service.description}} </option>
+
+                }
+            </select>
+    </div>
+    <div class="w-1/4">
+        <label for="service-select" class="block text-sm font-medium text-gray-700">Age</label>
+        <input type="text"  name="newQuoter.acomodations" id="accommodations" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+    </div>
+</div>
