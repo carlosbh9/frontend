@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QuoterService } from '../../Services/quoter.service';
 import { FormHotelComponent } from '../form-hotel/form-hotel.component';
@@ -16,7 +16,7 @@ export class QuoterFormComponent implements OnInit{
  
   selectedDate: string ='';
   selectedCity: string = '';
-  
+  cont = 0 ;
   quoter: any={}
   
   newQuoter: any = {
@@ -57,7 +57,8 @@ export class QuoterFormComponent implements OnInit{
   //hotels: any[] = [];
  
 
-  datosrecibidos: any={};
+  datosrecibidosHotel: any={};
+  datosrecibidosService: any ={}
 
   constructor(private quoterService: QuoterService) {}
   
@@ -75,9 +76,9 @@ export class QuoterFormComponent implements OnInit{
   }
 
   addItemToQuote(datos: any){
-
-      this.datosrecibidos ={
- 
+  
+      this.datosrecibidosHotel ={
+        day: this.cont,
         city: datos.city,
         date:datos.date,
         name_hotel: datos.name_hotel,
@@ -86,17 +87,25 @@ export class QuoterFormComponent implements OnInit{
         accomodatios_category: datos.accomodatios_category,
         notes:datos.notes
       };
-
-    //  this.currentHotelIndex = this.newQuoter.hotels.length - 1;
-    
-
   }
-  onSubmit(){
-    this.newQuoter.hotels.push(this.datosrecibidos)
-    console.log('nuevo',this.newQuoter.hotels)
-    console.log('nuevo',this.newQuoter)
- 
+
+  addItemService(datos:any){
+    this.datosrecibidosService={
+      day:this.cont,
+      date: datos.date,
+      city: datos.city,
+      name_service: datos.name_service,
+      price_pp:datos.price_pp,
+      price:datos.price_pp,
+      notes: ''
+    }
+  }
+
   
+  onSubmit(){
+    this.newQuoter.hotels.push(this.datosrecibidosHotel)
+    this.newQuoter.services.push(this.datosrecibidosService)
+    this.cont++
   }
 
   
@@ -112,8 +121,6 @@ export class QuoterFormComponent implements OnInit{
         console.error('Error adding Quoter', error)
       }
     )
- 
-     console.log('new quoter: ',this.newQuoter.hotels)
-     console.log('ID: ',this.newQuoter)
+
   }
 }

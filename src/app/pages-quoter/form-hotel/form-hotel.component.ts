@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Input ,inject,input, output} from '@angular/core';
+import { Component, EventEmitter, OnInit, Input ,inject,input, output, model} from '@angular/core';
 import { HotelService } from '../../Services/hotel.service';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule } from '@angular/forms';
@@ -17,8 +17,10 @@ export class FormHotelComponent implements OnInit {
  
 hotelItem = output<any>();
 
-selectedCity = input<string>();
-selectedDate =  input<string>();
+selectedDate = input.required<string>();
+selectedCity =  input.required<string>();
+
+
 
   selectedHotel: string = '';
   selectedService: string = '';
@@ -54,10 +56,6 @@ selectedDate =  input<string>();
       console.error('Error fetching hotels:', error);
     }
   }
-  
-  //itemsNull(){
-
- // }
 
   ngOnInit(): void {
     this.loadHotels();
@@ -71,15 +69,14 @@ selectedDate =  input<string>();
 
   onHotelChange(event: any): void {
       const selectedHotel = this.hotels.find(hotel => hotel._id === this.selectedHotel)
-      // Cambiar la llamada para esperar el resultado de la promesa
       if(selectedHotel){
         this.hotelServices= selectedHotel.services
       }
       this.quoterItem.name_hotel= selectedHotel.name
       this.quoterItem.city=selectedHotel.location
-    //  this.hotelService.getServicesByHotelId(this.selectedHotel).then((services: any[]) => {
-    //    this.hotelServices = services;
-    //  });
+      this.quoterItem.city=this.selectedCity()
+      this.quoterItem.date=this.selectedDate()
+
 
   }
 
@@ -90,8 +87,7 @@ selectedDate =  input<string>();
       this.roomTypes = selectedService.roomPrices;
       
     }
-  this.quoterItem.city=this.selectedCity()
-  this.quoterItem.date=this.selectedDate()
+  
   this.quoterItem.accomodatios_category= selectedService.name_service
   }
 

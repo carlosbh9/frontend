@@ -1,4 +1,4 @@
-import { Component, inject, OnInit,input } from '@angular/core';
+import { Component, inject, OnInit,input, output } from '@angular/core';
 import { Entrance } from './entrance.interface';
 import { EntrancesService } from '../../Services/entrances.service';
 import { CommonModule } from '@angular/common';
@@ -12,13 +12,14 @@ import { FormsModule } from '@angular/forms';
 })
 export class FormEntrancesComponent implements OnInit {
   entranceService = inject(EntrancesService)
+  serviceItem = output<any>()
   selectedCity = input<string>();
   selectedDate = input<string>();
  
-  selectedService: string = '';
-  selectedPrice: Number =0
+  selectedService: any = {};
+  selectedAge: Number =0
   entrances: any[]=[];
-
+  entrance: any = {}
 
   async loadEntrances (){
     try{
@@ -33,7 +34,21 @@ export class FormEntrancesComponent implements OnInit {
   }
 
   onServiceChange(event: any): void {
-    console.log(this.selectedService)
+
+    const selectedService = this.entrances.find(service => service._id === this.selectedService);
+    this.entrance.name_service=selectedService.description
+
+    if(this.selectedAge <= selectedService.childRate.upTo){
+      this.entrance.price_pp=selectedService.childRate.pp
+    }else{
+     this.entrance.price_pp=selectedService.price_pp
+    }
+    
+    this.entrance.date=this.selectedDate()
+    this.entrance.city=this.selectedCity()
+  
+    this.serviceItem.emit(this.entrance)
+    console.log(this.entrance)
   }
 
 

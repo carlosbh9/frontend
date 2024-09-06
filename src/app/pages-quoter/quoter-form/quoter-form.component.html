@@ -72,15 +72,21 @@
             </div>
             <div class="">
                 @if (selectedCategory==='Hoteles') {
-                    <app-form-hotel (hotelItem)="addItemToQuote($event)" [selectedDate]="selectedDate" [selectedCity]="selectedCity"></app-form-hotel>
+                    <app-form-hotel 
+                    (hotelItem)="addItemToQuote($event)" 
+                    [selectedDate]="selectedDate" 
+                    [selectedCity]="selectedCity"></app-form-hotel>
                         }
                 @if (selectedCategory==='Entrances') {
-                    <app-form-entrances [selectedCity]="selectedCity" [selectedDate]="selectedDate">
+                    <app-form-entrances 
+                    (serviceItem)="addItemService($event)"
+                    [selectedCity]="selectedCity" 
+                    [selectedDate]="selectedDate">
 
                     </app-form-entrances>
                 }
                         <p>Datos Recibidos:</p>
-                        <pre>{{ datosrecibidos | json }}</pre> <!-- Mostrando los datos recibidos -->   
+                        <pre>{{ datosrecibidosService | json }}</pre> <!-- Mostrando los datos recibidos -->   
             </div>
         </div>
         <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Hotels</h1>
@@ -101,7 +107,7 @@
         
                 @for (hotel of quoter.hotels; track $index) {
                     <tr class="text-gray-700 dark:text-gray-1000">
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{$index}}</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.day}}</td>
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.date | date }}</td>
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.city}}</td>
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.name_hotel}}</td>
@@ -133,9 +139,7 @@
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">ACCOMMODATIONS AND CATEGORY</th>
             </tr>
           </thead>
-          <tbody >
-        
-                
+          <tbody >           
           </tbody>
         </table>
       </div>
