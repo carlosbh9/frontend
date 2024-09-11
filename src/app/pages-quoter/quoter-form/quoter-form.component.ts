@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { QuoterService } from '../../Services/quoter.service';
 import { FormHotelComponent } from '../form-hotel/form-hotel.component';
 import { FormEntrancesComponent } from '../form-entrances/form-entrances.component';
+import {FormExpeditionsComponent} from '../form-expeditions/form-expeditions.component'
 
 @Component({
   selector: 'app-quoter-form',
   standalone: true,
-  imports: [CommonModule, FormsModule,FormHotelComponent,FormEntrancesComponent],
+  imports: [CommonModule, FormsModule,FormHotelComponent,FormEntrancesComponent,FormExpeditionsComponent],
   templateUrl: './quoter-form.component.html',
   styleUrl: './quoter-form.component.css'
 })
@@ -97,14 +98,18 @@ export class QuoterFormComponent implements OnInit{
       name_service: datos.name_service,
       price_pp:datos.price_pp,
       price:datos.price_pp,
-      notes: ''
+      notes: datos.notes
     }
   }
 
   
   onSubmit(){
-    this.newQuoter.hotels.push(this.datosrecibidosHotel)
-    this.newQuoter.services.push(this.datosrecibidosService)
+    if(this.datosrecibidosHotel!){
+          this.newQuoter.hotels.push(this.datosrecibidosHotel)
+    }
+    if(this.datosrecibidosService!){
+          this.newQuoter.services.push(this.datosrecibidosService)
+    }
     this.cont++
   }
 

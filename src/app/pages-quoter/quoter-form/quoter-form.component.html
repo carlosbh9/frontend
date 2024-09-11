@@ -54,7 +54,7 @@
                     <option value="Operadores">Operadores</option>
                     <option value="Transporte">Transporte</option>
                     <option value="Experiencias">Experiencias</option>
-                    <option value="Expediciones">Expediciones</option>
+                    <option value="Expeditions">Expeditions</option>
                 </select>
                 </div>
                 <div class="w-1/4">
@@ -84,6 +84,14 @@
                     [selectedDate]="selectedDate">
 
                     </app-form-entrances>
+                }
+
+                @if (selectedCategory==='Expeditions') {
+                    <app-form-expeditions
+                    (serviceItem)="addItemService($event)"
+                    [selectedCity]="selectedCity" 
+                    [selectedDate]="selectedDate">
+                    </app-form-expeditions>
                 }
                         <p>Datos Recibidos:</p>
                         <pre>{{ datosrecibidosService | json }}</pre> <!-- Mostrando los datos recibidos -->   

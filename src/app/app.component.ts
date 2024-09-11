@@ -1,7 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { LayoutComponent } from './components/layout/layout.component';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { environment } from '../enviroment/environment';
 
 //CommonModule, RouterOutlet, RouterLinkActive
 @Component({

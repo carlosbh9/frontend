@@ -1,5 +1,4 @@
 import { Component, inject, OnInit,input, output } from '@angular/core';
-import { Entrance } from './entrance.interface';
 import { EntrancesService } from '../../Services/entrances.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +17,7 @@ export class FormEntrancesComponent implements OnInit {
  
   selectedService: any = {};
   selectedAge: Number =0
+  notes: string =''
   entrances: any[]=[];
   entrance: any = {}
 
@@ -43,10 +43,9 @@ export class FormEntrancesComponent implements OnInit {
     }else{
      this.entrance.price_pp=selectedService.price_pp
     }
-    
+    this.entrance.notes=this.notes
     this.entrance.date=this.selectedDate()
     this.entrance.city=this.selectedCity()
-  
     this.serviceItem.emit(this.entrance)
     console.log(this.entrance)
   }
