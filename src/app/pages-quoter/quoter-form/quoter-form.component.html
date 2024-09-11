@@ -43,63 +43,22 @@
                
             </div>
         </div>
-        <div class="p-6 flex flex-col space-y-4">
-            <div class="flex flex-row justify-between">
-                <div class="basis-1/4">
-                    <label for="issue-date" class="block text-sm font-medium text-gray-700">Selecione la categoria</label>
-                <select [(ngModel)]="selectedCategory" name="selectedCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
-                    <option value="" disabled selected>Select Category</option>
-                    <option value="Hoteles">Hoteles</option>
-                    <option value="Entrances">Entrances</option>
-                    <option value="Operadores">Operadores</option>
-                    <option value="Transporte">Transporte</option>
-                    <option value="Experiencias">Experiencias</option>
-                    <option value="Expeditions">Expeditions</option>
-                </select>
+        <div class="relative flex flex-wrap items-center px-4 py-2">
+            <div class="p-2 relative w-full max-w-full flex-grow flex-1">
+                <app-form-hotel 
+                (hotelItem)="addItemToQuote($event)" 
+                [selectedDate]="selectedDate" 
+                [selectedCity]="selectedCity"></app-form-hotel>
+                <div class="absolute top-0 right-0">
+                    <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="onSubmit()">Add Item Hotel</button>
                 </div>
-                <div class="w-1/4">
-                    <label for="issue-date" class="block text-sm font-medium text-gray-700">Date</label>
-                    <input type="date" [(ngModel)]="selectedDate" name="date" id="date" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
-                </div>
-                <div class="w-1/4">
-                    <label for="issue-date" class="block text-sm font-medium text-gray-700">City</label>
-                    <input type="text" [(ngModel)]="selectedCity"  name="city" id="city" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
-                </div>
-                <div class="">
-                    <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="onSubmit()">Add Item</button>
-                </div>
-                  
             </div>
-            <div class="">
-                @if (selectedCategory==='Hoteles') {
-                    <app-form-hotel 
-                    (hotelItem)="addItemToQuote($event)" 
-                    [selectedDate]="selectedDate" 
-                    [selectedCity]="selectedCity"></app-form-hotel>
-                        }
-                @if (selectedCategory==='Entrances') {
-                    <app-form-entrances 
-                    (serviceItem)="addItemService($event)"
-                    [selectedCity]="selectedCity" 
-                    [selectedDate]="selectedDate">
-
-                    </app-form-entrances>
-                }
-
-                @if (selectedCategory==='Expeditions') {
-                    <app-form-expeditions
-                    (serviceItem)="addItemService($event)"
-                    [selectedCity]="selectedCity" 
-                    [selectedDate]="selectedDate">
-                    </app-form-expeditions>
-                }
-                        <p>Datos Recibidos:</p>
-                        <pre>{{ datosrecibidosService | json }}</pre> <!-- Mostrando los datos recibidos -->   
-            </div>
-        </div>
+              
+          </div>
+       
+      <div class="p-6 block w-full overflow-x-auto">
         <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Hotels</h1>
-      <div class="block w-full overflow-x-auto">
-        <table class="items-center w-full bg-transparent border-collapse">
+        <table class="items-center w-full bg-transparent border-collapse border border-slate-400">
           <thead>
             <tr>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center">Day</th>
@@ -107,7 +66,10 @@
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">City</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left">Hotel</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">P. Conf</th>
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price</th>
+              @for (item of [].constructor(newQuoter.number_paxs); track $index) {
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price {{$index+1}}</th>
+              }
+              
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">ACCOMMODATIONS AND CATEGORY</th><th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Actions</th>
             </tr>
           </thead>
@@ -133,8 +95,54 @@
           </tbody>
         </table>
       </div>
-      <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Services</h1>
-      <div class="block w-full overflow-x-auto">
+      <div class="p-6 flex flex-col space-y-4">
+        <div class="flex flex-row justify-between">
+            <div class="basis-1/4">
+                <label for="issue-date" class="block text-sm font-medium text-gray-700">Selecione la categoria</label>
+            <select [(ngModel)]="selectedCategory" name="selectedCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
+                <option value="" disabled selected>Select Category</option>
+                <option value="Entrances">Entrances</option>
+                <option value="Expeditions">Expeditions</option>
+                <option value="Operadores">Operadores</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Experiencias">Experiencias</option>
+            </select>
+            </div>
+            <div class="w-1/4">
+                <label for="issue-date" class="block text-sm font-medium text-gray-700">Date</label>
+                <input type="date" [(ngModel)]="selectedDate" name="date" id="date" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
+            </div>
+            <div class="w-1/4">
+                <label for="issue-date" class="block text-sm font-medium text-gray-700">City</label>
+                <input type="text" [(ngModel)]="selectedCity"  name="city" id="city" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
+            </div>
+            <div class="">
+                <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="onSubmit()">Add Item</button>
+            </div>
+              
+        </div>
+        <div class="">
+            @if (selectedCategory==='Entrances') {
+                <app-form-entrances 
+                (serviceItem)="addItemService($event)"
+                [selectedCity]="selectedCity" 
+                [selectedDate]="selectedDate">
+
+                </app-form-entrances>
+            }
+            @if (selectedCategory==='Expeditions') {
+                <app-form-expeditions
+                (serviceItem)="addItemService($event)"
+                [selectedCity]="selectedCity" 
+                [selectedDate]="selectedDate">
+                </app-form-expeditions>
+            }
+                    <p>Datos Recibidos:</p>
+                    <pre>{{ datosrecibidosService | json }}</pre> <!-- Mostrando los datos recibidos -->   
+        </div>
+    </div>
+      <div class="p-6 block w-full overflow-x-auto">
+        <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Services</h1>
         <table class="items-center w-full bg-transparent border-collapse">
           <thead>
             <tr>
@@ -143,7 +151,9 @@
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">City</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left">Hotel</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">P. Conf</th>
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price</th>
+              @for (item of [].constructor(newQuoter.number_paxs); track $index) {
+                              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price {{$index+1}}</th>
+              }
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">ACCOMMODATIONS AND CATEGORY</th>
             </tr>
           </thead>

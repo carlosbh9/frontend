@@ -1,6 +1,6 @@
 
   <!--  @if (selectedCategory==='Hoteles') {-->
-     <div class="flex flex-wrap space-x-4 " (change)="onRoomTypeChange($event)">
+     <div class="flex flex-wrap space-x-4 justify-start" (change)="onRoomTypeChange($event)">
         <div class="w-1/4">
             <label for="hotel-select" class="block text-sm font-medium text-gray-700">Hoteles</label>
             <select [(ngModel)]="selectedHotel" (change)="onHotelChange($event)" name="selectedHotel" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
