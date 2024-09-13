@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit,Output, EventEmitter } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit,Output, EventEmitter, inject } from '@angular/core';
+import { FormControl, FormsModule } from '@angular/forms';
 import { QuoterService } from '../../Services/quoter.service';
 import { FormHotelComponent } from '../form-hotel/form-hotel.component';
 import { FormEntrancesComponent } from '../form-entrances/form-entrances.component';
@@ -14,9 +14,14 @@ import {FormExpeditionsComponent} from '../form-expeditions/form-expeditions.com
   styleUrl: './quoter-form.component.css'
 })
 export class QuoterFormComponent implements OnInit{
+  quoterService = inject(QuoterService)
+
  
+
   selectedDate: string ='';
   selectedCity: string = '';
+  selectedDateService: string ='';
+  selectedCityService: string = '';
   cont = 0 ;
   quoter: any={}
   
@@ -61,7 +66,7 @@ export class QuoterFormComponent implements OnInit{
   datosrecibidosHotel: any={};
   datosrecibidosService: any ={}
 
-  constructor(private quoterService: QuoterService) {}
+
   
   ngOnInit(): void {
     this.fetchHotels(); 
@@ -103,16 +108,20 @@ export class QuoterFormComponent implements OnInit{
   }
 
   
-  onSubmit(){
+  onSubmitHotel(){
     if(this.datosrecibidosHotel!){
           this.newQuoter.hotels.push(this.datosrecibidosHotel)
     }
+
+    this.cont++
+  }
+
+  onSubmitService(){
     if(this.datosrecibidosService!){
           this.newQuoter.services.push(this.datosrecibidosService)
     }
     this.cont++
   }
-
   
 
 

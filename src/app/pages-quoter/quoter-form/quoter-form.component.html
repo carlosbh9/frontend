@@ -28,34 +28,57 @@
                         <input type="text" [(ngModel)]="newQuoter.acomodations" name="newQuoter.acomodations" id="accommodations" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
                     </div>
                     <div>
-                        <label for="number-pax" class="block text-sm font-medium text-gray-700">Number of Pax</label>
-                        <input type="number"  [(ngModel)]="newQuoter.number_paxs"  name="newQuoter.number_paxs" id="number-pax" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+                        <label for="number_paxs" class="block text-sm font-medium text-gray-700">Number of Pax</label>
+                        <input type="number" [(ngModel)]="newQuoter.number_paxs"  name="newQuoter.number_paxs" id="number_paxs" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value" required>
+                        @if (!newQuoter.number_paxs) {
+                            <span class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
+                                Invalid username field !
+                            </span>
+                        }
+                        
                     </div>
                 </div>
             </div>
         
             <!-- Columna Derecha -->
-            <div class="w-1/3  space-y-4">
+            <div class="w-1/3 space-y-4">
                 <div>
                     <label for="issue-date" class="block text-sm font-medium text-gray-700">Fecha de emisión</label>
                     <input type="date" id="issue-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
                 </div>
+                <div class="space-x-4">
+                    <button class="px-4 bg-green-500 dark:bg-green-700 p-3  rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800" >Submit</button>
+                    <button class="px-4 bg-red-500 dark:bg-red-700 p-3  rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Cancel</button>
+                </div>
                
             </div>
         </div>
-        <div class="relative flex flex-wrap items-center px-4 py-2">
-            <div class="p-2 relative w-full max-w-full flex-grow flex-1">
+        
+          <div class="p-6 flex flex-col space-y-4">
+            <div class="flex flex-wrap space-x-4 justify-start">
+                
+                <div class="w-1/4">
+                    <label for="issue-date" class="block text-sm font-medium text-gray-700">Date</label>
+                    <input type="date" [(ngModel)]="selectedDate" name="date" id="date" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
+                </div>
+                <div class="w-1/4">
+                    <label for="issue-date" class="block text-sm font-medium text-gray-700">City</label>
+                    <input type="text" [(ngModel)]="selectedCity"  name="city" id="city" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
+                </div>
+                <div class="flex-1 relative ">
+                    <button class="absolute top-4 right-4 px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="onSubmitHotel()">Add Item Hotel</button>
+                </div>
+                  
+            </div>
+            <div class="">
                 <app-form-hotel 
                 (hotelItem)="addItemToQuote($event)" 
                 [selectedDate]="selectedDate" 
-                [selectedCity]="selectedCity"></app-form-hotel>
-                <div class="absolute top-0 right-0">
-                    <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="onSubmit()">Add Item Hotel</button>
-                </div>
+                [selectedCity]="selectedCity"
+                >
+            </app-form-hotel>
             </div>
-              
-          </div>
-       
+        </div>
       <div class="p-6 block w-full overflow-x-auto">
         <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Hotels</h1>
         <table class="items-center w-full bg-transparent border-collapse border border-slate-400">
@@ -69,8 +92,8 @@
               @for (item of [].constructor(newQuoter.number_paxs); track $index) {
                 <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price {{$index+1}}</th>
               }
-              
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">ACCOMMODATIONS AND CATEGORY</th><th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Actions</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">ACCOMMODATIONS AND CATEGORY</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Actions</th>
             </tr>
           </thead>
           <tbody >
@@ -96,13 +119,14 @@
         </table>
       </div>
       <div class="p-6 flex flex-col space-y-4">
-        <div class="flex flex-row justify-between">
+        <div class="flex flex-wrap space-x-4 justify-start">
             <div class="basis-1/4">
                 <label for="issue-date" class="block text-sm font-medium text-gray-700">Selecione la categoria</label>
             <select [(ngModel)]="selectedCategory" name="selectedCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
                 <option value="" disabled selected>Select Category</option>
                 <option value="Entrances">Entrances</option>
                 <option value="Expeditions">Expeditions</option>
+                <option value="Guides">Guides</option>
                 <option value="Operadores">Operadores</option>
                 <option value="Transporte">Transporte</option>
                 <option value="Experiencias">Experiencias</option>
@@ -110,14 +134,14 @@
             </div>
             <div class="w-1/4">
                 <label for="issue-date" class="block text-sm font-medium text-gray-700">Date</label>
-                <input type="date" [(ngModel)]="selectedDate" name="date" id="date" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
+                <input type="date" [(ngModel)]="selectedDateService" name="date" id="date" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
             </div>
             <div class="w-1/4">
                 <label for="issue-date" class="block text-sm font-medium text-gray-700">City</label>
-                <input type="text" [(ngModel)]="selectedCity"  name="city" id="city" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
+                <input type="text" [(ngModel)]="selectedCityService"  name="city" id="city" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
             </div>
-            <div class="">
-                <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="onSubmit()">Add Item</button>
+            <div class="flex-1 relative ">
+                <button class="absolute top-4 right-4 px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="onSubmitService()">Add Item</button>
             </div>
               
         </div>
@@ -125,20 +149,28 @@
             @if (selectedCategory==='Entrances') {
                 <app-form-entrances 
                 (serviceItem)="addItemService($event)"
-                [selectedCity]="selectedCity" 
-                [selectedDate]="selectedDate">
+                [selectedCity]="selectedCityService" 
+                [selectedDate]="selectedDateService">
 
                 </app-form-entrances>
             }
             @if (selectedCategory==='Expeditions') {
                 <app-form-expeditions
                 (serviceItem)="addItemService($event)"
-                [selectedCity]="selectedCity" 
-                [selectedDate]="selectedDate">
+                [selectedCity]="selectedCityService" 
+                [selectedDate]="selectedDateService">
                 </app-form-expeditions>
             }
-                    <p>Datos Recibidos:</p>
-                    <pre>{{ datosrecibidosService | json }}</pre> <!-- Mostrando los datos recibidos -->   
+            @if (selectedCategory==='Guides') {
+                <app-form-expeditions
+                (serviceItem)="addItemService($event)"
+                [selectedCity]="selectedCityService" 
+                [selectedDate]="selectedDateService">
+                </app-form-expeditions>
+            }
+
+              <!--     <p>Datos Recibidos:</p>
+                    <pre>{{ datosrecibidosService | json }}</pre>  Mostrando los datos recibidos -->    
         </div>
     </div>
       <div class="p-6 block w-full overflow-x-auto">
@@ -149,15 +181,33 @@
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center">Day</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">Date</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">City</th>
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left">Hotel</th>
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">P. Conf</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left">Name Service</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">Price</th>
               @for (item of [].constructor(newQuoter.number_paxs); track $index) {
                               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price {{$index+1}}</th>
               }
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">ACCOMMODATIONS AND CATEGORY</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Notes</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Actions</th>
             </tr>
           </thead>
-          <tbody >           
+          <tbody >  
+            @for (service of quoter.services; track $index) {
+                <tr class="text-gray-700 dark:text-gray-1000">
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.day}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.date | date }}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.city}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.name_service}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{service.price_pp.toFixed(2)}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+                        <input type="number" [ngModel]="service.price_pp.toFixed(2)" name="hotel.price" class="border border-gray-300 rounded-md">
+                    </td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.notes}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' ></i>
+                        <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' ></i>
+                    </td>
+                </tr>
+            }         
           </tbody>
         </table>
       </div>
