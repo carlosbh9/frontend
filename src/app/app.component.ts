@@ -18,4 +18,13 @@ import { environment } from '../enviroment/environment';
 
 export class AppComponent {
   title = 'frontend';
+  isSidebarOpen = false;
+
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  closeSidebar() {
+    this.isSidebarOpen = false;
+  }
 }

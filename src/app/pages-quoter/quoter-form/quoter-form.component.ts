@@ -5,25 +5,31 @@ import { QuoterService } from '../../Services/quoter.service';
 import { FormHotelComponent } from '../form-hotel/form-hotel.component';
 import { FormEntrancesComponent } from '../form-entrances/form-entrances.component';
 import {FormExpeditionsComponent} from '../form-expeditions/form-expeditions.component'
+import { FormGuidesComponent } from '../form-guides/form-guides.component';
+import { FormRestaurantsComponent } from '../form-restaurants/form-restaurants.component';
 
 @Component({
   selector: 'app-quoter-form',
   standalone: true,
-  imports: [CommonModule, FormsModule,FormHotelComponent,FormEntrancesComponent,FormExpeditionsComponent],
+  imports: [CommonModule, FormsModule,FormHotelComponent,FormEntrancesComponent,FormExpeditionsComponent,FormGuidesComponent,FormRestaurantsComponent],
   templateUrl: './quoter-form.component.html',
   styleUrl: './quoter-form.component.css'
 })
 export class QuoterFormComponent implements OnInit{
   quoterService = inject(QuoterService)
 
- 
+  totalPriceHotels: number = 0;
+  totalPriceServices: number = 0;
 
   selectedDate: string ='';
   selectedCity: string = '';
+  previousDateHotel: string = ''; // Para almacenar el último valor de selectedDate
+  previousDateService: string = ''; 
   selectedDateService: string ='';
   selectedCityService: string = '';
-  cont = 0 ;
-  quoter: any={}
+  contHotel = 1 ;
+  contService = 1;
+  //quoter: any={}
   
   newQuoter: any = {
     guest:'',
@@ -34,7 +40,7 @@ export class QuoterFormComponent implements OnInit{
     },
     acomodations:'',
     totalNights: '',
-    number_paxs: 0,
+    number_paxs: 1,
     trvale_agent:'',
     exchange_rate:'',
     services:[],
@@ -51,7 +57,7 @@ export class QuoterFormComponent implements OnInit{
     },
     acomodations:'',
     totalNights: '',
-    number_paxs: 0,
+    number_paxs: 1,
     trvale_agent:'',
     exchange_rate:'',
     services:[],
@@ -69,35 +75,51 @@ export class QuoterFormComponent implements OnInit{
 
   
   ngOnInit(): void {
-    this.fetchHotels(); 
+    //this.calculateTotalPrice();
+    this.datosrecibidosHotel = null
+this.datosrecibidosService = null
+
   }
 
-  async fetchHotels() {
-    try {
-   //   this.quoters = await this.quoterService.getAllQuoter();
-      this.quoter= this.newQuoter
-    } catch (error) {
-      console.error('Error fetching Quoters', error);
-    }
+ 
+
+  onPriceChangeHotel(index: number, newPrice: number) {
+    this.newQuoter.hotels[index].price = newPrice;  // Asegúrate de que sea un número
+    this.updateTotalPriceHotels();
+
+  }
+  onPriceChangeService(index: number, newPrice: number){
+    this.newQuoter.services[index].price = newPrice;  // Asegúrate de que sea un número
+    this.updateTotalPriceServices();
   }
 
   addItemToQuote(datos: any){
-  
       this.datosrecibidosHotel ={
-        day: this.cont,
+        day: this.contHotel,
         city: datos.city,
         date:datos.date,
         name_hotel: datos.name_hotel,
-        type_hotel: datos.price.type,
+        type_hotel: datos.price.type, 
         price: datos.price.price,
         accomodatios_category: datos.accomodatios_category,
         notes:datos.notes
       };
+      if (this.selectedDate !== this.previousDateHotel) {
+        this.contHotel++; // Incrementa el día solo si la fecha cambia
+        this.previousDateHotel = this.selectedDate; // Actualiza la fecha previa
+     }
+  }
+  updateTotalPriceHotels() {
+    this.totalPriceHotels = this.newQuoter.hotels.reduce((acc: number, hotel: any) => acc + hotel.price, 0);
+  }
+  updateTotalPriceServices() {
+    this.totalPriceServices = this.newQuoter.services.reduce((acc: number, service: any) => acc + service.price_pp, 0);
   }
 
   addItemService(datos:any){
+    
     this.datosrecibidosService={
-      day:this.cont,
+      day:this.contService,
       date: datos.date,
       city: datos.city,
       name_service: datos.name_service,
@@ -105,31 +127,37 @@ export class QuoterFormComponent implements OnInit{
       price:datos.price_pp,
       notes: datos.notes
     }
+    if (this.selectedDateService !== this.previousDateService) {
+      this.contService++; // Incrementa el día solo si la fecha cambia
+      this.previousDateService = this.selectedDateService; // Actualiza la fecha previa
+    }
   }
 
   
   onSubmitHotel(){
+
     if(this.datosrecibidosHotel!){
           this.newQuoter.hotels.push(this.datosrecibidosHotel)
+          
     }
-
-    this.cont++
+    this.updateTotalPriceHotels();
+    this.datosrecibidosHotel = null
   }
 
   onSubmitService(){
     if(this.datosrecibidosService!){
           this.newQuoter.services.push(this.datosrecibidosService)
+          
     }
-    this.cont++
+    this.updateTotalPriceServices();
+    this.datosrecibidosService = null
   }
   
-
-
   onSubmit2(){
     this.quoterService.addItemQuoter(this.newQuoter._id,this.newQuoter.hotels).then(
       response => {
         console.log('Quoter added',response)
-        this.fetchHotels();
+        //this.fetchHotels();
       },
       error => {
         console.error('Error adding Quoter', error)

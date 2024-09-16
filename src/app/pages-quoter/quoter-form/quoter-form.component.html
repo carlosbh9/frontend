@@ -81,7 +81,7 @@
         </div>
       <div class="p-6 block w-full overflow-x-auto">
         <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Hotels</h1>
-        <table class="items-center w-full bg-transparent border-collapse border border-slate-400">
+        <table class="items-center w-full bg-transparent border-collapse border ">
           <thead>
             <tr>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center">Day</th>
@@ -93,12 +93,13 @@
                 <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price {{$index+1}}</th>
               }
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">ACCOMMODATIONS AND CATEGORY</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Notes</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Actions</th>
             </tr>
           </thead>
           <tbody >
         
-                @for (hotel of quoter.hotels; track $index) {
+                @for (hotel of newQuoter.hotels; track $index) {
                     <tr class="text-gray-700 dark:text-gray-1000">
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.day}}</td>
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.date | date }}</td>
@@ -106,9 +107,10 @@
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.name_hotel}}</td>
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{hotel.price.toFixed(2)}}</td>
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
-                            <input type="number" [ngModel]="hotel.price.toFixed(2)" name="hotel.price" class="border border-gray-300 rounded-md">
+                            <input type="number" [ngModel]="hotel.price" (ngModelChange)="onPriceChangeHotel($index, $event)" name="hotel.price" class="border border-gray-300 rounded-md">
                         </td>
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.accomodatios_category}}</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.notes}}</td>
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                             <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' ></i>
                             <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' ></i>
@@ -116,6 +118,13 @@
                     </tr>
                 }
           </tbody>
+          <tfoot>
+            <tr class="font-semibold text-gray-700 dark:text-gray-1000">
+                <td colspan="5" class="border-t-2 border-gray-300 px-4 py-2 text-left">Total Price</td>
+                <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">${{totalPriceHotels.toFixed(2)}}</td>
+                <td colspan="2" class="border-t-2 border-gray-300 px-4 py-2 text-right"></td>
+              </tr>
+          </tfoot>
         </table>
       </div>
       <div class="p-6 flex flex-col space-y-4">
@@ -127,6 +136,7 @@
                 <option value="Entrances">Entrances</option>
                 <option value="Expeditions">Expeditions</option>
                 <option value="Guides">Guides</option>
+                <option value="Restaurants">Restaurants</option>
                 <option value="Operadores">Operadores</option>
                 <option value="Transporte">Transporte</option>
                 <option value="Experiencias">Experiencias</option>
@@ -162,11 +172,18 @@
                 </app-form-expeditions>
             }
             @if (selectedCategory==='Guides') {
-                <app-form-expeditions
+                <app-form-guides
                 (serviceItem)="addItemService($event)"
                 [selectedCity]="selectedCityService" 
                 [selectedDate]="selectedDateService">
-                </app-form-expeditions>
+                </app-form-guides>
+            }
+            @if (selectedCategory==='Restaurants') {
+                <app-form-restaurants
+                (serviceItem)="addItemService($event)"
+                [selectedCity]="selectedCityService" 
+                [selectedDate]="selectedDateService">
+                </app-form-restaurants>
             }
 
               <!--     <p>Datos Recibidos:</p>
@@ -175,7 +192,7 @@
     </div>
       <div class="p-6 block w-full overflow-x-auto">
         <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Services</h1>
-        <table class="items-center w-full bg-transparent border-collapse">
+        <table class="items-center w-full bg-transparent border border-collapse">
           <thead>
             <tr>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center">Day</th>
@@ -191,7 +208,7 @@
             </tr>
           </thead>
           <tbody >  
-            @for (service of quoter.services; track $index) {
+            @for (service of newQuoter.services; track $index) {
                 <tr class="text-gray-700 dark:text-gray-1000">
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.day}}</td>
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.date | date }}</td>
@@ -199,7 +216,7 @@
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.name_service}}</td>
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{service.price_pp.toFixed(2)}}</td>
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
-                        <input type="number" [ngModel]="service.price_pp.toFixed(2)" name="hotel.price" class="border border-gray-300 rounded-md">
+                        <input type="number" [ngModel]="service.price_pp.toFixed(2)" (ngModelChange)="onPriceChangeService($index,$event)" name="service.price" class="border border-gray-300 rounded-md">
                     </td>
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.notes}}</td>
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
@@ -209,6 +226,13 @@
                 </tr>
             }         
           </tbody>
+          <tfoot>
+            <tr class="font-semibold text-gray-700 dark:text-gray-1000">
+                <td colspan="5" class="border-t-2 border-gray-300 px-4 py-2 text-left">Total Price</td>
+                <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">${{totalPriceServices.toFixed(2)}}</td>
+                <td colspan="2" class="border-t-2 border-gray-300 px-4 py-2 text-right"></td>
+              </tr>
+          </tfoot>
         </table>
       </div>
     </div>

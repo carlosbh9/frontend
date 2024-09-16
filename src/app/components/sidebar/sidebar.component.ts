@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component , Input,Output,EventEmitter} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -20,5 +20,12 @@ export class SidebarComponent {
   }
   toggleDropdown2() {
     this.isDropdownOpen2 = !this.isDropdownOpen2;
+}
+
+@Input() isOpen = false;
+@Output() closeSidebar = new EventEmitter<void>();
+
+onCloseSidebar() {
+  this.closeSidebar.emit();
 }
 }

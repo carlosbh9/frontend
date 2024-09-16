@@ -44,7 +44,9 @@ export class FormGuidesComponent implements OnInit {
     }
   }
   onServiceChange(event: any) {
+
     const selectedService = this.guides.find(service => service._id === this.selectedService);
+
       this.guide.name_service=selectedService.name_guide
        this.guide.price_pp=selectedService.price_guide
   

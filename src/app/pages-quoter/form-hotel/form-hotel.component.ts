@@ -24,6 +24,7 @@ selectedCity =  input.required<string>();
 
   selectedHotel: string = '';
   selectedService: string = '';
+
   selectedRoomType: string = '';
   hotels: any[] = [];
   hotelServices: any[] = [];

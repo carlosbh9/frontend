@@ -1,9 +1,10 @@
 
 <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-200 min-h-screen transition-all main">
     <!-- navbar -->
-<app-header></app-header>
+<app-header (toggleSidebar)="toggleSidebar()"></app-header >
     <!-- end navbar -->
-<app-sidebar></app-sidebar>
+
+<app-sidebar [isOpen]="isSidebarOpen" (closeSidebar)="closeSidebar()"></app-sidebar >
   <!-- Content -->
 <div class="p-6">
 <router-outlet></router-outlet>
