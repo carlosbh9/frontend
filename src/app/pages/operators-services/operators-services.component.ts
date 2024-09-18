@@ -25,6 +25,7 @@ export class OperatorsServicesComponent implements OnInit{
     ciudad: '',
     name_service: '',
     servicios: [],
+    pricesRange:[],
     observaciones: ''
   };
   newService: any = {
@@ -42,6 +43,19 @@ export class OperatorsServicesComponent implements OnInit{
 
   constructor (private operatorsService: OperatorsService,private route: ActivatedRoute){}
 
+  assignPricesRangeToNewService() {
+    this.newService.prices = this.selectedOperator.pricesRange.map((range: any) => {
+      return {
+        range_min: range.range_min,
+        range_max: range.range_max,
+        type_vehicle: range.type,
+        price: 0  // Aquí puedes inicializar el precio en 0 o un valor por defecto
+      };
+    });
+  }
+
+
+
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
@@ -54,8 +68,9 @@ export class OperatorsServicesComponent implements OnInit{
         console.log('No id')
       }
     });
-
+    
     console.log(this.operatorId)
+    
   }
 
   async fetchServices(id: string) {
@@ -120,6 +135,7 @@ export class OperatorsServicesComponent implements OnInit{
   openEditModal(operator: any) {
     this.selectService = { ...operator };
     this.showEditModal = true;
+    //this.assignPricesRangeToSelService()
     console.log(this.selectService)
   }
 
@@ -131,6 +147,9 @@ export class OperatorsServicesComponent implements OnInit{
 
   openModal() {
     this.showAddModal = true;
+    this.emptyService();
+    this.assignPricesRangeToNewService();
+    console.log('aqui el new service',this.assignPricesRangeToNewService())
   }
 
   closeModal() {
@@ -147,33 +166,29 @@ export class OperatorsServicesComponent implements OnInit{
   }
 
    // Función para agregar un nuevo campo de precio en el formulario de agregar servicio
- addPriceField() {
-  this.newService.prices.push({ range_min: 0, range_max: 0, type_vehicle: '' });
-}
+// addPriceField() {
+ // this.newService.prices.push({ range_min: 0, range_max: 0, type_vehicle: '' });
+//}
 
 // Función para agregar un nuevo campo de precio en el formulario de editar servicio
-addEditPriceField() {
-  this.selectService.prices.push({ range_min: 0, range_max: 0, type_vehicle: '' });
-}
-removePriceField(index: number) {
-
-  if (this.newService.prices.length >= 1) { // Prevent removing the only price field
-    this.newService.prices.splice(index, 1);
-  } else {
+//addEditPriceField() {
+ // this.selectService.prices.push({ range_min: 0, range_max: 0, type_vehicle: '' });
+//}
+//removePriceField(index: number) {
+ // if (this.newService.prices.length >= 1) { // Prevent removing the only price field
+//  this.newService.prices.splice(index, 1);
+ // } else {
     // Handle the case of removing the only price field (optional: clear values or display a message)
-    console.warn('Cannot remove the only price field.');
-  }
+ //   console.warn('Cannot remove the only price field.');
+ // }
+//}
 
-}
-
-removeeditPriceField(index: number) {
-
-  if (this.selectService.prices.length >= 1) { // Prevent removing the only price field
-    this.selectService.prices.splice(index, 1);
-  } else {
+//removeeditPriceField(index: number) {
+//  if (this.selectService.prices.length >= 1) { // Prevent removing the only price field
+//    this.selectService.prices.splice(index, 1);
+//  } else {
     // Handle the case of removing the only price field (optional: clear values or display a message)
-    console.warn('Cannot remove the only price field.');
-  }
-
-}
+//    console.warn('Cannot remove the only price field.');
+//  }
+//}
 }

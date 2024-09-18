@@ -25,6 +25,7 @@ export class OperatorsComponent implements OnInit {
     ciudad: '',
     name_service: '',
     servicios: [],
+    pricesRange:[],
     observaciones: ''
   };
 
@@ -126,4 +127,39 @@ export class OperatorsComponent implements OnInit {
   viewServices(operator: any) {
     this.router.navigate([`services-operators`, operator._id]);
   }
+
+
+
+     // Función para agregar un nuevo campo de precio en el formulario de agregar servicio
+ addPriceField() {
+  this.newOperator.pricesRange.push({ range_min: 0, range_max: 0, type: '' });
+}
+removePriceField(index: number) {
+
+  if (this.newOperator.pricesRange.length >= 1) { // Prevent removing the only price field
+    this.newOperator.pricesRange.splice(index, 1);
+  } else {
+    // Handle the case of removing the only price field (optional: clear values or display a message)
+    console.warn('Cannot remove the only price field.');
+  }
+}
+
+
+
+// Función para agregar un nuevo campo de precio en el formulario de editar servicio
+addEditPriceField() {
+  this.selectedOperator.pricesRange.push({ range_min: 0, range_max: 0, type: '' });
+}
+
+
+removeeditPriceField(index: number) {
+
+  if (this.selectedOperator.pricesRange.length >= 1) { // Prevent removing the only price field
+    this.selectedOperator.pricesRange.splice(index, 1);
+  } else {
+    // Handle the case of removing the only price field (optional: clear values or display a message)
+    console.warn('Cannot remove the only price field.');
+  }
+
+}
 }

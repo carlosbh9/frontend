@@ -79,6 +79,25 @@
               <label for="name_service" class="block text-md text-gray-600 dark:text-gray-50">Service name</label>
               <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service name" [(ngModel)]="newOperator.name_service" required>
             </div>
+            <div class="mb-4">
+              <label for="prices" class="block text-md text-gray-600 dark:text-gray-50 ">Prices</label>
+              @for (price of newOperator.pricesRange; track $index) {
+                <div class="grid grid-cols-3 gap-3 py-2 items-center">
+                  <input type="number" [(ngModel)]="price.range_min" placeholder="Range min" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="range_min-{{$index}}" required>
+                  <input type="number" [(ngModel)]="price.range_max" placeholder="Range max" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="range_max-{{$index}}" required>
+                  <select [(ngModel)]="price.type" name="type-{{$index}}" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Type Guide" required>
+                    <option value="Camioneta">Camioneta</option>
+                    <option value="Van">Van</option>
+                    <option value="Sprinter">Sprinter</option>
+                    <option value="MiniBus">MiniBus</option>
+                    <option value="Bus">Bus</option>
+                    <option value="Sin especificar">Sin especificar</option>
+                </select>
+                <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removePriceField($index)"></i>
+                </div>
+              }
+              <button type="button" (click)="addPriceField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Price</button>
+          </div>
           </div>
         </form>
       </div>
@@ -120,6 +139,25 @@
               <label for="name_service" class="block text-md text-gray-600 dark:text-gray-50">Service name</label>
               <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service name" [(ngModel)]="selectedOperator.name_service" required>
             </div>
+            <div class="mb-4">
+              <label for="prices" class="block text-md text-gray-600 dark:text-gray-50 ">Prices</label>
+              @for (price of selectedOperator.pricesRange; track $index) {
+                <div class="grid grid-cols-3 gap-3 py-2 items-center">
+                  <input type="number" [(ngModel)]="price.range_min" placeholder="Range min" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="range_min-{{$index}}" required>
+                  <input type="number" [(ngModel)]="price.range_max" placeholder="Range max" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="range_max-{{$index}}" required>
+                  <select [(ngModel)]="price.type" name="type-{{$index}}" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Type Guide" required>
+                    <option value="Camioneta">Camioneta</option>
+                    <option value="Van">Van</option>
+                    <option value="Sprinter">Sprinter</option>
+                    <option value="MiniBus">MiniBus</option>
+                    <option value="Bus">Bus</option>
+                    <option value="Sin especificar">Sin especificar</option>
+                </select>
+                <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removeeditPriceField($index)"></i>
+                </div>
+              }
+              <button type="button" (click)="addEditPriceField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Price</button>
+          </div>
           </div>
         </form>
       </div>

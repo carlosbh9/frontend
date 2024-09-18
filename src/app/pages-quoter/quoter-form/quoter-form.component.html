@@ -137,7 +137,7 @@
                 <option value="Expeditions">Expeditions</option>
                 <option value="Guides">Guides</option>
                 <option value="Restaurants">Restaurants</option>
-                <option value="Operadores">Operadores</option>
+                <option value="Operators">Operators</option>
                 <option value="Transporte">Transporte</option>
                 <option value="Experiencias">Experiencias</option>
             </select>
@@ -185,9 +185,16 @@
                 [selectedDate]="selectedDateService">
                 </app-form-restaurants>
             }
+            @if (selectedCategory==='Operators') {
+                <app-form-operators
+                (serviceItem)="addItemService($event)"
+                [selectedCity]="selectedCityService" 
+                [selectedDate]="selectedDateService">
+                </app-form-operators>
+            }
 
-              <!--     <p>Datos Recibidos:</p>
-                    <pre>{{ datosrecibidosService | json }}</pre>  Mostrando los datos recibidos -->    
+<!--                   <p>Datos Recibidos:</p>
+                    <pre>{{ datosrecibidosService | json }}</pre>  Mostrando los datos recibidos   -->
         </div>
     </div>
       <div class="p-6 block w-full overflow-x-auto">

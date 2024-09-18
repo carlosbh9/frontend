@@ -101,7 +101,7 @@
                 <div class="relative z-0 w-full mb-5">
                   <input
                     type="number"
-                    name="money"
+                    name="price.confidential"
                     [(ngModel)]="price.confidential"
                     placeholder=" "
                     class="pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
@@ -112,7 +112,7 @@
                 <div class="relative z-0 w-full mb-5">
                   <input
                     type="number"
-                    name="money"
+                    name="price.rack"
                     [(ngModel)]="price.rack"
                     placeholder=" "
                     class="pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
@@ -157,7 +157,7 @@
                 <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service Description" [(ngModel)]="selectedService.name_service" required>
               </div>
             <div class="mb-4">
-              @for (price of selectedService.roomPrices; track price.type) {
+              @for (price of selectedService.roomPrices; track $index) {
                 <div class="grid grid-cols-3 gap-3 py-2 items-center">
                 <label for="" class="block text-md text-gray-600 dark:text-gray-50">{{price.type}}</label>
                 <div class="relative z-0 w-full mb-5">

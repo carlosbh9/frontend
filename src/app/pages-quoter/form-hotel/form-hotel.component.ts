@@ -11,16 +11,11 @@ import { NonNullAssert } from '@angular/compiler';
   templateUrl: './form-hotel.component.html',
   styleUrl: './form-hotel.component.css'
 })
-export class FormHotelComponent implements OnInit {
-  
-
- 
-hotelItem = output<any>();
-
-selectedDate = input.required<string>();
-selectedCity =  input.required<string>();
-
-
+export class FormHotelComponent implements OnInit { 
+  hotelService = inject(HotelService)
+  hotelItem = output<any>();
+  selectedDate = input.required<string>();
+  selectedCity =  input.required<string>();
 
   selectedHotel: string = '';
   selectedService: string = '';
@@ -46,7 +41,7 @@ selectedCity =  input.required<string>();
     },
     notes:''
   }; 
-  hotelService = inject(HotelService)
+  
  
   
   async loadHotels() {
@@ -62,11 +57,6 @@ selectedCity =  input.required<string>();
     this.loadHotels();
   }
 
-  loadHotels2(): void {
-    this.hotelService.getAllHotels().then((data: any[]) => {
-      this.hotels = data;
-    });
-  }
 
   onHotelChange(event: any): void {
       const selectedHotel = this.hotels.find(hotel => hotel._id === this.selectedHotel)

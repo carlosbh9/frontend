@@ -7,11 +7,12 @@ import { FormEntrancesComponent } from '../form-entrances/form-entrances.compone
 import {FormExpeditionsComponent} from '../form-expeditions/form-expeditions.component'
 import { FormGuidesComponent } from '../form-guides/form-guides.component';
 import { FormRestaurantsComponent } from '../form-restaurants/form-restaurants.component';
+import { FormOperatorsComponent } from '../form-operators/form-operators.component';
 
 @Component({
   selector: 'app-quoter-form',
   standalone: true,
-  imports: [CommonModule, FormsModule,FormHotelComponent,FormEntrancesComponent,FormExpeditionsComponent,FormGuidesComponent,FormRestaurantsComponent],
+  imports: [CommonModule, FormsModule,FormHotelComponent,FormEntrancesComponent,FormExpeditionsComponent,FormGuidesComponent,FormRestaurantsComponent,FormOperatorsComponent],
   templateUrl: './quoter-form.component.html',
   styleUrl: './quoter-form.component.css'
 })
