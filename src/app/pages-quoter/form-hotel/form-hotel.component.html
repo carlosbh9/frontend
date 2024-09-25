@@ -1,6 +1,6 @@
 
 
-     <div class="flex flex-wrap space-x-4 justify-start" (change)="onRoomTypeChange($event)">
+     <div class="flex flex-wrap justify-start" (change)="onRoomTypeChange($event)">
         <div class="w-1/4">
             <label for="hotel-select" class="block text-sm font-medium text-gray-700">Hoteles</label>
             <select [(ngModel)]="selectedHotel" (change)="onHotelChange($event)" name="selectedHotel" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
@@ -11,7 +11,7 @@
             </select>
         </div>
       <!--   <div class="flex flex-row space-x-4">-->
-            <div class="w-1/4">
+            <div class="w-1/4 px-4">
                 <label for="service-select" class="block text-sm font-medium text-gray-700">Services</label>
             <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" name="selectedService" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
                 <option value="" disabled selected>Select Service</option>
@@ -21,7 +21,7 @@
                 }
             </select>
             </div>
-            <div>
+            <div class="pr-4">
                @if (roomTypes.length>0) {
                 <label for="price" class="block text-sm font-medium text-gray-700 pb-1">Accommodations</label>
                 <div class="space-x-4 flex flex-row border-2 h-10 border-gray-300 rounded-md" >
@@ -58,6 +58,7 @@
                 </div>
                 
                 }
+                <i class="bx bxs-plus-circle text-2xl text-green-500 dark:text-green-700" (click)="addPrices()"></i>
                 </div>
 
                 }    
@@ -67,7 +68,15 @@
                      <label for="service-select" class="block text-sm font-medium text-gray-700">Notes</label>
                     <textarea [(ngModel)]="quoterItem.notes" name="quoterItem.notes" id="" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1"></textarea>
                 </div>
-               
+            </div>
+            <div >
+                <div>
+                    <label for="service-select" class="block text-sm font-medium text-gray-700">Prices</label>
+                    @for (item of [].constructor(priceLength()); track $index) {
+                        <input  name="" [(ngModel)]="quoterItem.price_prueba[$index]" id="" class="pr-4 h-10 p-2 w-16 border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
+                    }
+                   
+               </div>
             </div>
          </div>
  

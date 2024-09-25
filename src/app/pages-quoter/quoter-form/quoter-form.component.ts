@@ -20,6 +20,7 @@ export class QuoterFormComponent implements OnInit{
   quoterService = inject(QuoterService)
 
   totalPriceHotels: number = 0;
+ // totalPriceHotels2: number[] = [];
   totalPriceServices: number = 0;
 
   selectedDate: string ='';
@@ -30,6 +31,7 @@ export class QuoterFormComponent implements OnInit{
   selectedCityService: string = '';
   contHotel = 1 ;
   contService = 1;
+  cont = 0
   //quoter: any={}
   
   newQuoter: any = {
@@ -41,7 +43,7 @@ export class QuoterFormComponent implements OnInit{
     },
     acomodations:'',
     totalNights: '',
-    number_paxs: 1,
+    number_paxs: [0],
     trvale_agent:'',
     exchange_rate:'',
     services:[],
@@ -82,7 +84,11 @@ this.datosrecibidosService = null
 
   }
 
- 
+  addNumberPaxs() {
+    this.newQuoter.number_paxs.push(0);  // Agrega un nuevo input 
+  console.log('Valores de number_paxs', this.newQuoter.number_paxs);
+  console.log('precios',this.totalPriceHotels)
+  }
 
   onPriceChangeHotel(index: number, newPrice: number) {
     this.newQuoter.hotels[index].price = newPrice;  // Asegúrate de que sea un número
@@ -101,7 +107,8 @@ this.datosrecibidosService = null
         date:datos.date,
         name_hotel: datos.name_hotel,
         type_hotel: datos.price.type, 
-        price: datos.price.price,
+        price: datos.price_prueba,
+        //prices:datos.price_prueba,
         accomodatios_category: datos.accomodatios_category,
         notes:datos.notes
       };

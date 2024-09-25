@@ -14,6 +14,7 @@ import { NonNullAssert } from '@angular/compiler';
 export class FormHotelComponent implements OnInit { 
   hotelService = inject(HotelService)
   hotelItem = output<any>();
+  priceLength = input.required<Number>();
   selectedDate = input.required<string>();
   selectedCity =  input.required<string>();
 
@@ -30,11 +31,12 @@ export class FormHotelComponent implements OnInit {
   selectedPrices: any[] = [];
 
   quoterItem: any = {
+    day:'',
     city:'',
     date:'',
     name_hotel:'',
     accomodatios_category: '',
-    price_pp: 0,
+    price_prueba: [],
     price: {
       type:'',
       price:0
@@ -57,14 +59,16 @@ export class FormHotelComponent implements OnInit {
     this.loadHotels();
   }
 
-
+  addPrices(){
+    this.quoterItem.price_prueba.push(this.quoterItem.price.price)
+  }
   onHotelChange(event: any): void {
       const selectedHotel = this.hotels.find(hotel => hotel._id === this.selectedHotel)
       if(selectedHotel){
         this.hotelServices= selectedHotel.services
       }
       this.quoterItem.name_hotel= selectedHotel.name
-      this.quoterItem.city=selectedHotel.location
+      //this.quoterItem.city=selectedHotel.location
       this.quoterItem.city=this.selectedCity()
       this.quoterItem.date=this.selectedDate()
 
