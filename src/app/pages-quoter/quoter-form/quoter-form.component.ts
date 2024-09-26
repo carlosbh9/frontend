@@ -107,7 +107,7 @@ this.datosrecibidosService = null
         date:datos.date,
         name_hotel: datos.name_hotel,
         type_hotel: datos.price.type, 
-        price: datos.price_prueba,
+        prices: datos.price_prueba,
         //prices:datos.price_prueba,
         accomodatios_category: datos.accomodatios_category,
         notes:datos.notes
