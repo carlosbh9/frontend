@@ -80,16 +80,43 @@ export class QuoterFormComponent implements OnInit{
   ngOnInit(): void {
     //this.calculateTotalPrice();
     this.datosrecibidosHotel = null
-this.datosrecibidosService = null
+    this.datosrecibidosService = null
 
   }
 
   addNumberPaxs() {
+    if(this.newQuoter.hotels.length!=0){
+      this.updatePricesSizeHotels(this.newQuoter.hotels,this.newQuoter.number_paxs.length+1)
+      console.log('hotels',this.newQuoter.hotels)
+      console.log('hotels',this.newQuoter.number_paxs.length)
+    }
     this.newQuoter.number_paxs.push(0);  // Agrega un nuevo input 
   console.log('Valores de number_paxs', this.newQuoter.number_paxs);
-  console.log('precios',this.totalPriceHotels)
+  
+
+  }
+  updatePricesSizeHotels(hotels: any[], newSize: number): any[] {
+    return hotels.map(hotel => {
+      const currentSize = hotel.prices.length;
+
+      if (currentSize < newSize) {
+        hotel.prices = [...hotel.prices, ...new Array(newSize - currentSize).fill(0)];
+      }
+      return hotel;
+    });
+  }
+  updatePricesSizeServices(services: any[], newSize: number): any[] {
+    return services.map(service => {
+      const currentSize = service.prices.length;
+
+      if (currentSize < newSize) {
+        service.prices = [...service.prices, ...new Array(newSize - currentSize).fill(0)];
+      }
+      return service;
+    });
   }
 
+  
   onPriceChangeHotel(index: number, newPrice: number) {
     this.newQuoter.hotels[index].price = newPrice;  // Asegúrate de que sea un número
     this.updateTotalPriceHotels();
@@ -108,10 +135,14 @@ this.datosrecibidosService = null
         name_hotel: datos.name_hotel,
         type_hotel: datos.price.type, 
         prices: datos.price_prueba,
-        //prices:datos.price_prueba,
         accomodatios_category: datos.accomodatios_category,
         notes:datos.notes
       };
+      if(this.datosrecibidosHotel.prices.length<this.newQuoter.number_paxs.length){
+        for(let i = this.datosrecibidosHotel.prices.length; i<this.newQuoter.number_paxs.length;i++){
+          this.datosrecibidosHotel.prices[i]=0
+        }
+      }
       if (this.selectedDate !== this.previousDateHotel) {
         this.contHotel++; // Incrementa el día solo si la fecha cambia
         this.previousDateHotel = this.selectedDate; // Actualiza la fecha previa

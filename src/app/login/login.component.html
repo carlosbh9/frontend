@@ -1,0 +1,70 @@
+<div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+    <div class="p-6 flex flex-col space-y-4">
+      <div class="flex flex-wrap space-x-4 justify-start">
+        <div class="w-1/4">
+          <label for="issue-date" class="block text-sm font-medium text-gray-700">Date</label>
+          <input type="date" [(ngModel)]="selectedDate" name="date" id="date" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
+        </div>
+        <div class="w-1/4">
+          <label for="issue-city" class="block text-sm font-medium text-gray-700">City</label>
+          <input type="text" [(ngModel)]="selectedCity" name="city" id="city" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
+        </div>
+        <div class="flex-1 relative">
+          <button class="absolute top-4 right-4 px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="onSubmitHotel()">Add Item Hotel</button>
+        </div>
+      </div>
+      <div>
+        <app-form-hotel 
+          (hotelItem)="addItemToQuote($event)"
+          [priceLength]="newQuoter.number_paxs.length" 
+          [selectedDate]="selectedDate" 
+          [selectedCity]="selectedCity">
+        </app-form-hotel>
+        <p>Datos Recibidos:</p>
+        <pre>{{ datosrecibidosHotel | json }}</pre>
+      </div>
+    </div>
+    <div class="p-6 block w-full overflow-x-auto">
+      <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Hotels</h1>
+      <table class="items-center w-full bg-transparent border-collapse border">
+        <thead>
+          <tr>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center">Day</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">Date</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">City</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left">Hotel</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">P. Conf</th>
+            <ng-container *ngFor="let item of [].constructor(newQuoter.number_paxs.length); let i = index">
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price {{i + 1}}</th>
+            </ng-container>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">ACCOMMODATIONS AND CATEGORY</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Notes</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let hotel of newQuoter.hotels; let i = index">
+            <tr class="text-gray-700 dark:text-gray-1000">
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4">{{hotel.day}}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4">{{hotel.date | date}}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4">{{hotel.city}}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4">{{hotel.name_hotel}}</td>
+              <ng-container *ngFor="let price of hotel.prices; let j = index">
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4">${{price.toFixed(2)}}</td>
+              </ng-container>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4">
+                <input type="number" [(ngModel)]="hotel.price" (ngModelChange)="onPriceChangeHotel(i, $event)" name="hotel.price" class="border border-gray-300 rounded-md">
+              </td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4">{{hotel.accomodatios_category}}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4">{{hotel.notes}}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2'></i>
+                <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2'></i>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+u   

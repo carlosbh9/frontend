@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Input ,inject,input, output, model} from '@angular/core';
+import { Component, OnInit, Input ,inject,input, output, OnChanges} from '@angular/core';
 import { HotelService } from '../../Services/hotel.service';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule } from '@angular/forms';
@@ -14,10 +14,10 @@ import { NonNullAssert } from '@angular/compiler';
 export class FormHotelComponent implements OnInit { 
   hotelService = inject(HotelService)
   hotelItem = output<any>();
-  priceLength = input.required<Number>();
+  priceLength = input.required<number>();
   selectedDate = input.required<string>();
   selectedCity =  input.required<string>();
-
+  addedPricesCount: number = 0
   selectedHotel: string = '';
   selectedService: string = '';
 
@@ -53,14 +53,31 @@ export class FormHotelComponent implements OnInit {
     } catch (error) {
       console.error('Error fetching hotels:', error);
     }
+    
   }
 
   ngOnInit(): void {
     this.loadHotels();
+ 
+  }
+
+   // Función para actualizar el tamaño del array price_prueba
+  updatePricePruebaArray(length: number) {
+    this.quoterItem.price_prueba = new Array(length).fill(0); // Inicializamos el array con valores predeterminados, por ejemplo, 0.
   }
 
   addPrices(){
-    this.quoterItem.price_prueba.push(this.quoterItem.price.price)
+    
+   //this.quoterItem.price_prueba.splice(this.quoterItem.price.price)
+   if (this.addedPricesCount < this.priceLength()) {
+    // Agregamos el precio actual al final del arreglo
+    this.quoterItem.price_prueba[this.addedPricesCount] = this.quoterItem.price.price;
+    this.addedPricesCount++; // Incrementamos el contador
+  } else {
+    // Si ya se ha alcanzado el límite de precios, mostramos un mensaje
+    console.log("No se pueden agregar más precios, el arreglo está lleno.");
+  }
+
   }
   onHotelChange(event: any): void {
       const selectedHotel = this.hotels.find(hotel => hotel._id === this.selectedHotel)
@@ -71,6 +88,9 @@ export class FormHotelComponent implements OnInit {
       //this.quoterItem.city=selectedHotel.location
       this.quoterItem.city=this.selectedCity()
       this.quoterItem.date=this.selectedDate()
+      this.addedPricesCount=0
+      this.quoterItem.price_prueba = new Array(this.priceLength()).fill(0);
+ 
 
 
   }

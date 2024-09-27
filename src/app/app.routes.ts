@@ -16,6 +16,7 @@ import { TrainServicesComponent } from './pages/train-services/train-services.co
 import { HotelServicesComponent } from './pages/hotel-services/hotel-services.component';
 import { QuoterComponent } from './pages-quoter/quoter/quoter.component';
 import { QuoterFormComponent } from './pages-quoter/quoter-form/quoter-form.component';
+import { LoginComponent } from './login/login.component';
 
 export const routes: Routes = [
 
@@ -39,7 +40,8 @@ export const routes: Routes = [
                 children: [
                     {   path:'quoter-form', component:QuoterFormComponent} 
                 ]
-            }
+            },
+            {   path:'login',component: LoginComponent}
         ]
     }
 

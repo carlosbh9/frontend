@@ -121,8 +121,8 @@
                         @for (price of hotel.prices; track $index) {
                             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{price.toFixed(2)}}</td>
                         }
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
-                            <input type="number" [ngModel]="hotel.price" (ngModelChange)="onPriceChangeHotel($index, $event)" name="hotel.price" class="border border-gray-300 rounded-md">
+                        <td  class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+                            <input type="number" [(ngModel)]="hotel.price" (ngModelChange)="onPriceChangeHotel($index, $event)" name="hotel.price" class="border border-gray-300 rounded-md">
                         </td>
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.accomodatios_category}}</td>
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.notes}}</td>
@@ -137,6 +137,7 @@
             <tr class="font-semibold text-gray-700 dark:text-gray-1000">
                 <td colspan="5" class="border-t-2 border-gray-300 px-4 py-2 text-left">Total Price</td>
                <!-- @for (price of totalPriceHotels; track $index) {}-->
+               <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">${{totalPriceHotels.toFixed(2)}}</td>
                 <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">${{totalPriceHotels.toFixed(2)}}</td>
                 <td colspan="2" class="border-t-2 border-gray-300 px-4 py-2 text-right"></td>
               </tr>
