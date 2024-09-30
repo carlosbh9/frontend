@@ -19,19 +19,16 @@ import { FormOperatorsComponent } from '../form-operators/form-operators.compone
 export class QuoterFormComponent implements OnInit{
   quoterService = inject(QuoterService)
 
-  totalPriceHotels: number = 0;
- // totalPriceHotels2: number[] = [];
+  //totalPriceHotels: number = 0;
+  totalPriceHotels: number[] = [];
   totalPriceServices: number = 0;
-
+  previousDateService=''
   selectedDate: string ='';
   selectedCity: string = '';
-  previousDateHotel: string = ''; // Para almacenar el último valor de selectedDate
-  previousDateService: string = ''; 
   selectedDateService: string ='';
   selectedCityService: string = '';
-  contHotel = 1 ;
-  contService = 1;
   cont = 0
+  contDayServices  = 0
   //quoter: any={}
   
   newQuoter: any = {
@@ -87,18 +84,16 @@ export class QuoterFormComponent implements OnInit{
   addNumberPaxs() {
     if(this.newQuoter.hotels.length!=0){
       this.updatePricesSizeHotels(this.newQuoter.hotels,this.newQuoter.number_paxs.length+1)
-      console.log('hotels',this.newQuoter.hotels)
-      console.log('hotels',this.newQuoter.number_paxs.length)
+    }
+    if(this.newQuoter.services.length!=0){
+      this.updatePricesSizeServices(this.newQuoter.services,this.newQuoter.number_paxs.length+1)
+ 
     }
     this.newQuoter.number_paxs.push(0);  // Agrega un nuevo input 
-  console.log('Valores de number_paxs', this.newQuoter.number_paxs);
-  
-
   }
   updatePricesSizeHotels(hotels: any[], newSize: number): any[] {
     return hotels.map(hotel => {
       const currentSize = hotel.prices.length;
-
       if (currentSize < newSize) {
         hotel.prices = [...hotel.prices, ...new Array(newSize - currentSize).fill(0)];
       }
@@ -108,8 +103,7 @@ export class QuoterFormComponent implements OnInit{
   updatePricesSizeServices(services: any[], newSize: number): any[] {
     return services.map(service => {
       const currentSize = service.prices.length;
-
-      if (currentSize < newSize) {
+     if (currentSize < newSize) {
         service.prices = [...service.prices, ...new Array(newSize - currentSize).fill(0)];
       }
       return service;
@@ -129,11 +123,11 @@ export class QuoterFormComponent implements OnInit{
 
   addItemToQuote(datos: any){
       this.datosrecibidosHotel ={
-        day: this.contHotel,
+        day: datos.day,
         city: datos.city,
         date:datos.date,
         name_hotel: datos.name_hotel,
-        type_hotel: datos.price.type, 
+        price_base:datos.price_prueba[0],
         prices: datos.price_prueba,
         accomodatios_category: datos.accomodatios_category,
         notes:datos.notes
@@ -143,10 +137,6 @@ export class QuoterFormComponent implements OnInit{
           this.datosrecibidosHotel.prices[i]=0
         }
       }
-      if (this.selectedDate !== this.previousDateHotel) {
-        this.contHotel++; // Incrementa el día solo si la fecha cambia
-        this.previousDateHotel = this.selectedDate; // Actualiza la fecha previa
-     }
   }
   updateTotalPriceHotels() {
     this.totalPriceHotels = this.newQuoter.hotels.reduce((acc: number, hotel: any) => acc + hotel.price, 0);
@@ -156,20 +146,22 @@ export class QuoterFormComponent implements OnInit{
   }
 
   addItemService(datos:any){
-    
+   
     this.datosrecibidosService={
-      day:this.contService,
+    
       date: datos.date,
       city: datos.city,
       name_service: datos.name_service,
-      price_pp:datos.price_pp,
-      price:datos.price_pp,
+      price_base:datos.prices[0],
+      prices:datos.prices,
       notes: datos.notes
     }
-    if (this.selectedDateService !== this.previousDateService) {
-      this.contService++; // Incrementa el día solo si la fecha cambia
-      this.previousDateService = this.selectedDateService; // Actualiza la fecha previa
+    if(this.datosrecibidosService.prices.length<this.newQuoter.number_paxs.length){
+      for(let i = this.datosrecibidosService.prices.length; i<this.newQuoter.number_paxs.length;i++){
+        this.datosrecibidosService.prices[i]=0
+      }
     }
+    
   }
 
   
@@ -181,15 +173,25 @@ export class QuoterFormComponent implements OnInit{
     }
     this.updateTotalPriceHotels();
     this.datosrecibidosHotel = null
+
   }
 
   onSubmitService(){
-    if(this.datosrecibidosService!){
-          this.newQuoter.services.push(this.datosrecibidosService)
-          
+    if (this.datosrecibidosService.date !== this.previousDateService) {
+      this.contDayServices++; // Incrementa el día solo si la fecha cambia
+      
+      this.previousDateService = this.datosrecibidosService.date; // Actualiza la fecha previa
     }
+    if(this.datosrecibidosService!){
+          this.datosrecibidosService.day=this.contDayServices
+          this.newQuoter.services.push(this.datosrecibidosService)  
+    }
+    
     this.updateTotalPriceServices();
     this.datosrecibidosService = null
+    console.log('probando contador services',this.contDayServices)
+    console.log('fecha previa',this.previousDateService)
+
   }
   
   onSubmit2(){
@@ -203,5 +205,21 @@ export class QuoterFormComponent implements OnInit{
       }
     )
 
+  }
+
+  getTotalPrices(): number[] {
+    const totalPrices: number[] = [];
+
+    this.newQuoter.hotels.forEach((hotel: { prices: number[] }) => { // Especificar el tipo de 'hotel'
+      hotel.prices.forEach((price: number, index: number) => { // Especificar el tipo de 'price'
+        if (totalPrices[index]) {
+          totalPrices[index] += price; // Sumar al total existente
+        } else {
+          totalPrices[index] = price; // Inicializar el total
+        }
+      });
+    });
+
+    return totalPrices;
   }
 }

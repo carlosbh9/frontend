@@ -1,5 +1,5 @@
 
-<div class="flex flex-wrap space-x-4 " >
+<div class="flex flex-wrap space-x-4 "  (change)="serviceChange($event)" >
     <div class="w-1/4">
         <label for="service-select" class="block text-sm font-medium text-gray-700">Operadores</label>
             <select [(ngModel)]="selectedOperator" (ngModelChange)="onOperatorsChange($event)" name="selectedOperator" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
@@ -22,14 +22,24 @@
     </div>
     <div class="w-1/4">
         <label for="service-select" class="block text-sm font-medium text-gray-700">Prices</label>
-        <select [(ngModel)]="selectedPrice" (ngModelChange)="onPricesChange($event)" name="selectedService" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
+        <select [(ngModel)]="selectedPrice" (ngModelChange)="onPricesChange($event)"  name="selectedPrice" id="selectedPrice" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
             <option value="" disabled selected>Select Service</option>
             @for (price of prices; track $index) {
-                <option [value]="+price.price">{{price.type_vehicle}} {{price.range_min}}/{{price.range_max}} - {{price.price}} </option>
+                <option [value]="price.price">{{price.type_vehicle}} {{price.range_min}}/{{price.range_max}} - {{price.price}} </option>
              
             }
         </select>
     </div>
+    <div  class="flex items-center justify-center mt-5">
+        <i class="bx bxs-plus-circle text-2xl text-green-500 dark:text-green-700" (click)="addPrices()"></i>
+    </div>
+    <div>
+        <label for="service-select" class="block text-sm font-medium text-gray-700">Prices</label>
+        @for (item of [].constructor(priceLength()); track $index) {
+            <input type="number" name="quoterItem.price_prueba-{{$index}}" [(ngModel)]="operator.prices[$index]" id="quoterItem.price_prueba-{{$index}}" class="pr-4 h-10 p-2 w-16 border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1 mr-2 mb-2">
+        }
+              
+   </div>
     <div class="">
         <label for="notes" class="block text-sm font-medium text-gray-700">Notes</label>
         <input type="text" [(ngModel)]="notes"  name="notes" id="notes" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="notes">

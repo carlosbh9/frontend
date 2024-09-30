@@ -14,12 +14,16 @@ import { NonNullAssert } from '@angular/compiler';
 export class FormHotelComponent implements OnInit { 
   hotelService = inject(HotelService)
   hotelItem = output<any>();
+
   priceLength = input.required<number>();
   selectedDate = input.required<string>();
   selectedCity =  input.required<string>();
   addedPricesCount: number = 0
   selectedHotel: string = '';
   selectedService: string = '';
+
+  previousDateHotel: string = '';
+  contHotel = 0 ;
 
   selectedRoomType: string = '';
   hotels: any[] = [];
@@ -31,17 +35,14 @@ export class FormHotelComponent implements OnInit {
   selectedPrices: any[] = [];
 
   quoterItem: any = {
-    day:'',
+    day:0,
     city:'',
     date:'',
     name_hotel:'',
     accomodatios_category: '',
     price_prueba: [],
-    price: {
-      type:'',
-      price:0
-    },
-    notes:''
+    notes:'',
+    dayCont: 0
   }; 
   
  
@@ -67,11 +68,9 @@ export class FormHotelComponent implements OnInit {
   }
 
   addPrices(){
-    
-   //this.quoterItem.price_prueba.splice(this.quoterItem.price.price)
    if (this.addedPricesCount < this.priceLength()) {
     // Agregamos el precio actual al final del arreglo
-    this.quoterItem.price_prueba[this.addedPricesCount] = this.quoterItem.price.price;
+    this.quoterItem.price_prueba[this.addedPricesCount] = this.quoterItem.price;
     this.addedPricesCount++; // Incrementamos el contador
   } else {
     // Si ya se ha alcanzado el límite de precios, mostramos un mensaje
@@ -88,8 +87,7 @@ export class FormHotelComponent implements OnInit {
       //this.quoterItem.city=selectedHotel.location
       this.quoterItem.city=this.selectedCity()
       this.quoterItem.date=this.selectedDate()
-      this.addedPricesCount=0
-      this.quoterItem.price_prueba = new Array(this.priceLength()).fill(0);
+      
  
 
 
@@ -104,9 +102,21 @@ export class FormHotelComponent implements OnInit {
     }
   
   this.quoterItem.accomodatios_category= selectedService.name_service
+  this.addedPricesCount=0
+  this.quoterItem.price_prueba = new Array(this.priceLength()).fill(0);
+  this.quoterItem.notes=''
+  this.quoterItem.price=0
+  this.quoterItem.day= this.contHotel
   }
 
 onRoomTypeChange(event: any) {
    this.hotelItem.emit(this.quoterItem);
+   if (this.selectedDate() !== this.previousDateHotel) {
+    this.contHotel++; // Incrementa el día solo si la fecha cambia
+    this.previousDateHotel = this.selectedDate(); // Actualiza la fecha previa
+ }
+ 
+  
 }
+
 }

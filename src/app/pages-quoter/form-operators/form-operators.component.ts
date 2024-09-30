@@ -15,6 +15,8 @@ export class FormOperatorsComponent implements OnInit{
   serviceItem = output<any>()
   selectedCity = input<string>();
   selectedDate = input<string>();
+  priceLength = input.required<number>();
+  addedPricesCount: number = 0
 
   selectedOperator: string = '';
   selectedService: string = '';
@@ -24,7 +26,9 @@ export class FormOperatorsComponent implements OnInit{
   operatorsServices: any[] =[]
   prices: any[]=[]
   notes : string =''
-  operator : any={}
+  operator : any={
+    prices:[]
+  }
 ;
   async loadEntrances (){
     try{
@@ -54,14 +58,38 @@ export class FormOperatorsComponent implements OnInit{
     
     this.operator.date=this.selectedDate()
     this.operator.city=this.selectedCity()
+    this.operator.prices= new Array(this.priceLength()).fill(0);
+    this.addedPricesCount=0
+    this.notes = ''
+ 
     
   }
 
   onPricesChange(event: any){
     this.selectedPrice = Number(event)
     this.operator.price_pp=this.selectedPrice
-    this.operator.notes=this.notes
-    this.serviceItem.emit(this.operator)
-    console.log('es el operador?',this.operator)
+    
+   
   }
-}
+
+  addPrices(){
+ 
+    if (this.addedPricesCount < this.priceLength()) {
+     // Agregamos el precio actual al final del arreglo
+     this.operator.prices[this.addedPricesCount] = this.operator.price_pp
+     this.addedPricesCount++; // Incrementamos el contador
+   } else {
+     // Si ya se ha alcanzado el límite de precios, mostramos un mensaje
+     console.log("No se pueden agregar más precios, el arreglo está lleno.");
+   }
+
+
+   }
+ 
+    serviceChange(event: any){
+      this.operator.notes=this.notes
+      this.serviceItem.emit(this.operator)
+    
+    }
+  }
+

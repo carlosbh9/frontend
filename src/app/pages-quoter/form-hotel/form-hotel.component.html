@@ -41,7 +41,7 @@
                       type="radio" 
                       id="confidential" 
                       [(ngModel)]="quoterItem.price"
-                      [value]="{ type: roomType.type, price: roomType.confidential, accommodations: 'confidential' }"
+                      [value]="roomType.confidential"
                       name="confidential"
                       class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" >
                       <label for="Confidential" class="ml-2 mr-2 text-sm">Confidential - ${{roomType.confidential}}</label>
@@ -51,7 +51,7 @@
                     type="radio" 
                     id="rack" 
                     [(ngModel)]="quoterItem.price"
-                    [value]="{ type: roomType.type, price: roomType.rack, accommodations: 'Rack' }"
+                    [value]="roomType.rack"
                     name="Rack"
                     class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded">
                     <label for="Rack" class="ml-2 text-sm mr-2">Rack - ${{roomType.rack}}</label>
@@ -73,7 +73,7 @@
                 <div>
                     <label for="service-select" class="block text-sm font-medium text-gray-700">Prices</label>
                     @for (item of [].constructor(priceLength()); track $index) {
-                        <input  name="" [(ngModel)]="quoterItem.price_prueba[$index]" id="" class="pr-4 h-10 p-2 w-16 border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
+                        <input type="number" name="quoterItem.price_prueba-{{$index}}" [(ngModel)]="quoterItem.price_prueba[$index]" id="quoterItem.price_prueba-{{$index}}" class="pr-4 h-10 p-2 w-16 border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1 mr-2 mb-2">
                     }
                    
                </div>
