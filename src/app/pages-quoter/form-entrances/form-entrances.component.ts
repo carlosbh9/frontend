@@ -15,7 +15,7 @@ export class FormEntrancesComponent implements OnInit {
   selectedCity = input<string>();
   selectedDate = input<string>();
   priceLength = input.required<number>();
- 
+
   addedPricesCount: number = 0
 
   selectedService: any = {};
@@ -39,7 +39,7 @@ export class FormEntrancesComponent implements OnInit {
   }
 
   addPrices(){
- 
+
     if (this.addedPricesCount < this.priceLength()) {
      // Agregamos el precio actual al final del arreglo
      this.entrance.prices[this.addedPricesCount] = this.entrance.price_pp;
@@ -48,7 +48,7 @@ export class FormEntrancesComponent implements OnInit {
      // Si ya se ha alcanzado el límite de precios, mostramos un mensaje
      console.log("No se pueden agregar más precios, el arreglo está lleno.");
    }
- 
+
    }
 
   onServiceChange(event: any): void {
@@ -61,12 +61,12 @@ export class FormEntrancesComponent implements OnInit {
     }else{
      this.entrance.price_pp=selectedService.price_pp
     }
- 
+
     this.entrance.notes=this.notes
     this.entrance.date=this.selectedDate()
     this.entrance.city=this.selectedCity()
-    
-    
+
+
     this.serviceItem.emit(this.entrance)
     console.log(this.entrance)
   }

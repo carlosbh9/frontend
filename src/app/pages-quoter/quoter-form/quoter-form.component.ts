@@ -21,7 +21,8 @@ export class QuoterFormComponent implements OnInit{
 
   //totalPriceHotels: number = 0;
   totalPriceHotels: number[] = [];
-  totalPriceServices: number = 0;
+  totalPriceServices: number[] = [];
+  //totalCosts: number[] = [];
   previousDateService=''
   selectedDate: string ='';
   selectedCity: string = '';
@@ -30,7 +31,7 @@ export class QuoterFormComponent implements OnInit{
   cont = 0
   contDayServices  = 0
   //quoter: any={}
-  
+
   newQuoter: any = {
     guest:'',
     FileCode: '',
@@ -67,13 +68,13 @@ export class QuoterFormComponent implements OnInit{
 
   selectedCategory: string = '';
   //hotels: any[] = [];
- 
+
 
   datosrecibidosHotel: any={};
   datosrecibidosService: any ={}
 
 
-  
+
   ngOnInit(): void {
     //this.calculateTotalPrice();
     this.datosrecibidosHotel = null
@@ -87,9 +88,9 @@ export class QuoterFormComponent implements OnInit{
     }
     if(this.newQuoter.services.length!=0){
       this.updatePricesSizeServices(this.newQuoter.services,this.newQuoter.number_paxs.length+1)
- 
+
     }
-    this.newQuoter.number_paxs.push(0);  // Agrega un nuevo input 
+    this.newQuoter.number_paxs.push(0);  // Agrega un nuevo input
   }
   updatePricesSizeHotels(hotels: any[], newSize: number): any[] {
     return hotels.map(hotel => {
@@ -110,16 +111,16 @@ export class QuoterFormComponent implements OnInit{
     });
   }
 
-  
-  onPriceChangeHotel(index: number, newPrice: number) {
-    this.newQuoter.hotels[index].price = newPrice;  // Asegúrate de que sea un número
-    this.updateTotalPriceHotels();
 
-  }
-  onPriceChangeService(index: number, newPrice: number){
-    this.newQuoter.services[index].price = newPrice;  // Asegúrate de que sea un número
-    this.updateTotalPriceServices();
-  }
+  //onPriceChangeHotel(index: number, newPrice: number) {
+  //  this.newQuoter.hotels[index].price = newPrice;  // Asegúrate de que sea un número
+  //  this.updateTotalPriceHotels();
+
+  //}
+  //onPriceChangeService(index: number, newPrice: number){
+  //  this.newQuoter.services[index].price = newPrice;  // Asegúrate de que sea un número
+  //  this.updateTotalPriceServices();
+  //}
 
   addItemToQuote(datos: any){
       this.datosrecibidosHotel ={
@@ -138,21 +139,21 @@ export class QuoterFormComponent implements OnInit{
         }
       }
   }
-  updateTotalPriceHotels() {
-    this.totalPriceHotels = this.newQuoter.hotels.reduce((acc: number, hotel: any) => acc + hotel.price, 0);
-  }
-  updateTotalPriceServices() {
-    this.totalPriceServices = this.newQuoter.services.reduce((acc: number, service: any) => acc + service.price_pp, 0);
-  }
+ // updateTotalPriceHotels() {
+   // this.totalPriceHotels = this.newQuoter.hotels.reduce((acc: number, hotel: any) => acc + hotel.price, 0);
+ // }
+ // updateTotalPriceServices() {
+ //   this.totalPriceServices = this.newQuoter.services.reduce((acc: number, service: any) => acc + service.price_pp, 0);
+ // }
 
   addItemService(datos:any){
-   
+    const uu = datos.prices[0]
     this.datosrecibidosService={
-    
+
       date: datos.date,
       city: datos.city,
       name_service: datos.name_service,
-      price_base:datos.prices[0],
+      price_base: uu,
       prices:datos.prices,
       notes: datos.notes
     }
@@ -161,17 +162,19 @@ export class QuoterFormComponent implements OnInit{
         this.datosrecibidosService.prices[i]=0
       }
     }
-    
+
+    console.log('se guardo precios base?',uu)
+
   }
 
-  
+
   onSubmitHotel(){
 
     if(this.datosrecibidosHotel!){
           this.newQuoter.hotels.push(this.datosrecibidosHotel)
-          
+
     }
-    this.updateTotalPriceHotels();
+   // this.updateTotalPriceHotels();
     this.datosrecibidosHotel = null
 
   }
@@ -179,23 +182,22 @@ export class QuoterFormComponent implements OnInit{
   onSubmitService(){
     if (this.datosrecibidosService.date !== this.previousDateService) {
       this.contDayServices++; // Incrementa el día solo si la fecha cambia
-      
+
       this.previousDateService = this.datosrecibidosService.date; // Actualiza la fecha previa
     }
     if(this.datosrecibidosService!){
           this.datosrecibidosService.day=this.contDayServices
-          this.newQuoter.services.push(this.datosrecibidosService)  
+          this.newQuoter.services.push(this.datosrecibidosService)
     }
-    
-    this.updateTotalPriceServices();
+
+   // this.updateTotalPriceServices();
+    console.log('se guardo?',this.datosrecibidosService)
     this.datosrecibidosService = null
-    console.log('probando contador services',this.contDayServices)
-    console.log('fecha previa',this.previousDateService)
 
   }
-  
-  onSubmit2(){
-    this.quoterService.addItemQuoter(this.newQuoter._id,this.newQuoter.hotels).then(
+
+  onSubmit(){
+    this.quoterService.createQuoter(this.newQuoter).then(
       response => {
         console.log('Quoter added',response)
         //this.fetchHotels();
@@ -207,7 +209,7 @@ export class QuoterFormComponent implements OnInit{
 
   }
 
-  getTotalPrices(): number[] {
+  getTotalPricesHotels(): number[] {
     const totalPrices: number[] = [];
 
     this.newQuoter.hotels.forEach((hotel: { prices: number[] }) => { // Especificar el tipo de 'hotel'
@@ -222,4 +224,37 @@ export class QuoterFormComponent implements OnInit{
 
     return totalPrices;
   }
+  getTotalPricesServices(): number[] {
+    const totalPrices: number[] = [];
+
+    this.newQuoter.services.forEach((service: { prices: number[] }) => { // Especificar el tipo de 'hotel'
+      service.prices.forEach((price: number, index: number) => { // Especificar el tipo de 'price'
+        if (totalPrices[index]) {
+          totalPrices[index] += price; // Sumar al total existente
+        } else {
+          totalPrices[index] = price; // Inicializar el total
+        }
+      });
+    });
+
+    return totalPrices;
+  }
+
+    getTotalCosts(): number[] {
+      const totalSum: number[] = [];
+      const totalPricesHotels = this.getTotalPricesHotels();
+      const totalPricesServices = this.getTotalPricesServices();
+      // Determinar el mayor largo entre los dos arreglos
+      const maxLength = Math.max(totalPricesHotels.length, totalPricesServices.length);
+
+      // Recorrer ambos arreglos hasta el mayor largo
+      for (let i = 0; i < maxLength; i++) {
+        const precioHotel = totalPricesHotels[i] || 0; // Si no existe valor, toma 0
+        const precioServicio = totalPricesServices[i] || 0; // Si no existe valor, toma 0
+        totalSum[i] = precioHotel + precioServicio;
+      }
+
+      return totalSum;
+    }
+
 }
