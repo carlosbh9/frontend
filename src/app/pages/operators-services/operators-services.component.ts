@@ -165,30 +165,4 @@ export class OperatorsServicesComponent implements OnInit{
     };
   }
 
-   // Función para agregar un nuevo campo de precio en el formulario de agregar servicio
-// addPriceField() {
- // this.newService.prices.push({ range_min: 0, range_max: 0, type_vehicle: '' });
-//}
-
-// Función para agregar un nuevo campo de precio en el formulario de editar servicio
-//addEditPriceField() {
- // this.selectService.prices.push({ range_min: 0, range_max: 0, type_vehicle: '' });
-//}
-//removePriceField(index: number) {
- // if (this.newService.prices.length >= 1) { // Prevent removing the only price field
-//  this.newService.prices.splice(index, 1);
- // } else {
-    // Handle the case of removing the only price field (optional: clear values or display a message)
- //   console.warn('Cannot remove the only price field.');
- // }
-//}
-
-//removeeditPriceField(index: number) {
-//  if (this.selectService.prices.length >= 1) { // Prevent removing the only price field
-//    this.selectService.prices.splice(index, 1);
-//  } else {
-    // Handle the case of removing the only price field (optional: clear values or display a message)
-//    console.warn('Cannot remove the only price field.');
-//  }
-//}
 }

@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit{
     acomodations: '',
     totalNights: '',
     number_paxs: [0],
-    trvale_agent: '',
+    travel_agent: '',
     exchange_rate: '',
     services: [],
     hotels: [] // Este ahora contendrá un array con la nueva estructura

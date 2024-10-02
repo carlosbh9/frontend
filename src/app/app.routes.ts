@@ -17,6 +17,7 @@ import { HotelServicesComponent } from './pages/hotel-services/hotel-services.co
 import { QuoterComponent } from './pages-quoter/quoter/quoter.component';
 import { QuoterFormComponent } from './pages-quoter/quoter-form/quoter-form.component';
 import { LoginComponent } from './login/login.component';
+import { QuoterListComponent } from './pages-quoter/quoter-list/quoter-list.component';
 
 export const routes: Routes = [
 
@@ -29,7 +30,6 @@ export const routes: Routes = [
             {   path: 'restaurant', component: RestaurantComponent},
             {   path:'guides', component:GuidesComponent},
             {   path:'operators', component : OperatorsComponent},
-           // {   path:'operators/:id/services',component: OperatorsServicesComponent},
             {   path:'services-operators/:id',component: OperatorsServicesComponent},
             {   path:'train', component:TrainComponent},
             {   path:'services-train/:id',component: TrainServicesComponent},
@@ -38,7 +38,9 @@ export const routes: Routes = [
             {   path:'services-hotel/:id',component: HotelServicesComponent},
             {   path:'quoter-main',component: QuoterComponent,
                 children: [
-                    {   path:'quoter-form', component:QuoterFormComponent} 
+                    {   path:'quoter-form', component:QuoterFormComponent}, 
+                    {   path:'quoter-list', component:QuoterListComponent},
+                    {   path:'quoter-edit/:id', component:QuoterFormComponent}
                 ]
             },
             {   path:'login',component: LoginComponent}

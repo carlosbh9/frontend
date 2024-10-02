@@ -1,0 +1,54 @@
+<div class="grid grid-cols-1 gap-2 mb-2  ">
+    <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+        <div class="flex flex-wrap items-center px-4 py-2">
+            <div class="relative w-full max-w-full flex-grow flex-1 text-right">
+              <input
+                type="text"
+                [(ngModel)]="filterText"
+                (input)="filterQuotes()"
+                placeholder="Filter quotes..."
+                class="p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <td>
+           <!-- Botón para abrir el modal -->
+              <button (click)="quoterForm()" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Add Quoter</button>
+            </td>
+          </div>    
+        <div class="p-6 block w-full overflow-x-auto">
+            <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">List of Quotes</h1>
+            <table class="items-center w-full bg-transparent border border-collapse">
+            <thead>
+                <tr>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-left">Guest</th>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">File Code</th>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">Travel Dates</th>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left">Accommodations</th>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">Total Nights</th>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">Number paxs</th>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">Travel agent</th>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (quoter of filteredQuotes; track $index) {
+                <tr class="text-gray-700 dark:text-gray-1000">
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{quoter.guest}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{quoter.FileCode}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "></td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{quoter.accomodations}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{quoter.totalNights}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{quoter.number_paxs}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{quoter.travel_agent}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="editQuoter(quoter._id)"></i>
+                        <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteQuoter(quoter._id)"></i>
+                        <i class='bx bx-download text-2xl text-green-500 dark:text-red-700 mr-2'></i>
+                      </td>
+                </tr>
+              }
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit,Output, EventEmitter, inject } from '@angular/core';
-import { FormControl, FormsModule } from '@angular/forms';
+import { Component, OnInit,inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { QuoterService } from '../../Services/quoter.service';
 import { FormHotelComponent } from '../form-hotel/form-hotel.component';
 import { FormEntrancesComponent } from '../form-entrances/form-entrances.component';
@@ -8,6 +8,8 @@ import {FormExpeditionsComponent} from '../form-expeditions/form-expeditions.com
 import { FormGuidesComponent } from '../form-guides/form-guides.component';
 import { FormRestaurantsComponent } from '../form-restaurants/form-restaurants.component';
 import { FormOperatorsComponent } from '../form-operators/form-operators.component';
+import { Quoter } from '../../interfaces/quoter.interface';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-quoter-form',
@@ -18,11 +20,13 @@ import { FormOperatorsComponent } from '../form-operators/form-operators.compone
 })
 export class QuoterFormComponent implements OnInit{
   quoterService = inject(QuoterService)
-
-  //totalPriceHotels: number = 0;
+  route = inject(ActivatedRoute)
+  
   totalPriceHotels: number[] = [];
   totalPriceServices: number[] = [];
-  //totalCosts: number[] = [];
+  
+  showUpdate = false
+  idQuoter: string = ''
   previousDateService=''
   selectedDate: string ='';
   selectedCity: string = '';
@@ -30,58 +34,70 @@ export class QuoterFormComponent implements OnInit{
   selectedCityService: string = '';
   cont = 0
   contDayServices  = 0
-  //quoter: any={}
 
-  newQuoter: any = {
+
+  newQuoter: Quoter = {
     guest:'',
     FileCode: '',
     travelDate:{
         start:'',
         end: ''
     },
-    acomodations:'',
-    totalNights: '',
+    accomodations:'',
+    totalNights: 0,
     number_paxs: [0],
-    trvale_agent:'',
+    travel_agent:'',
     exchange_rate:'',
     services:[],
     hotels:[],
     flights:[]
   };
 
-  selectedQuoter: any = {
-    guest:'',
+  emptyQuoter: Quoter = {
+    guest: '',
     FileCode: '',
-    travelDate:{
-        start:'',
-        end: ''
+    travelDate: {
+      start: '',
+      end: ''
     },
-    acomodations:'',
-    totalNights: '',
-    number_paxs: 1,
-    trvale_agent:'',
-    exchange_rate:'',
-    services:[],
-    hotels:[],
-    flights:[]
-  };
+    accomodations: '',
+    totalNights: 0,
+    number_paxs: [0],
+    travel_agent: '',
+    exchange_rate: '',
+    services: [],
+    hotels: [],
+    flights: []
+  }
 
   selectedCategory: string = '';
-  //hotels: any[] = [];
-
 
   datosrecibidosHotel: any={};
   datosrecibidosService: any ={}
 
 
-
   ngOnInit(): void {
     //this.calculateTotalPrice();
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if(id) {
+        this.getQuoterbyId(id);
+        this.showUpdate= true
+        this.idQuoter=id
+      }
+    })
     this.datosrecibidosHotel = null
     this.datosrecibidosService = null
 
   }
-
+   async getQuoterbyId(Id: string): Promise<void>{
+    try {
+      this.newQuoter = await this.quoterService.getQuoterById(Id);
+      console.log('quoter cargado',this.newQuoter)
+    } catch (error) {
+      console.error('Error get operator by iddd ');
+    }
+  }
   addNumberPaxs() {
     if(this.newQuoter.hotels.length!=0){
       this.updatePricesSizeHotels(this.newQuoter.hotels,this.newQuoter.number_paxs.length+1)
@@ -112,16 +128,6 @@ export class QuoterFormComponent implements OnInit{
   }
 
 
-  //onPriceChangeHotel(index: number, newPrice: number) {
-  //  this.newQuoter.hotels[index].price = newPrice;  // Asegúrate de que sea un número
-  //  this.updateTotalPriceHotels();
-
-  //}
-  //onPriceChangeService(index: number, newPrice: number){
-  //  this.newQuoter.services[index].price = newPrice;  // Asegúrate de que sea un número
-  //  this.updateTotalPriceServices();
-  //}
-
   addItemToQuote(datos: any){
       this.datosrecibidosHotel ={
         day: datos.day,
@@ -139,12 +145,7 @@ export class QuoterFormComponent implements OnInit{
         }
       }
   }
- // updateTotalPriceHotels() {
-   // this.totalPriceHotels = this.newQuoter.hotels.reduce((acc: number, hotel: any) => acc + hotel.price, 0);
- // }
- // updateTotalPriceServices() {
- //   this.totalPriceServices = this.newQuoter.services.reduce((acc: number, service: any) => acc + service.price_pp, 0);
- // }
+
 
   addItemService(datos:any){
     const uu = datos.prices[0]
@@ -163,50 +164,50 @@ export class QuoterFormComponent implements OnInit{
       }
     }
 
-    console.log('se guardo precios base?',uu)
-
   }
 
 
   onSubmitHotel(){
-
     if(this.datosrecibidosHotel!){
           this.newQuoter.hotels.push(this.datosrecibidosHotel)
-
     }
-   // this.updateTotalPriceHotels();
     this.datosrecibidosHotel = null
-
   }
 
   onSubmitService(){
     if (this.datosrecibidosService.date !== this.previousDateService) {
       this.contDayServices++; // Incrementa el día solo si la fecha cambia
-
       this.previousDateService = this.datosrecibidosService.date; // Actualiza la fecha previa
     }
     if(this.datosrecibidosService!){
           this.datosrecibidosService.day=this.contDayServices
           this.newQuoter.services.push(this.datosrecibidosService)
     }
-
-   // this.updateTotalPriceServices();
-    console.log('se guardo?',this.datosrecibidosService)
     this.datosrecibidosService = null
-
   }
 
   onSubmit(){
     this.quoterService.createQuoter(this.newQuoter).then(
       response => {
         console.log('Quoter added',response)
+        this.newQuoter=this.emptyQuoter
         //this.fetchHotels();
       },
       error => {
         console.error('Error adding Quoter', error)
       }
     )
-
+  }
+  onUpdate(){
+    this.quoterService.updateQuoter(this.idQuoter,this.newQuoter).then(
+      response => {
+        console.log('Quoter update',response)
+        this.newQuoter=this.emptyQuoter
+      },
+      error => {
+        console.error('Error editing Quoter', error)
+      }
+    )
   }
 
   getTotalPricesHotels(): number[] {
@@ -256,5 +257,32 @@ export class QuoterFormComponent implements OnInit{
 
       return totalSum;
     }
+
+    getExternalTaxes(): number[] {
+      const totalExternal: number[]=[];
+      const totalCost = this.getTotalCosts();
+      const maxLength = totalCost.length;
+      for (let i = 0; i < maxLength; i++) {
+        const temp = totalCost[i] || 0; // Si no existe valor, toma 0
+        totalExternal[i] = temp * 0.15;
+      }
+      return totalExternal
+    }
+
+    getTotalCostExternal(): number[] {
+      const totalCostExternal: number[]=[]
+      const totalCost = this.getTotalCosts();
+      const totalExternal = this.getExternalTaxes();
+      const maxLength = totalCost.length;
+      for (let i = 0; i < maxLength; i++) {
+        const temp1 = totalCost[i] || 0;
+        const temp2 = totalExternal[i] || 0;// Si no existe valor, toma 0
+        totalCostExternal[i] = temp1 + temp2;
+      }
+
+      return totalCostExternal
+    }
+
+    
 
 }
