@@ -8,23 +8,27 @@ import {FormExpeditionsComponent} from '../form-expeditions/form-expeditions.com
 import { FormGuidesComponent } from '../form-guides/form-guides.component';
 import { FormRestaurantsComponent } from '../form-restaurants/form-restaurants.component';
 import { FormOperatorsComponent } from '../form-operators/form-operators.component';
+import { FlightsComponent } from '../flights/flights.component';
 import { Quoter } from '../../interfaces/quoter.interface';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-quoter-form',
   standalone: true,
-  imports: [CommonModule, FormsModule,FormHotelComponent,FormEntrancesComponent,FormExpeditionsComponent,FormGuidesComponent,FormRestaurantsComponent,FormOperatorsComponent],
+  imports: [CommonModule
+    ,FormsModule,FormHotelComponent,FormEntrancesComponent,
+    FormExpeditionsComponent,FormGuidesComponent,FormRestaurantsComponent,
+    FormOperatorsComponent,FlightsComponent],
   templateUrl: './quoter-form.component.html',
   styleUrl: './quoter-form.component.css'
 })
 export class QuoterFormComponent implements OnInit{
   quoterService = inject(QuoterService)
   route = inject(ActivatedRoute)
-  
+
   totalPriceHotels: number[] = [];
   totalPriceServices: number[] = [];
-  
+
   showUpdate = false
   idQuoter: string = ''
   previousDateService=''
@@ -283,6 +287,6 @@ export class QuoterFormComponent implements OnInit{
       return totalCostExternal
     }
 
-    
+
 
 }

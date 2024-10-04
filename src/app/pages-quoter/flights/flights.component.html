@@ -1,0 +1,93 @@
+
+<div class="p-6 flex flex-col space-y-4">
+  <div class="flex flex-wrap space-x-4 justify-start">
+
+      <div class="w-1/4">
+          <label for="issue-date" class="block text-sm font-medium text-gray-700">Date</label>
+          <input type="date" [(ngModel)]="newFlight.date"  name="date" id="date" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
+      </div>
+      <div class="w-1/4">
+          <label  for="route" class="block text-sm font-medium text-gray-700">Route</label>
+          <select [(ngModel)]="newFlight.route" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" name="route" id="route">
+            @for (city of citys; track $index) {
+              <option [value]="city">{{city}}</option>
+            }
+
+          </select>
+          <!-- <input type="text" [(ngModel)]="selectedCity"  name="city" id="city" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" > -->
+      </div>
+      <div>
+          <label for="issue-date" class="block text-sm font-medium text-gray-700">Prices</label>
+          @for (item of [].constructor(priceLength()); track $index) {
+            <input type="number" name="quoterItem.price_prueba-{{$index}}" [(ngModel)]="newFlight.prices[$index]" id="quoterItem.price_prueba-{{$index}}" class="pr-4 h-10 p-2 w-16 border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1 mr-2 mb-2">
+        }
+      </div>
+      <div>
+          <label for="issue-date" class="block text-sm font-medium text-gray-700">Notes</label>
+          <input type="text" name="notes" [(ngModel)]="newFlight.notes" id="notes" class="pr-4 h-10 p-2 w-16 border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1 mr-2 mb-2">
+      </div>
+      <div class="flex-1 relative ">
+          <button class="absolute top-4 right-4 px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="onSubmitFlight()">Add Item Hotel</button>
+      </div>
+      </div>
+  </div>
+  <div class="p-6 block w-full overflow-x-auto">
+<div class="p-6 block w-full overflow-x-auto">
+  <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Flight</h1>
+  <table class="items-center w-full bg-transparent border border-collapse">
+    <thead>
+      <tr>
+          <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tl-md rounded-bl-md">Date</th>
+          <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Route</th>
+          <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Conf. Price</th>
+          @for (item of [].constructor(priceLength()); track $index) {
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Price {{$index+1}}</th>
+          }
+          <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Notes</th>
+          <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Actions</th>
+      </tr>
+  </thead>
+  <tbody>
+    @for (item of flights; track $index) {
+      <tr class="text-gray-700 dark:text-gray-1000">
+        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+        @if (editFlight) {
+          <div>
+             <input class="w-full" type="date" [(ngModel)]="item.date">
+          </div>
+        }@else{
+          <div>
+            {{item.date | date}}
+          </div>
+        }
+      </td >
+      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+        @if (editFlight) {
+          <input type="text" [(ngModel)]="item.route">
+        }@else {
+          <div>
+            {{item.route}}
+          </div>
+        }
+      </td>
+        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{item.price_conf.toFixed(2)}}</td>
+        @for (price of item.prices; track $index) {
+          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{price.toFixed(2)}}</td>
+        }
+        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{item.notes}}</td>
+        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4">
+          <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="onEdit(item)"></i>
+          <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="onClose()" ></i>
+      </td>
+      </tr>
+    }
+  </tbody>
+  <tfoot>
+      <tr class="font-semibold text-gray-700 dark:text-gray-1000">
+          <td colspan="5" class="border-t-2 border-gray-300 px-4 py-2 text-left">Total Price</td>
+          <td colspan="2" class="border-t-2 border-gray-300 px-4 py-2 text-right"></td>
+      </tr>
+  </tfoot>
+  </table>
+</div>
+</div>

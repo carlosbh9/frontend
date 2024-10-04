@@ -59,7 +59,7 @@
                         }@else {
                             <button (click)="onUpdate()" class="px-4 bg-blue-500 dark:bg-green-700 p-3  rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800" >Update</button>
                         }
-                        
+
                         <button class="px-4 bg-red-500 dark:bg-red-700 p-3  rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Cancel</button>
                     </div>
 
@@ -79,7 +79,7 @@
                         <input type="date" [(ngModel)]="selectedDate" name="date" id="date" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
                     </div>
                     <div class="w-1/4">
-                        
+
                         <label for="issue-date" class="block text-sm font-medium text-gray-700">City</label>
                         <select [(ngModel)]="selectedCity" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" name="selectedCity" id="selectedCity">
                             <option value="LIM">LIM</option>
@@ -361,54 +361,12 @@
     <!-- end card  5 -->
     <!-- card  5 -->
     <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-      <div class="p-6 block w-full overflow-x-auto">
-        <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Flight</h1>
-        <table class="items-center w-full bg-transparent border border-collapse">
-          <thead>
-            <tr>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tl-md rounded-bl-md">Date</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Route</th>
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Conf. Price</th>
-                @for (item of [].constructor(newQuoter.number_paxs.length); track $index) {
-                  <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Price {{$index+1}}</th>
-              }
-                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="text-gray-700 dark:text-gray-1000">
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">2-Ene</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">LIM/PER</td>
-                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">$20.00</td>
-                @for (item of [].constructor(newQuoter.number_paxs.length); track $index) {
-                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">$200.00</td>
-                }
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' ></i>
-                    <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' ></i>
-                </td>
-                </tr>
-                <tr class="text-gray-700 dark:text-gray-1000">
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">3-Ene</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">PEM/CUZ</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">$400.00</td>
-                   @for (item of [].constructor(newQuoter.number_paxs.length); track $index) {
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">$160.00</td>
-                   }
-                   <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' ></i>
-                    <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' ></i>
-                </td>
-                   </tr>
-        </tbody>
-        <tfoot>
-            <tr class="font-semibold text-gray-700 dark:text-gray-1000">
-                <td colspan="5" class="border-t-2 border-gray-300 px-4 py-2 text-left">Total Price</td>
-                <td colspan="2" class="border-t-2 border-gray-300 px-4 py-2 text-right"></td>
-            </tr>
-        </tfoot>
-        </table>
-    </div>
+        <app-flights
+        (hotelItem)="addItemToQuote($event)"
+        [priceLength]="newQuoter.number_paxs.length"
+        >
+        </app-flights>
+
     </div>
     <!-- end card  5 -->
 </div>
