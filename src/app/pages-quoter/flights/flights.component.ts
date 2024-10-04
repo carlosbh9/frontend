@@ -52,7 +52,7 @@ onSubmitFlight() {
 }
 
 onEdit(item: any) {
-
+  
   this.editFlight= true
 }
 onClose(){
