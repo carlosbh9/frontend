@@ -84,7 +84,7 @@ export class OperatorsServicesComponent implements OnInit{
 
   filterServices() {
     this.filteredServices = this.services.filter(service =>
-      service.description.toLowerCase().includes(this.filterText.toLowerCase()))
+      service.descripcion.toLowerCase().includes(this.filterText.toLowerCase()))
     ;
   }
 

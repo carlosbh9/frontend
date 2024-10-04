@@ -2,7 +2,7 @@
     <div class="rounded-t mb-0 px-0 border-0">
       <div class="flex flex-wrap items-center px-4 py-2">
         <div class="relative w-full max-w-full flex-grow flex-1">
-          <h3 class="font-semibold text-base text-gray-900 dark:text-gray-50">Transports</h3>
+          <h3 class="font-semibold text-base text-gray-900 dark:text-gray-50">KUTIMUY</h3>
         </div>
         <div class="relative w-full max-w-full flex-grow flex-1 text-right">
           <input
@@ -29,15 +29,18 @@
             </tr>
           </thead>
           <tbody>
-            @for (transport of filteredTransports; track $index) {
+            @for (transport of filteredTransports; track transport._id) {
             <tr class="text-gray-700 dark:text-gray-100">
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ transport.nombre }}</td>
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ transport.type_service }}</td>
               
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                @for (vehicle of transport.type_vehicle; track vehicle) {
-                        <span class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-medium text-left block">
-                          {{ vehicle.name_type_vehicle }}: ${{ vehicle.price.toFixed(2) }}
+                @for (vehicle of transport.type_vehicle; track $index) {
+                        <span class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left block ">
+                          {{ vehicle.name_type_vehicle }}: 
+                          <span class="font-bold text-emerald-700">
+                             ${{ vehicle.price.toFixed(2) }}
+                          </span>
                         </span>
               }
               </td>
@@ -85,9 +88,14 @@
             <div class="mb-4">
               <label for="type_vehicle" class="block text-md text-gray-600 dark:text-gray-50 ">Type vehicle</label>
               @for (vehicle of newTransport.type_vehicle; track $index) {
-                <div class="grid grid-cols-3 gap-3 py-2 items-center">
-                  <input type="text" [(ngModel)]="vehicle.name_type_vehicle" placeholder="Name Type Vehicle" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-7000 rounded-md" name="name_type_vehicle-{{$index}}" required>
-                  <input type="number" [(ngModel)]="vehicle.price" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="range_max-{{$index}}" required>
+                <div class="flex gap-3 py-2 items-center">
+                  <select  [(ngModel)]="vehicle.name_type_vehicle" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="name_type_vehicle-{{$index}}" id="name_type_vehicle-{{$index}}">
+                      <option value="CAMIONETA/VW TRANSPORTER /TOYOTA HIACE 01 - 03">CAMIONETA/VW TRANSPORTER /TOYOTA HIACE 01 - 03</option>
+                      <option value="VW CRAFTER 04 - 07">VW CRAFTER 04 - 07</option>
+                      <option value="SPRINTER MB 08 - 15/VW CRAFTER DLX 4 PAX">SPRINTER MB 08 - 15/VW CRAFTER DLX 4 PAX</option>
+                      <option value="MINIBUS 16 - 25">MINIBUS 16 - 25</option>
+                  </select>
+                  <input type="number" [(ngModel)]="vehicle.price" placeholder="Price" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="range_max-{{$index}}" required>
                   <i class='bx bxs-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removePriceField($index)"></i>
                 </div>
               }
@@ -136,8 +144,14 @@
               <div class="mb-4">
                 <label for="type_vehicle" class="block text-md text-gray-600 dark:text-gray-50 ">Type vehicle</label>
                 @for (vehicle of selectedTransport.type_vehicle; track $index) {
-                  <div class="grid grid-cols-3 gap-3 py-2 items-center">
-                    <input type="text" [(ngModel)]="vehicle.name_type_vehicle" placeholder="Name Type Vehicle" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-7000 rounded-md" name="name_type_vehicle-{{$index}}" required>
+                  <div class="flex gap-3 py-2 items-center">
+                    <select  [(ngModel)]="vehicle.name_type_vehicle" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="name_type_vehicle-{{$index}}" id="name_type_vehicle-{{$index}}">
+                      <option value="CAMIONETA/VW TRANSPORTER /TOYOTA HIACE 01 - 03">CAMIONETA/VW TRANSPORTER /TOYOTA HIACE 01 - 03</option>
+                      <option value="VW CRAFTER 04 - 07">VW CRAFTER 04 - 07</option>
+                      <option value="SPRINTER MB 08 - 15/VW CRAFTER DLX 4 PAX">SPRINTER MB 08 - 15/VW CRAFTER DLX 4 PAX</option>
+                      <option value="MINIBUS 16 - 25">MINIBUS 16 - 25</option>
+                  </select>
+                    <!-- <input type="text" [(ngModel)]="vehicle.name_type_vehicle" placeholder="Name Type Vehicle" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-7000 rounded-md" name="name_type_vehicle-{{$index}}" required> -->
                     <input type="number" [(ngModel)]="vehicle.price" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="range_max-{{$index}}" required>
                     <i class='bx bxs-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removeEditPriceField($index)"></i>
                   </div>

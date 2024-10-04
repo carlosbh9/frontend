@@ -16,7 +16,7 @@
       </div>
       <td>
         <!-- Botón para abrir el modal -->
-        <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Add Service per Operator</button>
+        <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Add Service for {{ selectedOperator.operador }}</button>
       </td>
     </div>
     <div class="block w-full overflow-x-auto">
@@ -39,7 +39,7 @@
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4 ">{{ service.descripcion }}</td>
                   @for (price of service.prices; track $index) {
                     
-                        <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">${{ price.price?.toFixed(2) }}</td>
+                        <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center font-bold text-emerald-700 text-xs">${{ price.price?.toFixed(2) }}</td>
                 }
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">{{ service.observaciones }}</td>
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">

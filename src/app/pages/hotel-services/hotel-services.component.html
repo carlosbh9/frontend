@@ -49,12 +49,12 @@
                       {{ service.name_service }}
                   </td>
                   <!-- Iterar sobre Tipo de Habitaciones -->
-                  @for (price of service.roomPrices; track price.confidential){
+                  @for (price of service.roomPrices; track price.type){
                       <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">
                             ${{ price.confidential.toFixed(2) }}
                         </td>
                       }
-                    @for (price of service.roomPrices; track price.rack) {
+                    @for (price of service.roomPrices; track price.type) {
                       <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">
                         ${{ price.rack.toFixed(2) }}
                     </td>
