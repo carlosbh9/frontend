@@ -11,6 +11,7 @@ import { FormOperatorsComponent } from '../form-operators/form-operators.compone
 import { FlightsComponent } from '../flights/flights.component';
 import { Quoter } from '../../interfaces/quoter.interface';
 import {ActivatedRoute} from '@angular/router';
+import { ExtOperatorComponent } from '../ext-operator/ext-operator.component';
 
 @Component({
   selector: 'app-quoter-form',
@@ -18,7 +19,7 @@ import {ActivatedRoute} from '@angular/router';
   imports: [CommonModule
     ,FormsModule,FormHotelComponent,FormEntrancesComponent,
     FormExpeditionsComponent,FormGuidesComponent,FormRestaurantsComponent,
-    FormOperatorsComponent,FlightsComponent],
+    FormOperatorsComponent,FlightsComponent,ExtOperatorComponent],
   templateUrl: './quoter-form.component.html',
   styleUrl: './quoter-form.component.css'
 })
@@ -28,7 +29,7 @@ export class QuoterFormComponent implements OnInit{
 
   totalPriceHotels: number[] = [];
   totalPriceServices: number[] = [];
-
+  totalPricesFlights: number[]=[]
   showUpdate = false
   idQuoter: string = ''
   previousDateService=''
@@ -78,6 +79,7 @@ export class QuoterFormComponent implements OnInit{
 
   datosrecibidosHotel: any={};
   datosrecibidosService: any ={}
+  datosrecibidosFlights: any[] =[]
 
 
   ngOnInit(): void {
@@ -154,14 +156,14 @@ export class QuoterFormComponent implements OnInit{
   addItemService(datos:any){
     const uu = datos.prices[0]
     this.datosrecibidosService={
-
       date: datos.date,
       city: datos.city,
       name_service: datos.name_service,
-      price_base: uu,
+      price_base: datos.price_pp,
       prices:datos.prices,
       notes: datos.notes
     }
+
     if(this.datosrecibidosService.prices.length<this.newQuoter.number_paxs.length){
       for(let i = this.datosrecibidosService.prices.length; i<this.newQuoter.number_paxs.length;i++){
         this.datosrecibidosService.prices[i]=0
@@ -169,7 +171,16 @@ export class QuoterFormComponent implements OnInit{
     }
 
   }
+  onFlightsUpdate(flights: any[]) {
+   // this.datosrecibidosFlights = flights;
+    this.newQuoter.flights=flights
+    console.log('Datos recibidos del componente hijo:',this.newQuoter.flights);
+  }
 
+  onTotalPricesChange(prices: number[]) {
+    this.totalPricesFlights = prices; // Actualizar el arreglo de precios totales
+    console.log('Total Prices desde el hijo:', this.totalPricesFlights);
+  }
 
   onSubmitHotel(){
     if(this.datosrecibidosHotel!){
@@ -186,11 +197,15 @@ export class QuoterFormComponent implements OnInit{
     if(this.datosrecibidosService!){
           this.datosrecibidosService.day=this.contDayServices
           this.newQuoter.services.push(this.datosrecibidosService)
+          console.log('agregado correctamente',this.newQuoter.services)
     }
-    this.datosrecibidosService = null
+   // this.datosrecibidosService = null
+  
+//  console.log('estas los precios',this.datosrecibidosService)
   }
 
   onSubmit(){
+   
     this.quoterService.createQuoter(this.newQuoter).then(
       response => {
         console.log('Quoter added',response)
