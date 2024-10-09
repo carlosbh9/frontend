@@ -35,7 +35,8 @@ export class QuoterListComponent implements OnInit{
     exchange_rate: '',
     services: [],
     hotels: [],
-    flights: []
+    flights: [],
+    operators:[]
   }
   constructor(private router: Router,private route: ActivatedRoute) {
     this.selectedQuoter = this.emptyQuoter; // Mueve la inicialización aquí

@@ -1,7 +1,7 @@
 <div class="p-6 flex flex-col space-y-4">
     <div class="flex flex-wrap space-x-4 justify-start">
         <div class="basis-1/4">
-            <label for="issue-date" class="block text-sm font-medium text-gray-700">Selecione la categoria</label>
+            <label for="issue-date" class="block text-sm font-medium text-gray-700">Selecione la categoria 2</label>
         <select [(ngModel)]="selectedCategory"  name="selectedCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
             <option value="" disabled selected>Select Category</option>
             <option value="Entrances">Entrances</option>
@@ -38,7 +38,7 @@
         @if (selectedCategory==='Entrances') {
             <app-form-entrances
             (serviceItem)="addItemService($event)"
-            [priceLength]="newQuoter.number_paxs.length"
+            [priceLength]="number_paxs()"
             [selectedCity]="selectedCityService"
             [selectedDate]="selectedDateService">
             </app-form-entrances>
@@ -46,7 +46,7 @@
         @if (selectedCategory==='Expeditions') {
             <app-form-expeditions
             (serviceItem)="addItemService($event)"
-            [priceLength]="newQuoter.number_paxs.length"
+            [priceLength]="number_paxs()"
             [selectedCity]="selectedCityService"
             [selectedDate]="selectedDateService">
             </app-form-expeditions>
@@ -54,7 +54,7 @@
         @if (selectedCategory==='Guides') {
             <app-form-guides
             (serviceItem)="addItemService($event)"
-            [priceLength]="newQuoter.number_paxs.length"
+            [priceLength]="number_paxs()"
             [selectedCity]="selectedCityService"
             [selectedDate]="selectedDateService">
             </app-form-guides>
@@ -62,7 +62,7 @@
         @if (selectedCategory==='Restaurants') {
             <app-form-restaurants
             (serviceItem)="addItemService($event)"
-            [priceLength]="newQuoter.number_paxs.length"
+            [priceLength]="number_paxs()"
             [selectedCity]="selectedCityService"
             [selectedDate]="selectedDateService">
             </app-form-restaurants>
@@ -70,14 +70,14 @@
         @if (selectedCategory==='Operators') {
             <app-form-operators
             (serviceItem)="addItemService($event)"
-            [priceLength]="newQuoter.number_paxs.length"
+            [priceLength]="number_paxs()"
             [selectedCity]="selectedCityService"
             [selectedDate]="selectedDateService">
             </app-form-operators>
         }
 
-           <p>Datos Recibidos:</p>
-                <pre>{{ datosrecibidosService | json }}</pre>  Mostrando los datos recibidos
+           <!-- <p>Datos Recibidos:</p>
+                <pre>{{ datosrecibidosService | json }}</pre>  Mostrando los datos recibidos -->
     </div>
 </div>
 <div class="p-6 block w-full overflow-x-auto">
@@ -90,7 +90,7 @@
         <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">City</th>
         <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left">Name Service</th>
         <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">Price</th>
-        @for (item of [].constructor(newQuoter.number_paxs.length); track $index) {
+        @for (item of [].constructor(number_paxs()); track $index) {
                         <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price {{$index+1}}</th>
         }
         <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Notes</th>
@@ -98,12 +98,12 @@
         </tr>
     </thead>
     <tbody >
-        @for (service of newQuoter.services; track $index) {
+        @for (service of services; track $index) {
             <tr class="text-gray-700 dark:text-gray-1000">
                 @if ($index === 0) {
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.day}}</td>
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.date | date }}</td>
-                }@else if (service.day!==newQuoter.services[$index-1].day) {
+                }@else if (service.day!==services[$index-1].day) {
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.day}}</td>
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.date | date }}</td>
                 }@else {

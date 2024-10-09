@@ -33,7 +33,7 @@ export class FormHotelComponent implements OnInit {
   selectedItem: any[]=[]
   selectedRoomTypePrices: any[]=[];
   selectedPrices: any[] = [];
-
+  
   quoterItem: any = {
     day:0,
     city:'',

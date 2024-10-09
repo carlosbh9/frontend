@@ -1,0 +1,168 @@
+<div class="p-6 flex flex-col space-y-4">
+    <div class="flex flex-wrap space-x-4 justify-start">
+
+        <div class="w-1/4">
+            <label for="issue-date" class="block text-sm font-medium text-gray-700">Date</label>
+            <input type="date" [(ngModel)]="newHotel.date" (change)="onChangeDate($event)" name="date" id="date" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
+        </div>
+        <div class="w-1/4">
+
+            <label for="issue-date" class="block text-sm font-medium text-gray-700">City</label>
+            <select [(ngModel)]="newHotel.city" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" name="selectedCity" id="selectedCity">
+                <option value="LIM">LIM</option>
+                <option value="CUZ">CUZ</option>
+                <option value="LIM/CUZ">LIM/CUZ</option>
+                <option value="SV">SV</option>
+                <option value="MP">MP</option>
+                <option value="PUN">PUN</option>
+            </select>
+            <!-- <input type="text" [(ngModel)]="selectedCity"  name="city" id="city" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" > -->
+        </div>
+        <div class="flex-1 relative ">
+            <button class="absolute top-4 right-4 px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="onSubmitHotel()">Add Item Hotel</button>
+        </div>
+
+    </div>
+    <div class="">
+        <div class="flex flex-wrap justify-start">
+            <div class="w-1/4">
+                <label for="hotel-select" class="block text-sm font-medium text-gray-700">Hoteles</label>
+                <select [(ngModel)]="selectedHotel" (change)="onHotelChange($event)" name="selectedHotel" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
+                    <option value="" disabled selected>Select Hotel</option>
+                    @for (hotel of hotelsOption; track hotel._id) {
+                        <option [value]="hotel._id">{{hotel.name}}</option>
+                    }
+                </select>
+            </div>
+          <!--   <div class="flex flex-row space-x-4">-->
+                <div class="w-1/4 px-4">
+                    <label for="service-select" class="block text-sm font-medium text-gray-700">Services</label>
+                <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" name="selectedService" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1">
+                    <option value="" disabled selected>Select Service</option>
+                    @for (service of hotelServices; track $index) {
+                        <option [value]="service._id">{{service.name_service}} </option>
+                     
+                    }
+                </select>
+                </div>
+                <div class="pr-4">
+                   @if (roomTypes.length>0) {
+                    <label for="price" class="block text-sm font-medium text-gray-700 pb-1">Accommodations</label>
+                    <div class="space-x-4 flex flex-row border-2 h-10 border-gray-300 rounded-md" >
+                
+                      <div class="flex items-center mx-2">
+                            <select [(ngModel)]="selectedRoomType"  name="type" id="type">
+                              <option value="" disabled selected>Select Type</option>
+                         @for (roomType of roomTypes; track $index) {
+                            <option [value]="roomType.type">{{roomType.type}}</option>
+                            }
+                            </select>
+                        </div>
+                        @for (roomType of roomTypes; track $index) {
+                        
+                      <div *ngIf="selectedRoomType === roomType.type"  class="flex items-center mr-2">
+                          <input 
+                          type="radio" 
+                          id="confidential" 
+                          [(ngModel)]="selectedPrice"
+                          [value]="roomType.confidential"
+                          name="confidential"
+                          class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" >
+                          <label for="Confidential" class="ml-2 mr-2 text-sm">Confidential - ${{roomType.confidential}}</label>
+                      </div>
+                      <div *ngIf="selectedRoomType === roomType.type" class="flex items-center mx-2">
+                        <input
+                        type="radio" 
+                        id="rack" 
+                        [(ngModel)]="selectedPrice"
+                        [value]="roomType.rack"
+                        name="Rack"
+                        class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded">
+                        <label for="Rack" class="ml-2 text-sm mr-2">Rack - ${{roomType.rack}}</label>
+                    </div>
+                    
+                    }
+                    <i class="bx bxs-plus-circle text-2xl text-green-500 dark:text-green-700" (click)="addPrices()"></i>
+                    </div>
+    
+                    }    
+                </div>
+                <div class="w-64">
+                    <div>
+                         <label for="service-select" class="block text-sm font-medium text-gray-700">Notes</label>
+                        <textarea [(ngModel)]="newHotel.notes" name="newHotel.notes" id="" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1"></textarea>
+                    </div>
+                </div>
+                <div >
+                    <div>
+                        <label for="service-select" class="block text-sm font-medium text-gray-700">Prices</label>
+                        @for (item of [].constructor(priceLength()); track $index) {
+                            <input type="number" name="newHotel.prices-{{$index}}" [(ngModel)]="newHotel.prices[$index]" id="newHotel.prices-{{$index}}" class="pr-4 h-10 p-2 w-16 border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1 mr-2 mb-2">
+                        }
+                       
+                   </div>
+                </div>
+             </div>
+    </div>
+</div>
+<div class="p-6 block w-full overflow-x-auto">
+<h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Hotels</h1>
+<table class="items-center w-full bg-transparent border-collapse border ">
+<thead>
+    <tr>
+    <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center">Day</th>
+    <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">Date</th>
+    <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">City</th>
+    <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left">Hotel</th>
+    <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">P. Conf</th>
+    @for (item of [].constructor(priceLength()); track $index) {
+        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price {{$index+1}}</th>
+    }
+    <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">ACCOMMODATIONS AND CATEGORY</th>
+    <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Notes</th>
+    <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Actions</th>
+    </tr>
+</thead>
+<tbody >
+
+        @for (hotel of hotels; track $index) {
+            <tr class="text-gray-700 dark:text-gray-1000">
+             @if ($index === 0) {
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.day}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.date | date }}</td>
+             }@else if (hotel.day!==hotels[$index-1].day) {
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.day}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.date | date }}</td>
+             }@else {
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "></td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "></td>
+             }
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.city}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.name_hotel}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{hotel.price_base.toFixed(2)}}</td>
+                @for (price of hotel.prices; track $index) {
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{price.toFixed(2)}}</td>
+                }
+
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.accomodatios_category}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.notes}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' ></i>
+                    <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' ></i>
+                </td>
+            </tr>
+        }
+</tbody>
+<tfoot>
+    <tr class="font-semibold text-gray-700 dark:text-gray-1000">
+        <td colspan="5" class="border-t-2 border-gray-300 px-4 py-2 text-left">Total Price</td>
+   @for (price of getTotalPricesHotels(); track $index) {
+        <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">${{price.toFixed(2)}}</td>
+    }@empty {
+        <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">$0.00</td>
+    }
+        <td colspan="2" class="border-t-2 border-gray-300 px-4 py-2 text-right"></td>
+    </tr>
+</tfoot>
+</table>
+</div>

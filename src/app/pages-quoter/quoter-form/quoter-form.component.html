@@ -32,7 +32,7 @@
                             <label for="number_paxs" class="block text-sm font-medium text-gray-700">Number of Pax</label>
                             <div class="flex flex-initial items-center space-x-4">
                                 @for (item of newQuoter.number_paxs; track $index) {
-                                    <input type="number" [(ngModel)]="newQuoter.number_paxs[$index]"  name="newQuoter.number_paxs_{{$index}}" id="number_paxs_{{$index}}" class="mt-1 block w-16 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value" required>
+                                    <input type="number" [(ngModel)]="newQuoter.number_paxs[$index]"   name="newQuoter.number_paxs_{{$index}}" id="number_paxs_{{$index}}" class="mt-1 block w-16 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value" required>
                                 }
                                 <i class="bx bxs-plus-circle text-2xl text-green-500 dark:text-green-700 " (click)="addNumberPaxs()"></i>
                             </div>
@@ -70,243 +70,20 @@
     <!-- end card  1 -->
     <!-- card  2 -->
     <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-
-            <div class="p-6 flex flex-col space-y-4">
-                <div class="flex flex-wrap space-x-4 justify-start">
-
-                    <div class="w-1/4">
-                        <label for="issue-date" class="block text-sm font-medium text-gray-700">Date</label>
-                        <input type="date" [(ngModel)]="selectedDate" name="date" id="date" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
-                    </div>
-                    <div class="w-1/4">
-
-                        <label for="issue-date" class="block text-sm font-medium text-gray-700">City</label>
-                        <select [(ngModel)]="selectedCity" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" name="selectedCity" id="selectedCity">
-                            <option value="LIM">LIM</option>
-                            <option value="CUZ">CUZ</option>
-                            <option value="LIM/CUZ">LIM/CUZ</option>
-                            <option value="SV">SV</option>
-                            <option value="MP">MP</option>
-                            <option value="PUN">PUN</option>
-                        </select>
-                        <!-- <input type="text" [(ngModel)]="selectedCity"  name="city" id="city" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" > -->
-                    </div>
-                    <div class="flex-1 relative ">
-                        <button class="absolute top-4 right-4 px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="onSubmitHotel()">Add Item Hotel</button>
-                    </div>
-
-                </div>
-                <div class="">
-                    <app-form-hotel
-                    (hotelItem)="addItemToQuote($event)"
-                    [priceLength]="newQuoter.number_paxs.length"
-                    [selectedDate]="selectedDate"
-                    [selectedCity]="selectedCity"
-                    >
-                </app-form-hotel>
-                </div>
-            </div>
-        <div class="p-6 block w-full overflow-x-auto">
-            <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Hotels</h1>
-            <table class="items-center w-full bg-transparent border-collapse border ">
-            <thead>
-                <tr>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center">Day</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">Date</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">City</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left">Hotel</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">P. Conf</th>
-                @for (item of [].constructor(newQuoter.number_paxs.length); track $index) {
-                    <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price {{$index+1}}</th>
-                }
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">ACCOMMODATIONS AND CATEGORY</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Notes</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Actions</th>
-                </tr>
-            </thead>
-            <tbody >
-
-                    @for (hotel of newQuoter.hotels; track $index) {
-                        <tr class="text-gray-700 dark:text-gray-1000">
-                         @if ($index === 0) {
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.day}}</td>
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.date | date }}</td>
-                         }@else if (hotel.day!==newQuoter.hotels[$index-1].day) {
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.day}}</td>
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.date | date }}</td>
-                         }@else {
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "></td>
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "></td>
-                         }
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.city}}</td>
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.name_hotel}}</td>
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{hotel.price_base.toFixed(2)}}</td>
-                            @for (price of hotel.prices; track $index) {
-                                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{price.toFixed(2)}}</td>
-                            }
-
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.accomodatios_category}}</td>
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.notes}}</td>
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' ></i>
-                                <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' ></i>
-                            </td>
-                        </tr>
-                    }
-            </tbody>
-            <tfoot>
-                <tr class="font-semibold text-gray-700 dark:text-gray-1000">
-                    <td colspan="5" class="border-t-2 border-gray-300 px-4 py-2 text-left">Total Price</td>
-               @for (price of getTotalPricesHotels(); track $index) {
-                    <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">${{price.toFixed(2)}}</td>
-                }
-                    <td colspan="2" class="border-t-2 border-gray-300 px-4 py-2 text-right"></td>
-                </tr>
-            </tfoot>
-            </table>
-        </div>
-
+            <app-hotels
+            [priceLength]="newQuoter.number_paxs.length"
+            (hotelsChange)="onHotelsUpdate($event)"
+            (totalPricesChange)="onTotalPricesHotelsChange($event)">
+            </app-hotels>
     </div>
     <!-- end card  2 -->
     <!-- card  3 -->
     <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-        <div class="p-6 flex flex-col space-y-4">
-            <div class="flex flex-wrap space-x-4 justify-start">
-                <div class="basis-1/4">
-                    <label for="issue-date" class="block text-sm font-medium text-gray-700">Selecione la categoria</label>
-                <select [(ngModel)]="selectedCategory"  name="selectedCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
-                    <option value="" disabled selected>Select Category</option>
-                    <option value="Entrances">Entrances</option>
-                    <option value="Expeditions">Expeditions</option>
-                    <option value="Guides">Guides</option>
-                    <option value="Restaurants">Restaurants</option>
-                    <option value="Operators">Operators</option>
-                    <!--<option value="Transporte">Transporte</option>
-                    <option value="Experiencias">Experiencias</option>-->
-                </select>
-                </div>
-                <div class="w-1/4">
-                    <label for="issue-date" class="block text-sm font-medium text-gray-700">Date</label>
-                    <input type="date" [(ngModel)]="selectedDateService"  name="date" id="date" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
-                </div>
-                <div class="w-1/4">
-                    <label for="issue-date" class="block text-sm font-medium text-gray-700">City</label>
-                    <select [(ngModel)]="selectedCityService" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" name="selectedCity" id="selectedCity">
-                        <option value="LIM">LIM</option>
-                        <option value="CUZ">CUZ</option>
-                        <option value="LIM/CUZ">LIM/CUZ</option>
-                        <option value="SV">SV</option>
-                        <option value="MP">MP</option>
-                        <option value="PUN">PUN</option>
-                    </select>
-                    <!-- <input type="text" [(ngModel)]="selectedCityService"  name="city" id="city" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" > -->
-                </div>
-                <div class="flex-1 relative ">
-                    <button class="absolute top-4 right-4 px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="onSubmitService()">Add Item</button>
-                </div>
-
-            </div>
-            <div class="">
-                @if (selectedCategory==='Entrances') {
-                    <app-form-entrances
-                    (serviceItem)="addItemService($event)"
-                    [priceLength]="newQuoter.number_paxs.length"
-                    [selectedCity]="selectedCityService"
-                    [selectedDate]="selectedDateService">
-                    </app-form-entrances>
-                }
-                @if (selectedCategory==='Expeditions') {
-                    <app-form-expeditions
-                    (serviceItem)="addItemService($event)"
-                    [priceLength]="newQuoter.number_paxs.length"
-                    [selectedCity]="selectedCityService"
-                    [selectedDate]="selectedDateService">
-                    </app-form-expeditions>
-                }
-                @if (selectedCategory==='Guides') {
-                    <app-form-guides
-                    (serviceItem)="addItemService($event)"
-                    [priceLength]="newQuoter.number_paxs.length"
-                    [selectedCity]="selectedCityService"
-                    [selectedDate]="selectedDateService">
-                    </app-form-guides>
-                }
-                @if (selectedCategory==='Restaurants') {
-                    <app-form-restaurants
-                    (serviceItem)="addItemService($event)"
-                    [priceLength]="newQuoter.number_paxs.length"
-                    [selectedCity]="selectedCityService"
-                    [selectedDate]="selectedDateService">
-                    </app-form-restaurants>
-                }
-                @if (selectedCategory==='Operators') {
-                    <app-form-operators
-                    (serviceItem)="addItemService($event)"
-                    [priceLength]="newQuoter.number_paxs.length"
-                    [selectedCity]="selectedCityService"
-                    [selectedDate]="selectedDateService">
-                    </app-form-operators>
-                }
-
-                   <p>Datos Recibidos:</p>
-                        <pre>{{ datosrecibidosService | json }}</pre>  Mostrando los datos recibidos
-            </div>
-        </div>
-        <div class="p-6 block w-full overflow-x-auto">
-            <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Services</h1>
-            <table class="items-center w-full bg-transparent border border-collapse">
-            <thead>
-                <tr>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center">Day</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">Date</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">City</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left">Name Service</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">Price</th>
-                @for (item of [].constructor(newQuoter.number_paxs.length); track $index) {
-                                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price {{$index+1}}</th>
-                }
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Notes</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Actions</th>
-                </tr>
-            </thead>
-            <tbody >
-                @for (service of newQuoter.services; track $index) {
-                    <tr class="text-gray-700 dark:text-gray-1000">
-                        @if ($index === 0) {
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.day}}</td>
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.date | date }}</td>
-                        }@else if (service.day!==newQuoter.services[$index-1].day) {
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.day}}</td>
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.date | date }}</td>
-                        }@else {
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "></td>
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "></td>
-                        }
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.city}}</td>
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.name_service}}</td>
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{service.price_base.toFixed(2)}}</td>
-                        @for (price of service.prices; track $index) {
-                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{price.toFixed(2)}}</td>
-                        }
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.notes}}</td>
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                            <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' ></i>
-                            <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' ></i>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-            <tfoot>
-                <tr class="font-semibold text-gray-700 dark:text-gray-1000">
-                    <td colspan="5" class="border-t-2 border-gray-300 px-4 py-2 text-left">Total Price</td>
-                    @for (price of getTotalPricesServices(); track $index) {
-                    <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">${{price.toFixed(2)}}</td>
-                    }
-                    <td colspan="2" class="border-t-2 border-gray-300 px-4 py-2 text-right"></td>
-                </tr>
-            </tfoot>
-            </table>
-        </div>
+        <app-services
+        [number_paxs]="newQuoter.number_paxs.length"        
+        (servicesChange)="onServicesUpdate($event)"
+        (totalPricesChange)="onTotalPricesServicesChange($event)">
+        </app-services>
     </div>
     <!-- end card  3 -->
     <!-- card  4 -->
@@ -362,9 +139,9 @@
      <!-- card 5 external operator -->
     <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
         <app-ext-operator 
-        [priceLength]="newQuoter.number_paxs.length">
-        ()
-
+        [priceLength]="newQuoter.number_paxs.length"
+        (operatorsChange)="onOperatorsUpdate($event)"
+        (totalPricesChange)="onTotalPricesOperatorsChange($event)">
         </app-ext-operator>
     </div>
     <!-- end card 5 -->
@@ -373,7 +150,7 @@
         <app-flights
         [priceLength]="newQuoter.number_paxs.length"
         (flightsChange)="onFlightsUpdate($event)"
-        (totalPricesChange)="onTotalPricesChange($event)"
+        (totalPricesChange)="onTotalPricesFligtsChange($event)"
         >
         </app-flights>
         

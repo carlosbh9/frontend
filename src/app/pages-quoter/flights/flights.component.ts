@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class FlightsComponent implements OnInit {
 
-  datosFlight = output<any[]>();
+ // datosFlight = output<any[]>();
   priceLength = input.required<number>();
   @Output() flightsChange = new EventEmitter<any[]>();
   @Output() totalPricesChange = new EventEmitter<number[]>();
@@ -28,13 +28,7 @@ export class FlightsComponent implements OnInit {
     editFlight: false
   }
 
-  SelectedFlight: any = {
-    date: '',
-    route: '',
-    price_conf: 0,
-    prices:[],
-    notes: ''
-  }
+ 
 
   ngOnInit(): void {
 
@@ -45,7 +39,8 @@ emtyFlight(){
     route: '',
     price_conf: 0,
     prices:[],
-    notes: ''
+    notes: '',
+    editFlight: false
   }
 }
 onSubmitFlight() {

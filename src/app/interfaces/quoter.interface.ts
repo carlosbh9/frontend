@@ -14,5 +14,6 @@ export interface Quoter {
     services: any[];
     hotels: any[];
     flights: any[];
+    operators: any[];
   }
 

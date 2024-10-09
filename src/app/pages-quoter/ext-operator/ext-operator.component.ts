@@ -26,6 +26,7 @@ export class ExtOperatorComponent {
     notes: '',
     editOperator: false
   }
+  prices: any[]=[]
 
   porcentajeTD: number = 0
 
@@ -74,8 +75,11 @@ onDelete(index: number){
 }
 
 private emitOperator() {
+  // this.prices.push(this.externalUtilityPrices())
+  // this.prices.push(this.externalTaxesPrices())
+  // this.prices.push(this.totalCostExternal())
   this.operatorsChange.emit(this.operators);
-  //this.totalPricesChange.emit(this.externalUtilityPrices())
+  // this.totalPricesChange.emit(this.prices)
   //this.totalCostExternal
 }
 externalUtilityPrices(): number[] {
