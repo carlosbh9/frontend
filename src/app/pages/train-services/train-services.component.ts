@@ -27,13 +27,23 @@ export class TrainServicesComponent implements OnInit {
 
   newService: any = {
     serviceName: '',
-    prices: [],
+    prices: [{
+      season: 'Regular',
+      adultPrice: 0,
+      childPrice: 0,
+      guidePrice: 0
+    }],
     observations: ''
   };
 
   selectService: any = {
     serviceName: '',
-    prices: [],
+    prices: [{
+      season: 'Regular',
+      adultPrice: 0,
+      childPrice: 0,
+      guidePrice: 0
+    }],
     observations: ''
   };
 
@@ -67,7 +77,8 @@ async onSubmit() {
   try {
     const response = await this.trainService.addServiceToTrain(this.trainId, this.newService);
     console.log('Servicio añadido', response);
-    this.fetchTrainServices(this.trainId); // Actualizar la lista de servicios
+    this.fetchTrainServices(this.trainId);  // Actualizar la lista de servicios
+    this.emptyService()
     this.showAddModal = false;
     
   } catch (error) {
@@ -128,33 +139,38 @@ closeModal() {
 emptyService(): void {
   this.newService = {
     serviceName: '',
-    prices: [],
+    prices: [{
+      season: 'Regular',
+      adultPrice: 0,
+      childPrice: 0,
+      guidePrice: 0
+    }],
     observations: ''
   };
 }
 
-addPriceField() {
-  this.newService.prices.push({season:'Regular', adultPrice:0, childPrice:0});
-}
+// addPriceField() {
+//   this.newService.prices.push({season:'Regular', adultPrice:0, childPrice:0 , guidePrice: 0});
+// }
 
-addEditPriceField() {
-  this.selectService.prices.push({season:'Regular',adultPrice: 0, childPrice:0});
-}
+// addEditPriceField() {
+//   this.selectService.prices.push({season:'Regular',adultPrice: 0, childPrice:0, guidePrice: 0});
+// }
 
-removePriceField(index: number) {
-  if (this.newService.prices.length >= 1) {
-    this.newService.prices.splice(index, 1);
-  }else{
-    console.warn('No se puede eliminar el ltimo campo de precio');
-  }
-}
+// removePriceField(index: number) {
+//   if (this.newService.prices.length >= 1) {
+//     this.newService.prices.splice(index, 1);
+//   }else{
+//     console.warn('No se puede eliminar el ltimo campo de precio');
+//   }
+// }
 
-removeEditPriceField(index: number) {
-  if (this.selectService.prices.length >= 1) {
-    this.selectService.prices.splice(index, 1);
-  }else{
-    console.warn('No se puede eliminar el ltimo campo de precio');
-  }
-}
+// removeEditPriceField(index: number) {
+//   if (this.selectService.prices.length >= 1) {
+//     this.selectService.prices.splice(index, 1);
+//   }else{
+//     console.warn('No se puede eliminar el ltimo campo de precio');
+//   }
+// }
 
 }

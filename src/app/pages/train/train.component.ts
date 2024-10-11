@@ -21,7 +21,7 @@ export class TrainComponent implements OnInit {
   filterText: string = '';
   showAddModal = false;
   showEditModal = false;
-
+  filterYear : string = '2024'
  newTrain: any = {
    company: '',
    services: [{
@@ -29,9 +29,11 @@ export class TrainComponent implements OnInit {
      prices: [{
        season: 'Regular',
        adultPrice: 0,
-       childPrice: 0
+       childPrice: 0,
+       guidePrice: 0
      }],
-     observations: ''
+     observations: '',
+     year:''
    }]
  };
 
@@ -42,9 +44,11 @@ export class TrainComponent implements OnInit {
      prices: [{
        season: 'Regular',
        adultPrice: 0,
-       childPrice: 0
+       childPrice: 0,
+       guidePrice: 0
      }],
-     observations: ''
+     observations: '',
+     year:''
    }]
  };
 
@@ -65,10 +69,15 @@ export class TrainComponent implements OnInit {
 
   filterTrains() {
     this.filteredTrains = this.trains.filter(train =>
-      train.company.toLowerCase().includes(this.filterText.toLowerCase())
+      train.company.toLowerCase().includes(this.filterText.toLowerCase()) && (this.filterYear ? train.year === this.filterYear : true)
     );
   }
 
+  onYearChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement; // Casting a HTMLSelectElement
+    this.filterYear = String(selectElement.value); // Convertir el valor a número
+    this.filterTrains();
+  }
 
   openEditModal(train: any) {
     this.selectedTrain = { ...train };
@@ -100,9 +109,11 @@ export class TrainComponent implements OnInit {
         prices: [{
           season: 'Regular',
           adultPrice: 0,
-          childPrice: 0
+          childPrice: 0,
+          guidePrice: 0
         }],
-        observations: ''
+        observations: '',
+        year:''
       }]
     };
   }

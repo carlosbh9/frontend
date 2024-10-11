@@ -5,6 +5,12 @@
           <h3 class="font-semibold text-base text-gray-900 dark:text-gray-50">Operators</h3>
         </div>
         <div class="relative w-full max-w-full flex-grow flex-1 text-right">
+          <select name="filterYear" id="filterYear" class="p-2 me-4 border border-gray-300 rounded" [(ngModel)]="filterYear" (change)="onYearChange($event)">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="">All</option>
+          </select>
           <input
             type="text"
             [(ngModel)]="filterText"
@@ -23,6 +29,7 @@
           <thead>
             <tr>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Operator</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Year</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">City</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Service Name</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Services</th>
@@ -32,6 +39,7 @@
           <tbody>
             <tr *ngFor="let operator of filteredOperators" class="text-gray-700 dark:text-gray-100">
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ operator.operador }}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ operator.year }}</td>
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ operator.ciudad }}</td>
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ operator.name_service }}</td>
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
@@ -51,7 +59,7 @@
 
 
   <!-- Add Modal -->
-<div *ngIf="showAddModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
+<div *ngIf="showAddModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster " style="background: rgba(0,0,0,.7);">
   <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
     <div class="modal-content py-4 text-left px-6">
       <!-- Title -->
@@ -64,12 +72,20 @@
         </div>
       </div>
       <!-- Body -->
-      <div class="my-5 mr-5 ml-5 flex justify-center">
+      <div class="my-5 mr-5 ml-5 flex justify-center max-h-96 overflow-y-auto">
         <form (submit)="onSubmit()" id="add_operator_form" class="w-full">
           <div class="">
             <div class="mb-4">
               <label for="operador" class="block text-md text-gray-600 dark:text-gray-50">Name operator</label>
               <input type="text" id="operador" name="operador" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Name" [(ngModel)]="newOperator.operador" equired>
+            </div>
+            <div class="mb-4">
+              <label for="year" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
+              <select [(ngModel)]="newOperator.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+            </select>
             </div>
             <div class="mb-4">
               <label for="ciudad" class="block text-md text-gray-600 dark:text-gray-50">City</label>
@@ -112,7 +128,7 @@
 
 <!-- Edit Modal -->
 <div *ngIf="showEditModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
-  <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+  <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl   shadow-lg z-50 overflow-y-auto">
     <div class="modal-content py-4 text-left px-6">
       <!-- Title -->
       <div class="flex justify-between items-center pb-3">
@@ -124,12 +140,20 @@
         </div>
       </div>
       <!-- Body -->
-      <div class="my-5 mr-5 ml-5 flex justify-center">
+      <div class="my-5 mr-5 ml-5 flex justify-center max-h-96 overflow-y-auto">
         <form (submit)="onEditSubmit()" id="edit_operator_form" class="w-full">
           <div class="">
             <div class="mb-4">
               <label for="operador" class="block text-md text-gray-600 dark:text-gray-50">Name operator</label>
               <input type="text" id="operador" name="operador" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Name" [(ngModel)]="selectedOperator.operador" equired>
+            </div>
+            <div class="mb-4">
+              <label for="year" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
+              <select [(ngModel)]="selectedOperator.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+            </select>
             </div>
             <div class="mb-4">
               <label for="ciudad" class="block text-md text-gray-600 dark:text-gray-50">City</label>

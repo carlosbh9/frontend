@@ -5,6 +5,12 @@
         <h3 class="font-semibold text-base text-gray-900 dark:text-gray-50">Activities</h3>
       </div>
       <div class="relative w-full max-w-full flex-grow flex-1 text-right">
+        <select name="filterYear" id="filterYear" class="p-2 me-4 border border-gray-300 rounded" [(ngModel)]="filterYear" (change)="onYearChange($event)">
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+          <option value="">All</option>
+        </select>
         <input
           type="text"
           [(ngModel)]="filterText"
@@ -23,6 +29,7 @@
         <thead>
           <tr>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Name</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Year</th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Category</th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Prices</th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Guide Price</th>
@@ -36,6 +43,7 @@
         <tbody>
           <tr *ngFor="let experience of filteredExperiences" class="text-gray-700 dark:text-gray-100">
             <td class="border-t-0 px-4 align-top border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">{{ experience.name }}</td>
+            <td class="border-t-0 px-4 align-top border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">{{ experience.year }}</td>
             <td class="border-t-0 px-4 align-top border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">{{ experience.category }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
               @for (price of experience.prices; track $index) {
@@ -78,6 +86,14 @@
             <div class="mb-4">
               <label for="name" class="block text-md text-gray-600 dark:text-gray-50">Name</label>
               <input type="text" id="name" name="name" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Name" [(ngModel)]="newExperience.name" required>
+            </div>
+            <div class="mb-4">
+              <label for="year" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
+              <select [(ngModel)]="newExperience.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+            </select>
             </div>
             <div class="mb-4">
               <label for="category" class="block text-md text-gray-600 dark:text-gray-50">Category</label>
@@ -150,6 +166,14 @@
             <div class="mb-4">
               <label for="name" class="block text-md text-gray-600 dark:text-gray-50">Name</label>
               <input type="text" id="name" name="name" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Name" [(ngModel)]="selectedExperience.name" required>
+            </div>
+            <div class="mb-4">
+              <label for="year" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
+              <select [(ngModel)]="selectedExperience.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+            </select>
             </div>
             <div class="mb-4">
               <label for="category" class="block text-md text-gray-600 dark:text-gray-50">Category</label>

@@ -17,19 +17,22 @@ export class GuidesComponent {
   filterText: string = '';
   showAddModal = false;
   showEditModal = false;
+  filterYear : string = '2024'
 
   newGuide: any = {
     name_guide: '',
     type_guide: 'Regular', // Valor por defecto
     price_guide: 0,
-    observations: ''
+    observations: '',
+    year:''
   };
 
   selectedGuide: any = {
     name_guide: '',
     type_guide: 'Regular',
     price_guide: 0,
-    observations: ''
+    observations: '',
+    year:''
   };
 
   constructor(private guidesService: GuidesService,private cdr: ChangeDetectorRef) { }
@@ -49,9 +52,17 @@ export class GuidesComponent {
   }
 
   filterGuides() {
-    this.filteredGuides = this.guides.filter(guide =>
-      guide.name_guide.toLowerCase().includes(this.filterText.toLowerCase()) || guide.type_guide.toLowerCase().includes(this.filterText.toLocaleLowerCase())
+    this.filteredGuides = this.guides.filter(guide =>(
+      guide.name_guide.toLowerCase().includes(this.filterText.toLowerCase()) || guide.type_guide.toLowerCase().includes(this.filterText.toLocaleLowerCase())) && (this.filterYear ? guide.year === this.filterYear : true)
     );
+  }
+
+  
+  onYearChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement; // Casting a HTMLSelectElement
+    this.filterYear = String(selectElement.value); // Convertir el valor a número
+    this.filterGuides();
+    
   }
 
   async deleteGuide(id: string) {
@@ -89,7 +100,8 @@ export class GuidesComponent {
       name_guide: '',
       type_guide: 'Regular',
       price_guide: 0,
-      observations: ''
+      observations: '',
+      year:''
     };
   }
 

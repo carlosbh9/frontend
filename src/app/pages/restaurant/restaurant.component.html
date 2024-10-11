@@ -5,6 +5,12 @@
           <h3 class="font-semibold text-base text-gray-900 dark:text-gray-50">Restaurants</h3>
         </div>
         <div class="relative w-full max-w-full flex-grow flex-1 text-right">
+          <select name="filterYear" id="filterYear" class="p-2 me-4 border border-gray-300 rounded" [(ngModel)]="filterYear" (change)="onYearChange($event)">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="">All</option>
+          </select>
           <input
             type="text"
             [(ngModel)]="filterText"
@@ -23,6 +29,7 @@
           <thead>
             <tr>
               <th rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Name</th>
+              <th rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Year</th>
               <th rowspan="2"  class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Price per Person</th>
               <th colspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-center">Child rate</th>
               <th rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">GUIDE & DRIVER</th>
@@ -44,6 +51,7 @@
           <tbody>
             <tr *ngFor="let restaurant of filteredRestaurants" class="text-gray-700 dark:text-gray-100">
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.name }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.year }}</td>
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4 font-bold text-emerald-700">${{ restaurant.price_pp.toFixed(2) }}</td>
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4 font-bold text-emerald-700">${{restaurant.child_rate[0].price_pp.toFixed(2)}}</td>
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4 font-bold">{{restaurant.child_rate[0].upTo}} años</td>
@@ -97,6 +105,14 @@
               <div class="mb-4">
                 <label for="name" class="block text-md text-gray-600 dark:text-gray-50">Name</label>
                 <input type="text" id="name" name="name" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Restaurant Name" [(ngModel)]="newRestaurant.name" required>
+              </div>
+              <div class="mb-4">
+                <label for="year" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
+                <select [(ngModel)]="newRestaurant.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+              </select>
               </div>
               <div class="mb-4">
                 <label for="price_pp" class="block text-md text-gray-600 dark:text-gray-50">Price per person</label>
@@ -187,6 +203,14 @@
               <div class="mb-4">
                 <label for="name" class="block text-md text-gray-600 dark:text-gray-50">Name</label>
                 <input type="text" id="name" name="name" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Restaurant Name" [(ngModel)]="selectedRestaurant.name" required>
+              </div>
+              <div class="mb-4">
+                <label for="year" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
+                <select [(ngModel)]="selectedRestaurant.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+              </select>
               </div>
               <div class="mb-4">
                 <label for="price_pp" class="block text-md text-gray-600 dark:text-gray-50">Price per person</label>

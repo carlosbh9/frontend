@@ -5,6 +5,12 @@
           <h3 class="font-semibold text-base text-gray-900 dark:text-gray-50">Guides</h3>
         </div>
         <div class="relative w-full max-w-full flex-grow flex-1 text-right">
+          <select name="filterYear" id="filterYear" class="p-2 me-4 border border-gray-300 rounded" [(ngModel)]="filterYear" (change)="onYearChange($event)">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="">All</option>
+          </select>
           <input
             type="text"
             [(ngModel)]="filterText"
@@ -23,6 +29,7 @@
           <thead>
             <tr>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Name Servide</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Year</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Type Guide</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Price Guide 1 - 9 paxs</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">observations</th>
@@ -32,6 +39,7 @@
           <tbody>
             <tr *ngFor="let guide of filteredGuides" class="text-gray-700 dark:text-gray-100">
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">{{ guide.name_guide }}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">{{ guide.year }}</td>
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ guide.type_guide }}</td>
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 font-bold text-emerald-700">$ {{ guide.price_guide.toFixed(2) }}</td>
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ guide.observations }}</td>
@@ -66,6 +74,14 @@
               <div class="mb-4">
                 <label for="neme_service" class="block text-md text-gray-600 dark:text-gray-50">Name Service</label>
                 <input type="text" id="neme_service" name="neme_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Name Service" [(ngModel)]="newGuide.name_guide" required>
+              </div>
+              <div class="mb-4">
+                <label for="year" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
+                <select [(ngModel)]="newGuide.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+              </select>
               </div>
               <div class="mb-4">
                 <label for="type_guide" class="block text-md text-gray-600 dark:text-gray-50">Type Guide</label>
@@ -117,8 +133,15 @@
                     <input type="text" id="neme_service" name="neme_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Name Service" [(ngModel)]="selectedGuide.name_guide" required>
                   </div>
                   <div class="mb-4">
+                    <label for="year" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
+                    <select [(ngModel)]="selectedGuide.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
+                      <option value="2024">2024</option>
+                      <option value="2025">2025</option>
+                      <option value="2026">2026</option>
+                  </select>
+                  </div>
+                  <div class="mb-4">
                     <label for="type_guide" class="block text-md text-gray-600 dark:text-gray-50">Type Guide</label>
-                    <!-- <input type="text" id="type_guide" name="type_guide" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" [value]="selectedGuide.type_guide" placeholder="Type Guide" [(ngModel)]="selectedGuide.type_guide" required> -->
                     <select id="type_guide" [(ngModel)]="selectedGuide.type_guide" name="type_guide"  class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" required>
                         <option value="Half day">Half day</option>
                         <option value="Full day">Full day</option>

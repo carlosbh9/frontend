@@ -16,6 +16,7 @@ export class ExperiencesComponent implements OnInit {
   filterText: string = '';
   showAddModal = false;
   showEditModal = false;
+  filterYear : string = '2024'
 
   newExperience: any = {
     name: '',
@@ -30,7 +31,8 @@ export class ExperiencesComponent implements OnInit {
     approximateDuration: '',
     take_notes:'',
     politica_canc:'',
-    contac_phone:''
+    contac_phone:'',
+    year:''
   };
 
   selectedExperience: any = {
@@ -46,7 +48,8 @@ export class ExperiencesComponent implements OnInit {
     approximateDuration: '',
     take_notes:'',
     politica_canc:'',
-    contac_phone:''
+    contac_phone:'',
+    year:''
   };
 
   constructor(private experienceService: ExperiencesService) { }
@@ -65,11 +68,17 @@ export class ExperiencesComponent implements OnInit {
   }
 
   filterExperiences() {
-    this.filteredExperiences = this.experiences.filter(experience =>
-      experience.name.toLowerCase().includes(this.filterText.toLowerCase()) || experience.category.toLowerCase().includes(this.filterText.toLowerCase())
+    this.filteredExperiences = this.experiences.filter(experience => (
+      experience.name.toLowerCase().includes(this.filterText.toLowerCase()) || experience.category.toLowerCase().includes(this.filterText.toLowerCase())) && (this.filterYear ? experience.year === this.filterYear : true)
     );
   }
 
+  onYearChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement; // Casting a HTMLSelectElement
+    this.filterYear = String(selectElement.value); // Convertir el valor a número
+    this.filterExperiences();
+    
+  }
 
   async deleteExperience(id: string) {
     try {
@@ -113,7 +122,8 @@ export class ExperiencesComponent implements OnInit {
       approximateDuration: '',
       take_notes:'',
       politica_canc:'',
-      contac_phone:''
+      contac_phone:'',
+      year:''
     };
   }
  // Función para agregar un nuevo campo de precio en el formulario de agregar experiencia

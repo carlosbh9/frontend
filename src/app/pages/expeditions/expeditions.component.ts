@@ -16,17 +16,20 @@ export class ExpeditionsComponent implements OnInit{
   filterText: string = '';
   showAddModal = false;
   showEditModal= false;
+  filterYear : string = '2024'
 
   newExpedition: any = {
     name: '',
     price_pp: 0,
     remarks: '',
+    year:''
   };
 
   selectedExpedition: any = {
     name: '',
     price_pp: 0,
     remarks: '',
+    year:''
   };
 
   constructor(private expeditionService: ExpeditionsService) { }
@@ -48,9 +51,17 @@ export class ExpeditionsComponent implements OnInit{
 
   filterExpedition() {
     this.filteredExpeditions = this.expeditions.filter(expedition =>
-      expedition.name.toLowerCase().includes(this.filterText.toLowerCase())
+      expedition.name.toLowerCase().includes(this.filterText.toLowerCase()) && (this.filterYear ? expedition.year === this.filterYear : true)
     );
   }
+
+  onYearChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement; // Casting a HTMLSelectElement
+    this.filterYear = String(selectElement.value); // Convertir el valor a número
+    this.filterExpedition();
+    
+  }
+
 
   async deleteExpedition(id: string) {
     try {
@@ -85,6 +96,7 @@ export class ExpeditionsComponent implements OnInit{
       name: '',
       price_pp: 0,
       remarks: '',
+      year:''
     };
   }
   onSubmit() {

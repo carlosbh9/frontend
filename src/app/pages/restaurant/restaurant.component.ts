@@ -16,6 +16,7 @@ export class RestaurantComponent implements OnInit{
   filterText: string = '';
   showAddModal = false;
   showEditModal = false;
+  filterYear : string = '2024'
 
   newRestaurant: any = {
     name: '',
@@ -30,7 +31,8 @@ export class RestaurantComponent implements OnInit{
     nearby_places: '',
     politica_canc: '',
     contac_phone: '',
-    observaciones: ''
+    observaciones: '',
+    year:''
   };
 
   selectedRestaurant: any = {
@@ -46,7 +48,8 @@ export class RestaurantComponent implements OnInit{
     nearby_places: '',
     politica_canc: '',
     contac_phone: '',
-    observaciones: ''
+    observaciones: '',
+    year:''
   };
 
   constructor(private restaurantService: RestaurantService) { }
@@ -66,10 +69,17 @@ export class RestaurantComponent implements OnInit{
   }
 
   filterRestaurant() {
-    this.filteredRestaurants = this.restaurants.filter(restaurant =>
+    this.filteredRestaurants = this.restaurants.filter(restaurant =>(
       restaurant.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
-      restaurant.location.toLowerCase().includes(this.filterText.toLowerCase())
+      restaurant.location.toLowerCase().includes(this.filterText.toLowerCase())) && (this.filterYear ? restaurant.year === this.filterYear : true)
     );
+  }
+
+  onYearChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement; // Casting a HTMLSelectElement
+    this.filterYear = String(selectElement.value); // Convertir el valor a número
+    this.filterRestaurant();
+    
   }
 
   async deleteRestaurant(id: string) {
@@ -172,7 +182,8 @@ export class RestaurantComponent implements OnInit{
       nearby_places: '',
       politica_canc: '',
       contac_phone: '',
-      observaciones: ''
+      observaciones: '',
+      year:''
     };
   }
 

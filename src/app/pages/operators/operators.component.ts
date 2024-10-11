@@ -19,6 +19,7 @@ export class OperatorsComponent implements OnInit {
   filterText: string = '';
   showAddModal = false;
   showEditModal = false;
+  filterYear : string = '2024'
 
   newOperator: any = {
     operador: '',
@@ -26,7 +27,8 @@ export class OperatorsComponent implements OnInit {
     name_service: '',
     servicios: [],
     pricesRange:[],
-    observaciones: ''
+    observaciones: '',
+    year:''
   };
 
   selectedOperator: any = {
@@ -34,7 +36,8 @@ export class OperatorsComponent implements OnInit {
     ciudad: '',
     name_service: '',
     servicios: [],
-    observaciones: ''
+    observaciones: '',
+    year:''
   };
 
 
@@ -55,10 +58,16 @@ export class OperatorsComponent implements OnInit {
 
   filterOperators() {
     this.filteredOperators = this.operators.filter(operator =>
-      operator.operador.toLowerCase().includes(this.filterText.toLowerCase())
+      operator.operador.toLowerCase().includes(this.filterText.toLowerCase()) && (this.filterYear ? operator.year === this.filterYear : true)
     );
   }
 
+  onYearChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement; // Casting a HTMLSelectElement
+    this.filterYear = String(selectElement.value); // Convertir el valor a número
+    this.filterOperators();
+    
+  }
   async deleteOperator(id: string) {
     try {
       await this.operatorsService.deleteOperator(id);
@@ -93,7 +102,8 @@ export class OperatorsComponent implements OnInit {
       ciudad: '',
       name_service: '',
       servicios: [],
-      observaciones: ''
+      observaciones: '',
+      year:''
     };
   }
 

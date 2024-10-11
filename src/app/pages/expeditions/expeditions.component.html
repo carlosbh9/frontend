@@ -5,6 +5,12 @@
         <h3 class="font-semibold text-base text-gray-900 dark:text-gray-50">ALPACA EXPEDITIONS</h3>
       </div>
       <div class="relative w-full max-w-full flex-grow flex-1 text-right">
+        <select name="filterYear" id="filterYear" class="p-2 me-4 border border-gray-300 rounded" [(ngModel)]="filterYear" (change)="onYearChange($event)">
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+          <option value="">All</option>
+        </select>
         <input
           type="text"
           [(ngModel)]="filterText"
@@ -23,6 +29,7 @@
         <thead>
           <tr>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Name</th>
+            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Year</th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Price per Person</th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Remarks</th>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Actions</th>
@@ -31,6 +38,7 @@
         <tbody>
           <tr *ngFor="let expedition of filteredExpeditions" class="text-gray-700 dark:text-gray-100">
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ expedition.name }}</td>
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ expedition.year }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-emerald-700 font-bold">${{ expedition.price_pp.toFixed(2) }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 max-h-24 overflow-y-auto block">{{ expedition.remarks }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
@@ -64,6 +72,14 @@
             <div class="mb-4">
               <label for="description" class="block text-md text-gray-600 dark:text-gray-50">Name</label>
               <input type="text" id="description" name="description" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Description" [(ngModel)]="newExpedition.name" required>
+            </div>
+            <div class="mb-4">
+              <label for="year" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
+              <select [(ngModel)]="newExpedition.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+            </select>
             </div>
             <div class="mb-4">
               <label for="price_pp" class="block text-md text-gray-600 dark:text-gray-50">Price per person</label>
@@ -105,6 +121,14 @@
             <div class="mb-4">
               <label for="description" class="block text-md text-gray-600 dark:text-gray-50">Name</label>
               <input type="text" id="description" name="name" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Name expedition" [(ngModel)]="selectedExpedition.name" required>
+            </div>
+            <div class="mb-4">
+              <label for="year" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
+              <select [(ngModel)]="selectedExpedition.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+            </select>
             </div>
             <div class="mb-4">
               <label for="price_pp" class="block text-md text-gray-600 dark:text-gray-50">Price per person</label>

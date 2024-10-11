@@ -18,6 +18,7 @@ export class EntrancesComponent implements OnInit{
   filterText: string = '';
   showAddModal = false;
   showEditModal= false;
+  filterYear : string = '2024'
 
   newEntrance = {
     description: '',
@@ -26,7 +27,8 @@ export class EntrancesComponent implements OnInit{
       pp: null,
       upTo: null
     },
-    take_note: ''
+    take_note: '',
+    year:''
   };
 
   selectedEntrance = {
@@ -37,7 +39,8 @@ export class EntrancesComponent implements OnInit{
       pp: null,
       upTo: null
     },
-    take_note: ''
+    take_note: '',
+    year:''
   };
 
   constructor(private entrancesService: EntrancesService) { }
@@ -56,12 +59,18 @@ export class EntrancesComponent implements OnInit{
       console.error('Error fetching entrances', error);
     }
   }
-
+  onYearChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement; // Casting a HTMLSelectElement
+    this.filterYear = String(selectElement.value); // Convertir el valor a número
+    this.filterEntrances();
+    
+  }
 
   filterEntrances() {
     this.filteredEntrances = this.entrances.filter(entrance =>
-      entrance.description.toLowerCase().includes(this.filterText.toLowerCase())
+      entrance.description.toLowerCase().includes(this.filterText.toLowerCase()) &&  (this.filterYear ? entrance.year === this.filterYear : true)
     );
+   
   }
 
   async deleteEntrance(id: string) {
@@ -101,7 +110,8 @@ export class EntrancesComponent implements OnInit{
         pp: null,
         upTo: null
       },
-      take_note: ''
+      take_note: '',
+      year:''
     };
   }
   onSubmit() {
