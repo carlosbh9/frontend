@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input,OnInit,output, Output, EventEmitter } from '@angular/core';
+import { Component, input,Input,output, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -12,10 +12,11 @@ import { FormsModule } from '@angular/forms';
 export class ExtOperatorComponent {
   datosFlight = output<any[]>();
   priceLength = input.required<number>();
+  @Input() operators: any[]=[]
   @Output() operatorsChange = new EventEmitter<any[]>();
   @Output() totalPricesChange = new EventEmitter<number[]>();
   //editFlight: boolean = false;
-  operators: any[] = [];
+ // operators: any[] = [];
   countries: string[] = ["ARGENTINA","BOLIVIA","BRAZIL","COLOMBIA","CHILE","ECUADOR"]
   operatorsList: string[]=["Sayhueque","Uncover Colombia","Unic","Southbound","Pure Brazil","Surtrek"]
   originalItem: any = {};

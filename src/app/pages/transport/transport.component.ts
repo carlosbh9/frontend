@@ -16,19 +16,22 @@ export class TransportComponent {
   filterText: string = '';
   showAddModal = false;
   showEditModal = false;
-  
+  filterYear : string = '2024'
+
   newTransport: any = {
     nombre: '',
     type_service: '',
     type_vehicle: [],
-    info: ''
+    info: '',
+    year:''
   };
   
   selectedTransport: any = {
     nombre: '',
     type_service: '',
     type_vehicle: [],
-    info: ''
+    info: '',
+    year:''
   };
 
   constructor(private transportService: TransportService) {}
@@ -48,9 +51,14 @@ async fetchTransports() {
 }
 
 filterTransports() {
-  this.filteredTransports = this.transports.filter(transport => transport.nombre.toLowerCase().includes(this.filterText.toLowerCase()));
+  this.filteredTransports = this.transports.filter(transport => transport.nombre.toLowerCase().includes(this.filterText.toLowerCase())&& (this.filterYear ? transport.year === this.filterYear : true) );
 }
 
+onYearChange(event: Event) {
+  const selectElement = event.target as HTMLSelectElement; // Casting a HTMLSelectElement
+  this.filterYear = String(selectElement.value); // Convertir el valor a número
+  this.filterTransports();
+}
 //delete transport
 async deleteTransport(id: string) {
   try {
@@ -83,11 +91,11 @@ closeModal() {
 
 emptyTransport(): void {
   this.newTransport = {
-    operador: '',
-    ciudad: '',
-    name_service: '',
-    servicios: [],
-    observaciones: ''
+    nombre: '',
+    type_service: '',
+    type_vehicle: [],
+    info: '',
+    year:''
   };}
 
 onSubmit(){

@@ -5,6 +5,12 @@
           <h3 class="font-semibold text-base text-gray-900 dark:text-gray-50">KUTIMUY</h3>
         </div>
         <div class="relative w-full max-w-full flex-grow flex-1 text-right">
+          <select name="filterYear" id="filterYear" class="p-2 me-4 border border-gray-300 rounded" [(ngModel)]="filterYear" (change)="onYearChange($event)">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="">All</option>
+          </select>
           <input
             type="text"
             [(ngModel)]="filterText"
@@ -23,6 +29,7 @@
           <thead>
             <tr>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Name</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Year</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Type service</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Type vehicle</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Actions</th>
@@ -32,8 +39,8 @@
             @for (transport of filteredTransports; track transport._id) {
             <tr class="text-gray-700 dark:text-gray-100">
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ transport.nombre }}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ transport.year }}</td>
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ transport.type_service }}</td>
-              
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 @for (vehicle of transport.type_vehicle; track $index) {
                         <span class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left block ">
@@ -76,6 +83,14 @@
             <div class="mb-4">
               <label for="name_service" class="block text-md text-gray-600 dark:text-gray-50">Service Description</label>
               <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service Description" [(ngModel)]="newTransport.nombre" required>
+            </div>
+            <div class="mb-4">
+              <label for="name_service" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
+              <select [(ngModel)]="newTransport.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+            </select>
             </div>
             <div class="mb-4">
               <label for="observaciones" class="block text-md text-gray-600 dark:text-gray-50">Type Service</label>
@@ -134,6 +149,14 @@
                 <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service Description" [(ngModel)]="selectedTransport.nombre" required>
               </div>
               <div class="mb-4">
+                <label for="name_service" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
+                <select [(ngModel)]="selectedTransport.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+              </select>
+              </div>
+              <div class="mb-4">
                 <label for="observaciones" class="block text-md text-gray-600 dark:text-gray-50">Type Service</label>
                 <select [(ngModel)]="selectedTransport.type_service" name="type_service" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Type Service" required>
                   <option value="Full Day">Full Day</option>
@@ -151,7 +174,6 @@
                       <option value="SPRINTER MB 08 - 15/VW CRAFTER DLX 4 PAX">SPRINTER MB 08 - 15/VW CRAFTER DLX 4 PAX</option>
                       <option value="MINIBUS 16 - 25">MINIBUS 16 - 25</option>
                   </select>
-                    <!-- <input type="text" [(ngModel)]="vehicle.name_type_vehicle" placeholder="Name Type Vehicle" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-7000 rounded-md" name="name_type_vehicle-{{$index}}" required> -->
                     <input type="number" [(ngModel)]="vehicle.price" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="range_max-{{$index}}" required>
                     <i class='bx bxs-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removeEditPriceField($index)"></i>
                   </div>

@@ -17,10 +17,12 @@ export class HotelComponent implements OnInit {
   constructor(private hotelService: HotelService,private router:Router) {}
   hotels: any[] = [];
   filteredHotels: any[] = [];
+  destinations: string[] = ['HOTELES CUSCO','HOTELES VALLE SAGRADO','HOTELES MACHU PICCHU','HOTELES LIMA','HOTELES PUNO','HOTELES AREQUIPA','HOTELES COLCA','LODGES TAMBOPATA','IQUITOS','HOTELES ICA & PARACAS','HOTELES NORTE DE PERU']
   filterText: string = '';
   showAddModal: boolean = false;
   showEditModal: boolean = false;
-
+  filterYear : string = '2024'
+  filterDestinations: string = ''
   newHotel: any = {
     name: '',
     location: '',
@@ -36,7 +38,8 @@ export class HotelComponent implements OnInit {
       date: '',
       price: 0
     }],
-    informacion_general: []
+    informacion_general: [],
+    year:''
   };
   
   selectedHotel: any = {
@@ -51,7 +54,8 @@ export class HotelComponent implements OnInit {
       }]
     }],
     special_dates: [],
-    informacion_general: []
+    informacion_general: [],
+    year:''
   };
   
 
@@ -70,7 +74,19 @@ export class HotelComponent implements OnInit {
   }
 
   filterHotels() {
-    this.filteredHotels = this.hotels.filter(hotel => hotel.name.toLowerCase().includes(this.filterText.toLowerCase()));
+    this.filteredHotels = this.hotels.filter(hotel => hotel.name.toLowerCase().includes(this.filterText.toLowerCase()) && (this.filterYear ? hotel.year === this.filterYear : true) && (this.filterDestinations ? hotel.location === this.filterDestinations : true)
+  );
+  }
+  onYearChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement; // Casting a HTMLSelectElement
+    this.filterYear = String(selectElement.value); // Convertir el valor a número
+    this.filterHotels();
+  }
+  
+  onDestinationsChange(event: Event){
+    const selectElement = event.target as HTMLSelectElement; // Casting a HTMLSelectElement
+    this.filterDestinations = String(selectElement.value); // Convertir el valor a número
+    this.filterHotels();
   }
 
   openAddModal() {
@@ -110,7 +126,8 @@ export class HotelComponent implements OnInit {
       date: '',
       price: 0
     }],
-    informacion_general: []
+    informacion_general: [],
+    year:''
     };
   }
   async onSubmit() {

@@ -106,12 +106,12 @@ export class TrainComponent implements OnInit {
       company: '',
       services: [{
         serviceName: '',
-        prices: [{
+        prices: {
           season: 'Regular',
           adultPrice: 0,
           childPrice: 0,
           guidePrice: 0
-        }],
+        },
         observations: '',
         year:''
       }]

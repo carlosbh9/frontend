@@ -110,6 +110,7 @@
 <table class="items-center w-full bg-transparent border-collapse border ">
 <thead>
     <tr>
+        <th></th>
     <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center">Day</th>
     <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">Date</th>
     <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">City</th>
@@ -127,6 +128,9 @@
 
         @for (hotel of hotels; track $index) {
             <tr class="text-gray-700 dark:text-gray-1000">
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "><i class='bx bx-down-arrow-alt text-green-500' (lick)="moveFlightDown($index)"></i>
+
+                    <i class='bx bx-up-arrow-alt text-red-500' (click)="moveFlightUp($index)"></i></td>
              @if ($index === 0) {
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.day}}</td>
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.date | date }}</td>
@@ -139,16 +143,45 @@
              }
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.city}}</td>
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.name_hotel}}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{hotel.price_base.toFixed(2)}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+                    @if (hotel.editHotel) {
+                        <input type="text" class="border border-gray-300 rounded-md" [(ngModel)]="hotel.price_base">
+                      }@else {
+                        <div>
+                          ${{hotel.price_base.toFixed(2)}}
+                        </div>
+                      }
+                </td>
                 @for (price of hotel.prices; track $index) {
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{price.toFixed(2)}}</td>
                 }
 
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.accomodatios_category}}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.notes}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+                    @if (hotel.editHotel) {
+                        <input type="text" class="border border-gray-300 rounded-md" [(ngModel)]="hotel.accomodatios_category">
+                      }@else {
+                        <div>
+                          {{hotel.accomodatios_category}}
+                        </div>
+                      }
+                </td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+                    @if (hotel.editHotel) {
+                        <input type="text" class="border border-gray-300 rounded-md" [(ngModel)]="hotel.notes">
+                      }@else {
+                        <div>
+                          {{hotel.notes}}
+                        </div>
+                      }
+                </td>
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' ></i>
-                    <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' ></i>
+                @if (hotel.editHotel) {
+                    <i class='bx bx-check text-2xl text-green-500 dark:text-red-700 mr-2' (click)="onSave(hotel)" ></i>
+                    <i class='bx bxs-x-circle text-2xl text-red-500 dark:text-red-700 mr-2' (click)="onClose(hotel,$index)" ></i>
+                }@else{
+                    <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="onEdit(hotel,$index)"></i>
+                } 
+                    <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="onDelete($index)" ></i>
                 </td>
             </tr>
         }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input,OnInit,output, Output, EventEmitter } from '@angular/core';
+import { Component, input,OnInit,Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -12,12 +12,34 @@ import { FormsModule } from '@angular/forms';
 export class FlightsComponent implements OnInit {
 
  // datosFlight = output<any[]>();
-  priceLength = input.required<number>();
+  paxs = input.required<number[]>();
+  @Input() flights: any[] = [];
+ // flights = input<any[]>();
   @Output() flightsChange = new EventEmitter<any[]>();
   @Output() totalPricesChange = new EventEmitter<number[]>();
   //editFlight: boolean = false;
-  flights: any[] = [];
-  citys: any[] = ["LIM","CUZ","LIM/CUZ","SV","MP","PUN"]
+  //flights: any[] = [];
+  routes: { route: string, price: number }[] = [
+    { route: 'LIM/CUZ', price: 210 },
+    { route: 'CUZ/LIM', price: 210 },
+    { route: 'LIM/PEM', price: 300 },
+    { route: 'CUZ/PEM', price: 300 },
+    { route: 'PEM/CUZ', price: 300 },
+    { route: 'JUL/LIM', price: 300 },
+    { route: 'CUZ/JUL', price: 300 },
+    { route: 'CUZ/AQP', price: 210 },
+    { route: 'AQP/LIM', price: 210 },
+    { route: 'LIM/IQT', price: 210 },
+    { route: 'IQT/LIM', price: 210 },
+    { route: 'CUZ/UIO', price: 0 },
+    { route: 'UIO/CUZ', price: 0 },
+    { route: 'LIM/TRU', price: 210 },
+    { route: 'TRU/LIM', price: 210 },
+    { route: 'LIM/TYL', price: 210 },
+    { route: 'TYL/LIM', price: 210 },
+  ];
+  selectedRoute: { route: string, price: number } = { route: '', price: 0 };
+
   originalItem: any = {};
   newFlight: any = {
     date: '',
@@ -31,6 +53,7 @@ export class FlightsComponent implements OnInit {
  
 
   ngOnInit(): void {
+    console.log('jajaja',this.flights)
 
   }
 emtyFlight(){
@@ -45,11 +68,25 @@ emtyFlight(){
 }
 onSubmitFlight() {
   this.newFlight.price_conf = this.newFlight.prices[0]
-    this.flights.push(this.newFlight);
-    console.log(this.flights);
-    this.emtyFlight();
-    this.emitFlights(); 
+ //   this.flights.push(this.newFlight);
+ if (this.selectedRoute.route && this.selectedRoute.price > 0) {
+  // Multiplicar el precio seleccionado por cada uno de los elementos de number_paxs
+  const calculatedPrices = this.paxs().map(pax => this.selectedRoute.price * pax);
+  
+  // Crear el objeto newFlight con el array prices
+  const flightToAdd = {
+    ...this.newFlight,
+    route: this.selectedRoute.route,
+    price_conf: this.selectedRoute.price,
+    prices: calculatedPrices
+  };
+  console.log(this.flights);
+  this.flights.push(flightToAdd);
+  this.emitFlights(); 
+  this.emtyFlight();
 }
+}
+    
 
 onEdit(item: any, index: number) {
   this.originalItem[index] = { ...item };

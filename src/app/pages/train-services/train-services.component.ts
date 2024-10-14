@@ -27,23 +27,23 @@ export class TrainServicesComponent implements OnInit {
 
   newService: any = {
     serviceName: '',
-    prices: [{
+    prices: {
       season: 'Regular',
-      adultPrice: 0,
-      childPrice: 0,
-      guidePrice: 0
-    }],
+      adultPrice: null,
+      childPrice: null,
+      guidePrice: null
+    },
     observations: ''
   };
 
   selectService: any = {
     serviceName: '',
-    prices: [{
+    prices: {
       season: 'Regular',
       adultPrice: 0,
       childPrice: 0,
       guidePrice: 0
-    }],
+    },
     observations: ''
   };
 
@@ -58,6 +58,7 @@ ngOnInit(): void {
       this.getTrainById(id);
     }
   });
+  
 }
 
 async fetchTrainServices(id: string) {
@@ -139,12 +140,12 @@ closeModal() {
 emptyService(): void {
   this.newService = {
     serviceName: '',
-    prices: [{
+    prices: {
       season: 'Regular',
       adultPrice: 0,
       childPrice: 0,
       guidePrice: 0
-    }],
+    },
     observations: ''
   };
 }

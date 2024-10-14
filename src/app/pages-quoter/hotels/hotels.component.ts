@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component , Output , EventEmitter, inject, OnInit,input} from '@angular/core';
+import { Component , Output , EventEmitter, inject, OnInit,input, Input} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HotelService } from '../../Services/hotel.service';
 
@@ -15,8 +15,8 @@ export class HotelsComponent implements OnInit{
   @Output() hotelsChange = new EventEmitter<any[]>();
   @Output() totalPricesChange = new EventEmitter<number[]>();
   priceLength = input.required<number>();
-
-  hotels: any[]= []
+  @Input() hotels: any[]= []
+ // hotels: any[]= []
   hotelsOption: any[]= []
   originalItem: any = {};
   selectedHotel: string = '';
@@ -41,12 +41,6 @@ export class HotelsComponent implements OnInit{
   }
 
   emtyHotel(){
-    // this.newHotel.name_hotel=''
-    // this.newHotel.price_base=0
-    // this.newHotel.prices = new Array(length).fill(0);
-    // this.newHotel.accomodatios_category=''
-    // this.newHotel.notes='',
-    // this.newHotel.editHotel= false
     this.newHotel ={
       day:'',
       date: this.newHotel.date || '',
@@ -93,13 +87,9 @@ export class HotelsComponent implements OnInit{
       const selectedHotel = this.hotelsOption.find(hotel => hotel._id === this.selectedHotel)
       if(selectedHotel){
         this.hotelServices= selectedHotel.services
+        this.newHotel.name_hotel= selectedHotel.name
       }
-
-      //this.quoterItem.name_hotel= selectedHotel.name
-      //this.quoterItem.city=selectedHotel.location
-     // this.quoterItem.city=this.selectedCity()
-//this.quoterItem.date=this.selectedDate()
-
+      
   }
 
   onServiceChange(event: any): void {
@@ -107,15 +97,11 @@ export class HotelsComponent implements OnInit{
   
       if (selectedService) {
         this.roomTypes = selectedService.roomPrices;
+        this.newHotel.accomodatios_category= selectedService.name_service
         
       }
     
-    // this.quoterItem.accomodatios_category= selectedService.name_service
     this.addedPricesCount=0
-    // this.newHotel.prices = new Array(this.priceLength()).fill(0);
-    // this.newHotel.notes=''
-    // this.newHotel.price_base=0
-   // this.newHotel.day= this.contHotel
     }
   
 
@@ -178,6 +164,24 @@ export class HotelsComponent implements OnInit{
     if (this.newHotel.date !== this.previousDateHotel) {
       this.contHotel++; // Incrementa el día solo si la fecha cambia
       this.previousDateHotel = this.newHotel.date; 
+  }
+}
+
+moveFlightUp(index: number) {
+  if (index > 0) {
+    // Intercambiar la fila actual con la anterior
+    const temp = this.hotels[index];
+    this.hotels[index] = this.hotels[index - 1];
+    this.hotels[index - 1] = temp;
+  }
+}
+
+moveFlightDown(index: number) {
+  if (index < this.hotels.length - 1) {
+    // Intercambiar la fila actual con la siguiente
+    const temp = this.hotels[index];
+    this.hotels[index] = this.hotels[index + 1];
+    this.hotels[index + 1] = temp;
   }
 }
 }

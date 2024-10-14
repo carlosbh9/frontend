@@ -8,18 +8,11 @@
       </div>
       <div class="w-1/4">
           <label  for="route" class="block text-sm font-medium text-gray-700">Route</label>
-          <select [(ngModel)]="newFlight.route" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" name="route" id="route">
-            @for (city of citys; track $index) {
-              <option [value]="city">{{city}}</option>
+          <select [(ngModel)]="selectedRoute" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" name="route" id="route">
+            @for (route of routes; track $index) {
+              <option [ngValue]="route">{{route.route}} - ${{route.price}}</option>
             }
-
           </select>
-      </div>
-      <div>
-          <label for="issue-date" class="block text-sm font-medium text-gray-700">Prices</label>
-          @for (item of [].constructor(priceLength()); track $index) {
-            <input type="number" name="quoterItem.price_prueba-{{$index}}" [(ngModel)]="newFlight.prices[$index]" id="quoterItem.price_prueba-{{$index}}" class="pr-4 h-10 p-2 w-16 border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1 mr-2 mb-2">
-        }
       </div>
       <div>
           <label for="issue-date" class="block text-sm font-medium text-gray-700">Notes</label>
@@ -39,7 +32,7 @@
           <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tl-md rounded-bl-md">Date</th>
           <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Route</th>
           <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Conf. Price</th>
-          @for (item of [].constructor(priceLength()); track $index) {
+          @for (item of [].constructor(paxs().length); track $index) {
             <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Price {{$index+1}}</th>
           }
           <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Notes</th>
@@ -100,7 +93,6 @@
           }
         </td>
         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4">
-          
           @if (item.editFlight) {
             <i class='bx bx-check text-2xl text-green-500 dark:text-red-700 mr-2' (click)="onSave(item)" ></i>
             <i class='bx bxs-x-circle text-2xl text-red-500 dark:text-red-700 mr-2' (click)="onClose(item,$index)" ></i>

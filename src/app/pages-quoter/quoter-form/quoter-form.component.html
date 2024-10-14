@@ -72,74 +72,70 @@
     <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
             <app-hotels
             [priceLength]="newQuoter.number_paxs.length"
+            [hotels]="newQuoter.hotels"
             (hotelsChange)="onHotelsUpdate($event)"
             (totalPricesChange)="onTotalPricesHotelsChange($event)">
             </app-hotels>
+            <app-services
+            [number_paxs]="newQuoter.number_paxs.length"  
+            [services]="newQuoter.services"      
+            (servicesChange)="onServicesUpdate($event)"
+            (totalPricesChange)="onTotalPricesServicesChange($event)">
+            </app-services>
+            <div class="flex justify-end p-6 block w-full overflow-x-auto">
+                <div></div>
+                <div>
+                <table class="items-center w-full bg-transparent border border-collapse ">
+                <tbody class="bg-stone-200">
+                    <tr>
+                        <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">Total Cost
+                        </td>
+                          @for (price of getTotalCosts(); track $index) {
+                          <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">${{price.toFixed(2)}}</td>
+                        }@empty {
+                          <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
+                        }
+        
+                    </tr>
+                    <tr>
+                        <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">EXTERNAL UTILITY
+                        </td>
+                        @for (price of getTotalCosts(); track $index) {
+                          <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
+                        }@empty {
+                          <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
+                        }
+                    </tr>
+                    <tr>
+                      <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">EXTERNAL TAXES
+                      </td>
+                      @for (price of getExternalTaxes(); track $index) {
+                        <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">${{price.toFixed(2)}}</td>
+                      }@empty {
+                        <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
+                      }
+                  </tr>
+                  <tr>
+                    <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">TOTAL COST EXTERNAL</td>
+                        @for (price of getTotalCostExternal(); track $index) {
+                            <td class="border-t-2 border-gray-300 px-4 py-2 text-emerald-500 text-center">${{price.toFixed(2)}}</td>
+        
+                        }@empty {
+                            <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
+                          }
+                  </tr>
+                </tbody>
+                </table>
+            </div>
+            </div>
     </div>
     <!-- end card  2 -->
-    <!-- card  3 -->
-    <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-        <app-services
-        [number_paxs]="newQuoter.number_paxs.length"        
-        (servicesChange)="onServicesUpdate($event)"
-        (totalPricesChange)="onTotalPricesServicesChange($event)">
-        </app-services>
-    </div>
-    <!-- end card  3 -->
-    <!-- card  4 -->
-    <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-      <div class="flex justify-end p-6 block w-full overflow-x-auto">
-        <div></div>
-        <div>
-        <table class="items-center w-full bg-transparent border border-collapse ">
-        <tbody class="bg-stone-200">
-            <tr>
-                <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">Total Cost
-                </td>
-                  @for (price of getTotalCosts(); track $index) {
-                  <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">${{price.toFixed(2)}}</td>
-                }@empty {
-                  <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
-                }
 
-            </tr>
-            <tr>
-                <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">EXTERNAL UTILITY
-                </td>
-                @for (price of getTotalCosts(); track $index) {
-                  <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
-                }@empty {
-                  <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
-                }
-            </tr>
-            <tr>
-              <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">EXTERNAL TAXES
-              </td>
-              @for (price of getExternalTaxes(); track $index) {
-                <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">${{price.toFixed(2)}}</td>
-              }@empty {
-                <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
-              }
-          </tr>
-          <tr>
-            <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">TOTAL COST EXTERNAL</td>
-                @for (price of getTotalCostExternal(); track $index) {
-                    <td class="border-t-2 border-gray-300 px-4 py-2 text-emerald-500 text-center">${{price.toFixed(2)}}</td>
-
-                }@empty {
-                    <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
-                  }
-          </tr>
-        </tbody>
-        </table>
-    </div>
-    </div>
-    </div>
-    <!-- end card  4 -->
      <!-- card 5 external operator -->
     <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
         <app-ext-operator 
         [priceLength]="newQuoter.number_paxs.length"
+        [operators]="newQuoter.operators"
         (operatorsChange)="onOperatorsUpdate($event)"
         (totalPricesChange)="onTotalPricesOperatorsChange($event)">
         </app-ext-operator>
@@ -148,12 +144,12 @@
     <!-- card  6 -->
     <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
         <app-flights
-        [priceLength]="newQuoter.number_paxs.length"
+        [paxs]="newQuoter.number_paxs"
+        [flights]="newQuoter.flights"
         (flightsChange)="onFlightsUpdate($event)"
         (totalPricesChange)="onTotalPricesFligtsChange($event)"
         >
         </app-flights>
-        
     </div>
     <!-- end card  6 -->
 </div>

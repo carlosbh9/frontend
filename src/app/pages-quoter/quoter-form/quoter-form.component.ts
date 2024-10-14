@@ -59,7 +59,18 @@ export class QuoterFormComponent implements OnInit{
     services:[],
     hotels:[],
     flights:[],
-    operators:[]
+    operators:[],
+    total_prices:{
+      total_hoteles: [], // Array vacío de números
+      total_services: [], // Array vacío de números
+      total_ext_operator: [], // Array vacío de números
+      total_ext_cruises: [], // Array vacío de números
+      total_flights: [], // Array vacío de números
+      subtotal: [], // Array vacío de números
+      cost_transfers: [], // Array vacío de números
+      final_cost: [], // Array vacío de números
+      price_pp: [] // Array vacío de números
+    }
   };
 
   emptyQuoter: Quoter = {
@@ -77,7 +88,18 @@ export class QuoterFormComponent implements OnInit{
     services: [],
     hotels: [],
     flights: [],
-    operators:[]
+    operators:[],
+    total_prices:{
+      total_hoteles: [], // Array vacío de números
+      total_services: [], // Array vacío de números
+      total_ext_operator: [], // Array vacío de números
+      total_ext_cruises: [], // Array vacío de números
+      total_flights: [], // Array vacío de números
+      subtotal: [], // Array vacío de números
+      cost_transfers: [], // Array vacío de números
+      final_cost: [], // Array vacío de números
+      price_pp: [] // Array vacío de números
+    }
   }
 
   selectedCategory: string = '';
@@ -95,6 +117,7 @@ export class QuoterFormComponent implements OnInit{
         this.getQuoterbyId(id);
         this.showUpdate= true
         this.idQuoter=id
+     
       }
     })
     this.datosrecibidosHotel = null
@@ -126,8 +149,10 @@ export class QuoterFormComponent implements OnInit{
       this.updatePricesSizeOperators(this.newQuoter.operators,this.newQuoter.number_paxs.length+1)
       console.log('comporando operadores con 0',this.newQuoter.operators)
     }
-    this.newQuoter.number_paxs.push(0);  // Agrega un nuevo input
-  }
+    this.newQuoter.number_paxs.push(0);
+      // Agrega un nuevo input
+  
+      console.log('se cargo?',this.newQuoter)  }
   updatePricesSizeHotels(hotels: any[], newSize: number): any[] {
     return hotels.map(hotel => {
       const currentSize = hotel.prices.length;
@@ -168,56 +193,53 @@ export class QuoterFormComponent implements OnInit{
   }
 
 
-  // addItemToQuote(datos: any){
-  //     this.datosrecibidosHotel ={
-  //       day: datos.day,
-  //       city: datos.city,
-  //       date:datos.date,
-  //       name_hotel: datos.name_hotel,
-  //       price_base:datos.price_prueba[0],
-  //       prices: datos.price_prueba,
-  //       accomodatios_category: datos.accomodatios_category,
-  //       notes:datos.notes
-  //     };
-  //     if(this.datosrecibidosHotel.prices.length<this.newQuoter.number_paxs.length){
-  //       for(let i = this.datosrecibidosHotel.prices.length; i<this.newQuoter.number_paxs.length;i++){
-  //         this.datosrecibidosHotel.prices[i]=0
-  //       }
-  //     }
-  // }
-
-
   onFlightsUpdate(flights: any[]) {
    // this.datosrecibidosFlights = flights;
     this.newQuoter.flights=flights
+
   }
 
   onServicesUpdate(services: any[]) {
     // this.datosrecibidosFlights = flights;
      this.newQuoter.services=services
+
    }
 
    onOperatorsUpdate(operators: any[]) {
     // this.datosrecibidosFlights = flights;
      this.newQuoter.operators=operators
+   
    }
 
    onHotelsUpdate(hotels: any[]){
     this.newQuoter.hotels=hotels
+   
+    
    }
 
   onTotalPricesFligtsChange(prices: number[]) {
-    this.totalPricesFlights = prices; // Actualizar el arreglo de precios totales
+   // this.totalPricesFlights = prices; // Actualizar el arreglo de precios totales
+    this.newQuoter.total_prices.total_flights= prices
+ //   this.updateTotalPrices() 
+    
   }
   onTotalPricesServicesChange(prices: number[]) {
-    this.totalPriceServices = prices; // Actualizar el arreglo de precios totales
+  //  this.totalPriceServices = prices; // Actualizar el arreglo de precios totales
+    this.newQuoter.total_prices.total_services= prices
+  //  this.updateTotalPrices() 
   }
   onTotalPricesHotelsChange(prices: number[]) {
-    this.totalPriceHotels = prices; // Actualizar el arreglo de precios totales
+   // this.totalPriceHotels = prices; // Actualizar el arreglo de precios totales
+    this.newQuoter.total_prices.total_hoteles= prices
+  //  this.updateTotalPrices() 
   }
 
   onTotalPricesOperatorsChange(prices: any[]){
-    this.totalPricesOperators = prices; // Actualizar el arreglo de precios totales
+    //this.totalPricesOperators = prices; // Actualizar el arreglo de precios totales
+    this.newQuoter.total_prices.total_ext_operator = prices
+   // this.updateTotalPrices() 
+
+  
   }
 
   onSubmitHotel(){
@@ -227,20 +249,6 @@ export class QuoterFormComponent implements OnInit{
     this.datosrecibidosHotel = null
   }
 
-//   onSubmitService(){
-//     if (this.datosrecibidosService.date !== this.previousDateService) {
-//       this.contDayServices++; // Incrementa el día solo si la fecha cambia
-//       this.previousDateService = this.datosrecibidosService.date; // Actualiza la fecha previa
-//     }
-//     if(this.datosrecibidosService!){
-//           this.datosrecibidosService.day=this.contDayServices
-//           this.newQuoter.services.push(this.datosrecibidosService)
-//           console.log('agregado correctamente',this.newQuoter.services)
-//     }
-//    // this.datosrecibidosService = null
-  
-// //  console.log('estas los precios',this.datosrecibidosService)
-//   }
 
   onSubmit(){
    
@@ -267,41 +275,13 @@ export class QuoterFormComponent implements OnInit{
     )
   }
 
-  // getTotalPricesHotels(): number[] {
-  //   const totalPrices: number[] = [];
-
-  //   this.newQuoter.hotels.forEach((hotel: { prices: number[] }) => { // Especificar el tipo de 'hotel'
-  //     hotel.prices.forEach((price: number, index: number) => { // Especificar el tipo de 'price'
-  //       if (totalPrices[index]) {
-  //         totalPrices[index] += price; // Sumar al total existente
-  //       } else {
-  //         totalPrices[index] = price; // Inicializar el total
-  //       }
-  //     });
-  //   });
-
-  //   return totalPrices;
-  // }
-  // getTotalPricesServices(): number[] {
-  //   const totalPrices: number[] = [];
-
-  //   this.newQuoter.services.forEach((service: { prices: number[] }) => { // Especificar el tipo de 'hotel'
-  //     service.prices.forEach((price: number, index: number) => { // Especificar el tipo de 'price'
-  //       if (totalPrices[index]) {
-  //         totalPrices[index] += price; // Sumar al total existente
-  //       } else {
-  //         totalPrices[index] = price; // Inicializar el total
-  //       }
-  //     });
-  //   });
-
-  //   return totalPrices;
-  // }
 
     getTotalCosts(): number[] {
       const totalSum: number[] = [];
-      const totalPricesHotels = this.totalPriceHotels;
-      const totalPricesServices = this.totalPriceServices;
+    //  const totalPricesHotels = this.totalPriceHotels;
+      const totalPricesHotels = this.newQuoter.total_prices.total_hoteles
+      //const totalPricesServices = this.totalPriceServices;
+      const totalPricesServices = this.newQuoter.total_prices.total_services;
       // Determinar el mayor largo entre los dos arreglos
       const maxLength = Math.max(totalPricesHotels.length, totalPricesServices.length);
 
@@ -336,10 +316,21 @@ export class QuoterFormComponent implements OnInit{
         const temp2 = totalExternal[i] || 0;// Si no existe valor, toma 0
         totalCostExternal[i] = temp1 + temp2;
       }
-
+      
       return totalCostExternal
     }
 
-
+    updateTotalPrices() {
+      // Actualizar los cálculos
+      const totalCosts = this.getTotalCosts();
+      const externalTaxes = this.getExternalTaxes();
+      const totalCostsWithExternal = this.getTotalCostExternal();
+    
+      console.log('Total Costs:', totalCosts);
+      console.log('External Taxes:', externalTaxes);
+      console.log('Total Costs with External Taxes:', totalCostsWithExternal);
+      
+    
+    }
 
 }

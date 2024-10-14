@@ -6,6 +6,18 @@
           <h3 class="font-semibold text-base text-gray-900 dark:text-gray-50">Hotels</h3>
         </div>
         <div class="relative w-full max-w-full flex-grow flex-1 text-right">
+          <select name="filterYear" id="filterYear" class="p-2 me-4 border border-gray-300 rounded" [(ngModel)]="filterYear" (change)="onYearChange($event)">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="">All</option>
+          </select>
+          <select name="filterDestinations" id="filterDestinations" class="p-2 me-4 border border-gray-300 rounded" [(ngModel)]="filterDestinations" (change)="onDestinationsChange($event)">
+            @for (destinos of destinations; track $index) {
+              <option [value]="destinos">{{destinos}}</option>
+            }
+            <option value="">All</option>
+          </select>
           <input
             type="text"
             [(ngModel)]="filterText"
@@ -24,7 +36,8 @@
           <thead>
             <tr>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Name Hotel</th>
-              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Location</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Year</th>
+              <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Destination</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Special dates</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Information general</th>
               <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Services</th>
@@ -34,7 +47,8 @@
           <tbody>
             @for (hotel of filteredHotels; track $index) {
             <tr  class="text-gray-700 dark:text-gray-100 text-lg">
-               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 whitespace-nowrap p-4 text-base">{{ hotel.name}}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 whitespace-nowrap p-4 text-base">{{ hotel.name}}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 whitespace-nowrap p-4 text-base">{{ hotel.year}}</td>
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">{{ hotel.location }}</td>
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 @for (date of hotel.special_dates; track $index) {
@@ -71,7 +85,7 @@
    <!-- add Modal -->
     @if (showAddModal) {
     <div class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
-        <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+        <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto max-h-80 rounded-xl shadow-lg z-50 overflow-y-auto">
         <div class="modal-content py-4 text-left px-6">
             <!-- Title -->
             <div class="flex justify-between items-center pb-3">
@@ -85,14 +99,26 @@
             <!-- Body -->
             <div class="my-5 mr-5 ml-5 flex justify-center">
             <form (submit)="onSubmit()" id="add_hotel_form" class="w-full">
-                <div class="">
+                <div>
                 <div class="mb-4">
                     <label for="name" class="block text-md text-gray-600 dark:text-gray-50">Name Hotel</label>
                     <input type="text" id="name" name="name" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Name Hotel" [(ngModel)]="newHotel.name" required>
                 </div>
                 <div class="mb-4">
-                    <label for="observations" class="block text-md text-gray-600 dark:text-gray-50">Location</label>
-                    <input type="text" id="location" name="location"class="h-15 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Location" [(ngModel)]="newHotel.location" required>
+                  <label for="name_service" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
+                  <select [(ngModel)]="newHotel.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                </select>
+                </div>
+                <div class="mb-4">
+                    <label for="location" class="block text-md text-gray-600 dark:text-gray-50">Location</label>
+                    <select [(ngModel)]="newHotel.location" name="location" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" required>
+                      @for (destinos of destinations; track $index) {
+                        <option [value]="destinos">{{destinos}}</option>
+                      }
+                  </select>
                 </div>
                 <div class="mb-4">
                     <label for="special_dates" class="block text-md text-gray-600 dark:text-gray-50">Special date</label>
@@ -133,7 +159,7 @@
    <!-- edit Modal -->
    @if (showEditModal) {
     <div class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
-        <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+        <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto max-h-full rounded-xl shadow-lg z-50 overflow-y-auto">
         <div class="modal-content py-4 text-left px-6">
             <!-- Title -->
             <div class="flex justify-between items-center pb-3">
@@ -145,7 +171,7 @@
             </div>
             </div>
             <!-- Body -->
-            <div class="my-5 mr-5 ml-5 flex justify-center">
+            <div class="my-5 mr-5 ml-5 flex justify-center  ">
             <form (submit)="onEditSubmit()" id="edit_hotel_form" class="w-full">
                 <div class="">
                 <div class="mb-4">
@@ -153,8 +179,20 @@
                     <input type="text" id="name" name="name" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Name Hotel" [(ngModel)]="selectedHotel.name" required>
                 </div>
                 <div class="mb-4">
-                    <label for="observations" class="block text-md text-gray-600 dark:text-gray-50">Location</label>
-                    <input type="text" id="location" name="location"class="h-15 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Location" [(ngModel)]="selectedHotel.location" required>
+                  <label for="name_service" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
+                  <select [(ngModel)]="selectedHotel.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                </select>
+                </div>
+                <div class="mb-4">
+                    <label for="location" class="block text-md text-gray-600 dark:text-gray-50">Location</label>
+                    <select [(ngModel)]="selectedHotel.location" name="location" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" required>
+                      @for (destinos of destinations; track $index) {
+                        <option [value]="destinos">{{destinos}}</option>
+                      }
+                  </select>
                 </div>
                 <div class="mb-4">
                     <label for="special_dates" class="block text-md text-gray-600 dark:text-gray-50">Special date</label>
