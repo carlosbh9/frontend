@@ -18,6 +18,7 @@ import { QuoterComponent } from './pages-quoter/quoter/quoter.component';
 import { QuoterFormComponent } from './pages-quoter/quoter-form/quoter-form.component';
 import { LoginComponent } from './login/login.component';
 import { QuoterListComponent } from './pages-quoter/quoter-list/quoter-list.component';
+import { MasterQuoterComponent } from './pages-quoter/master-quoter/master-quoter.component';
 
 export const routes: Routes = [
 
@@ -40,7 +41,8 @@ export const routes: Routes = [
                 children: [
                     {   path:'quoter-form', component:QuoterFormComponent}, 
                     {   path:'quoter-list', component:QuoterListComponent},
-                    {   path:'quoter-edit/:id', component:QuoterFormComponent}
+                    {   path:'quoter-edit/:id', component:QuoterFormComponent},
+                    {   path:'master-quoter',component:MasterQuoterComponent}
                 ]
             },
             {   path:'login',component: LoginComponent}

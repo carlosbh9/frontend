@@ -67,7 +67,7 @@ async deleteQuoter(id: string): Promise<any> {
   }
 }
 
- //agregar un item a una cotizacion
+ //agregar un item a una cotizacion no se usa
  async addItemQuoter(quoterId: string, item: any): Promise<any> {
   try {
     return await firstValueFrom(this.http.post<any>(`${this.baseUrl}/${quoterId}/quoterItems`, item));

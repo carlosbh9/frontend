@@ -1,0 +1,51 @@
+<div class="grid grid-cols-1 gap-2 mb-2  ">
+    <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+        <div class="p-6 flex justify-between">
+            <div class="w-1/3 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="name_mq" class="block text-sm font-medium text-gray-700">Name Master Quoter</label>
+                        <input name="name_mq" type="text" id="name_mq" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Name Master Quoter">
+                    </div>
+                    <div>
+                        <label for="accommodations" class="block text-sm font-medium text-gray-700">Days</label>
+                        <input type="number"  name="newQuoter.number_paxs_" id="number_paxs_" class="mt-1 block w-16 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Days" required>
+                    </div>
+                </div>
+            </div>
+            <div class="w-2/3 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="hotel_select" class="block text-sm font-medium text-gray-700">Hoteles</label>
+                    <select [(ngModel)]="hotel_selectId"  (change)="onHotelChange($event)" name="hotel_select" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="" disabled selected>Select Hotel</option>
+                    @for (hotel of hotelsOption; track hotel._id) {
+                        <option [value]="hotel._id">{{hotel.name}}</option>
+                    }
+                  
+                    </select>
+                </div>
+                <div>
+                    <label for="hotel_service" class="block text-sm font-medium text-gray-700">Services</label>
+                    <select [(ngModel)]="hotel_service" (change)="onServiceChange($event)" name="hotel_service" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="" disabled selected>Select Service</option>
+                        @for (service of hotelServices; track $index) {
+                            <option [value]="service._id">{{service.name_service}} </option>
+                         
+                        }
+                    </select>
+                </div>
+            </div>
+                <div>
+                    <div class="mt-4 flex flex-wrap border border-gray-300 ">
+                        <span *ngFor="let tag of tags" class="tag bg-green-500 text-white rounded-full px-3 py-1 mr-2 mb-2 flex items-center">
+                          {{ tag.name_service }}
+                          <span (click)="removeTag(tag)" class="remove-tag ml-2 cursor-pointer text-lg">&times;</span>
+                        </span>
+                      </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>    

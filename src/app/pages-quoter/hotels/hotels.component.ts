@@ -83,7 +83,7 @@ export class HotelsComponent implements OnInit{
    
      }
 
-     onHotelChange(event: any): void {
+  onHotelChange(event: any): void {
       const selectedHotel = this.hotelsOption.find(hotel => hotel._id === this.selectedHotel)
       if(selectedHotel){
         this.hotelServices= selectedHotel.services
