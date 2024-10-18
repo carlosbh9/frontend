@@ -65,8 +65,6 @@ export class FormEntrancesComponent implements OnInit {
     this.entrance.notes=this.notes
     this.entrance.date=this.selectedDate()
     this.entrance.city=this.selectedCity()
-
-
     this.serviceItem.emit(this.entrance)
     console.log(this.entrance)
   }

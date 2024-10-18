@@ -27,7 +27,7 @@
                 </div>
                 <div>
                     <label for="hotel_service" class="block text-sm font-medium text-gray-700">Services</label>
-                    <select [(ngModel)]="hotel_service" (change)="onServiceChange($event)" name="hotel_service" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <select [(ngModel)]="hotel_service" (change)="onServiceChangeHotel($event)" name="hotel_service" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <option value="" disabled selected>Select Service</option>
                         @for (service of hotelServices; track $index) {
                             <option [value]="service._id">{{service.name_service}} </option>
@@ -36,15 +36,50 @@
                     </select>
                 </div>
             </div>
-                <div>
-                    <div class="mt-4 flex flex-wrap border border-gray-300 ">
-                        <span *ngFor="let tag of tags" class="tag bg-green-500 text-white rounded-full px-3 py-1 mr-2 mb-2 flex items-center">
-                          {{ tag.name_service }}
-                          <span (click)="removeTag(tag)" class="remove-tag ml-2 cursor-pointer text-lg">&times;</span>
-                        </span>
-                      </div>
+            <div>
+                <div class="mt-4 flex flex-wrap border border-gray-300 ">
+                    <span *ngFor="let tag of tags" class="tag bg-green-500 text-white rounded-full px-3 py-1 mr-2 mb-2 flex items-center">
+                    {{ tag.name_service }}
+                    <span (click)="removeTag(tag)" class="remove-tag ml-2 cursor-pointer text-lg">&times;</span>
+                    </span>
                 </div>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <label for="selectCategoria" class="block text-sm font-medium text-gray-700">Selecione la categoria 2</label>
+                    <select  [(ngModel)]="selectCategoria" (change)="onCategoriaChange($event)" name="selectedCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
+                        <option value="" disabled selected>Select Category</option>
+                        <option value="Entrances">Entrances</option>
+                        <option value="Expeditions">Expeditions</option>
+                        <option value="Guides">Guides</option>
+                        <option value="Restaurants">Restaurants</option>
+                        <option value="Operators">Operators</option>
+                        <!--<option value="Transporte">Transporte</option>
+                        <option value="Experiencias">Experiencias</option>-->
+                    </select>
+                </div>
+                <div>
+                    <label for="selectedService" class="block text-sm font-medium text-gray-700">Services</label>
+                    <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" name="selectedService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="" disabled selected>Select Service</option>
+                        @for (service of servicesOptions; track $index) {
+                            <option [value]="service._id">{{service.description || service.name || service.name_guide || service.operador || service.company || service.nombre}} </option>
+                        }
+                    </select>
+                </div>
+                @if (this.subservicesOptions!) {
+                 <div>
+                    <label for="selectedService" class="block text-sm font-medium text-gray-700">Services</label>
+                    <select [(ngModel)]="selectedSubService" (change)="prueba($event)" name="selectedService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="" disabled selected>Select Service</option>
+                        @for (service of subservicesOptions; track $index) {
+                            <option [value]="service._id">{{service.descripcion || service.serviceName}} </option>
+                        }
+                    </select>
+                </div>
+                }
                 
+            </div>
             </div>
         </div>
     </div>
