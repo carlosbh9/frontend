@@ -1,7 +1,7 @@
 <div class="grid grid-cols-1 gap-2 mb-2  ">
     <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
         <div class="p-6 flex justify-between">
-            <div class="w-1/3 space-y-4">
+            <div class="w-1/4 space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="name_mq" class="block text-sm font-medium text-gray-700">Name Master Quoter</label>
@@ -13,49 +13,21 @@
                     </div>
                 </div>
             </div>
-            <div class="w-2/3 space-y-4">
-                <div class="grid grid-cols-2 gap-4">
+            <div class="w-full space-y-4">
+                
+            
+            <div class="grid grid-cols-4 gap-4">
                 <div>
-                    <label for="hotel_select" class="block text-sm font-medium text-gray-700">Hoteles</label>
-                    <select [(ngModel)]="hotel_selectId"  (change)="onHotelChange($event)" name="hotel_select" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="" disabled selected>Select Hotel</option>
-                    @for (hotel of hotelsOption; track hotel._id) {
-                        <option [value]="hotel._id">{{hotel.name}}</option>
-                    }
-                  
-                    </select>
-                </div>
-                <div>
-                    <label for="hotel_service" class="block text-sm font-medium text-gray-700">Services</label>
-                    <select [(ngModel)]="hotel_service" (change)="onServiceChangeHotel($event)" name="hotel_service" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <option value="" disabled selected>Select Service</option>
-                        @for (service of hotelServices; track $index) {
-                            <option [value]="service._id">{{service.name_service}} </option>
-                         
-                        }
-                    </select>
-                </div>
-            </div>
-            <div>
-                <div class="mt-4 flex flex-wrap border border-gray-300 ">
-                    <span *ngFor="let tag of tags" class="tag bg-green-500 text-white rounded-full px-3 py-1 mr-2 mb-2 flex items-center">
-                    {{ tag.name_service }}
-                    <span (click)="removeTag(tag)" class="remove-tag ml-2 cursor-pointer text-lg">&times;</span>
-                    </span>
-                </div>
-            </div>
-            <div class="grid grid-cols-3 gap-4">
-                <div>
-                    <label for="selectCategoria" class="block text-sm font-medium text-gray-700">Selecione la categoria 2</label>
+                    <label for="selectCategoria" class="block text-sm font-medium text-gray-700">Selecione la categoria</label>
                     <select  [(ngModel)]="selectCategoria" (change)="onCategoriaChange($event)" name="selectedCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
                         <option value="" disabled selected>Select Category</option>
-                        <option value="Entrances">Entrances</option>
-                        <option value="Expeditions">Expeditions</option>
-                        <option value="Guides">Guides</option>
-                        <option value="Restaurants">Restaurants</option>
-                        <option value="Operators">Operators</option>
-                        <!--<option value="Transporte">Transporte</option>
-                        <option value="Experiencias">Experiencias</option>-->
+                        <option value="entrance">Entrances</option>
+                        <option value="expeditions">Expeditions</option>
+                        <option value="guides">Guides</option>
+                        <option value="restaurant">Restaurants</option>
+                        <option value="operator">Operators</option>
+                        <!--<option value="transport">Transporte</option>
+                        <option value="experience">Experiencias</option>train-->
                     </select>
                 </div>
                 <div>
@@ -63,23 +35,80 @@
                     <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" name="selectedService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <option value="" disabled selected>Select Service</option>
                         @for (service of servicesOptions; track $index) {
-                            <option [value]="service._id">{{service.description || service.name || service.name_guide || service.operador || service.company || service.nombre}} </option>
+                            <option [ngValue]="{type_service: selectedDayIndex.type ,service_id: service._id,service_type: selectCategoria, name_service: service.description || service.name|| service.name_guide || service.operador || service.company || service.nombre}">{{service.description || service.name || service.name_guide || service.operador || service.company || service.nombre}} </option>
                         }
                     </select>
                 </div>
-                @if (this.subservicesOptions!) {
+                @if (selectCategoria==='operator') {
                  <div>
-                    <label for="selectedService" class="block text-sm font-medium text-gray-700">Services</label>
-                    <select [(ngModel)]="selectedSubService" (change)="prueba($event)" name="selectedService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <label for="selectedSubService" class="block text-sm font-medium text-gray-700">Services</label>
+                    <select [(ngModel)]="selectedSubService" (change)="prueba($event)" name="selectedSubService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <option value="" disabled selected>Select Service</option>
+                        <!-- @for (service of subservicesOptions; track $index) {
+                            <option [ngValue]="{type_service: typeoptions,id:service._id,name:service.descripcion}">{{service.descripcion || service.serviceName}} </option>
+                        } -->
                         @for (service of subservicesOptions; track $index) {
-                            <option [value]="service._id">{{service.descripcion || service.serviceName}} </option>
+                            <option [ngValue]="{operator_service_id:service._id,name_service:service.descripcion}">{{service.descripcion || service.serviceName}} </option>
                         }
                     </select>
                 </div>
                 }
-                
+                <div class="col-start-4 flex justify-end">
+                    <button (click)="addDays()" class="w-32 mt-3 px-4 bg-blue-500 dark:bg-green-700 p-3 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800 self-start">
+                      Add Options
+                    </button>
+                  </div>
             </div>
+            @for (day of masterQuoter.day; track  $index; let i = $index) {
+            
+            <div>
+                <h1>Dia {{$index+1}}</h1>
+                <div class="mt-4 flex flex-wrap border border-gray-300">
+                    
+                    <label>
+                        <input type="radio" [(ngModel)]="selectedDayIndex" [value]="{ type: 'services', dayIndex: $index }" class="peer hidden" name="">
+                        <div class="flex items-center justify-between px-4 py-2 cursor-pointer text-sm  group">
+                            <h2 class="font-medium text-gray-700">Servicios </h2>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </label>
+                    @for (tag of day.services; track $index) {
+                        @if (tag.type_service=='services') {
+                           <span class="tag bg-green-500 text-white rounded-full px-3 py-1 mr-2 mb-2 m-2 flex items-center">
+                           {{ tag.name_service }}
+                       <span (click)="removeTag(tag)" class="remove-tag ml-2 cursor-pointer text-lg">&times;</span>
+                        </span>
+                        }
+                       }
+                </div>
+            </div>
+            <div>
+                
+                <div class="mt-4 flex flex-wrap border border-gray-300">
+                    <label>
+                        <input type="radio" [(ngModel)]="selectedDayIndex" [value]="{ type: 'options', dayIndex: $index }" class="peer hidden" name="">
+                        <div class="flex items-center justify-between px-4 py-2 cursor-pointer text-sm  group">
+                            <h2 class="font-medium text-gray-700">Opcionales </h2>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </label>
+                    @for (tag of day.services; track $index) {
+                     @if (tag.type_service=='options') {
+                        <span class="tag bg-blue-500 text-white rounded-full px-3 py-1 mr-2 mb-2 m-2 flex items-center">
+                        {{ tag.name_service }}
+                    <span (click)="removeTag(tag)" class="remove-tag ml-2 cursor-pointer text-lg">&times;</span>
+                     </span>
+                     }
+                    }
+                    
+                </div>
+           
+            </div>
+            }
             </div>
         </div>
     </div>
