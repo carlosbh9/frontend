@@ -43,7 +43,8 @@ export class MasterQuoterComponent implements OnInit{
     days: null,
     destinations: null,
     day:[{
-    //  index: 0,
+      city: null,
+      name_services:null,
       services: [] as {
       type_service: string | null,
       name_service: string | null,
@@ -60,7 +61,8 @@ export class MasterQuoterComponent implements OnInit{
     days: null,
     destinations: null,
     day:[{
-    //  index: 0,
+      city: null,
+      name_services:null,
       services: [] as {
       type_service: string | null,
       name_service: string | null,
@@ -150,7 +152,8 @@ onSubServiceChange(event: any){
 addDays(){
   this.index++
   this.masterQuoter.day.push({
- //   index: this.index,
+    city: null,
+    name_services:null,
     services: []
   })
 

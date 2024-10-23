@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component,Input ,input,Output,EventEmitter } from '@angular/core';
+import { Component,Input ,input,Output,EventEmitter, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FormEntrancesComponent } from '../form-entrances/form-entrances.component';
 import {FormExpeditionsComponent} from '../form-expeditions/form-expeditions.component'
@@ -21,6 +21,7 @@ import { FormOperatorsComponent } from '../form-operators/form-operators.compone
 export class ServicesComponent {
   @Output() servicesChange = new EventEmitter<any[]>();
   @Output() totalPricesChange = new EventEmitter<number[]>();
+
   @Input() services: any[]=[]
   selectedDateService: string ='';
   selectedCityService: string = '';
@@ -29,7 +30,7 @@ export class ServicesComponent {
   number_paxs = input.required<number>();
   contDayServices  = 0
   previousDateService=''
-
+  showmodalMasterQuoter = false
  // services: any[]=[]
 
   addItemService(datos:any){

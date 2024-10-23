@@ -61,6 +61,7 @@
                         }
 
                         <button class="px-4 bg-red-500 dark:bg-red-700 p-3  rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Cancel</button>
+                        <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Open Master Quoter</button>
                     </div>
 
                 </div>
@@ -80,6 +81,7 @@
             [number_paxs]="newQuoter.number_paxs.length"  
             [services]="newQuoter.services"      
             (servicesChange)="onServicesUpdate($event)"
+            (openModalEvent)="openModal()"
             (totalPricesChange)="onTotalPricesServicesChange($event)">
             </app-services>
             <div class="flex justify-end p-6 block w-full overflow-x-auto">
@@ -153,3 +155,7 @@
     </div>
     <!-- end card  6 -->
 </div>
+
+@if (modalOpen()) {
+    <app-master-quoter (closeModalEvent)="closeModal()"></app-master-quoter>
+}

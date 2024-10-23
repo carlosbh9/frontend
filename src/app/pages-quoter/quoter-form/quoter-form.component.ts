@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit,inject } from '@angular/core';
+import { Component, OnInit,inject,signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QuoterService } from '../../Services/quoter.service';
 import { FormHotelComponent } from '../form-hotel/form-hotel.component';
@@ -14,6 +14,7 @@ import {ActivatedRoute} from '@angular/router';
 import { ExtOperatorComponent } from '../ext-operator/ext-operator.component';
 import { ServicesComponent } from '../services/services.component';
 import { HotelsComponent } from '../hotels/hotels.component';
+import { MasterQuoterModalComponent } from '../modals/master-quoter.modal/master-quoter.modal.component';
 
 @Component({
   selector: 'app-quoter-form',
@@ -21,13 +22,14 @@ import { HotelsComponent } from '../hotels/hotels.component';
   imports: [CommonModule
     ,FormsModule,FormHotelComponent,FormEntrancesComponent,
     FormExpeditionsComponent,FormGuidesComponent,FormRestaurantsComponent,
-    FormOperatorsComponent,FlightsComponent,ExtOperatorComponent,ServicesComponent,HotelsComponent],
+    FormOperatorsComponent,FlightsComponent,ExtOperatorComponent,ServicesComponent,HotelsComponent,MasterQuoterModalComponent],
   templateUrl: './quoter-form.component.html',
   styleUrl: './quoter-form.component.css'
 })
 export class QuoterFormComponent implements OnInit{
   quoterService = inject(QuoterService)
   route = inject(ActivatedRoute)
+  modalOpen = signal(true);
 
   totalPriceHotels: number[] = [];
   totalPriceServices: number[] = [];
@@ -42,6 +44,7 @@ export class QuoterFormComponent implements OnInit{
   selectedCityService: string = '';
   cont = 0
   contDayServices  = 0
+
 
 
   newQuoter: Quoter = {
@@ -332,5 +335,12 @@ export class QuoterFormComponent implements OnInit{
       
     
     }
-
+    openModal() {
+      this.modalOpen.set(true);
+    }
+  
+    // Method to close modal
+    closeModal() {
+      this.modalOpen.set(false);
+    }
 }

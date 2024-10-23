@@ -1,24 +1,25 @@
 <div class="grid grid-cols-1 gap-2 mb-2  ">
     <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-        <div class="p-6 flex justify-between">
+        <div class="p-6 flex justify-between gap-4">
           <!-- columna de la izquierda -->
             <div class="w-1/4 space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
+                <div >
                         <label for="name_mq" class="block text-sm font-medium text-gray-700">Name Master Quoter</label>
                         <input [(ngModel)]="masterQuoter.name" name="name_mq" type="text" id="name_mq" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Name Master Quoter">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class=" " >
+                        <label for="destinations" class="block text-sm font-medium text-gray-700">Destinations</label>
+                        <input [(ngModel)]="masterQuoter.destinations" type="text"  name="destinations" id="destinations" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Destinations" required>
                     </div>
                     <div>
-                        <label for="accommodations" class="block text-sm font-medium text-gray-700">Days</label>
-                        <input [(ngModel)]="masterQuoter.days" type="number"  name="newQuoter.number_paxs_" id="number_paxs_" class="mt-1 block w-16 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Days" required>
+                        <label for="days" class="block text-sm font-medium text-gray-700">Days</label>
+                        <input [(ngModel)]="masterQuoter.days" type="number"  name="days" id="days" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Days" required>
                     </div>
                 </div>
                 <div>
-                  <button (click)="onSubmit()" class=" mt-3  px-4 bg-green-400 dark:bg-green-700 p-3 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800 self-start">
-                  Save Master Quoter
-                </button>
-                </div>
-
+                        <button (click)="onSubmit()" class=" mt-3  px-4 bg-green-400 dark:bg-green-700 p-3 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800 self-start">Save Master Quoter</button>
+                    </div>
             </div>
             <!-- columna de la derecha -->
             <div class="w-full space-y-4">
@@ -50,9 +51,6 @@
                     <label for="selectedSubService" class="block text-sm font-medium text-gray-700">Services</label>
                     <select [(ngModel)]="selectedSubService" (change)="onSubServiceChange($event)" name="selectedSubService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <option value="" disabled selected>Select Service</option>
-                        <!-- @for (service of subservicesOptions; track $index) {
-                            <option [ngValue]="{type_service: typeoptions,id:service._id,name:service.descripcion}">{{service.descripcion || service.serviceName}} </option>
-                        } -->
                         @for (service of subservicesOptions; track $index) {
                             <option [ngValue]="{operator_service_id:service._id,name_service:service.descripcion}">{{service.descripcion || service.serviceName}} </option>
                         }
@@ -68,7 +66,16 @@
             @for (day of masterQuoter.day; track  $index; let i = $index) {
 
             <div>
-                <h1>Dia {{$index+1}}</h1>
+                <div class="flex space-x-4">
+                    <div>
+                        <label for="City" class="block text-sm font-medium text-gray-700">Dia {{$index+1}}</label>
+                        <input [(ngModel)]="day.city" type="text" placeholder="City..." class="mt-1 block w-32 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label  for="name_services" class="block text-sm font-medium text-gray-700">Name of services</label>
+                        <input [(ngModel)]="day.name_services" type="text" placeholder="Name of services..." class="mt-1 block w-32 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                </div>
                 <div class="mt-4 flex flex-wrap border border-gray-300">
 
                     <label>
