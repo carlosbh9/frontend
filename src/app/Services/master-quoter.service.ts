@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../enviroment/environment';
 import { firstValueFrom } from 'rxjs';
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class MasterQuoterService {
-  
+
   private baseUrl = `${environment.apiUrl}/master`
   constructor(private http: HttpClient) { }
 
@@ -66,4 +67,12 @@ async deleteMasterQuoter(id: string): Promise<any> {
   }
 }
 
+
+// private convertServiceIds(quoter: any): void {
+//   quoter.day.forEach((day: any) => {
+//     day.services.forEach((service: any) => {
+//       service.service_id = mongoose.Types.ObjectId(service.service_id);
+//     });
+//   });
+// }
 }
