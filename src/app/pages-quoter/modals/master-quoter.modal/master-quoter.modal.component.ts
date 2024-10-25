@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component,Output, EventEmitter, inject, OnInit ,HostListener } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormGroup, FormsModule } from '@angular/forms';
 import { MasterQuoterService } from '../../../Services/master-quoter.service';
 @Component({
   selector: 'app-master-quoter',
@@ -27,10 +27,13 @@ searchTerm: string = '';  // Término de búsqueda
 searchTermDays: string = '';  // Término de búsqueda
 showOptions: boolean = false;  // Controla la visibilidad de las opciones
 showOptionsDays: boolean = false;  // Controla la visibilidad de las opciones de dias
+selectedMasterQuoter: any  = null;
 filteredOptions: any[] = [];  // Opciones filtradas mq Quoters
 filteredDaysOptions: any[]= []
+selectedServices: { [serviceId: string]: boolean } = {};
 
-//constructor(private mqService: MqService) {}
+servicesList: any[] = []; // Aquí guardarás los de type_service 'services'
+optionsList: any[] = []; // Aquí guardarás los de type_service 'options'
 
 ngOnInit(): void {
   this.loadmqServices();
@@ -44,50 +47,62 @@ async loadmqServices() {
     console.log('Error al cargar los Master Quoters', error);
   }
 }
-
-// Método para seleccionar una opción
-selectOption(option: any) {
-  this.selectedMqQuoterOption = option;
-  this.mqQuotersDays = this.selectedMqQuoterOption.day
-  this.searchTerm = option.name;  // Actualiza el input con la opción seleccionada
-  this.showOptions = false;  // Oculta las opciones al seleccionar
-  console.log('Objeto seleccionado:', option);
-  console.log('dayoption :', this.searchTermDays);
+ // Filtrar opciones en Master Quoter
+ filterOptions(): void {
+  this.filteredOptions = this.mqQuoters.filter(option =>
+    option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+  );
 }
 
-// Método para seleccionar una opción
-selectOptionDay(option: any) {
-  this.selectedDayOption = option;
-  this.searchTermDays = option.name_services;  // Actualiza el input con la opción seleccionada
-  this.showOptionsDays = false;  // Oculta las opciones al seleccionar
-  
-  console.log('servicios :', this.selectedDayOption);
+// Seleccionar opción en Master Quoter
+selectOption(option: any): void {
+  this.selectedMasterQuoter = option;
+  this.showOptions = false;
+  this.searchTerm = option.name;
+  this.filteredDaysOptions = option.day; // Filtrar días basados en la selección de Master Quoter
 }
 
-// Método para filtrar las opciones
-filterOptions() {
-  this.showOptions = true;  // Muestra las opciones al escribir en el input
-  if (this.searchTerm) {
-    this.filteredOptions = this.mqQuoters.filter(mq =>
-      mq.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+// Filtrar opciones en days
+filterOptionsDays(): void {
+  if (this.selectedMasterQuoter?.day) {
+    this.filteredDaysOptions = this.selectedMasterQuoter.day.filter((day: { city?: string; name_services?: string }) =>
+      (day.city && day.city.toLowerCase().includes(this.searchTermDays.toLowerCase())) ||
+      (day.name_services && day.name_services.toLowerCase().includes(this.searchTermDays.toLowerCase()))
     );
   } else {
-    this.filteredOptions = this.mqQuoters;  // Si no hay término de búsqueda, mostrar todas las opciones
+    this.filteredDaysOptions = [];
   }
 }
-// Método para filtrar las opciones
-filterOptionsDays() {
-  this.showOptionsDays = true;  // Muestra las opciones al escribir en el input
-  if (this.searchTermDays) {
-    this.filteredDaysOptions = this.mqQuotersDays.filter(mq =>
-      mq.name_services.toLowerCase().includes(this.searchTermDays.toLowerCase())
-    );
-  } else {
-    this.filteredDaysOptions = this.mqQuotersDays;  // Si no hay término de búsqueda, mostrar todas las opciones
-  }
 
-  console.log('holaaaa')
+
+// Seleccionar un día específico
+selectOptionDay(dayOption: any): void {
+  this.showOptionsDays = false;
+  this.searchTermDays = `${dayOption.city} - ${dayOption.name_services}`;
+  // this.servicesList = dayOption.services.filter((service: { type_service: string }) => service.type_service === 'services');
+  // this.optionsList = dayOption.services.filter((service: { type_service: string }) => service.type_service === 'options');
+  this.servicesList = dayOption.services.filter((service: any) => service.type_service === 'services');
+  this.optionsList = dayOption.services.filter((service: any) => service.type_service === 'options');
+
+  //Marca los `services` como seleccionados por defecto
+  this.servicesList.forEach(service => {
+    this.selectedServices[service.service_id] = true;
+  });
+  console.log('opcion seleccionada del dia',dayOption)
 }
+
+onDayOptionSelect(dayOption: any): void {
+  // Filtra los servicios y los separa en `services` y `options`
+  this.servicesList = dayOption.services.filter((service: any) => service.type_service === 'services');
+  this.optionsList = dayOption.services.filter((service: any) => service.type_service === 'options');
+
+  //Marca los `services` como seleccionados por defecto
+  this.servicesList.forEach(service => {
+    this.selectedServices[service.service_id] = true;
+  });
+}
+
+
 
 // Método para ocultar las opciones
 hideOptions() {

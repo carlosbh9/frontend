@@ -56,9 +56,37 @@
                     (click)="selectOptionDay(option)"
                     class="p-2 hover:bg-gray-200 cursor-pointer"
                     >
-                    {{ option.name_services }}
+                    {{option.city}} - {{ option.name_services }}
                     </li>
                 </ul>
+              </div>
+              <div class="mt-4 p-5 border border-gray-300 rounded-lg bg-slate-100 ">
+                <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300">Services</h3>
+                <div *ngFor="let service of servicesList">
+                  <label>
+                    <input
+                      type="checkbox"
+                      name="service"
+                      [(ngModel)]="selectedServices[service.service_id]"
+                      [checked]="selectedServices[service.service_id]"
+                    />
+                    {{ service.name_service }}
+                  </label>
+                </div>
+              </div>
+              
+              <div class="mt-4 p-5 border border-gray-300 rounded-lg bg-slate-100 ">
+                <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300">Options</h3>
+                <div *ngFor="let option of optionsList">
+                  <label>
+                    <input
+                      type="checkbox"
+                      name="option"
+                      [(ngModel)]="selectedServices[option.service_id]"
+                    />
+                    {{ option.name_service }}
+                  </label>
+                </div>
               </div>
             </div>
           </form>
@@ -66,7 +94,7 @@
         <!-- Footer -->
         <div class="flex justify-end pt-2 space-x-14">
           <button (click)="closeModal()" class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" >Cancel</button>
-          <button type="submit" form="edit_operator_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
+          <button type="submit" form="edit_operator_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Add</button>
         </div>
       </div>
     </div>

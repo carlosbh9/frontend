@@ -29,7 +29,7 @@ import { MasterQuoterModalComponent } from '../modals/master-quoter.modal/master
 export class QuoterFormComponent implements OnInit{
   quoterService = inject(QuoterService)
   route = inject(ActivatedRoute)
-  modalOpen = signal(true);
+  modalOpen = signal(false);
 
   totalPriceHotels: number[] = [];
   totalPriceServices: number[] = [];
