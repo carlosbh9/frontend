@@ -64,7 +64,7 @@
     <div class="modal-content py-4 text-left px-6">
       <!-- Title -->
       <div class="flex justify-between items-center pb-3">
-        <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Add Experience</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Add Operator</p>
         <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
           <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
             <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
@@ -96,9 +96,9 @@
               <input type="text" id="name_service" name="name_service" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Service name" [(ngModel)]="newOperator.name_service" required>
             </div>
             <div class="mb-4">
-              <label for="prices" class="block text-md text-gray-600 dark:text-gray-50 ">Prices</label>
+              <label for="prices" class="block text-md text-gray-600 dark:text-gray-50 ">Range paxs</label>
               @for (price of newOperator.pricesRange; track $index) {
-                <div class="grid grid-cols-3 gap-3 py-2 items-center">
+                <div class="flex grid-cols-4 gap-3 py-2 items-center">
                   <input type="number" [(ngModel)]="price.range_min" placeholder="Range min" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="range_min-{{$index}}" required>
                   <input type="number" [(ngModel)]="price.range_max" placeholder="Range max" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="range_max-{{$index}}" required>
                   <select [(ngModel)]="price.type" name="type-{{$index}}" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Type Guide" required>

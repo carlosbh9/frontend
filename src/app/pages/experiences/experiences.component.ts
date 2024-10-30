@@ -21,11 +21,11 @@ export class ExperiencesComponent implements OnInit {
   newExperience: any = {
     name: '',
     category: '',
-    prices: [{ groupSize: null, pricePerPerson: null }],
+    prices: [{ groupSize: null, pricePerPerson: 0 }],
     childRate: {
-      pp: null,
-      upTo: null,
-      minimumAge: null
+      pp: 0,
+      upTo: 0,
+      minimumAge: 0
     },
     guide_price: 0,
     approximateDuration: '',
@@ -38,11 +38,11 @@ export class ExperiencesComponent implements OnInit {
   selectedExperience: any = {
     name: '',
     category: '',
-    prices: [{ groupSize: null, pricePerPerson: null }],
+    prices: [{ groupSize: null, pricePerPerson: 0 }],
     childRate: {
-      pp: null,
-      upTo: null,
-      minimumAge: null
+      pp: 0,
+      upTo: 0,
+      minimumAge: 0
     },
     guide_price: 0,
     approximateDuration: '',
@@ -114,9 +114,9 @@ export class ExperiencesComponent implements OnInit {
       category: '',
       prices: [],
       childRate: {
-        pp: null,
-        upTo: null,
-        minimumAge: null
+        pp: 0,
+        upTo: 0,
+        minimumAge: 0
       },
       guide_price: 0,
       approximateDuration: '',

@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component,Output, EventEmitter, inject, OnInit ,HostListener } from '@angular/core';
+import { Component,Output, EventEmitter, inject, OnInit ,HostListener, input, output } from '@angular/core';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { MasterQuoterService } from '../../../Services/master-quoter.service';
+import {CalculatepricesService}  from '../../../Services/controllerprices/calculateprices.service'
 @Component({
   selector: 'app-master-quoter',
   standalone: true,
@@ -12,6 +13,10 @@ import { MasterQuoterService } from '../../../Services/master-quoter.service';
 export class MasterQuoterModalComponent implements OnInit {
 // Evento para emitir cuando se quiera cerrar el modal
 @Output() closeModalEvent = new EventEmitter<void>();
+
+servicesChange = output<any>()
+priceService = inject(CalculatepricesService);
+numberpaxs = input<number[]>();
 mqService = inject(MasterQuoterService)
 //mqQuoters: any[]=[]
 // Método para cerrar el modal (emite el evento)
@@ -30,13 +35,27 @@ showOptionsDays: boolean = false;  // Controla la visibilidad de las opciones de
 selectedMasterQuoter: any  = null;
 filteredOptions: any[] = [];  // Opciones filtradas mq Quoters
 filteredDaysOptions: any[]= []
-selectedServices: { [serviceId: string]: boolean } = {};
-
+//selectedServices: { [serviceId: string]: boolean } = {};
+//selectedServices:  any [] = [];
 servicesList: any[] = []; // Aquí guardarás los de type_service 'services'
 optionsList: any[] = []; // Aquí guardarás los de type_service 'options'
 
+selectedServices: any = {
+  services: [],
+  number_paxs: [],
+  children_ages: [],
+  date: '',
+  city:''
+};
+
+preciosCalculados: any = {
+  price: [],
+  name:''
+};
+
 ngOnInit(): void {
   this.loadmqServices();
+  console.log('dddd los paxs',this.numberpaxs())
 }
 
 async loadmqServices() {
@@ -77,10 +96,10 @@ filterOptionsDays(): void {
 
 // Seleccionar un día específico
 selectOptionDay(dayOption: any): void {
+  this.selectedServices.city = dayOption.city
   this.showOptionsDays = false;
   this.searchTermDays = `${dayOption.city} - ${dayOption.name_services}`;
-  // this.servicesList = dayOption.services.filter((service: { type_service: string }) => service.type_service === 'services');
-  // this.optionsList = dayOption.services.filter((service: { type_service: string }) => service.type_service === 'options');
+ 
   this.servicesList = dayOption.services.filter((service: any) => service.type_service === 'services');
   this.optionsList = dayOption.services.filter((service: any) => service.type_service === 'options');
 
@@ -91,17 +110,35 @@ selectOptionDay(dayOption: any): void {
   console.log('opcion seleccionada del dia',dayOption)
 }
 
-onDayOptionSelect(dayOption: any): void {
-  // Filtra los servicios y los separa en `services` y `options`
-  this.servicesList = dayOption.services.filter((service: any) => service.type_service === 'services');
-  this.optionsList = dayOption.services.filter((service: any) => service.type_service === 'options');
+toggleService(service: any) {
 
-  //Marca los `services` como seleccionados por defecto
-  this.servicesList.forEach(service => {
-    this.selectedServices[service.service_id] = true;
-  });
+     // Crea una clave única basada en service_id y el id adicional
+     const uniqueKey = `${service.service_id}_${service.operator_service_id || service.train_service_id || ''}`;
+
+     const index = this.selectedServices.services.findIndex((s:any) => 
+       `${s.service_id}_${s.operator_service_id || s.train_service_id || ''}` === uniqueKey
+     );
+ 
+     if (index > -1) {
+       // Si ya está seleccionado, quitarlo
+       this.selectedServices.services.splice(index, 1);
+     } else {
+       // Si no está seleccionado, agregarlo
+       this.selectedServices.services.push(service);
+     }
+  
 }
 
+async onAddMQuoter(){
+  this.selectedServices.number_paxs=this.numberpaxs()
+  
+  console.log('serivios seleccionados',this.selectedServices)
+  this.preciosCalculados = await this.priceService.calculatePrice(this.selectedServices)
+  console.log('precios calculados',this.preciosCalculados)
+  
+  this.servicesChange.emit(this.preciosCalculados)
+  this.closeModal()
+}
 
 
 // Método para ocultar las opciones

@@ -2,7 +2,7 @@ import { Component , OnInit} from '@angular/core';
 import { EntrancesService } from '../../Services/entrances.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+
 
 
 @Component({
@@ -22,9 +22,9 @@ export class EntrancesComponent implements OnInit{
 
   newEntrance = {
     description: '',
-    price_pp: null,
+    price_pp: 0,
     childRate: {
-      pp: null,
+      pp: 0,
       upTo: null
     },
     take_note: '',
@@ -34,9 +34,9 @@ export class EntrancesComponent implements OnInit{
   selectedEntrance = {
     _id: '',
     description: '',
-    price_pp: null,
+    price_pp: 0,
     childRate: {
-      pp: null,
+      pp: 0,
       upTo: null
     },
     take_note: '',
@@ -105,9 +105,9 @@ export class EntrancesComponent implements OnInit{
   emptyEntrance(): void {
     this.newEntrance = {
       description: '',
-      price_pp: null,
+      price_pp: 0,
       childRate: {
-        pp: null,
+        pp: 0,
         upTo: null
       },
       take_note: '',

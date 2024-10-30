@@ -30,7 +30,7 @@ export class QuoterFormComponent implements OnInit{
   quoterService = inject(QuoterService)
   route = inject(ActivatedRoute)
   modalOpen = signal(false);
-
+  modalData = signal<any[]>([])
   totalPriceHotels: number[] = [];
   totalPriceServices: number[] = [];
   totalPricesFlights: number[]=[]
@@ -45,7 +45,7 @@ export class QuoterFormComponent implements OnInit{
   cont = 0
   contDayServices  = 0
 
-
+  destinations: string[] =['PERU','BOLIVIA','ECUADOR','COLOMBIA','ARGENTINA','CHILE']
 
   newQuoter: Quoter = {
     guest:'',
@@ -195,6 +195,10 @@ export class QuoterFormComponent implements OnInit{
     });
   }
 
+  onModalmqQuoterChange(temp: any){
+    
+    this.newQuoter.services.push(...temp)
+  }
 
   onFlightsUpdate(flights: any[]) {
    // this.datosrecibidosFlights = flights;
@@ -337,6 +341,7 @@ export class QuoterFormComponent implements OnInit{
     }
     openModal() {
       this.modalOpen.set(true);
+      this.modalData.set(this.newQuoter.number_paxs);
     }
   
     // Method to close modal

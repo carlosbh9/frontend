@@ -1,7 +1,7 @@
-<div class="p-6 flex flex-col space-y-4">
+<div class="p-6 flex flex-col space-y-4 ">
     <div class="flex flex-wrap space-x-4 justify-start">
         <div class="basis-1/4">
-            <label for="issue-date" class="block text-sm font-medium text-gray-700">Selecione la categoria 2</label>
+            <label for="issue-date" class="block text-sm font-medium text-gray-700">Category</label>
         <select [(ngModel)]="selectedCategory"  name="selectedCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
             <option value="" disabled selected>Select Category</option>
             <option value="Entrances">Entrances</option>
@@ -103,23 +103,23 @@
         @for (service of services; track $index) {
             <tr class="text-gray-700 dark:text-gray-1000">
                 @if ($index === 0) {
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.day}}</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.date | date }}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap  ">{{service.day}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">{{service.date | date }}</td>
                 }@else if (service.day!==services[$index-1].day) {
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.day}}</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.date | date }}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap  ">{{service.day}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap  ">{{service.date | date }}</td>
                 }@else {
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "></td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "></td>
+                    <td class="border-t-0  align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "></td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap  "></td>
                 }
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.city}}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.name_service}}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{service.price_base.toFixed(2)}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">{{service.city}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap  ">{{service.name_service}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap  ">${{service.price_base.toFixed(2)}}</td>
                 @for (price of service.prices; track $index) {
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{price.toFixed(2)}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">${{price.toFixed(2)}}</td>
                 }
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{service.notes}}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap  ">{{service.notes}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap ">
                     <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' ></i>
                     <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' ></i>
                 </td>

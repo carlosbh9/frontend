@@ -2,18 +2,27 @@
 <div class="grid grid-cols-1 gap-2 mb-2  ">
     <!-- card  1 -->
     <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-            <div class="p-6 flex justify-between  ">
+            <div class="p-6 flex justify-between gap-4">
                 <!-- Columna Izquierda -->
                 <div class="w-1/2 space-y-4">
-                    <div >
-                        <label for="travel_agent" class="block text-sm font-medium text-gray-700">Travel agent</label>
-                        <input [(ngModel)]="newQuoter.travel_agent" name="travel_agent" type="text" id="travel_agent" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="travel_agent">
-                    </div>
-                    <div>
-                        <label for="guest"  class="block text-sm font-medium text-gray-700">Guest</label>
-                        <input [(ngModel)]="newQuoter.guest" name="newQuoter.guest" type="text" id="guest" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Guest">
-                    </div>
                     <div class="grid grid-cols-2 gap-4">
+                        <div>
+                           <label for="travel_agent" class="block text-sm font-medium text-gray-700">Travel Designer</label>
+                           <select name="travel_agent" id="travel_agent" [(ngModel)]="newQuoter.travel_agent" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="NV">NV</option>
+                            <option value="IVL">IVL</option>
+                            <option value="TG">TG</option>
+                            <option value="TA">TA</option>
+                            <option value="MK">MK</option>
+                            <option value="ME">ME</option>
+
+                           </select>
+                        </div>
+                        <div>
+                            <label for="guest"  class="block text-sm font-medium text-gray-700">Guest</label>
+                            <input [(ngModel)]="newQuoter.guest" name="newQuoter.guest" type="text" id="guest" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Guest">
+                        </div>
+                  
                         <div>
                             <label for="travel-start-date" class="block text-sm font-medium text-gray-700">Travel Dates</label>
                             <input type="date" [(ngModel)]="newQuoter.travelDate.start" name="newQuoter.travelDate.start" id="travel-start-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -22,14 +31,13 @@
                             <label for="travel-end-date" class="block text-sm font-medium text-gray-700">&nbsp;</label> <!-- Etiqueta vacía para alinear -->
                             <input type="date" [(ngModel)]="newQuoter.travelDate.end" name="newQuoter.travelDate.end" id="travel-end-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
+                    
                         <div>
-                            <label for="accommodations" class="block text-sm font-medium text-gray-700">Accommodations</label>
+                            <label for="accommodations" class="block text-sm font-medium text-gray-700">Type of Accommodations</label>
                             <input type="text" [(ngModel)]="newQuoter.accomodations" name="newQuoter.acomodations" id="accommodations" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Accommodations">
                         </div>
                         <div>
-                            <label for="number_paxs" class="block text-sm font-medium text-gray-700">Number of Pax</label>
+                            <label for="number_paxs" class="block text-sm font-medium text-gray-700">Number of Guest</label>
                             <div class="flex flex-initial items-center space-x-4">
                                 @for (item of newQuoter.number_paxs; track $index) {
                                     <input type="number" [(ngModel)]="newQuoter.number_paxs[$index]"   name="newQuoter.number_paxs_{{$index}}" id="number_paxs_{{$index}}" class="mt-1 block w-16 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value" required>
@@ -48,10 +56,21 @@
                 </div>
 
                 <!-- Columna Derecha -->
-                <div class="w-1/3 space-y-4">
+                <div class="w-1/2 space-y-4">
                     <div>
-                        <label for="issue-date" class="block text-sm font-medium text-gray-700">Fecha de emisión</label>
-                        <input type="date" id="issue-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value">
+                        <label for="destinations" class="block text-sm font-medium text-gray-700">Destinations</label>
+                       <div class="mt-1 py-2 p-3">
+                        @for (item of destinations; track $index) {
+                        <label class=" mt-1 py-2 p-3">
+                            <input
+                              type="checkbox"
+                              name="Destinations"
+                            />
+                            {{item}}
+                         </label>
+                        }
+                    </div>
+                        <!-- <input type="date" id="issue-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value"> -->
                     </div>
                     <div class="space-x-4">
                         @if (showUpdate== false) {
@@ -157,5 +176,5 @@
 </div>
 
 @if (modalOpen()) {
-    <app-master-quoter (closeModalEvent)="closeModal()"></app-master-quoter>
+    <app-master-quoter (servicesChange)="onModalmqQuoterChange($event)" [numberpaxs]="newQuoter.number_paxs" (closeModalEvent)="closeModal()"></app-master-quoter>
 }

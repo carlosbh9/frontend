@@ -20,8 +20,8 @@ export class RestaurantComponent implements OnInit{
 
   newRestaurant: any = {
     name: '',
-    price_pp: null,
-    child_rate: [{ price_pp: null, upTo: null }],
+    price_pp: 0,
+    child_rate: [{ price_pp: 0, upTo: null }],
     price_guide_pp: 0,
     special_dates: [{ date: null, price_add: null }],
     closing_date: [{ date: null, price_add: null }],
@@ -38,7 +38,7 @@ export class RestaurantComponent implements OnInit{
   selectedRestaurant: any = {
     name: '',
     price_pp: null,
-    child_rate: [{ price_pp: null, upTo: null }],
+    child_rate: [{ price_pp: 0, upTo: null }],
     price_guide_pp: 0,
     special_dates: [{ date: null, price_add: null }],
     closing_date: [{ date: null, price_add: null }],
@@ -130,7 +130,7 @@ export class RestaurantComponent implements OnInit{
     this.selectedRestaurant.closing_date.push({ date: null, price_add: null });
   }
   removeClosingdateField(index: number) {
-    if (this.newRestaurant.closing_date.length > 1) { // Prevent removing the only special date
+    if (this.newRestaurant.closing_date.length >= 1) { // Prevent removing the only special date
       this.newRestaurant.closing_date.splice(index, 1);
     } else {
       // Handle the case of removing the only price field (optional: clear values or display a message)
@@ -140,7 +140,7 @@ export class RestaurantComponent implements OnInit{
   }
 
   removeEditClosingdateField(index: number) {
-    if (this.selectedRestaurant.closing_date.length > 1) { // Prevent removing the only special date
+    if (this.selectedRestaurant.closing_date.length >= 1) { // Prevent removing the only special date
       this.selectedRestaurant.closing_date.splice(index, 1);
     } else {
       // Handle the case of removing the only price field (optional: clear values or display a message)
@@ -172,7 +172,7 @@ export class RestaurantComponent implements OnInit{
     this.newRestaurant = {
       name: '',
       price_pp: null,
-      child_rate: [{ price_pp: null, upTo: null }],
+      child_rate: [{ price_pp: 0, upTo: null }],
       price_guide_pp: 0,
       special_dates: [{ date: null, price_add: null }],
       closing_date: [{ date: null, price_add: null }],

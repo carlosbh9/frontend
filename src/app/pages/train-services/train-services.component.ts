@@ -29,9 +29,9 @@ export class TrainServicesComponent implements OnInit {
     serviceName: '',
     prices: {
       season: 'Regular',
-      adultPrice: null,
-      childPrice: null,
-      guidePrice: null
+      adultPrice: 0,
+      childPrice: 0,
+      guidePrice: 0
     },
     observations: ''
   };
