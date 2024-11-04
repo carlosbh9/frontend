@@ -6,6 +6,8 @@ import {FormExpeditionsComponent} from '../form-expeditions/form-expeditions.com
 import { FormGuidesComponent } from '../form-guides/form-guides.component';
 import { FormRestaurantsComponent } from '../form-restaurants/form-restaurants.component';
 import { FormOperatorsComponent } from '../form-operators/form-operators.component';
+import { MasterQuoterModalComponent } from '../modals/master-quoter.modal/master-quoter.modal.component';
+import { EditServiceModalComponent } from '../modals/edit-service-modal/edit-service-modal.component';
 
 @Component({
   selector: 'app-services',
@@ -14,24 +16,44 @@ import { FormOperatorsComponent } from '../form-operators/form-operators.compone
     FormExpeditionsComponent,
     FormGuidesComponent,
     FormRestaurantsComponent,
-    FormOperatorsComponent],
+    FormOperatorsComponent,MasterQuoterModalComponent,EditServiceModalComponent],
   templateUrl: './services.component.html',
   styleUrl: './services.component.css'
 })
 export class ServicesComponent {
-  @Output() servicesChange = new EventEmitter<any[]>();
+ // @Output() servicesChange = new EventEmitter<any[]>();
+  @Output() servicesChange = new EventEmitter<any>();
   @Output() totalPricesChange = new EventEmitter<number[]>();
-
+  modalOpen = signal(false);
+  selectserviceEdit: any ={} 
+  modalOpenEditService = signal(false);
   @Input() services: any[]=[]
   selectedDateService: string ='';
   selectedCityService: string = '';
   selectedCategory: string = '';
   datosrecibidosService: any ={}
-  number_paxs = input.required<number>();
+  number_paxs = input.required<number[]>();
+  count:number = 1
   contDayServices  = 0
   previousDateService=''
   showmodalMasterQuoter = false
  // services: any[]=[]
+ // Ejemplo de datos para un nuevo servicio
+ newService = {
+  day: 1,
+  date:'',
+  services: [] as any[],
+
+};
+
+  emtyService(){
+    this.newService = {
+        day: 1,
+        date:'',
+        services: [] as any[]
+
+    }
+  }
 
   addItemService(datos:any){
     const uu = datos.prices[0]
@@ -44,8 +66,8 @@ export class ServicesComponent {
       notes: datos.notes
     }
 
-    if(this.datosrecibidosService.prices.length<this.number_paxs()){
-      for(let i = this.datosrecibidosService.prices.length; i<this.number_paxs();i++){
+    if(this.datosrecibidosService.prices.length<this.number_paxs().length){
+      for(let i = this.datosrecibidosService.prices.length; i<this.number_paxs().length;i++){
         this.datosrecibidosService.prices[i]=0
       }
     }
@@ -67,25 +89,75 @@ export class ServicesComponent {
 //  console.log('estas los precios',this.datosrecibidosService)
   }
 
+  // getTotalPricesServices(): number[] {
+  //   const totalPrices: number[] = [];
+   
+  //   this.services.forEach((service: { prices: number[] }) => { // Especificar el tipo de 'hotel'
+  //     service.prices.forEach((price: number, index: number) => { // Especificar el tipo de 'price'
+  //       if (totalPrices[index]) {
+  //         totalPrices[index] += price; // Sumar al total existente
+  //       } else {
+  //         totalPrices[index] = price; // Inicializar el total
+  //       }
+  //     });
+  //   });
+
+  //   return totalPrices;
+  // }
   getTotalPricesServices(): number[] {
     const totalPrices: number[] = [];
-   
-    this.services.forEach((service: { prices: number[] }) => { // Especificar el tipo de 'hotel'
-      service.prices.forEach((price: number, index: number) => { // Especificar el tipo de 'price'
-        if (totalPrices[index]) {
-          totalPrices[index] += price; // Sumar al total existente
-        } else {
-          totalPrices[index] = price; // Inicializar el total
-        }
+    
+    // Itera sobre cada día
+    this.services.forEach((day: { services: { prices: number[] }[] }) => {
+      // Itera sobre cada servicio dentro del día
+      day.services.forEach((service: { prices: number[] }) => {
+        service.prices.forEach((price: number, index: number) => {
+          if (totalPrices[index]) {
+            totalPrices[index] += price; // Sumar al total existente en la posición index
+          } else {
+            totalPrices[index] = price; // Inicializar el total en la posición index
+          }
+        });
       });
     });
-
+  
     return totalPrices;
   }
 
   private emitServices() {
+   // this.servicesChange.emit(this.services);
     this.servicesChange.emit(this.services);
     this.totalPricesChange.emit(this.getTotalPricesServices())
   }
+  openModal() {
+    this.modalOpen.set(true);
+  }
+// Method to close modal
+  closeModal() {
+    this.modalOpen.set(false);
+  }
 
+  openModalEdit(dayService:any) {
+    this.selectserviceEdit=dayService
+    this.modalOpenEditService.set(true);
+    console.log('dia seleccionado', this.selectserviceEdit)
+  }
+// Method to close modal
+  closeModalEdit() {
+    this.modalOpenEditService.set(false);
+  }
+
+  onModalmqQuoterChange(temp: any){
+   
+    this.newService.day = this.count++
+    // this.services.push(...temp)
+    this.newService.date = temp.date
+    this.newService.services.push(...temp.services)
+    this.services.push(this.newService)
+    this.emtyService();
+    this.emitServices()
+
+    console.log('los ',temp)
+    console.log('tabla',this.services)
+  }
 }

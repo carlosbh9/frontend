@@ -50,7 +50,8 @@ selectedServices: any = {
 
 preciosCalculados: any = {
   price: [],
-  name:''
+  name:'',
+  date:''
 };
 
 ngOnInit(): void {
@@ -132,10 +133,10 @@ toggleService(service: any) {
 async onAddMQuoter(){
   this.selectedServices.number_paxs=this.numberpaxs()
   
-  console.log('serivios seleccionados',this.selectedServices)
+ 
   this.preciosCalculados = await this.priceService.calculatePrice(this.selectedServices)
-  console.log('precios calculados',this.preciosCalculados)
-  
+ 
+  this.preciosCalculados.date = this.selectedServices.date
   this.servicesChange.emit(this.preciosCalculados)
   this.closeModal()
 }

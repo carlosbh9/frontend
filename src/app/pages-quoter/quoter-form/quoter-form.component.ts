@@ -15,6 +15,7 @@ import { ExtOperatorComponent } from '../ext-operator/ext-operator.component';
 import { ServicesComponent } from '../services/services.component';
 import { HotelsComponent } from '../hotels/hotels.component';
 import { MasterQuoterModalComponent } from '../modals/master-quoter.modal/master-quoter.modal.component';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-quoter-form',
@@ -195,10 +196,10 @@ export class QuoterFormComponent implements OnInit{
     });
   }
 
-  onModalmqQuoterChange(temp: any){
+  // onModalmqQuoterChange(temp: any){
     
-    this.newQuoter.services.push(...temp)
-  }
+  //   this.newQuoter.services.push(...temp)
+  // }
 
   onFlightsUpdate(flights: any[]) {
    // this.datosrecibidosFlights = flights;
@@ -348,4 +349,94 @@ export class QuoterFormComponent implements OnInit{
     closeModal() {
       this.modalOpen.set(false);
     }
+
+    generatePDF() {
+      const doc = new jsPDF();
+
+    // Títulos
+    doc.setFontSize(16);
+    doc.text('Cotización de Viaje', 20, 20);
+    doc.setFontSize(12);
+
+    // Información General
+    doc.text(`Invitado: ${this.newQuoter.guest}`, 20, 30);
+    doc.text(`Código de Archivo: ${this.newQuoter.FileCode}`, 20, 40);
+    doc.text(`Fecha de Viaje: ${this.newQuoter.travelDate.start} a ${this.newQuoter.travelDate.end}`, 20, 50);
+    doc.text(`Alojamiento: ${this.newQuoter.accomodations}`, 20, 60);
+    doc.text(`Total de Noches: ${this.newQuoter.totalNights}`, 20, 70);
+    doc.text(`Número de Pasajeros: ${this.newQuoter.number_paxs.join(', ')}`, 20, 80);
+    doc.text(`Agente de Viaje: ${this.newQuoter.travel_agent}`, 20, 90);
+    doc.text(`Tasa de Cambio: ${this.newQuoter.exchange_rate}`, 20, 100);
+
+    // Servicios
+    let y = 120; // Posición inicial para servicios
+    doc.text('Servicios:', 20, y);
+    y += 10;
+    this.drawTable(doc, this.newQuoter.services, 'Servicios', y);
+    y += this.newQuoter.services.length * 10 + 20; // Ajustar posición después de la tabla
+
+    // Hoteles
+    doc.text('Hoteles:', 20, y);
+    y += 10;
+    this.drawTable(doc, this.newQuoter.hotels, 'Hoteles', y);
+    y += this.newQuoter.hotels.length * 10 + 20;
+
+    // Vuelos
+    doc.text('Vuelos:', 20, y);
+    y += 10;
+    this.drawTable(doc, this.newQuoter.flights, 'Vuelos', y);
+    y += this.newQuoter.flights.length * 10 + 20;
+
+    // Operadores
+    doc.text('Operadores:', 20, y);
+    y += 10;
+    this.drawTable(doc, this.newQuoter.operators, 'Operadores', y);
+
+    // Guardar el PDF
+    doc.save('cotizacion_viaje.pdf');
+  }
+
+  drawTable(doc: jsPDF, data: any[], title: string, startY: number) {
+    const columnHeaders = {
+      'Servicios': ['Día', 'Fecha', 'Nombre del Servicio', 'Precio Base'],
+      'Hoteles': ['Nombre del Hotel', 'Precio Base'],
+      'Vuelos': ['Ruta', 'Precio'],
+      'Operadores': ['Nombre del Operador', 'País']
+    };
+
+    const headers = columnHeaders[title as keyof typeof columnHeaders];
+
+    // Dibuja encabezados
+    const headerY = startY;
+    doc.setFontSize(10);
+    headers.forEach((header, index) => {
+      doc.text(header, 20 + index * 50, headerY);
+    });
+
+    // Dibuja líneas para la tabla
+    doc.line(20, headerY + 2, 180, headerY + 2); // Línea bajo los encabezados
+
+    // Dibuja filas
+    data.forEach((item, index) => {
+      const y = headerY + (index + 1) * 10 + 5; // Espacio entre filas
+      if (title === 'Servicios') {
+        doc.text(String(item.day), 20, y);
+        doc.text(item.date, 70, y);
+        doc.text(item.services[0].name_service, 120, y); // Asumiendo un solo servicio por día
+        doc.text(String(item.services[0].price_base), 180, y);
+      } else if (title === 'Hoteles') {
+        doc.text(item.name_hotel, 20, y);
+        doc.text(String(item.price_base), 180, y);
+      } else if (title === 'Vuelos') {
+        doc.text(item.route, 20, y);
+        doc.text(String(item.price_conf), 180, y);
+      } else if (title === 'Operadores') {
+        doc.text(item.name_operator, 20, y);
+        doc.text(item.country, 180, y);
+      }
+      // Línea de separación entre filas
+      doc.line(20, y + 2, 180, y + 2);
+    });
+  }
+    
 }

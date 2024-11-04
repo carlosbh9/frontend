@@ -1,0 +1,117 @@
+<div  class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-start animated fadeIn faster" style="background: rgba(0,0,0,.7);" >
+    <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-8/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+      <div class="modal-content py-4 text-left px-6">
+        <!-- Title -->
+        <div class="flex justify-between items-center pb-3">
+          <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Editar Día y Servicios</p>
+          <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
+            <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+              <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+            </svg>
+          </div>
+        </div>
+        <!-- Body -->
+        <div class="my-5 mr-5 ml-5 flex justify-center max-h-96 overflow-y-auto">
+       
+
+            <form id="edit_mquoter" class="w-full">
+              <!-- Campos de Día y Fecha -->
+              <div class="mb-4 flex justify-start space-x-4">
+                <label class="block text-md text-gray-600 dark:text-gray-50">Día:</label>
+                <input [(ngModel)]="dayData.day" name="day" type="number" class=" w-32 border-2 border-gray-300 dark:border-gray-700 rounded-md" />
+          
+                <label class="block text-md text-gray-600 dark:text-gray-50">Fecha:</label>
+                <input [(ngModel)]="dayData.date" name="date" type="date" class=" w-32 border-2 border-gray-300 dark:border-gray-700 rounded-md" />
+                <label class="block text-md text-gray-600 dark:text-gray-50">City</label>
+                <select [(ngModel)]="item.city" name="city" id="city" class=" w-32 border-2 border-gray-300 dark:border-gray-700 rounded-md">
+                    <option value="LIM">LIM</option>
+                    <option value="CUZ">CUZ</option>
+                    <option value="PUN">PUN</option>
+                    <option value="MP">MP</option>
+
+                </select>
+              </div>
+              <div class="mb-4">
+                <div class="grid grid-cols-4 gap-4">
+                    <div>
+                        <label for="selectCategoria" class="block text-sm font-medium text-gray-700">Selecione la categoria</label>
+                        <select  [(ngModel)]="selectCategoria" (change)="onCategoriaChange($event)" name="selectedCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
+                            <option value="" disabled selected>Select Category</option>
+                            <option value="entrance">Entrances</option>
+                            <option value="expeditions">Expeditions</option>
+                            <option value="guides">Guides</option>
+                            <option value="restaurant">Restaurants</option>
+                            <option value="operator">Operators</option>
+                            <!--<option value="transport">Transporte</option>
+                            <option value="experience">Experiencias</option>train-->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="selectedService" class="block text-sm font-medium text-gray-700">Services</label>
+                        <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" name="selectedService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="" disabled selected>Select Service</option>
+                            @for (service of servicesOptions; track $index) {
+                                <option [ngValue]="{type_service: selectedDayIndex.type ,service_id: service._id,service_type: selectCategoria, name_service: service.description || service.name|| service.name_guide || service.operador || service.company || service.nombre}">{{service.description || service.name || service.name_guide || service.operador || service.company || service.nombre}} </option>
+                            }
+                        </select>
+                    </div>
+                    @if (selectCategoria==='operator') {
+                     <div>
+                        <label for="selectedSubService" class="block text-sm font-medium text-gray-700">Services</label>
+                        <select [(ngModel)]="selectedSubService" (change)="onSubServiceChange($event)" name="selectedSubService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="" disabled selected>Select Service</option>
+                            @for (service of subservicesOptions; track $index) {
+                                <option [ngValue]="{operator_service_id:service._id,name_service:service.descripcion}">{{service.descripcion || service.serviceName}} </option>
+                            }
+                        </select>
+                    </div>
+                    }
+                    <div class="col-start-4 flex justify-end">
+                        <button (click)="addItem()"  class="w-32 mt-3 px-4 bg-blue-500 dark:bg-green-700 p-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800 self-start">
+                          Add Item
+                        </button>
+                      </div>
+                </div>
+              </div>
+              <div class="mb-4 w-full">
+              <table class="w-full">
+                <thead>
+                  <tr>
+                    <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center" >Ciudad</th>
+                    <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center" >Nombre del Servicio</th>
+                    <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center" >Precio Base</th>
+                    @for (item of number_paxs() ? [].constructor(number_paxs()?.length || 0) : []; track $index) {
+                        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center" >Price {{$index+1}}</th>
+        }
+                     <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center" >Actions</th>
+                  </tr>
+                </thead>
+                <tbody >
+                  @for (service of dayData.services; track $index) {
+                    <tr class="text-gray-700 dark:text-gray-1000">
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.city}}</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.name_service}}</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.price_base}}</td>
+                        @for (price of service.prices; track $index) {
+                           <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{price}}</td> 
+                        }
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap">
+                        
+                            <i (click)="onDelete($index)" class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2'></i>
+                        </td>
+                    </tr>
+                  }
+                    
+                </tbody>
+              </table>
+            </div>
+            </form>
+        </div>
+        <!-- Footer -->
+        <div class="flex justify-end pt-2 space-x-14">
+          <button (click)="closeModal()" class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" >Cancel</button>
+          <button  type="submit" form="add_mquoter" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>

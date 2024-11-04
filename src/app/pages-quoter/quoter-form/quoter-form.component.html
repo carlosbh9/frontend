@@ -1,10 +1,11 @@
 
 <div class="grid grid-cols-1 gap-2 mb-2  ">
     <!-- card  1 -->
-    <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+     <div class="grid grid-cols-2 gap-4">
+        <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
             <div class="p-6 flex justify-between gap-4">
                 <!-- Columna Izquierda -->
-                <div class="w-1/2 space-y-4">
+                <div class="w-full space-y-4">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                            <label for="travel_agent" class="block text-sm font-medium text-gray-700">Travel Designer</label>
@@ -52,103 +53,113 @@
                             }
 
                         </div>
+                        <div class="col-span-2">
+                            <div>
+                                <label for="destinations" class="block text-sm font-medium text-gray-700">Destinations</label>
+                               <div class="mt-1 py-2 p-3">
+                                @for (item of destinations; track $index) {
+                                <label class=" mt-1 py-2 p-3">
+                                    <input
+                                      type="checkbox"
+                                      name="Destinations"
+                                    />
+                                    {{item}}
+                                 </label>
+                                }
+                            </div>
+                                <!-- <input type="date" id="issue-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value"> -->
+                            </div>
+                            <div class="space-x-4">
+                                @if (showUpdate== false) {
+                                    <button (click)="onSubmit()" class="px-4 bg-green-500 dark:bg-green-700 p-3  rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800" >Submit</button>
+                                }@else {
+                                    <button (click)="onUpdate()" class="px-4 bg-blue-500 dark:bg-green-700 p-3  rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800" >Update</button>
+                                }
+        
+                                <button class="px-4 bg-red-500 dark:bg-red-700 p-3  rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Cancel</button>
+                                <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="generatePDF()">Open Master Quoter</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Columna Derecha -->
-                <div class="w-1/2 space-y-4">
-                    <div>
-                        <label for="destinations" class="block text-sm font-medium text-gray-700">Destinations</label>
-                       <div class="mt-1 py-2 p-3">
-                        @for (item of destinations; track $index) {
-                        <label class=" mt-1 py-2 p-3">
-                            <input
-                              type="checkbox"
-                              name="Destinations"
-                            />
-                            {{item}}
-                         </label>
-                        }
-                    </div>
-                        <!-- <input type="date" id="issue-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value"> -->
-                    </div>
-                    <div class="space-x-4">
-                        @if (showUpdate== false) {
-                            <button (click)="onSubmit()" class="px-4 bg-green-500 dark:bg-green-700 p-3  rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800" >Submit</button>
-                        }@else {
-                            <button (click)="onUpdate()" class="px-4 bg-blue-500 dark:bg-green-700 p-3  rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800" >Update</button>
-                        }
-
-                        <button class="px-4 bg-red-500 dark:bg-red-700 p-3  rounded-lg text-white hover:bg-red-600 dark:hover:bg-red-800">Cancel</button>
-                        <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Open Master Quoter</button>
-                    </div>
-
-                </div>
+             
             </div>
 
     </div>
+    <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+        <div class="p-6 flex justify-between gap-4">
+            <!-- Columna Izquierda -->
+            <div class="w-full space-y-4">
+                <div class="flex justify-start p-6 block w-full overflow-x-auto">
+                    <div></div>
+                    <div>
+                    <table class="items-center w-full bg-transparent border border-collapse ">
+                    <tbody class="bg-stone-200">
+                        <tr>
+                            <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">Total Cost
+                            </td>
+                              @for (price of getTotalCosts(); track $index) {
+                              <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">${{price.toFixed(2)}}</td>
+                            }@empty {
+                              <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
+                            }
+            
+                        </tr>
+                        <tr>
+                            <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">EXTERNAL UTILITY
+                            </td>
+                            @for (price of getTotalCosts(); track $index) {
+                              <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
+                            }@empty {
+                              <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
+                            }
+                        </tr>
+                        <tr>
+                          <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">EXTERNAL TAXES
+                          </td>
+                          @for (price of getExternalTaxes(); track $index) {
+                            <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">${{price.toFixed(2)}}</td>
+                          }@empty {
+                            <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
+                          }
+                      </tr>
+                      <tr>
+                        <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">TOTAL COST EXTERNAL</td>
+                            @for (price of getTotalCostExternal(); track $index) {
+                                <td class="border-t-2 border-gray-300 px-4 py-2 text-emerald-500 text-center">${{price.toFixed(2)}}</td>
+            
+                            }@empty {
+                                <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
+                              }
+                      </tr>
+                    </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+     </div>
+    
     <!-- end card  1 -->
     <!-- card  2 -->
     <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+            
+            <app-services
+            [number_paxs]="newQuoter.number_paxs"  
+            [services]="newQuoter.services"      
+            (servicesChange)="onServicesUpdate($event)"
+            (openModalEvent)="openModal()"
+            (totalPricesChange)="onTotalPricesServicesChange($event)">
+            </app-services>
             <app-hotels
             [priceLength]="newQuoter.number_paxs.length"
             [hotels]="newQuoter.hotels"
             (hotelsChange)="onHotelsUpdate($event)"
             (totalPricesChange)="onTotalPricesHotelsChange($event)">
             </app-hotels>
-            <app-services
-            [number_paxs]="newQuoter.number_paxs.length"  
-            [services]="newQuoter.services"      
-            (servicesChange)="onServicesUpdate($event)"
-            (openModalEvent)="openModal()"
-            (totalPricesChange)="onTotalPricesServicesChange($event)">
-            </app-services>
-            <div class="flex justify-end p-6 block w-full overflow-x-auto">
-                <div></div>
-                <div>
-                <table class="items-center w-full bg-transparent border border-collapse ">
-                <tbody class="bg-stone-200">
-                    <tr>
-                        <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">Total Cost
-                        </td>
-                          @for (price of getTotalCosts(); track $index) {
-                          <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">${{price.toFixed(2)}}</td>
-                        }@empty {
-                          <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
-                        }
-        
-                    </tr>
-                    <tr>
-                        <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">EXTERNAL UTILITY
-                        </td>
-                        @for (price of getTotalCosts(); track $index) {
-                          <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
-                        }@empty {
-                          <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
-                        }
-                    </tr>
-                    <tr>
-                      <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">EXTERNAL TAXES
-                      </td>
-                      @for (price of getExternalTaxes(); track $index) {
-                        <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">${{price.toFixed(2)}}</td>
-                      }@empty {
-                        <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
-                      }
-                  </tr>
-                  <tr>
-                    <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">TOTAL COST EXTERNAL</td>
-                        @for (price of getTotalCostExternal(); track $index) {
-                            <td class="border-t-2 border-gray-300 px-4 py-2 text-emerald-500 text-center">${{price.toFixed(2)}}</td>
-        
-                        }@empty {
-                            <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
-                          }
-                  </tr>
-                </tbody>
-                </table>
-            </div>
-            </div>
+           
     </div>
     <!-- end card  2 -->
 
@@ -175,6 +186,6 @@
     <!-- end card  6 -->
 </div>
 
-@if (modalOpen()) {
+<!-- @if (modalOpen()) {
     <app-master-quoter (servicesChange)="onModalmqQuoterChange($event)" [numberpaxs]="newQuoter.number_paxs" (closeModalEvent)="closeModal()"></app-master-quoter>
-}
+} -->
