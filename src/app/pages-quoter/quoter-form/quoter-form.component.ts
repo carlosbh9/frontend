@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit,inject,signal } from '@angular/core';
+import { Component, OnInit,inject,signal ,effect, computed,  } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QuoterService } from '../../Services/quoter.service';
-import { FormHotelComponent } from '../form-hotel/form-hotel.component';
+
 import { FormEntrancesComponent } from '../form-entrances/form-entrances.component';
 import {FormExpeditionsComponent} from '../form-expeditions/form-expeditions.component'
 import { FormGuidesComponent } from '../form-guides/form-guides.component';
@@ -15,21 +15,25 @@ import { ExtOperatorComponent } from '../ext-operator/ext-operator.component';
 import { ServicesComponent } from '../services/services.component';
 import { HotelsComponent } from '../hotels/hotels.component';
 import { MasterQuoterModalComponent } from '../modals/master-quoter.modal/master-quoter.modal.component';
-import jsPDF from 'jspdf';
+import * as pdfMake from "pdfmake/build/pdfmake";
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+
+(<any>pdfMake).addVirtualFileSystem(pdfFonts);
 
 @Component({
   selector: 'app-quoter-form',
   standalone: true,
   imports: [CommonModule
-    ,FormsModule,FormHotelComponent,FormEntrancesComponent,
+    ,FormsModule,FormEntrancesComponent,
     FormExpeditionsComponent,FormGuidesComponent,FormRestaurantsComponent,
     FormOperatorsComponent,FlightsComponent,ExtOperatorComponent,ServicesComponent,HotelsComponent,MasterQuoterModalComponent],
   templateUrl: './quoter-form.component.html',
   styleUrl: './quoter-form.component.css'
 })
-export class QuoterFormComponent implements OnInit{
+export class QuoterFormComponent implements  OnInit{
   quoterService = inject(QuoterService)
   route = inject(ActivatedRoute)
+  
   modalOpen = signal(false);
   modalData = signal<any[]>([])
   totalPriceHotels: number[] = [];
@@ -43,8 +47,11 @@ export class QuoterFormComponent implements OnInit{
   selectedCity: string = '';
   selectedDateService: string ='';
   selectedCityService: string = '';
-  cont = 0
-  contDayServices  = 0
+ 
+  prueba = signal<number[]>([]);
+  prueba2 = signal<number[]>([]);
+  prueba3 = signal<number[]>([]);
+  prueba4 = signal<number[]>([]);
 
   destinations: string[] =['PERU','BOLIVIA','ECUADOR','COLOMBIA','ARGENTINA','CHILE']
 
@@ -67,6 +74,10 @@ export class QuoterFormComponent implements OnInit{
     total_prices:{
       total_hoteles: [], // Array vacío de números
       total_services: [], // Array vacío de números
+      total_cost:[],
+      external_utility:[],
+      cost_external_taxes:[],
+      total_cost_external:[],
       total_ext_operator: [], // Array vacío de números
       total_ext_cruises: [], // Array vacío de números
       total_flights: [], // Array vacío de números
@@ -96,6 +107,10 @@ export class QuoterFormComponent implements OnInit{
     total_prices:{
       total_hoteles: [], // Array vacío de números
       total_services: [], // Array vacío de números
+      total_cost:[],
+      external_utility:[],
+      cost_external_taxes:[],
+      total_cost_external:[],
       total_ext_operator: [], // Array vacío de números
       total_ext_cruises: [], // Array vacío de números
       total_flights: [], // Array vacío de números
@@ -116,22 +131,41 @@ export class QuoterFormComponent implements OnInit{
   ngOnInit(): void {
     //this.calculateTotalPrice();
     this.route.paramMap.subscribe(params => {
+      
       const id = params.get('id');
       if(id) {
         this.getQuoterbyId(id);
-        this.showUpdate= true
-        this.idQuoter=id
-     
+        this.showUpdate= true;
+        this.idQuoter=id;
+    
       }
     })
+    
+     // Efecto para que los cálculos se actualicen cuando los signals cambian
+    //  effect(() => {
+    //   // Llamar al cálculo de totales cuando 'newQuoter' cambie
+    //   this.getTotalCosts();
+    //   this.getExternalTaxes();
+    //   this.getTotalCostExternal();
+    //   this.prueba.set(gg)
+    // });
+
     this.datosrecibidosHotel = null
     this.datosrecibidosService = null
+
 
   }
    async getQuoterbyId(Id: string): Promise<void>{
     try {
       this.newQuoter = await this.quoterService.getQuoterById(Id);
+      
       console.log('quoter cargado',this.newQuoter)
+      this.prueba.set(this.newQuoter.total_prices.total_hoteles)
+      this.prueba2.set(this.newQuoter.total_prices.total_services)
+      this.prueba3.set(this.newQuoter.total_prices.total_ext_operator)
+      this.prueba4.set(this.newQuoter.total_prices.total_flights)
+
+
     } catch (error) {
       console.error('Error get operator by iddd ');
     }
@@ -209,6 +243,7 @@ export class QuoterFormComponent implements OnInit{
 
   onServicesUpdate(services: any[]) {
     // this.datosrecibidosFlights = flights;
+
      this.newQuoter.services=services
 
    }
@@ -221,35 +256,27 @@ export class QuoterFormComponent implements OnInit{
 
    onHotelsUpdate(hotels: any[]){
     this.newQuoter.hotels=hotels
-   
-    
    }
-
-  onTotalPricesFligtsChange(prices: number[]) {
-   // this.totalPricesFlights = prices; // Actualizar el arreglo de precios totales
-    this.newQuoter.total_prices.total_flights= prices
- //   this.updateTotalPrices() 
-    
-  }
+ 
   onTotalPricesServicesChange(prices: number[]) {
-  //  this.totalPriceServices = prices; // Actualizar el arreglo de precios totales
+  this.prueba2.set(prices)
     this.newQuoter.total_prices.total_services= prices
-  //  this.updateTotalPrices() 
+
   }
   onTotalPricesHotelsChange(prices: number[]) {
-   // this.totalPriceHotels = prices; // Actualizar el arreglo de precios totales
+  
+   this.prueba.set(prices)
     this.newQuoter.total_prices.total_hoteles= prices
-  //  this.updateTotalPrices() 
   }
 
   onTotalPricesOperatorsChange(prices: any[]){
-    //this.totalPricesOperators = prices; // Actualizar el arreglo de precios totales
+    this.prueba3.set(prices)
     this.newQuoter.total_prices.total_ext_operator = prices
-   // this.updateTotalPrices() 
-
-  
   }
-
+  onTotalPricesFligtsChange(prices: number[]) {
+    this.prueba4.set(prices)
+     this.newQuoter.total_prices.total_flights= prices
+   }
   onSubmitHotel(){
     if(this.datosrecibidosHotel!){
           this.newQuoter.hotels.push(this.datosrecibidosHotel)
@@ -284,49 +311,93 @@ export class QuoterFormComponent implements OnInit{
   }
 
 
-    getTotalCosts(): number[] {
-      const totalSum: number[] = [];
-    //  const totalPricesHotels = this.totalPriceHotels;
-      const totalPricesHotels = this.newQuoter.total_prices.total_hoteles
-      //const totalPricesServices = this.totalPriceServices;
-      const totalPricesServices = this.newQuoter.total_prices.total_services;
-      // Determinar el mayor largo entre los dos arreglos
-      const maxLength = Math.max(totalPricesHotels.length, totalPricesServices.length);
+  getTotalCosts = computed(() => { 
+    const totalSum: number[] = [];
+    const totalPricesHotels = this.prueba()
+    //const totalPricesServices = this.totalPriceServices;
+    const totalPricesServices = this.prueba2()
+    // Determinar el mayor largo entre los dos arreglos
+    const maxLength = Math.max(this.prueba().length);
 
-      // Recorrer ambos arreglos hasta el mayor largo
-      for (let i = 0; i < maxLength; i++) {
-        const precioHotel = totalPricesHotels[i] || 0; // Si no existe valor, toma 0
-        const precioServicio = totalPricesServices[i] || 0; // Si no existe valor, toma 0
-        totalSum[i] = precioHotel + precioServicio;
-      }
-
-      return totalSum;
+    // Recorrer ambos arreglos hasta el mayor largo
+    for (let i = 0; i < maxLength; i++) {
+      const precioHotel = totalPricesHotels[i] || 0; // Si no existe valor, toma 0
+      const precioServicio = totalPricesServices[i] || 0; // Si no existe valor, toma 0
+      totalSum[i] = precioHotel + precioServicio;
     }
+    this.newQuoter.total_prices.total_cost= totalSum
+    return totalSum
+  });
 
-    getExternalTaxes(): number[] {
-      const totalExternal: number[]=[];
+  getExternalTaxes = computed(() => {
+    const totalExternal: number[]=[];
       const totalCost = this.getTotalCosts();
-      const maxLength = totalCost.length;
+      const maxLength = Math.max(this.prueba().length);
       for (let i = 0; i < maxLength; i++) {
         const temp = totalCost[i] || 0; // Si no existe valor, toma 0
         totalExternal[i] = temp * 0.15;
       }
+      this.newQuoter.total_prices.cost_external_taxes=totalExternal
       return totalExternal
-    }
+  });
 
-    getTotalCostExternal(): number[] {
+    getTotalCostExternal= computed(() => {
       const totalCostExternal: number[]=[]
       const totalCost = this.getTotalCosts();
       const totalExternal = this.getExternalTaxes();
-      const maxLength = totalCost.length;
+      const maxLength = Math.max(this.prueba().length);
       for (let i = 0; i < maxLength; i++) {
         const temp1 = totalCost[i] || 0;
         const temp2 = totalExternal[i] || 0;// Si no existe valor, toma 0
         totalCostExternal[i] = temp1 + temp2;
       }
-      
+      this.newQuoter.total_prices.total_cost_external=totalCostExternal
       return totalCostExternal
     }
+  )
+
+  subTotal = computed(() => {
+    const subtotal: number[]=[]
+    const maxLength = Math.max(this.prueba().length);
+    for (let i = 0; i < maxLength; i++) {
+      const temp1 = this.getTotalCostExternal()[i] || 0;
+      const temp2 = this.prueba3()[i] || 0;// Si no existe valor, toma 0
+      const temp3 = this.prueba4()[i] || 0;// Si no existe valor, toma 0
+      subtotal[i] = temp1 + temp2+temp3;
+    }
+    return subtotal
+  })
+
+  costOfTransfers = computed(() => {
+    const cost_transfers: number[]=[]
+    const maxLength = Math.max(this.prueba().length);
+    for (let i = 0; i < maxLength; i++) {
+      const temp1 = this.subTotal()[i] || 0;
+    
+      cost_transfers[i] = temp1 *0.04 ;
+    }
+    return cost_transfers
+  })
+  final_cost = computed(() => {
+    const final_cost: number[]=[]
+    const maxLength = Math.max(this.prueba().length);
+    for (let i = 0; i < maxLength; i++) {
+      const temp1 = this.subTotal()[i] || 0;
+      const temp2 = this.costOfTransfers()[i] || 0;
+      final_cost[i] = temp1 +temp2;
+    }
+    return final_cost
+  })
+  price_per_person = computed(() => {
+    const price_pp: number[]=[]
+    const maxLength = Math.max(this.prueba().length);
+    for (let i = 0; i < maxLength; i++) {
+      const temp1 = this.final_cost()[i] || 0;
+      const temp2 = this.newQuoter.number_paxs[i] || 0;
+      price_pp[i] = temp1 /temp2;
+    }
+    return price_pp
+  })
 
     updateTotalPrices() {
       // Actualizar los cálculos
@@ -351,92 +422,84 @@ export class QuoterFormComponent implements OnInit{
     }
 
     generatePDF() {
-      const doc = new jsPDF();
+ // PDF Document Definition
+const docDefinition = {
+  content: [
+    { text: 'Travel Itinerary', style: 'header' },
+    { text: `Guest: ${this.newQuoter.guest}`, style: 'subheader' },
+    { text: `Agent: ${this.newQuoter.travel_agent}` },
+    { text: `Accommodation: ${this.newQuoter.accomodations}`, style: 'subheader' },
+    { text: `Dates: ${this.newQuoter.travelDate.start} to ${this.newQuoter.travelDate.end}`, margin: [0, 10] },
+    
+    // Services Section
+    { text: 'Services', style: 'sectionHeader' },
+    ...this.newQuoter.services.map(serviceDay => [
+      { text: `Day ${serviceDay.day}: ${serviceDay.date}`, style: 'subheader' },
+      ...serviceDay.services.map((service: any) => ({
+        columns: [
+          { text: `City: ${service.city}`, width: '25%' },
+          { text: `Service: ${service.name_service}`, width: '50%' },
+          { text: `Prices: ${service.prices.join(', ')}`, width: '25%' }
+        ]
+      })),
+    ]),
 
-    // Títulos
-    doc.setFontSize(16);
-    doc.text('Cotización de Viaje', 20, 20);
-    doc.setFontSize(12);
+    // Hotels Section
+    { text: 'Hotels', style: 'sectionHeader', margin: [0, 10] },
+    ...this.newQuoter.hotels.map(hotel => ({
+      columns: [
+        { text: `Hotel: ${hotel.name_hotel}`, width: '30%' },
+        { text: `City: ${hotel.city}`, width: '20%' },
+        { text: `Prices: ${hotel.prices.join(', ')}`, width: '25%' },
+        { text: `Date: ${hotel.date}`, width: '25%' }
+      ],
+      margin: [0, 5]
+    })),
 
-    // Información General
-    doc.text(`Invitado: ${this.newQuoter.guest}`, 20, 30);
-    doc.text(`Código de Archivo: ${this.newQuoter.FileCode}`, 20, 40);
-    doc.text(`Fecha de Viaje: ${this.newQuoter.travelDate.start} a ${this.newQuoter.travelDate.end}`, 20, 50);
-    doc.text(`Alojamiento: ${this.newQuoter.accomodations}`, 20, 60);
-    doc.text(`Total de Noches: ${this.newQuoter.totalNights}`, 20, 70);
-    doc.text(`Número de Pasajeros: ${this.newQuoter.number_paxs.join(', ')}`, 20, 80);
-    doc.text(`Agente de Viaje: ${this.newQuoter.travel_agent}`, 20, 90);
-    doc.text(`Tasa de Cambio: ${this.newQuoter.exchange_rate}`, 20, 100);
+    // Flights Section
+    { text: 'Flights', style: 'sectionHeader', margin: [0, 10] },
+    ...this.newQuoter.flights.map(flight => ({
+      columns: [
+        { text: `Route: ${flight.route}`, width: '50%' },
+        { text: `Prices: ${flight.prices.join(', ')}`, width: '50%' }
+      ],
+      margin: [0, 5]
+    })),
 
-    // Servicios
-    let y = 120; // Posición inicial para servicios
-    doc.text('Servicios:', 20, y);
-    y += 10;
-    this.drawTable(doc, this.newQuoter.services, 'Servicios', y);
-    y += this.newQuoter.services.length * 10 + 20; // Ajustar posición después de la tabla
+    // Operators Section
+    { text: 'Operators', style: 'sectionHeader', margin: [0, 10] },
+    ...this.newQuoter.operators.map(operator => ({
+      columns: [
+        { text: `Operator: ${operator.name_operator}`, width: '50%' },
+        { text: `Country: ${operator.country}`, width: '20%' },
+        { text: `Prices: ${operator.prices.join(', ')}`, width: '30%' }
+      ],
+      margin: [0, 5]
+    })),
 
-    // Hoteles
-    doc.text('Hoteles:', 20, y);
-    y += 10;
-    this.drawTable(doc, this.newQuoter.hotels, 'Hoteles', y);
-    y += this.newQuoter.hotels.length * 10 + 20;
-
-    // Vuelos
-    doc.text('Vuelos:', 20, y);
-    y += 10;
-    this.drawTable(doc, this.newQuoter.flights, 'Vuelos', y);
-    y += this.newQuoter.flights.length * 10 + 20;
-
-    // Operadores
-    doc.text('Operadores:', 20, y);
-    y += 10;
-    this.drawTable(doc, this.newQuoter.operators, 'Operadores', y);
-
-    // Guardar el PDF
-    doc.save('cotizacion_viaje.pdf');
+    // Total Prices Summary
+    { text: 'Total Prices', style: 'sectionHeader', margin: [0, 10] },
+    {
+      columns: [
+        { text: `Total Cost: ${this.newQuoter.total_prices.total_cost.join(', ')}`, width: '50%' },
+        { text: `Hotels Total: ${this.newQuoter.total_prices.total_hoteles.join(', ')}`, width: '50%' }
+      ]
+    },
+    {
+      columns: [
+        { text: `Services Total: ${this.newQuoter.total_prices.total_services.join(', ')}`, width: '50%' },
+        { text: `Flights Total: ${this.newQuoter.total_prices.total_flights.join(', ')}`, width: '50%' }
+      ]
+    }
+  ],
+  styles: {
+    header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10] },
+    subheader: { fontSize: 14, bold: true, margin: [0, 10, 0, 5] },
+    sectionHeader: { fontSize: 16, bold: true, margin: [0, 10, 0, 5], color: 'blue' }
   }
-
-  drawTable(doc: jsPDF, data: any[], title: string, startY: number) {
-    const columnHeaders = {
-      'Servicios': ['Día', 'Fecha', 'Nombre del Servicio', 'Precio Base'],
-      'Hoteles': ['Nombre del Hotel', 'Precio Base'],
-      'Vuelos': ['Ruta', 'Precio'],
-      'Operadores': ['Nombre del Operador', 'País']
-    };
-
-    const headers = columnHeaders[title as keyof typeof columnHeaders];
-
-    // Dibuja encabezados
-    const headerY = startY;
-    doc.setFontSize(10);
-    headers.forEach((header, index) => {
-      doc.text(header, 20 + index * 50, headerY);
-    });
-
-    // Dibuja líneas para la tabla
-    doc.line(20, headerY + 2, 180, headerY + 2); // Línea bajo los encabezados
-
-    // Dibuja filas
-    data.forEach((item, index) => {
-      const y = headerY + (index + 1) * 10 + 5; // Espacio entre filas
-      if (title === 'Servicios') {
-        doc.text(String(item.day), 20, y);
-        doc.text(item.date, 70, y);
-        doc.text(item.services[0].name_service, 120, y); // Asumiendo un solo servicio por día
-        doc.text(String(item.services[0].price_base), 180, y);
-      } else if (title === 'Hoteles') {
-        doc.text(item.name_hotel, 20, y);
-        doc.text(String(item.price_base), 180, y);
-      } else if (title === 'Vuelos') {
-        doc.text(item.route, 20, y);
-        doc.text(String(item.price_conf), 180, y);
-      } else if (title === 'Operadores') {
-        doc.text(item.name_operator, 20, y);
-        doc.text(item.country, 180, y);
-      }
-      // Línea de separación entre filas
-      doc.line(20, y + 2, 180, y + 2);
-    });
+};
+// Generate the PDF
+//pdfMake.createPdf(docDefinition).open();
   }
     
 }

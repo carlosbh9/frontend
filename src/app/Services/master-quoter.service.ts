@@ -33,6 +33,17 @@ async getMasterQuoterById(id: string): Promise<any> {
     throw error;
   }
 }
+  // Método para obtener un Master Quoter por ID
+  async getMasterQuoterByIdNotReferences(id: string): Promise<any> {
+    try {
+      const res = await firstValueFrom(this.http.get<any>(`${this.baseUrl}/edit/${id}`));
+      console.log('el nuevo Master Quoter',res);
+      return res;
+    } catch (error) {
+      console.log('Error while trying to get Master Quoter by ID: ', error);
+      throw error;
+    }
+  }
 
 // Método para crear un nuevo Master Quoter
 async createMasterQuoter(master: any): Promise<any> {

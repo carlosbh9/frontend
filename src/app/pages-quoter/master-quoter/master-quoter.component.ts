@@ -9,6 +9,7 @@ import { GuidesService } from '../../Services/guides.service';
 import { RestaurantService } from '../../Services/restaurant.service';
 import { OperatorsService } from '../../Services/operators.service';
 import { MasterQuoterService } from '../../Services/master-quoter.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-master-quoter',
@@ -25,6 +26,7 @@ export class MasterQuoterComponent implements OnInit{
   restaurantService = inject(RestaurantService)
   operatorsService = inject(OperatorsService)
   masterQuoterService = inject(MasterQuoterService)
+  route = inject(ActivatedRoute)
 
   selectedDayIndex: any = {type: 'service',dayIndex: 0};
   servicesOptions: any[]=[]
@@ -38,6 +40,8 @@ export class MasterQuoterComponent implements OnInit{
   options: any[] = []; // Etiquetas seleccionadas
   index: number = 0
   temp: number =0
+  showUpdate = false
+  idQuoter: string = ''
   masterQuoter = {
     name: null,
     days: null,
@@ -77,10 +81,25 @@ export class MasterQuoterComponent implements OnInit{
 
 
   ngOnInit(): void {
-
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if(id) {
+        this.getQuoterbyId(id);
+        this.showUpdate= true
+        this.idQuoter=id
+     
+      }
+    })
   }
 
-
+  async getQuoterbyId(Id: string): Promise<void>{
+    try {
+      this.masterQuoter = await this.masterQuoterService.getMasterQuoterByIdNotReferences(Id);
+      console.log('quoter cargado',this.masterQuoter)
+    } catch (error) {
+      console.error('Error get operator by iddd ');
+    }
+  }
 
 
   removeTag(tag: any): void {
@@ -175,15 +194,15 @@ onSubmit(){
     }
   )
 }
-// onUpdate(){
-//   this.quoterService.updateQuoter(this.idQuoter,this.newQuoter).then(
-//     response => {
-//       console.log('Quoter update',response)
-//       this.newQuoter=this.emptyQuoter
-//     },
-//     error => {
-//       console.error('Error editing Quoter', error)
-//     }
-//   )
-// }
+onUpdate(){
+  this.masterQuoterService.updateMasterQuoter(this.idQuoter,this.masterQuoter).then(
+    response => {
+      console.log('Quoter update',response)
+      this.masterQuoter=this.emptyMasterQuoter
+    },
+    error => {
+      console.error('Error editing Quoter', error)
+    }
+  )
+}
 }

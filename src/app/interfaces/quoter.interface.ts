@@ -21,6 +21,10 @@ export interface Quoter {
   interface TotalPrices {
     total_hoteles: number[];
     total_services: number[];
+    total_cost: number[];
+    external_utility:[];
+    cost_external_taxes:number[];
+    total_cost_external:number[];
     total_ext_operator: number[];
     total_ext_cruises: number[];
     total_flights: number[];

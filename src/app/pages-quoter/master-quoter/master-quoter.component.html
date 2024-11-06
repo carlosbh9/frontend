@@ -18,8 +18,12 @@
                     </div>
                 </div>
                 <div>
+                    @if (showUpdate== false) {
                         <button (click)="onSubmit()" class=" mt-3  px-4 bg-green-400 dark:bg-green-700 p-3 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800 self-start">Save Master Quoter</button>
-                    </div>
+                    }@else {
+                        <button (click)="onUpdate()" class="px-4 bg-blue-500 dark:bg-green-700 p-3  rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800" >Update</button>
+                    }
+                </div>
             </div>
             <!-- columna de la derecha -->
             <div class="w-full space-y-4">

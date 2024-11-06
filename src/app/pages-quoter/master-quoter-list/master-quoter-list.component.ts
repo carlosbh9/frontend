@@ -1,25 +1,23 @@
-import { Component,inject ,OnInit} from '@angular/core';
-import { QuoterService} from '../../Services/quoter.service'
-import { Quoter } from '../../interfaces/quoter.interface';
-import { Router,ActivatedRoute } from '@angular/router';
+import { Component ,inject} from '@angular/core';
+import { MasterQuoterService } from '../../Services/master-quoter.service';
+import { Router ,ActivatedRoute} from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+
 @Component({
-  selector: 'app-quoter-list',
+  selector: 'app-master-quoter-list',
   standalone: true,
-  imports: [CommonModule,FormsModule,RouterModule],
-  templateUrl: './quoter-list.component.html',
-  styleUrl: './quoter-list.component.css'
+  imports: [CommonModule, FormsModule],
+  templateUrl: './master-quoter-list.component.html',
+  styleUrl: './master-quoter-list.component.css'
 })
-export class QuoterListComponent implements OnInit{
-  quoterService = inject(QuoterService)
-  //router = inject(Router)
-  //route= inject(ActivatedRoute) 
-  quotes: Quoter[] = []
+export class MasterQuoterListComponent {
+  MasterquoterService = inject(MasterQuoterService)
+  
+  Masterquotes: any[] = []
   filteredQuotes: any[] = [];
   filterText: string = '';
- // selectedQuoter: Quoter 
+  // selectedQuoter: Quoter 
   
   // emptyQuoter: Quoter = {
   //   guest: '',
@@ -48,43 +46,42 @@ export class QuoterListComponent implements OnInit{
   //     final_cost: [],
   //     price_pp: []
   //   }
-  // }
+//}
   constructor(private router: Router,private route: ActivatedRoute) {
-  //  this.selectedQuoter = this.emptyQuoter; // Mueve la inicialización aquí
+   // this.selectedQuoter = this.emptyQuoter; // Mueve la inicialización aquí
   }
   ngOnInit(): void {
-    this.fetchQuoter();
+    this.fetchMasterQuoter();
   }
-  async fetchQuoter (){
+  async fetchMasterQuoter (){
     try{
-      this.quotes = await this.quoterService.getAllQuoter();
-      this.filteredQuotes = this.quotes
-      console.log(this.quotes)
+      this.Masterquotes = await this.MasterquoterService.getAllMasterQuoter();
+      this.filteredQuotes = this.Masterquotes
+      console.log(this.Masterquotes)
     }catch{
       console.error('Error fetching entrances');
     }
   }
 
   filterQuotes() {
-    this.filteredQuotes = this.quotes.filter(quoter =>
+    this.filteredQuotes = this.Masterquotes.filter(quoter =>
       quoter.guest.toLowerCase().includes(this.filterText.toLowerCase())
     );
   }
   quoterForm() {
-    this.router.navigate([`../quoter-form`],{ relativeTo: this.route });
+    this.router.navigate([`../master-quoter`],{ relativeTo: this.route });
   }
   async deleteQuoter(id: string) {
     try {
-      await this.quoterService.deleteQuoter(id);
-      this.fetchQuoter();
+      await this.MasterquoterService.deleteMasterQuoter(id);
+      this.fetchMasterQuoter();
     } catch (error) {
       console.error('Error deleting quoter', error);
     }
   }
 
   editQuoter(id: string){
-    this.router.navigate([`../quoter-edit`,id],{ relativeTo: this.route });
+    this.router.navigate([`../master-quoter-edit`,id],{ relativeTo: this.route });
   }
 
 }
-

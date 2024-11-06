@@ -20,6 +20,7 @@ import { LoginComponent } from './login/login.component';
 import { QuoterListComponent } from './pages-quoter/quoter-list/quoter-list.component';
 import { MasterQuoterComponent } from './pages-quoter/master-quoter/master-quoter.component';
 import { LimaGourmetComponent } from './pages/lima-gourmet/lima-gourmet.component';
+import { MasterQuoterListComponent } from './pages-quoter/master-quoter-list/master-quoter-list.component';
 
 export const routes: Routes = [
 
@@ -44,7 +45,9 @@ export const routes: Routes = [
                     {   path:'quoter-form', component:QuoterFormComponent}, 
                     {   path:'quoter-list', component:QuoterListComponent},
                     {   path:'quoter-edit/:id', component:QuoterFormComponent},
-                    {   path:'master-quoter',component:MasterQuoterComponent}
+                    {   path:'master-quoter',component:MasterQuoterComponent},
+                    {   path:'master-quoter-list', component:MasterQuoterListComponent},
+                    {   path:'master-quoter-edit/:id',component:MasterQuoterComponent}
                 ]
             },
             {   path:'login',component: LoginComponent}

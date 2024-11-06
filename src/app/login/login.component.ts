@@ -15,13 +15,12 @@ export interface Hotel {
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FormHotelComponent } from '../pages-quoter/form-hotel/form-hotel.component';
 import { EntrancesService } from '../Services/entrances.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule,FormsModule,FormHotelComponent],
+  imports: [CommonModule,FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

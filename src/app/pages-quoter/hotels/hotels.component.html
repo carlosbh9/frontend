@@ -92,7 +92,7 @@
                         <textarea [(ngModel)]="newHotel.notes" name="newHotel.notes" id="" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1"></textarea>
                     </div>
                 </div>
-                <div >
+                <!-- <div >
                     <div>
                         <label for="service-select" class="block text-sm font-medium text-gray-700">Prices</label>
                         @for (item of [].constructor(priceLength()); track $index) {
@@ -100,7 +100,20 @@
                         }
                        
                    </div>
-                </div>
+                </div> -->
+                <div>
+                    <div>
+                      <label for="service-select" class="block text-sm font-medium text-gray-700">Prices</label>
+                      <!-- Iteramos sobre los precios para mostrarlos como solo vista con un botón de eliminar -->
+                      <div *ngFor="let price of newHotel.prices; let i = index" class="flex items-center mb-2">
+                        <!-- Mostramos el precio como texto -->
+                        <span class="text-lg mr-4">{{ price | currency: 'USD' }}</span>
+                        <!-- Botón para eliminar el precio -->
+                        <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removePrice(i)" ></i>
+                      </div>
+                    </div>
+                  </div>
+                  
              </div>
     </div>
 </div>
@@ -127,22 +140,22 @@
 
         @for (hotel of hotels; track $index) {
             <tr class="text-gray-700 dark:text-gray-1000">
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "><i class='bx bx-down-arrow-alt text-green-500' (lick)="moveFlightDown($index)"></i>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap "><i class='bx bx-down-arrow-alt text-green-500' (lick)="moveFlightDown($index)"></i>
 
                     <i class='bx bx-up-arrow-alt text-red-500' (click)="moveFlightUp($index)"></i></td>
              @if ($index === 0) {
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.day}}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.date | date }}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">{{hotel.day}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">{{hotel.date | date }}</td>
              }@else if (hotel.day!==hotels[$index-1].day) {
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.day}}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.date | date }}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">{{hotel.day}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">{{hotel.date | date }}</td>
              }@else {
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "></td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "></td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap "></td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap"></td>
              }
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.city}}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{hotel.name_hotel}}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{hotel.city}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{hotel.name_hotel}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">
                     @if (hotel.editHotel) {
                         <input type="text" class="border border-gray-300 rounded-md" [(ngModel)]="hotel.price_base">
                       }@else {
@@ -152,10 +165,10 @@
                       }
                 </td>
                 @for (price of hotel.prices; track $index) {
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">${{price.toFixed(2)}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">${{price.toFixed(2)}}</td>
                 }
 
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">
                     @if (hotel.editHotel) {
                         <input type="text" class="border border-gray-300 rounded-md" [(ngModel)]="hotel.accomodatios_category">
                       }@else {
@@ -164,7 +177,7 @@
                         </div>
                       }
                 </td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">
                     @if (hotel.editHotel) {
                         <input type="text" class="border border-gray-300 rounded-md" [(ngModel)]="hotel.notes">
                       }@else {
@@ -173,7 +186,7 @@
                         </div>
                       }
                 </td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap">
                 @if (hotel.editHotel) {
                     <i class='bx bx-check text-2xl text-green-500 dark:text-red-700 mr-2' (click)="onSave(hotel)" ></i>
                     <i class='bx bxs-x-circle text-2xl text-red-500 dark:text-red-700 mr-2' (click)="onClose(hotel,$index)" ></i>
@@ -187,7 +200,7 @@
 </tbody>
 <tfoot>
     <tr class="font-semibold text-gray-700 dark:text-gray-1000">
-        <td colspan="5" class="border-t-2 border-gray-300 px-4 py-2 text-left">Total Price</td>
+        <td colspan="6" class="border-t-2 border-gray-300 px-4 py-2 text-left">Total Price</td>
    @for (price of getTotalPricesHotels(); track $index) {
         <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">${{price.toFixed(2)}}</td>
     }@empty {

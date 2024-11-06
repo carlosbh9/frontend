@@ -70,7 +70,11 @@ export class HotelsComponent implements OnInit{
     updatePricePruebaArray(length: number) {
       this.newHotel.prices = new Array(length).fill(0); // Inicializamos el array con valores predeterminados, por ejemplo, 0.
     }
-
+    removePrice(index: number): void {
+      // Eliminar el precio en el índice correspondiente
+      this.newHotel.prices.splice(index, 1);
+      this.addedPricesCount--;
+    }
     addPrices(){
       if (this.addedPricesCount < this.priceLength()) {
        // Agregamos el precio actual al final del arreglo

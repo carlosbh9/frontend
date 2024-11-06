@@ -80,7 +80,7 @@ private emitOperator() {
   // this.prices.push(this.externalTaxesPrices())
   // this.prices.push(this.totalCostExternal())
   this.operatorsChange.emit(this.operators);
-  // this.totalPricesChange.emit(this.prices)
+ this.totalPricesChange.emit(this.totalCostExternal())
   //this.totalCostExternal
 }
 externalUtilityPrices(): number[] {
