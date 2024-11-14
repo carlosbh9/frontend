@@ -40,13 +40,13 @@
                   <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">{{ service.serviceName }}</td>
                     
                       @if (service.prices.season!='Regular') {
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"> {{service.prices.season}} - ${{ service.prices.adultPrice.toFixed(2) }}
-                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"> {{service.prices.season}} - ${{ service.prices.childPrice.toFixed(2) }}</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"> {{service.prices.season}} - ${{ service.prices.guidePrice.toFixed(2) }}</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"> {{service.prices.season}} - {{ service.prices.adultPrice | currency }}
+                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"> {{service.prices.season}} - {{ service.prices.childPrice | currency}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"> {{service.prices.season}} - {{ service.prices.guidePrice | currency }}</td>
                       }@else{
-                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">${{ service.prices.adultPrice.toFixed(2) }}</td>
-                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">${{ service.prices.childPrice.toFixed(2) }}</td>
-                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">${{ service.prices.guidePrice.toFixed(2) }}</td>
+                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ service.prices.adultPrice | currency }}</td>
+                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ service.prices.childPrice | currency}}</td>
+                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ service.prices.guidePrice | currency}}</td>
                       }
                     
                     

@@ -2,12 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit,inject,signal ,effect, computed,  } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QuoterService } from '../../Services/quoter.service';
-
-import { FormEntrancesComponent } from '../form-entrances/form-entrances.component';
-import {FormExpeditionsComponent} from '../form-expeditions/form-expeditions.component'
-import { FormGuidesComponent } from '../form-guides/form-guides.component';
-import { FormRestaurantsComponent } from '../form-restaurants/form-restaurants.component';
-import { FormOperatorsComponent } from '../form-operators/form-operators.component';
 import { FlightsComponent } from '../flights/flights.component';
 import { Quoter } from '../../interfaces/quoter.interface';
 import {ActivatedRoute} from '@angular/router';
@@ -15,25 +9,24 @@ import { ExtOperatorComponent } from '../ext-operator/ext-operator.component';
 import { ServicesComponent } from '../services/services.component';
 import { HotelsComponent } from '../hotels/hotels.component';
 import { MasterQuoterModalComponent } from '../modals/master-quoter.modal/master-quoter.modal.component';
-import * as pdfMake from "pdfmake/build/pdfmake";
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { PdfexportService } from '../../Services/pdfexport/pdfexport.service';
 
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
 (<any>pdfMake).addVirtualFileSystem(pdfFonts);
 
 @Component({
   selector: 'app-quoter-form',
   standalone: true,
   imports: [CommonModule
-    ,FormsModule,FormEntrancesComponent,
-    FormExpeditionsComponent,FormGuidesComponent,FormRestaurantsComponent,
-    FormOperatorsComponent,FlightsComponent,ExtOperatorComponent,ServicesComponent,HotelsComponent,MasterQuoterModalComponent],
+    ,FormsModule,FlightsComponent,ExtOperatorComponent,ServicesComponent,HotelsComponent],
   templateUrl: './quoter-form.component.html',
   styleUrl: './quoter-form.component.css'
 })
 export class QuoterFormComponent implements  OnInit{
   quoterService = inject(QuoterService)
   route = inject(ActivatedRoute)
-  
+  pdfExportService = inject(PdfexportService)
   modalOpen = signal(false);
   modalData = signal<any[]>([])
   totalPriceHotels: number[] = [];
@@ -52,6 +45,7 @@ export class QuoterFormComponent implements  OnInit{
   prueba2 = signal<number[]>([]);
   prueba3 = signal<number[]>([]);
   prueba4 = signal<number[]>([]);
+  prueba5 = signal<number>(0);
 
   destinations: string[] =['PERU','BOLIVIA','ECUADOR','COLOMBIA','ARGENTINA','CHILE']
 
@@ -84,7 +78,8 @@ export class QuoterFormComponent implements  OnInit{
       subtotal: [], // Array vacío de números
       cost_transfers: [], // Array vacío de números
       final_cost: [], // Array vacío de números
-      price_pp: [] // Array vacío de números
+      price_pp: [], // Array vacío de números
+      porcentajeTD:0
     }
   };
 
@@ -117,7 +112,8 @@ export class QuoterFormComponent implements  OnInit{
       subtotal: [], // Array vacío de números
       cost_transfers: [], // Array vacío de números
       final_cost: [], // Array vacío de números
-      price_pp: [] // Array vacío de números
+      price_pp: [], // Array vacío de números
+      porcentajeTD:0
     }
   }
 
@@ -258,6 +254,12 @@ export class QuoterFormComponent implements  OnInit{
     this.newQuoter.hotels=hotels
    }
  
+   onPorcentajeTD(porcentaje: number){
+      console.log('buscanod el porcentaje ',porcentaje)
+     // this.prueba5.set(porcentaje)
+      this.newQuoter.total_prices.porcentajeTD= porcentaje
+   }
+
   onTotalPricesServicesChange(prices: number[]) {
   this.prueba2.set(prices)
     this.newQuoter.total_prices.total_services= prices
@@ -422,84 +424,8 @@ export class QuoterFormComponent implements  OnInit{
     }
 
     generatePDF() {
- // PDF Document Definition
-const docDefinition = {
-  content: [
-    { text: 'Travel Itinerary', style: 'header' },
-    { text: `Guest: ${this.newQuoter.guest}`, style: 'subheader' },
-    { text: `Agent: ${this.newQuoter.travel_agent}` },
-    { text: `Accommodation: ${this.newQuoter.accomodations}`, style: 'subheader' },
-    { text: `Dates: ${this.newQuoter.travelDate.start} to ${this.newQuoter.travelDate.end}`, margin: [0, 10] },
-    
-    // Services Section
-    { text: 'Services', style: 'sectionHeader' },
-    ...this.newQuoter.services.map(serviceDay => [
-      { text: `Day ${serviceDay.day}: ${serviceDay.date}`, style: 'subheader' },
-      ...serviceDay.services.map((service: any) => ({
-        columns: [
-          { text: `City: ${service.city}`, width: '25%' },
-          { text: `Service: ${service.name_service}`, width: '50%' },
-          { text: `Prices: ${service.prices.join(', ')}`, width: '25%' }
-        ]
-      })),
-    ]),
-
-    // Hotels Section
-    { text: 'Hotels', style: 'sectionHeader', margin: [0, 10] },
-    ...this.newQuoter.hotels.map(hotel => ({
-      columns: [
-        { text: `Hotel: ${hotel.name_hotel}`, width: '30%' },
-        { text: `City: ${hotel.city}`, width: '20%' },
-        { text: `Prices: ${hotel.prices.join(', ')}`, width: '25%' },
-        { text: `Date: ${hotel.date}`, width: '25%' }
-      ],
-      margin: [0, 5]
-    })),
-
-    // Flights Section
-    { text: 'Flights', style: 'sectionHeader', margin: [0, 10] },
-    ...this.newQuoter.flights.map(flight => ({
-      columns: [
-        { text: `Route: ${flight.route}`, width: '50%' },
-        { text: `Prices: ${flight.prices.join(', ')}`, width: '50%' }
-      ],
-      margin: [0, 5]
-    })),
-
-    // Operators Section
-    { text: 'Operators', style: 'sectionHeader', margin: [0, 10] },
-    ...this.newQuoter.operators.map(operator => ({
-      columns: [
-        { text: `Operator: ${operator.name_operator}`, width: '50%' },
-        { text: `Country: ${operator.country}`, width: '20%' },
-        { text: `Prices: ${operator.prices.join(', ')}`, width: '30%' }
-      ],
-      margin: [0, 5]
-    })),
-
-    // Total Prices Summary
-    { text: 'Total Prices', style: 'sectionHeader', margin: [0, 10] },
-    {
-      columns: [
-        { text: `Total Cost: ${this.newQuoter.total_prices.total_cost.join(', ')}`, width: '50%' },
-        { text: `Hotels Total: ${this.newQuoter.total_prices.total_hoteles.join(', ')}`, width: '50%' }
-      ]
-    },
-    {
-      columns: [
-        { text: `Services Total: ${this.newQuoter.total_prices.total_services.join(', ')}`, width: '50%' },
-        { text: `Flights Total: ${this.newQuoter.total_prices.total_flights.join(', ')}`, width: '50%' }
-      ]
+      const docDefinition = this.pdfExportService.generatePdf(this.newQuoter);
+      this.pdfExportService.exportPdf(docDefinition);
     }
-  ],
-  styles: {
-    header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10] },
-    subheader: { fontSize: 14, bold: true, margin: [0, 10, 0, 5] },
-    sectionHeader: { fontSize: 16, bold: true, margin: [0, 10, 0, 5], color: 'blue' }
-  }
-};
-// Generate the PDF
-//pdfMake.createPdf(docDefinition).open();
-  }
-    
+
 }

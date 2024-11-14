@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 export class ExtOperatorComponent {
   datosFlight = output<any[]>();
   priceLength = input.required<number>();
+  porcentajeTd =  output<number>()
   @Input() operators: any[]=[]
   @Output() operatorsChange = new EventEmitter<any[]>();
   @Output() totalPricesChange = new EventEmitter<number[]>();
@@ -25,11 +26,12 @@ export class ExtOperatorComponent {
     name_operator: '',
     prices:[],
     notes: '',
-    editOperator: false
+    editOperator: false,
+  
   }
   prices: any[]=[]
-
-  porcentajeTD: number = 0
+  porcentajeTD: number = 0  
+  
 
   ngOnInit(): void {
 
@@ -40,7 +42,8 @@ emtyFlight(){
     name_operator: '',
     prices:[],
     notes: '',
-    editOperator: false
+    editOperator: false,
+
   }
 }
 
@@ -79,6 +82,7 @@ private emitOperator() {
   // this.prices.push(this.externalUtilityPrices())
   // this.prices.push(this.externalTaxesPrices())
   // this.prices.push(this.totalCostExternal())
+  this.porcentajeTd.emit(this.porcentajeTD)
   this.operatorsChange.emit(this.operators);
  this.totalPricesChange.emit(this.totalCostExternal())
   //this.totalCostExternal

@@ -240,6 +240,7 @@
         <app-ext-operator 
         [priceLength]="newQuoter.number_paxs.length"
         [operators]="newQuoter.operators"
+        (porcentajeTd)="onPorcentajeTD($event)"
         (operatorsChange)="onOperatorsUpdate($event)"
         (totalPricesChange)="onTotalPricesOperatorsChange($event)">
         </app-ext-operator>

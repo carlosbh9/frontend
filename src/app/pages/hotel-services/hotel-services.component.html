@@ -51,12 +51,12 @@
                   <!-- Iterar sobre Tipo de Habitaciones -->
                   @for (price of service.roomPrices; track price.type){
                       <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">
-                            ${{ price.confidential.toFixed(2) }}
+                            {{ price.confidential | currency}}
                         </td>
                       }
                     @for (price of service.roomPrices; track price.type) {
                       <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center">
-                        ${{ price.rack.toFixed(2) }}
+                        {{ price.rack | currency }}
                     </td>
                     }
                   <!-- Columnas de Acciones -->

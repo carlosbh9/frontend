@@ -39,7 +39,7 @@
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4 ">{{ service.descripcion }}</td>
                   @for (price of service.prices; track $index) {
                     
-                        <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center font-bold text-emerald-700 text-xs">${{ price.price?.toFixed(2) }}</td>
+                        <td class="border border-gray-200 dark:border-gray-500 px-2 py-1 text-center font-bold text-emerald-700 text-xs">{{ price.price | currency}}</td>
                 }
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">{{ service.observaciones }}</td>
               <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">

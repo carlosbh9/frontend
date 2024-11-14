@@ -50,10 +50,10 @@
             <tr *ngFor="let restaurant of filteredRestaurants" class="text-gray-700 dark:text-gray-100">
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.name }}</td>
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.year }}</td>
-              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4 font-bold text-emerald-700">${{ restaurant.price_pp.toFixed(2) }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4 font-bold text-emerald-700">{{ restaurant.price_pp | currency }}</td>
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4 font-bold text-emerald-700">${{restaurant.child_rate[0].price_pp}}</td>
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4 font-bold">{{restaurant.child_rate[0].upTo}} años</td>
-              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 font-bold text-emerald-700">${{ restaurant.price_guide_pp.toFixed(2) }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 font-bold text-emerald-700">{{ restaurant.price_guide_pp | currency }}</td>
               <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">
                 <span *ngFor="let date of restaurant.special_dates" class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0  font-medium text-left block">
                   {{ date.date | date }} -> {{ date.price_add }}

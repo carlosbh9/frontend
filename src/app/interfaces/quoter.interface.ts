@@ -32,4 +32,5 @@ export interface Quoter {
     cost_transfers: number[];
     final_cost: number[];
     price_pp: number[];
+    porcentajeTD: number;
   }

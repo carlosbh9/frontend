@@ -37,31 +37,51 @@
                         <option value="guides">Guides</option>
                         <option value="restaurant">Restaurants</option>
                         <option value="operator">Operators</option>
-                        <!--<option value="transport">Transporte</option>
-                        <option value="experience">Experiencias</option>train-->
+                        <option value="transport">Kutimuy</option>
+                        <option value="experience">Experiencias</option>
+                        <option value="gourmet">Lima Gourmet</option>
+                        <option value="train">Train</option>
+                        <option value="crucero">Cruceros</option>
+                        <option value="puerto">Puerto maldonado</option>
                     </select>
                 </div>
                 <div>
                     <label for="selectedService" class="block text-sm font-medium text-gray-700">Services</label>
+                    @if (selectCategoria==='crucero' || selectCategoria=== 'puerto' ) {
+                        <div class="flex items-center">
+
+                        
+                        <input [(ngModel)]="categoria_temp" type="text" placeholder="Name service" class="mt-1 block w-32 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <i (click)="addCruceroAndPuerto()" class="bx bxs-plus-circle mt-1 mx-3 text-2xl text-green-500 dark:text-green-700 " ></i></div>
+                    }@else {
                     <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" name="selectedService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <option value="" disabled selected>Select Service</option>
                         @for (service of servicesOptions; track $index) {
-                            <option [ngValue]="{type_service: selectedDayIndex.type ,service_id: service._id,service_type: selectCategoria, name_service: service.description || service.name|| service.name_guide || service.operador || service.company || service.nombre}">{{service.description || service.name || service.name_guide || service.operador || service.company || service.nombre}} </option>
+                            <option [ngValue]="getServiceValue(service)">{{service.description || service.name || service.name_guide || service.operador || service.company || service.nombre || service.activitie }} </option>
                         }
                     </select>
+                }
                 </div>
-                @if (selectCategoria==='operator') {
+                @if (selectCategoria === 'operator' || selectCategoria === 'train') {
                  <div>
                     <label for="selectedSubService" class="block text-sm font-medium text-gray-700">Services</label>
                     <select [(ngModel)]="selectedSubService" (change)="onSubServiceChange($event)" name="selectedSubService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <option value="" disabled selected>Select Service</option>
                         @for (service of subservicesOptions; track $index) {
-                            <option [ngValue]="{operator_service_id:service._id,name_service:service.descripcion}">{{service.descripcion || service.serviceName}} </option>
+                            <option [ngValue]="getServiceValue(service)">{{service.descripcion || service.serviceName }} </option>
                         }
                     </select>
                 </div>
                 }
                 <div class="col-start-4 flex justify-end">
+                    <div>
+                    <label for="selectedSubService" class="block text-sm font-medium text-gray-700">Selected Year</label>
+                    <select [(ngModel)]="selectedYear"name="selectedSubService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        </select>
+                    </div>
                     <button (click)="addDays()" class="w-32 mt-3 px-4 bg-blue-500 dark:bg-green-700 p-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800 self-start">
                       Add Day
                     </button>

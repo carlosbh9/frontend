@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component , Output , EventEmitter, inject, OnInit,input, Input} from '@angular/core';
+import { Component , Output , EventEmitter, inject, OnInit,input, Input, signal} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HotelService } from '../../Services/hotel.service';
 
@@ -84,7 +84,6 @@ export class HotelsComponent implements OnInit{
        // Si ya se ha alcanzado el límite de precios, mostramos un mensaje
        console.log("No se pueden agregar más precios, el arreglo está lleno.");
      }
-   
      }
 
   onHotelChange(event: any): void {
@@ -149,8 +148,6 @@ export class HotelsComponent implements OnInit{
 
   getTotalPricesHotels(): number[] {
     const totalPrices: number[] = [];
- 
-  
     this.hotels.forEach((hotel: { prices: number[] }) => { // Especificar el tipo de 'hotel'
       hotel.prices.forEach((price: number, index: number) => { // Especificar el tipo de 'price'
         if (totalPrices[index]) {
@@ -160,13 +157,15 @@ export class HotelsComponent implements OnInit{
         }
       });
     });
-
     return totalPrices;
   }
 
   onChangeDate(event: any){
+    const lastObject = this.hotels[this.hotels.length - 1];
+
     if (this.newHotel.date !== this.previousDateHotel) {
-      this.contHotel++; // Incrementa el día solo si la fecha cambia
+      this.contHotel= lastObject.day+1
+  //    this.contHotel++; // Incrementa el día solo si la fecha cambia
       this.previousDateHotel = this.newHotel.date; 
   }
 }

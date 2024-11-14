@@ -25,8 +25,8 @@ export class LimaGourmetComponent {
     price_pp: 0,
     price_for_one_person: 0,
     childRate: {
-        from: 5,
-        upTo: 12,
+        from: 0,
+        upTo: 0,
         price: 0
     },
     aprox_duration: '',
@@ -41,8 +41,8 @@ export class LimaGourmetComponent {
     price_pp: 0,
     price_for_one_person: 0,
     childRate: {
-        from: null,
-        upTo: null,
+        from: 0,
+        upTo: 0,
         price: 0
     },
     aprox_duration: '',
