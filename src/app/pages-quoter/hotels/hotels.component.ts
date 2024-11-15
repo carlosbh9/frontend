@@ -161,10 +161,15 @@ export class HotelsComponent implements OnInit{
   }
 
   onChangeDate(event: any){
-    const lastObject = this.hotels[this.hotels.length - 1];
+    let lastObject = 0
+    if(this.hotels.length < 0){
+       lastObject = this.hotels[this.hotels.length - 1].day || 0;
+    }
+
 
     if (this.newHotel.date !== this.previousDateHotel) {
-      this.contHotel= lastObject.day+1
+ 
+      this.contHotel= lastObject+1
   //    this.contHotel++; // Incrementa el día solo si la fecha cambia
       this.previousDateHotel = this.newHotel.date; 
   }

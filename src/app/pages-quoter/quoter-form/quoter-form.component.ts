@@ -137,14 +137,7 @@ export class QuoterFormComponent implements  OnInit{
       }
     })
     
-     // Efecto para que los cálculos se actualicen cuando los signals cambian
-    //  effect(() => {
-    //   // Llamar al cálculo de totales cuando 'newQuoter' cambie
-    //   this.getTotalCosts();
-    //   this.getExternalTaxes();
-    //   this.getTotalCostExternal();
-    //   this.prueba.set(gg)
-    // });
+
 
     this.datosrecibidosHotel = null
     this.datosrecibidosService = null
@@ -273,18 +266,14 @@ export class QuoterFormComponent implements  OnInit{
 
   onTotalPricesOperatorsChange(prices: any[]){
     this.prueba3.set(prices)
+    
     this.newQuoter.total_prices.total_ext_operator = prices
   }
   onTotalPricesFligtsChange(prices: number[]) {
     this.prueba4.set(prices)
+    console.log('buscanod precios ',this.prueba4())
      this.newQuoter.total_prices.total_flights= prices
    }
-  onSubmitHotel(){
-    if(this.datosrecibidosHotel!){
-          this.newQuoter.hotels.push(this.datosrecibidosHotel)
-    }
-    this.datosrecibidosHotel = null
-  }
 
 
   onSubmit(){
@@ -319,7 +308,7 @@ export class QuoterFormComponent implements  OnInit{
     //const totalPricesServices = this.totalPriceServices;
     const totalPricesServices = this.prueba2()
     // Determinar el mayor largo entre los dos arreglos
-    const maxLength = Math.max(this.prueba().length);
+    const maxLength = Math.max(this.newQuoter.number_paxs.length);
 
     // Recorrer ambos arreglos hasta el mayor largo
     for (let i = 0; i < maxLength; i++) {
@@ -334,7 +323,7 @@ export class QuoterFormComponent implements  OnInit{
   getExternalTaxes = computed(() => {
     const totalExternal: number[]=[];
       const totalCost = this.getTotalCosts();
-      const maxLength = Math.max(this.prueba().length);
+      const maxLength = Math.max(this.newQuoter.number_paxs.length);
       for (let i = 0; i < maxLength; i++) {
         const temp = totalCost[i] || 0; // Si no existe valor, toma 0
         totalExternal[i] = temp * 0.15;
@@ -347,7 +336,7 @@ export class QuoterFormComponent implements  OnInit{
       const totalCostExternal: number[]=[]
       const totalCost = this.getTotalCosts();
       const totalExternal = this.getExternalTaxes();
-      const maxLength = Math.max(this.prueba().length);
+      const maxLength = Math.max(this.newQuoter.number_paxs.length);
       for (let i = 0; i < maxLength; i++) {
         const temp1 = totalCost[i] || 0;
         const temp2 = totalExternal[i] || 0;// Si no existe valor, toma 0
@@ -359,42 +348,61 @@ export class QuoterFormComponent implements  OnInit{
   )
 
   subTotal = computed(() => {
-    const subtotal: number[]=[]
-    const maxLength = Math.max(this.prueba().length);
+    
+    const subtotal: number[] = [];
+    
+    // Forzar la evaluación de todas las señales para que sean dependencias
+    const prueba3Values = this.prueba3();
+    const prueba4Values = this.prueba4();
+    const totalCostExternal = this.getTotalCostExternal();
+    
+    // Determinar la longitud máxima con las señales ya evaluadas
+    const maxLength = Math.max(this.newQuoter.number_paxs.length);
+    console.log('Recalculando subTotal prueba 4',maxLength);
+    // Calcular los subtotales usando las señales evaluadas
     for (let i = 0; i < maxLength; i++) {
-      const temp1 = this.getTotalCostExternal()[i] || 0;
-      const temp2 = this.prueba3()[i] || 0;// Si no existe valor, toma 0
-      const temp3 = this.prueba4()[i] || 0;// Si no existe valor, toma 0
-      subtotal[i] = temp1 + temp2+temp3;
+      const temp1 = totalCostExternal[i] || 0;
+      const temp2 = prueba3Values[i] || 0;
+      const temp3 = prueba4Values[i] || 0;
+      subtotal[i] = temp1 + temp2 + temp3;
     }
-    return subtotal
+  
+    console.log('Subtotal:', subtotal);
+    return subtotal;
   })
 
   costOfTransfers = computed(() => {
     const cost_transfers: number[]=[]
-    const maxLength = Math.max(this.prueba().length);
+    const maxLength = Math.max(this.newQuoter.number_paxs.length);
+    const subtotal = this.subTotal()
+
     for (let i = 0; i < maxLength; i++) {
-      const temp1 = this.subTotal()[i] || 0;
-    
+      const temp1 = subtotal[i] || 0;
       cost_transfers[i] = temp1 *0.04 ;
     }
     return cost_transfers
   })
   final_cost = computed(() => {
     const final_cost: number[]=[]
-    const maxLength = Math.max(this.prueba().length);
+
+    const subTotalValues = this.subTotal();
+    const costOfTransfersValues = this.costOfTransfers();
+    
+
+    const maxLength = Math.max(this.newQuoter.number_paxs.length);
     for (let i = 0; i < maxLength; i++) {
-      const temp1 = this.subTotal()[i] || 0;
-      const temp2 = this.costOfTransfers()[i] || 0;
+       const temp1 = subTotalValues[i] || 0;
+    const temp2 = costOfTransfersValues[i] || 0;
       final_cost[i] = temp1 +temp2;
     }
     return final_cost
   })
   price_per_person = computed(() => {
     const price_pp: number[]=[]
-    const maxLength = Math.max(this.prueba().length);
+    const maxLength = Math.max(this.newQuoter.number_paxs.length);
+    const finalCostValues = this.final_cost();
     for (let i = 0; i < maxLength; i++) {
-      const temp1 = this.final_cost()[i] || 0;
+      const temp1 = finalCostValues[i] || 0;
       const temp2 = this.newQuoter.number_paxs[i] || 0;
       price_pp[i] = temp1 /temp2;
     }
