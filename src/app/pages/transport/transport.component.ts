@@ -34,6 +34,17 @@ export class TransportComponent {
     year:''
   };
 
+  vehiculos: any [] =[
+    {vehiculo: 'CAMIONETA/VW TRANSPORTER /TOYOTA HIACE 01 - 03', range_min:1,range_max :3},
+    {vehiculo: 'VW CRAFTER 04 - 07', range_min:4,range_max :7},
+    {vehiculo: 'SPRINTER MB 08 - 15/VW CRAFTER DLX 4 PAX', range_min:8,range_max :15},
+    {vehiculo: 'MINIBUS 16 - 25', range_min:16,range_max :25},
+    {vehiculo: 'AGUA 1 - 2',range_min:1,range_max :2},
+    {vehiculo: 'AGUA 3 - 4',range_min:3,range_max :4},
+    {vehiculo: 'AGUA 5 - 6',range_min:5,range_max :6},
+    {vehiculo: 'AGUA 6 - 10',range_min:6,range_max :10},
+  ]
+
   constructor(private transportService: TransportService) {}
 
 ngOnInit(): void {

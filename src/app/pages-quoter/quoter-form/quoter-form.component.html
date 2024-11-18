@@ -130,7 +130,7 @@
                             <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">Total Cost
                             </td>
                               @for (price of getTotalCosts(); track $index) {
-                              <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">${{price | currency}}</td>
+                              <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">{{price | currency}}</td>
                             }@empty {
                               <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
                             }
@@ -149,7 +149,7 @@
                           <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">EXTERNAL TAXES
                           </td>
                           @for (price of getExternalTaxes(); track $index) {
-                            <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">${{price | currency}}</td>
+                            <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">{{price | currency}}</td>
                           }@empty {
                             <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
                           }
@@ -157,7 +157,7 @@
                       <tr>
                         <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">TOTAL COST EXTERNAL</td>
                             @for (price of getTotalCostExternal() ;track $index) {
-                                <td class="border-t-2 border-gray-300 px-4 py-2 text-emerald-500 text-left">${{price | currency}}</td>
+                                <td class="border-t-2 border-gray-300 px-4 py-2 text-emerald-500 text-left">{{price | currency}}</td>
             
                             }@empty {
                                 <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
@@ -173,7 +173,7 @@
                             <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">Subtotal
                             </td>
                             @for (price of subTotal(); track $index) {
-                              <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">${{price | currency}}</td>
+                              <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">{{price | currency}}</td>
                             }@empty {
                               <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
                             }
@@ -182,7 +182,7 @@
                           <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">Cost of Transfers
                           </td>
                           @for (price of costOfTransfers(); track $index) {
-                            <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">${{price | currency}}</td>
+                            <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">{{price | currency}}</td>
                           }@empty {
                             <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
                           }
@@ -190,7 +190,7 @@
                       <tr>
                         <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">Final Cost</td>
                             @for (price of final_cost(); track $index) {
-                                <td class="border-t-2 border-gray-300 px-4 py-2 text-emerald-500 text-left">${{price | currency}}</td>
+                                <td class="border-t-2 border-gray-300 px-4 py-2 text-emerald-500 text-left">{{price | currency}}</td>
             
                             }@empty {
                                 <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
@@ -199,7 +199,7 @@
                       <tr>
                         <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">Cost Per Person</td>
                             @for (price of price_per_person(); track $index) {
-                                <td class="border-t-2 border-gray-300 px-4 py-2 text-emerald-500 text-left">${{price | currency}}</td>
+                                <td class="border-t-2 border-gray-300 px-4 py-2 text-emerald-500 text-left">{{price | currency}}</td>
             
                             }@empty {
                                 <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
@@ -240,7 +240,8 @@
         <app-ext-operator 
         [priceLength]="newQuoter.number_paxs.length"
         [operators]="newQuoter.operators"
-        (porcentajeTd)="onPorcentajeTD($event)"
+        [porcentajeTd]="newQuoter.total_prices.porcentajeTD"
+        (porcentajeChange)="onPorcentajeTDUpdate($event)"
         (operatorsChange)="onOperatorsUpdate($event)"
         (totalPricesChange)="onTotalPricesOperatorsChange($event)">
         </app-ext-operator>

@@ -114,7 +114,7 @@
     <tfoot>
         <tr class="font-semibold text-gray-700 dark:text-gray-1000">
             <td colspan="1" class="border-t-2 border-gray-300 px-4 py-2 text-left">External Utility</td>
-            <input type="text" class="px-4 py-2 w-16 border bg-gray-200 rounded-md" [(ngModel)]="porcentajeTD">
+            <input type="text" class="px-4 py-2 w-16 border bg-gray-200 rounded-md" [(ngModel)]="porcentajeTD" >
             @for (price of externalUtilityPrices(); track $index) {
               <td class="border-t-2 border-gray-300 px-4 py-2 text-left">${{price.toFixed(2)}}</td>
             }

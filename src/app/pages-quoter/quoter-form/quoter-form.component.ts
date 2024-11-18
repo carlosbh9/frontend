@@ -246,9 +246,13 @@ export class QuoterFormComponent implements  OnInit{
    onHotelsUpdate(hotels: any[]){
     this.newQuoter.hotels=hotels
    }
- 
+   onPorcentajeTDUpdate(porcentaje: number){
+   
+   // this.prueba5.set(porcentaje)
+    this.newQuoter.total_prices.porcentajeTD= porcentaje
+ }
    onPorcentajeTD(porcentaje: number){
-      console.log('buscanod el porcentaje ',porcentaje)
+ 
      // this.prueba5.set(porcentaje)
       this.newQuoter.total_prices.porcentajeTD= porcentaje
    }
@@ -271,7 +275,7 @@ export class QuoterFormComponent implements  OnInit{
   }
   onTotalPricesFligtsChange(prices: number[]) {
     this.prueba4.set(prices)
-    console.log('buscanod precios ',this.prueba4())
+  
      this.newQuoter.total_prices.total_flights= prices
    }
 
@@ -358,7 +362,7 @@ export class QuoterFormComponent implements  OnInit{
     
     // Determinar la longitud máxima con las señales ya evaluadas
     const maxLength = Math.max(this.newQuoter.number_paxs.length);
-    console.log('Recalculando subTotal prueba 4',maxLength);
+   
     // Calcular los subtotales usando las señales evaluadas
     for (let i = 0; i < maxLength; i++) {
       const temp1 = totalCostExternal[i] || 0;
@@ -366,8 +370,8 @@ export class QuoterFormComponent implements  OnInit{
       const temp3 = prueba4Values[i] || 0;
       subtotal[i] = temp1 + temp2 + temp3;
     }
+    this.newQuoter.total_prices.subtotal = subtotal
   
-    console.log('Subtotal:', subtotal);
     return subtotal;
   })
 
@@ -380,6 +384,7 @@ export class QuoterFormComponent implements  OnInit{
       const temp1 = subtotal[i] || 0;
       cost_transfers[i] = temp1 *0.04 ;
     }
+    this.newQuoter.total_prices.cost_transfers = cost_transfers
     return cost_transfers
   })
   final_cost = computed(() => {
@@ -395,6 +400,7 @@ export class QuoterFormComponent implements  OnInit{
     const temp2 = costOfTransfersValues[i] || 0;
       final_cost[i] = temp1 +temp2;
     }
+    this.newQuoter.total_prices.final_cost= final_cost
     return final_cost
   })
   price_per_person = computed(() => {
@@ -406,6 +412,7 @@ export class QuoterFormComponent implements  OnInit{
       const temp2 = this.newQuoter.number_paxs[i] || 0;
       price_pp[i] = temp1 /temp2;
     }
+    this.newQuoter.total_prices.price_pp= price_pp
     return price_pp
   })
 

@@ -105,10 +105,9 @@
               @for (vehicle of newTransport.type_vehicle; track $index) {
                 <div class="flex gap-3 py-2 items-center">
                   <select  [(ngModel)]="vehicle.name_type_vehicle" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="name_type_vehicle-{{$index}}" id="name_type_vehicle-{{$index}}">
-                      <option value="CAMIONETA/VW TRANSPORTER /TOYOTA HIACE 01 - 03">CAMIONETA/VW TRANSPORTER /TOYOTA HIACE 01 - 03</option>
-                      <option value="VW CRAFTER 04 - 07">VW CRAFTER 04 - 07</option>
-                      <option value="SPRINTER MB 08 - 15/VW CRAFTER DLX 4 PAX">SPRINTER MB 08 - 15/VW CRAFTER DLX 4 PAX</option>
-                      <option value="MINIBUS 16 - 25">MINIBUS 16 - 25</option>
+                    @for (option of vehiculos; track $index) {
+                      <option [value]="option.vehiculo">{{option.vehiculo}} </option>
+                    }
                   </select>
                   <input type="number" [(ngModel)]="vehicle.price" placeholder="Price" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="range_max-{{$index}}" required>
                   <i class='bx bxs-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removePriceField($index)"></i>
@@ -169,10 +168,9 @@
                 @for (vehicle of selectedTransport.type_vehicle; track $index) {
                   <div class="flex gap-3 py-2 items-center">
                     <select  [(ngModel)]="vehicle.name_type_vehicle" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="name_type_vehicle-{{$index}}" id="name_type_vehicle-{{$index}}">
-                      <option value="CAMIONETA/VW TRANSPORTER /TOYOTA HIACE 01 - 03">CAMIONETA/VW TRANSPORTER /TOYOTA HIACE 01 - 03</option>
-                      <option value="VW CRAFTER 04 - 07">VW CRAFTER 04 - 07</option>
-                      <option value="SPRINTER MB 08 - 15/VW CRAFTER DLX 4 PAX">SPRINTER MB 08 - 15/VW CRAFTER DLX 4 PAX</option>
-                      <option value="MINIBUS 16 - 25">MINIBUS 16 - 25</option>
+                      @for (option of vehiculos; track $index) {
+                        <option [value]="option.vehiculo">{{option.vehiculo }} </option>
+                      }
                   </select>
                     <input type="number" [(ngModel)]="vehicle.price" placeholder="Price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="range_max-{{$index}}" required>
                     <i class='bx bxs-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="removeEditPriceField($index)"></i>
