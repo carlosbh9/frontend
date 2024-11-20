@@ -117,7 +117,7 @@
              </div>
     </div>
 </div>
-<div class="p-6 block w-full overflow-x-auto">
+<div class="p-6 block w-full overflow-x-auto" #childTable>
 <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Hotels</h1>
 <table class="items-center w-full bg-transparent border-collapse border ">
 <thead>
@@ -133,7 +133,7 @@
     }
     <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">ACCOMMODATIONS AND CATEGORY</th>
     <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Notes</th>
-    <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Actions</th>
+    <th [ngClass]="{ 'hide-column': hideColumns }" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Actions</th>
     </tr>
 </thead>
 <tbody >
@@ -186,7 +186,7 @@
                         </div>
                       }
                 </td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap">
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap"  [ngClass]="{ 'hide-column': hideColumns }">
                 @if (hotel.editHotel) {
                     <i class='bx bx-check text-2xl text-green-500 dark:text-red-700 mr-2' (click)="onSave(hotel)" ></i>
                     <i class='bx bxs-x-circle text-2xl text-red-500 dark:text-red-700 mr-2' (click)="onClose(hotel,$index)" ></i>

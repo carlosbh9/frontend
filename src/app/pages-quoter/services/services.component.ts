@@ -1,22 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component,Input ,input,Output,EventEmitter, signal } from '@angular/core';
+import { Component,Input ,input,Output,EventEmitter, signal,ViewChild,
+  ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FormEntrancesComponent } from '../form-entrances/form-entrances.component';
-import {FormExpeditionsComponent} from '../form-expeditions/form-expeditions.component'
-import { FormGuidesComponent } from '../form-guides/form-guides.component';
-import { FormRestaurantsComponent } from '../form-restaurants/form-restaurants.component';
-import { FormOperatorsComponent } from '../form-operators/form-operators.component';
+
 import { MasterQuoterModalComponent } from '../modals/master-quoter.modal/master-quoter.modal.component';
 import { EditServiceModalComponent } from '../modals/edit-service-modal/edit-service-modal.component';
 
 @Component({
   selector: 'app-services',
   standalone: true,
-  imports: [CommonModule, FormsModule,FormEntrancesComponent,
-    FormExpeditionsComponent,
-    FormGuidesComponent,
-    FormRestaurantsComponent,
-    FormOperatorsComponent,MasterQuoterModalComponent,EditServiceModalComponent],
+  imports: [CommonModule, FormsModule,MasterQuoterModalComponent,EditServiceModalComponent],
   templateUrl: './services.component.html',
   styleUrl: './services.component.css'
 })
@@ -159,5 +152,10 @@ export class ServicesComponent {
 
     console.log('los ',temp)
     console.log('tabla',this.services)
+  }
+  @ViewChild('tableContainer', { static: false }) tableContainer!: ElementRef;
+
+  getTableContainer(): ElementRef {
+    return this.tableContainer;
   }
 }

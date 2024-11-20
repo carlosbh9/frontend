@@ -52,7 +52,7 @@ export class MasterQuoterComponent implements OnInit{
   showUpdate = false
   idQuoter: string = ''
   categoria_temp: string= ''
-  selectedYear: string =  ''
+  selectedYear: string =  '2025'
 
   masterQuoter = {
     name: null,
@@ -185,6 +185,7 @@ export class MasterQuoterComponent implements OnInit{
         case 'puerto': this.selectedService.name_service = this.categoria_temp
         break;
       }
+      console.log('categoria: ',this.servicesOptions)
 
   }
 

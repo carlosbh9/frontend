@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit,inject,signal ,effect, computed,  } from '@angular/core';
+import { Component, OnInit,inject,signal ,ViewChild, computed,QueryList,ViewChildren ,ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QuoterService } from '../../Services/quoter.service';
 import { FlightsComponent } from '../flights/flights.component';
@@ -8,7 +8,8 @@ import {ActivatedRoute} from '@angular/router';
 import { ExtOperatorComponent } from '../ext-operator/ext-operator.component';
 import { ServicesComponent } from '../services/services.component';
 import { HotelsComponent } from '../hotels/hotels.component';
-import { MasterQuoterModalComponent } from '../modals/master-quoter.modal/master-quoter.modal.component';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 import { PdfexportService } from '../../Services/pdfexport/pdfexport.service';
 
 import pdfMake from "pdfmake/build/pdfmake";
@@ -438,9 +439,35 @@ export class QuoterFormComponent implements  OnInit{
       this.modalOpen.set(false);
     }
 
-    generatePDF() {
-      const docDefinition = this.pdfExportService.generatePdf(this.newQuoter);
-      this.pdfExportService.exportPdf(docDefinition);
-    }
+    async generatePDF() {
+      const dataURL = await this.pdfExportService.convertImageToDataURL('/images/image.png');
 
+      const docDefinition = this.pdfExportService.generatePdf(this.newQuoter,dataURL);
+      this.pdfExportService.exportPdf(docDefinition);
+
+    }
+    @ViewChild(HotelsComponent) hotelsComponent!: HotelsComponent;
+  
+  //  async  generatePDF() {
+  
+  // // Ocultar la columna en el hijo
+  // this.hotelsComponent.toggleColumnVisibility(true);
+
+  // // Esperar para asegurar que el DOM se renderice completamente
+  // await new Promise((resolve) => setTimeout(resolve, 200));
+
+  // const pdf = new jsPDF();
+  // const table = this.hotelsComponent.childTable.nativeElement;
+
+  // // Generar el canvas
+  // const canvas = await html2canvas(table, { scale: 1 });
+  // const imgData = canvas.toDataURL('image/jpeg', 0.8);
+  // pdf.addImage(imgData, 'JPEG', 0, 0, 210, (canvas.height * 210) / canvas.width);
+
+  // // Restaurar visibilidad de la columna
+  // this.hotelsComponent.toggleColumnVisibility(false);
+
+  // // Guardar el PDF
+  // pdf.save('tabla.pdf');
+  //   }
 }

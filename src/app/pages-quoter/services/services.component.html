@@ -4,9 +4,9 @@
             <button class=" top-4 right-4 px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Open Master Quoter</button>    
     </div> 
 </div>
-<div class="p-6 block w-full overflow-x-auto">
+<div class="p-6 block w-full overflow-x-auto" id="table-container" #tableContainer>
     <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Services</h1>
-    <table class="items-center w-full bg-transparent border border-collapse">
+    <table class="items-center w-full bg-transparent border border-collapse" >
     <thead>
         <tr>
         <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center">Day</th>
@@ -39,9 +39,9 @@
                     }
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.city}}</td>
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.name_service}}</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">${{service.price_base.toFixed(2)}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">${{service.price_base | currency}}</td>
                     @for (price of service.prices; track $index ; let priceIndex = $index) {
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">${{price.toFixed(2)}}</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{price | currency}}</td>
                     }
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.notes}}</td>
 

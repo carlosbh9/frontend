@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component , Output , EventEmitter, inject, OnInit,input, Input, signal} from '@angular/core';
+import { Component , Output , EventEmitter, inject, OnInit,input, Input, signal,ViewChild,ElementRef} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HotelService } from '../../Services/hotel.service';
 
@@ -191,5 +191,15 @@ moveFlightDown(index: number) {
     this.hotels[index] = this.hotels[index + 1];
     this.hotels[index + 1] = temp;
   }
+}
+
+@ViewChild('childTable', { static: true }) childTable!: ElementRef;
+hideColumns = false;
+// getTableContainer(): ElementRef {
+//   return this.tableContainer;
+// }
+
+toggleColumnVisibility(hide: boolean) {
+  this.hideColumns = hide;
 }
 }

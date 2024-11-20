@@ -10,35 +10,55 @@ export class PdfexportService {
 
   constructor() { }
 
+ convertImageToDataURL(imagePath: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = imagePath;
 
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        if (!context) {
+          reject('No se pudo obtener el contexto del canvas');
+          return;
+        }
+        canvas.width = image.width;
+        canvas.height = image.height;
+        context.drawImage(image, 0, 0);
+        resolve(canvas.toDataURL('image/png'));
+      };
+
+      image.onerror = (error) => reject(error);
+    });
+  }
   // Método para exportar el PDF
 exportPdf(docDefinition: any): void {
     pdfMake.createPdf(docDefinition).open();
 }
 
-generatePdf(data : any) : any {
+generatePdf(data : any,dataURL: string) : any {
 
 const tam = data.number_paxs.length;
 
-const tableHeader = [{ text: 'Day' }, { text: 'Date' },{ text: 'City' }, { text: 'Service' }, { text: 'Price Base' }];
+const tableHeader = [{ text: 'Day' ,style: 'header'}, { text: 'Date' ,style: 'header'},{ text: 'City' ,style: 'header'}, { text: 'Service',style: 'header' }, { text: 'Price Base' ,style: 'header'}];
 for (let i = 0; i < tam; i++) {
-    tableHeader.push({ text: `Price ${i + 1}` });
+    tableHeader.push({ text: `Price ${i + 1}`,style: 'header' });
 }
 
 const tableHeaderHotels = [
-  { text: 'Day' },
-  { text: 'Date' },
-  { text: 'City' },
-  { text: 'Hotel' },
-  { text: 'Price Base' },
+  { text: 'Day' ,style: 'header'},
+  { text: 'Date'  ,style: 'header'},
+  { text: 'City'  ,style: 'header'},
+  { text: 'Hotel'  ,style: 'header'},
+  { text: 'Price Base' ,style: 'header' },
 ];
 
 // Crear encabezados dinámicos para los precios según el número de pax
 for (let i = 0; i < tam; i++) {
-  tableHeaderHotels.push({ text: `Price ${i + 1}` });
+  tableHeaderHotels.push({ text: `Price ${i + 1}`  ,style: 'header'});
 }
  // Agregar las columnas de "Accommodations" y "Category" al final
- tableHeaderHotels.push({ text: 'Accommodations and Category' });
+ tableHeaderHotels.push({ text: 'Accommodations and Category' ,style: 'header' });
 // Iniciar el cuerpo de la tabla con el encabezado
 const tableBody = [tableHeader]
 const tableBodyhotels = [tableHeaderHotels];
@@ -46,16 +66,16 @@ const tableBodyhotels = [tableHeaderHotels];
 data.services.forEach((dayData : any)=> {
     dayData.services.forEach((service: any) => {
         const row = [
-            { text: dayData.day.toString(), alignment: 'center' },
-            { text: dayData.date, alignment: 'center' },
-            { text: service.city,alignment: 'center' },
-            { text: service.name_service },
-            { text: service.price_base.toString() }
+           dayData.day.toString(),
+            dayData.date,
+            service.city,
+            service.name_service,
+            service.price_base.toString() 
         ];
 
         // Añadir precios en las columnas correspondientes
         for (let i = 0; i < tam; i++) {
-            row.push({ text: service.prices[i] !== undefined ? service.prices[i].toString() : '' });
+            row.push( service.prices[i] !== undefined ? service.prices[i].toString() : '' );
         }
         console.log('totalrow1',row)
         tableBody.push(row);
@@ -65,16 +85,16 @@ data.services.forEach((dayData : any)=> {
 //data.hotels.forEach((dayData: any) => {
   data.hotels.forEach((hotel: any) => {
     const row = [
-      { text: hotel.day.toString(), alignment: 'center' },
-      { text: hotel.date, alignment: 'center' },
-      { text: hotel.city },
-      { text: hotel.name_hotel },
-      { text: hotel.price_base.toString() },
+      hotel.day.toString(),
+    hotel.date,
+     hotel.city  ,
+      hotel.name_hotel ,
+    hotel.price_base.toString(),
     ];
 
     // Añadir precios en las columnas correspondientes
     for (let i = 0; i < tam; i++) {
-      row.push({ text: hotel.prices[i] !== undefined ? hotel.prices[i].toString() : '' });
+      row.push(hotel.prices[i] !== undefined ? hotel.prices[i].toString() : '' );
     }
 
     // Añadir "Accommodations" y "Category" al final de la fila
@@ -86,18 +106,18 @@ data.services.forEach((dayData : any)=> {
 
   // Crear la fila de totales
   const totalRow = [
-    { text: 'Total Prices', colSpan: 5, alignment: 'center' }, // Total Prices ocupa 4 columnas
+    { text: 'Total Prices', colSpan: 5, alignment: 'center', bold:true }, // Total Prices ocupa 4 columnas
     {}, {}, {}, {}, // Deja las primeras 4 celdas vacías para que 'Total Prices' ocupe 4 columnas
     ...data.total_prices.total_services.map((price: any) => {
-      return { text: price.toString() }; // Mapea los totales de cada servicio a una celda
+      return { text: price.toString(), bold:true }; // Mapea los totales de cada servicio a una celda
     }),
   ];
 
   const totalRowHotels = [
-    { text: 'Total Prices', colSpan: 5, alignment: 'center' }, // Total Prices ocupa las primeras 5 columnas
+    { text: 'Total Prices', colSpan: 5, alignment: 'center' , bold:true}, // Total Prices ocupa las primeras 5 columnas
     {}, {}, {}, {}, // Deja las primeras 5 celdas vacías
     ...data.total_prices.total_services.map((price: any) => {
-      return { text: price.toString() };
+      return { text: price.toString() , bold:true };
     }),
     '',  // Espacio vacío para "Accommodations"
   ];
@@ -108,44 +128,116 @@ data.services.forEach((dayData : any)=> {
   // Añadir la fila de totales al final de la tabla
   tableBodyhotels.push(totalRowHotels);
 
+  const temp1 = 330-(tam*30)
+  const temp2 = ((330-(tam*30))/2)-10
+  
+
+  console.log('totalPrices:', data.total_prices);
     return {
       content: [
-        { text: 'QUOTER', style: 'header' },
-        { text: `Guest: ${data.guest}`, style: 'subheader' },
-        { text: `Agent: ${data.travel_agent}`, style: 'subheader' },
-        { text: `Accommodation: ${data.accomodations}`, style: 'subheader' },
-        { text: `Dates: ${data.travelDate.start} to ${data.travelDate.end}`},
+        {
+          columns: [
+          { text: 'QUOTER', style: 'title' ,width: 220},
+          {
+            image: dataURL,
+            width: 150,
+			      margin: [150,0,0,50]
+          },
+          ] 
+        },
+        {
+          columns: [
+            {
+              width: '30%', // Ajusta el ancho de la columna izquierda
+              text: [
+                { text: 'Guest: \n', bold: true },
+                { text: 'Travel Designer: \n', bold: true },
+                { text: 'Type of Accommodations: \n', bold: true },
+                { text: 'Travel Dates: \n', bold: true },
+              ],
+            },
+            {
+              width: '70%', // Ajusta el ancho de la columna derecha
+              text: [
+                { text: `${data.guest} \n` },
+                { text: `${data.travel_agent} \n` },
+                { text: `${data.accomodations} \n` },
+                { text: `${data.travelDate.start} to ${data.travelDate.end} \n` },
+              ],
+            },
+          ]
+        },
+        { text: '\n\n' },
         
         // Services Section
-        { text: 'Services', style: 'sectionHeader' },
+        { text: 'Services \n', style: 'subtitles' },
         {
-            style: 'tableservice',
+            style: 'body',
             table: {
-                widths: [30, 50,30, 200, 30, ...Array(tam).fill(30)], // Ajustar anchos
+                widths: [20, 60,30, '*', 30, ...Array(tam).fill(30)], // Ajustar anchos
                 body: tableBody
-            }
+            },
+            layout: 'lightHorizontalLines'
         },
        // Sección de Hoteles
-      { text: 'Hotels', style: 'sectionHeader' },
+      { text: 'Hotels \n', style: 'subtitles' },
       {
-        style: 'tablehotel',
+        style: 'body',
         table: {
-          widths: [30, 50, 50, 150, 30, ...Array(tam).fill(30), 100], // Ajuste de anchos, añadiendo espacio para Accommodation y Category
+          widths: [20, 60, 50, '*', 30, ...Array(tam).fill(30), '*'], // Ajuste de anchos, añadiendo espacio para Accommodation y Category
           body: tableBodyhotels,
         },
+        layout: 'lightHorizontalLines'
+      },
+      { text: '\n\n' },
+      {
+        style: 'bodytotals',
+        table: {
+          widths: ['50%', '50%'], // Ajustar ancho: columna de texto vs precios
+          body: [
+            [{ text: 'TOTAL COST', bold: true }, { text: `${data.total_prices.total_cost.join(' / ')}` }],
+            [{ text: 'EXTERNAL UTILITY', bold: true }, { text: `${data.total_prices.external_utility.join(' / ') || 'N/A'}` }],
+            [{ text: 'EXTERNAL TAXES', bold: true }, { text: `${data.total_prices.cost_external_taxes.join(' / ')}` }],
+            [{ text: 'TOTAL COST EXTERNAL', bold: true }, { text: `${data.total_prices.total_cost_external.join(' / ')}` }],
+          ],
+        },
+        layout: 'noBorders', // Opcional, si quieres bordes en la tabla
+        margin: [200, 0, 0, 0],
+      },
+      { text: '\n' }, // Espaciado entre tablas
+      {
+        style: 'bodytotals',
+        table: {
+          widths: ['50%', '50%'], // Ajustar ancho
+          body: [
+            [{ text: 'SUBTOTAL', bold: true }, { text: `${data.total_prices.subtotal.join(' / ')}` }],
+            [{ text: 'COST OF TRANSFERS', bold: true }, { text: `${data.total_prices.cost_transfers.join(' / ')}` }],
+            [{ text: 'FINAL COST', bold: true }, { text: `${data.total_prices.final_cost.join(' / ')}` }],
+            [{ text: 'PER PERSON:', bold: true }, { text: `${data.total_prices.price_pp.join(' / ')}` }],
+          ],
+        },
+        layout: 'noBorders',
+        margin: [200, 0, 0, 0],
       },
     ],
     styles: {
-        header: { fontSize: 12, bold: true },
-        subheader: { fontSize: 12},
-        sectionHeader: { fontSize: 12, bold: true},
-        tableservice: { bold: false,
-          fontSize: 10,
-          color: 'black' },
-          tablehotel: { bold: false,
-            fontSize: 10,
-            color: 'black' }
-    }
+        title: {fontSize: 18,
+          bold: true,
+          alignment: 'top',
+         
+        },
+        img: { 
+          alignment: 'right',
+          margin: [0, 50, 0, 0]},
+        subtitles: {fontSize: 12, bold: true},
+        header: { fontSize: 10, bold: true },
+        body: {fontSize:8,color: 'black'},
+        bodytotals: {fontSize:8,color: 'black'},
+        formStyle: {fontSize: 10, bold: false}
+       
+       
+    },
+   
     
     }
   }

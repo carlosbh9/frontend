@@ -132,10 +132,7 @@ toggleService(service: any) {
 
 async onAddMQuoter(){
   this.selectedServices.number_paxs=this.numberpaxs()
-  
- 
   this.preciosCalculados = await this.priceService.calculatePrice(this.selectedServices)
- 
   this.preciosCalculados.date = this.selectedServices.date
   this.servicesChange.emit(this.preciosCalculados)
   this.closeModal()
