@@ -54,18 +54,41 @@ export class MasterQuoterListComponent {
     this.fetchMasterQuoter();
   }
   async fetchMasterQuoter (){
-    try{
+    // try{
+    //   this.Masterquotes = await this.MasterquoterService.getAllMasterQuoter();
+    //   this.filteredQuotes = this.Masterquotes
+    //   console.log(this.Masterquotes)
+    // }catch{
+    //   console.error('Error fetching entrances');
+    // }
+    try {
       this.Masterquotes = await this.MasterquoterService.getAllMasterQuoter();
-      this.filteredQuotes = this.Masterquotes
-      console.log(this.Masterquotes)
-    }catch{
-      console.error('Error fetching entrances');
+      
+      // Ordenar los datos por tipo y luego por nombre de manera predeterminada
+      this.Masterquotes.sort((a, b) => {
+        // Ordenar primero por tipo
+        if (a.type < b.type) return -1;
+        if (a.type > b.type) return 1;
+  
+        // Si los tipos son iguales, ordenar por nombre alfabéticamente
+        if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+        if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+  
+        return 0; // Si ambos valores son iguales
+      });
+  
+      // Inicialmente, mostrar todos los resultados ordenados
+      this.filteredQuotes = this.Masterquotes;
+      
+      console.log(this.Masterquotes); // Para ver cómo queda la lista
+    } catch (error) {
+      console.error('Error fetching entrances', error);
     }
   }
 
   filterQuotes() {
     this.filteredQuotes = this.Masterquotes.filter(quoter =>
-      quoter.guest.toLowerCase().includes(this.filterText.toLowerCase())
+      quoter.name.toLowerCase().includes(this.filterText.toLowerCase())
     );
   }
   quoterForm() {

@@ -10,7 +10,7 @@ import { RestaurantService } from '../../Services/restaurant.service';
 import { OperatorsService } from '../../Services/operators.service';
 import { MasterQuoterService } from '../../Services/master-quoter.service';
 import { TransportService } from '../../Services/transport.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute,Router } from '@angular/router';
 import { TrainService } from '../../Services/train.service';
 import { ExperiencesService } from '../../Services/experiences.service';
 import { GourmetService } from '../../Services/limagourmet/gourmet.service';
@@ -36,6 +36,7 @@ export class MasterQuoterComponent implements OnInit{
 
   masterQuoterService = inject(MasterQuoterService)
   route = inject(ActivatedRoute)
+  router = inject(Router)
 
   selectedDayIndex: any = {type: 'service',dayIndex: 0};
   servicesOptions: any[]=[]
@@ -56,11 +57,12 @@ export class MasterQuoterComponent implements OnInit{
 
   masterQuoter = {
     name: null,
+    type: 'Templates',
     days: null,
     destinations: null,
     day:[{
-      city: null,
-      name_services:null,
+      city: '',
+      name_services:'',
       services: [] as {
       type_service: string | null,
       name_service: string | null,
@@ -74,11 +76,12 @@ export class MasterQuoterComponent implements OnInit{
   };
   emptyMasterQuoter = {
     name: null,
+    type: '',
     days: null,
     destinations: null,
     day:[{
-      city: null,
-      name_services:null,
+      city: '',
+      name_services:'',
       services: [] as {
       type_service: string | null,
       name_service: string | null,
@@ -242,8 +245,8 @@ addCruceroAndPuerto(){
 addDays(){
   this.index++
   this.masterQuoter.day.push({
-    city: null,
-    name_services:null,
+    city: '',
+    name_services:'',
     services: []
   })
 
@@ -269,7 +272,9 @@ onUpdate(){
   this.masterQuoterService.updateMasterQuoter(this.idQuoter,this.masterQuoter).then(
     response => {
       console.log('Quoter update',response)
-      this.masterQuoter=this.emptyMasterQuoter
+          this.router.navigate([`/quoter-main/master-quoter-list`],{ relativeTo: this.route });
+
+        this.masterQuoter=this.emptyMasterQuoter
     },
     error => {
       console.error('Error editing Quoter', error)

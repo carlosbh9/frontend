@@ -1,0 +1,126 @@
+<div class="p-6 flex flex-col space-y-4">
+    <div class="flex flex-wrap space-x-4 justify-start">
+        <div class="w-1/4">
+            <label  for="name" class="block text-sm font-medium text-gray-700">Name</label>
+            <select [(ngModel)]="newCruise.name" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" name="name" id="name">
+              @for (name of cruisesOptions; track $index) {
+                <option [ngValue]="name">{{name}}</option>
+              }
+            </select>
+        </div>
+        <div class="w-1/4">
+            <label  for="operator" class="block text-sm font-medium text-gray-700">Operator</label>
+            <select [(ngModel)]="newCruise.operator" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" name="operator" id="operator">
+              @for (operator of operators; track $index) {
+                <option [ngValue]="operator">{{operator}}</option>
+              }
+            </select>
+        </div>
+        <div>
+            <label for="issue-date" class="block text-sm font-medium text-gray-700">Prices</label>
+            @for (item of [].constructor(paxs().length); track $index) {
+              <input type="number" name="quoterItem.price_prueba-{{$index}}" [(ngModel)]="newCruise.prices[$index]" id="quoterItem.price_prueba-{{$index}}" class="pr-4 h-10 p-2 w-16 border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1 mr-2 mb-2">
+          }
+        </div>
+        <div>
+            <label for="issue-date" class="block text-sm font-medium text-gray-700">Notes</label>
+            <input type="text" name="notes" [(ngModel)]="newCruise.notes" id="notes" class="pr-4 h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1 mr-2 mb-2">
+        </div>
+        <div class="flex-1 relative ">
+            <button class="absolute top-4 right-4 px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="onSubmitCruise()">Add Cruise</button>
+        </div>
+        </div>
+    </div>
+  
+  <div class="p-6 block w-full overflow-x-auto">
+    <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Cruises</h1>
+    <table class="items-center w-full bg-transparent border border-collapse">
+      <thead>
+        <tr>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tl-md rounded-bl-md">Name</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Operator</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Conf. Price</th>
+            @for (item of [].constructor(paxs().length); track $index) {
+              <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Price {{$index+1}}</th>
+            }
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Notes</th>
+            <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+      @for (item of cruises; track $index) {
+        <tr class="text-gray-700 dark:text-gray-1000">
+          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+          @if (item.editCruise) {
+            <div>
+               <input class="border border-gray-300 rounded-md" type="date" [(ngModel)]="item.name">
+            </div>
+          }@else{
+            <div>
+              {{item.name}}
+            </div>
+          }
+        </td >
+        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+          @if (item.editCruise) {
+            <input type="text" class="border border-gray-300 rounded-md" [(ngModel)]="item.operator">
+          }@else {
+            <div>
+              {{item.operator}}
+            </div>
+          }
+        </td>
+          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+            @if (item.editCruise) {
+              <input type="number" class="w-16 border border-gray-300 rounded-md" [(ngModel)]="item.price_conf">
+            }@else {
+              <div>
+                {{item.price_conf | currency}}
+              </div>
+            }
+          </td>
+          @for (price of item.prices; track $index) {
+            
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+              @if (item.editCruise) {
+                <input type="number" class="w-16 border border-gray-300 rounded-md" [(ngModel)]="item.prices[$index]">
+              }@else {
+                <div>
+                  {{price | currency}}
+                </div>
+              }
+            </td>
+          }
+          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+            @if (item.editCruise) {
+              <input type="text" class="border border-gray-300 rounded-md" [(ngModel)]="item.notes">
+            }@else {
+              <div>
+                {{item.notes}}
+              </div>
+            }
+          </td>
+          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4">
+            @if (item.editCruise) {
+              <i class='bx bx-check text-2xl text-green-500 dark:text-red-700 mr-2' (click)="onSave(item)" ></i>
+              <i class='bx bxs-x-circle text-2xl text-red-500 dark:text-red-700 mr-2' (click)="onClose(item,$index)" ></i>
+            }@else{
+              <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="onEdit(item,$index)"></i>
+            } 
+            <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="onDelete($index)" ></i>
+        </td>
+        </tr>
+      }
+    </tbody>
+    <tfoot>
+        <tr class="font-semibold text-gray-700 dark:text-gray-1000">
+            <td colspan="3" class="border-t-2 border-gray-300 px-4 py-2 text-left">TOTAL COST EXTERNAL</td>
+            @for (price of getTotalPrices(); track $index) {
+              <td class="border-t-2 border-gray-300 px-4 py-2 text-left">{{price | currency}}</td>
+            }
+            
+        </tr>
+    </tfoot>
+    </table>
+  </div>
+  

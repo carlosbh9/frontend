@@ -15,6 +15,7 @@ export interface Quoter {
     hotels: any[];
     flights: any[];
     operators: any[];
+    cruises: any[];
     total_prices: TotalPrices;
   }
 

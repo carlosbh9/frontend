@@ -137,7 +137,7 @@ data.services.forEach((dayData : any)=> {
       content: [
         {
           columns: [
-          { text: 'QUOTER', style: 'title' ,width: 220},
+          { text: 'QUOTE', style: 'title' ,width: 220},
           {
             image: dataURL,
             width: 150,
@@ -190,35 +190,35 @@ data.services.forEach((dayData : any)=> {
         layout: 'lightHorizontalLines'
       },
       { text: '\n\n' },
-      {
-        style: 'bodytotals',
-        table: {
-          widths: ['50%', '50%'], // Ajustar ancho: columna de texto vs precios
-          body: [
-            [{ text: 'TOTAL COST', bold: true }, { text: `${data.total_prices.total_cost.join(' / ')}` }],
-            [{ text: 'EXTERNAL UTILITY', bold: true }, { text: `${data.total_prices.external_utility.join(' / ') || 'N/A'}` }],
-            [{ text: 'EXTERNAL TAXES', bold: true }, { text: `${data.total_prices.cost_external_taxes.join(' / ')}` }],
-            [{ text: 'TOTAL COST EXTERNAL', bold: true }, { text: `${data.total_prices.total_cost_external.join(' / ')}` }],
-          ],
-        },
-        layout: 'noBorders', // Opcional, si quieres bordes en la tabla
-        margin: [200, 0, 0, 0],
-      },
-      { text: '\n' }, // Espaciado entre tablas
-      {
-        style: 'bodytotals',
-        table: {
-          widths: ['50%', '50%'], // Ajustar ancho
-          body: [
-            [{ text: 'SUBTOTAL', bold: true }, { text: `${data.total_prices.subtotal.join(' / ')}` }],
-            [{ text: 'COST OF TRANSFERS', bold: true }, { text: `${data.total_prices.cost_transfers.join(' / ')}` }],
-            [{ text: 'FINAL COST', bold: true }, { text: `${data.total_prices.final_cost.join(' / ')}` }],
-            [{ text: 'PER PERSON:', bold: true }, { text: `${data.total_prices.price_pp.join(' / ')}` }],
-          ],
-        },
-        layout: 'noBorders',
-        margin: [200, 0, 0, 0],
-      },
+      // {
+      //   style: 'bodytotals',
+      //   table: {
+      //     widths: ['50%', '50%'], // Ajustar ancho: columna de texto vs precios
+      //     body: [
+      //       [{ text: 'TOTAL COST', bold: true }, { text: `${data.total_prices.total_cost.join(' / ')}` }],
+      //       [{ text: 'EXTERNAL UTILITY', bold: true }, { text: `${data.total_prices.external_utility.join(' / ') || 'N/A'}` }],
+      //       [{ text: 'EXTERNAL TAXES', bold: true }, { text: `${data.total_prices.cost_external_taxes.join(' / ')}` }],
+      //       [{ text: 'TOTAL COST EXTERNAL', bold: true }, { text: `${data.total_prices.total_cost_external.join(' / ')}` }],
+      //     ],
+      //   },
+      //   layout: 'noBorders', // Opcional, si quieres bordes en la tabla
+      //   margin: [200, 0, 0, 0],
+      // },
+      // { text: '\n' }, // Espaciado entre tablas
+      // {
+      //   style: 'bodytotals',
+      //   table: {
+      //     widths: ['50%', '50%'], // Ajustar ancho
+      //     body: [
+      //       [{ text: 'SUBTOTAL', bold: true }, { text: `${data.total_prices.subtotal.join(' / ')}` }],
+      //       [{ text: 'COST OF TRANSFERS', bold: true }, { text: `${data.total_prices.cost_transfers.join(' / ')}` }],
+      //       [{ text: 'FINAL COST', bold: true }, { text: `${data.total_prices.final_cost.join(' / ')}` }],
+      //       [{ text: 'PER PERSON:', bold: true }, { text: `${data.total_prices.price_pp.join(' / ')}` }],
+      //     ],
+      //   },
+      //   layout: 'noBorders',
+      //   margin: [200, 0, 0, 0],
+      // },
     ],
     styles: {
         title: {fontSize: 18,

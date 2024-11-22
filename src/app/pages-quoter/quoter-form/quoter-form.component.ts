@@ -14,13 +14,14 @@ import { PdfexportService } from '../../Services/pdfexport/pdfexport.service';
 
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { CrucerosComponent } from '../cruceros/cruceros.component';
 (<any>pdfMake).addVirtualFileSystem(pdfFonts);
 
 @Component({
   selector: 'app-quoter-form',
   standalone: true,
   imports: [CommonModule
-    ,FormsModule,FlightsComponent,ExtOperatorComponent,ServicesComponent,HotelsComponent],
+    ,FormsModule,FlightsComponent,ExtOperatorComponent,ServicesComponent,HotelsComponent,CrucerosComponent],
   templateUrl: './quoter-form.component.html',
   styleUrl: './quoter-form.component.css'
 })
@@ -46,7 +47,7 @@ export class QuoterFormComponent implements  OnInit{
   prueba2 = signal<number[]>([]);
   prueba3 = signal<number[]>([]);
   prueba4 = signal<number[]>([]);
-  prueba5 = signal<number>(0);
+  prueba5 = signal<number[]>([]);
 
   destinations: string[] =['PERU','BOLIVIA','ECUADOR','COLOMBIA','ARGENTINA','CHILE']
 
@@ -66,6 +67,7 @@ export class QuoterFormComponent implements  OnInit{
     hotels:[],
     flights:[],
     operators:[],
+    cruises: [],
     total_prices:{
       total_hoteles: [], // Array vacío de números
       total_services: [], // Array vacío de números
@@ -100,6 +102,7 @@ export class QuoterFormComponent implements  OnInit{
     hotels: [],
     flights: [],
     operators:[],
+    cruises: [],
     total_prices:{
       total_hoteles: [], // Array vacío de números
       total_services: [], // Array vacío de números
@@ -225,6 +228,17 @@ export class QuoterFormComponent implements  OnInit{
   //   this.newQuoter.services.push(...temp)
   // }
 
+  onCruiseUpdate(cruises: any[]) {
+    // this.datosrecibidosFlights = flights;
+     this.newQuoter.cruises=cruises
+ 
+   }
+   onTotalPricesCruiseChange(prices: number[]) {
+     this.prueba5.set(prices)
+      this.newQuoter.total_prices.total_ext_cruises= prices
+    }
+
+    
   onFlightsUpdate(flights: any[]) {
    // this.datosrecibidosFlights = flights;
     this.newQuoter.flights=flights
@@ -359,6 +373,7 @@ export class QuoterFormComponent implements  OnInit{
     // Forzar la evaluación de todas las señales para que sean dependencias
     const prueba3Values = this.prueba3();
     const prueba4Values = this.prueba4();
+    const prueba5Values = this.prueba5();
     const totalCostExternal = this.getTotalCostExternal();
     
     // Determinar la longitud máxima con las señales ya evaluadas
@@ -369,7 +384,8 @@ export class QuoterFormComponent implements  OnInit{
       const temp1 = totalCostExternal[i] || 0;
       const temp2 = prueba3Values[i] || 0;
       const temp3 = prueba4Values[i] || 0;
-      subtotal[i] = temp1 + temp2 + temp3;
+      const temp4 = prueba5Values[i] || 0;
+      subtotal[i] = temp1 + temp2 + temp3+temp4;
     }
     this.newQuoter.total_prices.subtotal = subtotal
   

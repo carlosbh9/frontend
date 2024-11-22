@@ -60,7 +60,7 @@
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 max-h-24 overflow-y-auto block">{{ entrance.take_note }}</td>
             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
               <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="openEditModal(entrance)" ></i>
-              <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteEntrance(entrance._id)" ></i>
+              <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' [swal]="{title:'Confirmacion', text:'¿Está seguro de que desea eliminar este registro?' , showCancelButton: true}" (confirm)="deleteEntrance(entrance._id)" ></i>
             </td>
           </tr>
         </tbody>

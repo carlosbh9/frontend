@@ -53,7 +53,7 @@ export class FlightsComponent implements OnInit {
  
 
   ngOnInit(): void {
-    console.log('jajaja',this.flights)
+  
 
   }
 emtyFlight(){

@@ -2,13 +2,14 @@ import { Component , OnInit} from '@angular/core';
 import { EntrancesService } from '../../Services/entrances.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import Swal from 'sweetalert2'
 
 
 @Component({
   selector: 'app-entrances',
   standalone: true,
-  imports: [CommonModule,FormsModule ],
+  imports: [CommonModule,FormsModule , SweetAlert2Module],
   templateUrl: './entrances.component.html',
   styleUrl: './entrances.component.css'
 })
@@ -76,6 +77,7 @@ export class EntrancesComponent implements OnInit{
   async deleteEntrance(id: string) {
     try {
       await this.entrancesService.deleteEntrance(id);
+      Swal.fire('Exsito','Registro borrado','success')
       this.fetchEntrances();
     } catch (error) {
       console.error('Error deleting entrance', error);

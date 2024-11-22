@@ -42,11 +42,10 @@ export class ExtOperatorComponent implements OnInit {
 
   ngOnInit(): void {
     this.porcentajeTD.set(this.porcentajeTd() || 0);
-  
   }
 
   constructor(){
-    
+   // this.porcentajeTD.set(this.porcentajeTd() || 0);
     effect(() => {
       const total = this.totalCostExternal();
       const porcentaje = this.porcentajeTD();
