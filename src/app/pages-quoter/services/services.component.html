@@ -18,12 +18,12 @@
                         <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price {{$index+1}}</th>
         }
         <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Notes</th>
-        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Actions</th>
+        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-20-px">Actions</th>
         </tr>
     </thead>
     <tbody >
     
-        @for (dayService of services; track $index) {
+        @for (dayService of services; track $index; ;let i=$index) {
             @for (service of dayService.services; track $index ;let innerIndex=$index) {
                 <tr class="text-gray-700 dark:text-gray-1000">
                     @if (innerIndex === 0) {
@@ -39,7 +39,7 @@
                     }
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.city}}</td>
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.name_service}}</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">${{service.price_base | currency}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.price_base | currency}}</td>
                     @for (price of service.prices; track $index ; let priceIndex = $index) {
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{price | currency}}</td>
                     }
@@ -48,7 +48,7 @@
                     @if (innerIndex===0) {
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap">
                     <i (click)="openModalEdit(dayService)" class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2'></i>
-                    <i (click)="closeModalEdit()" class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2'></i>
+                    <i (click)="deleteService(i)" class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2'></i>
                 </td>
             }@else{
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap"></td>

@@ -48,24 +48,6 @@ export class ServicesComponent {
     }
   }
 
-  addItemService(datos:any){
-    const uu = datos.prices[0]
-    this.datosrecibidosService={
-      date: datos.date,
-      city: datos.city,
-      name_service: datos.name_service,
-      price_base: datos.price_pp,
-      prices:datos.prices,
-      notes: datos.notes
-    }
-
-    if(this.datosrecibidosService.prices.length<this.number_paxs().length){
-      for(let i = this.datosrecibidosService.prices.length; i<this.number_paxs().length;i++){
-        this.datosrecibidosService.prices[i]=0
-      }
-    }
-
-  }
   onSubmitService(){
     if (this.datosrecibidosService.date !== this.previousDateService) {
       this.contDayServices++; // Incrementa el día solo si la fecha cambia
@@ -138,6 +120,12 @@ export class ServicesComponent {
 // Method to close modal
   closeModalEdit() {
     this.modalOpenEditService.set(false);
+    this.emitServices();
+  }
+
+  deleteService(index: number){
+    this.services.splice(index,1)
+    this.emitServices()
   }
 
   onModalmqQuoterChange(temp: any){

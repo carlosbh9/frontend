@@ -23,7 +23,7 @@ export interface Quoter {
     total_hoteles: number[];
     total_services: number[];
     total_cost: number[];
-    external_utility:[];
+    external_utility:number[];
     cost_external_taxes:number[];
     total_cost_external:number[];
     total_ext_operator: number[];

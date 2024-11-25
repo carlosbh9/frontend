@@ -14,6 +14,7 @@ export class ExtOperatorComponent implements OnInit {
   priceLength = input.required<number>();
   porcentajeTd =  input.required<number>()
   porcentajeChange = output<number>()
+ // @Input( ) porcentajeTd: number = 0
   @Input() operators: any[]=[]
   @Output() operatorsChange = new EventEmitter<any[]>();
  
@@ -33,28 +34,28 @@ export class ExtOperatorComponent implements OnInit {
   }
   prices: any[]=[]
   porcentajeTD = signal<number>(0)  
-  prueba: number = 0
-  // porcentajeTD = effect(() => {
-  //   const currentPorcentaje = this.porcentajeTd();
-  //   this.porcentajeChange.emit(currentPorcentaje);
-  //   console.log('el valor emitido es:', currentPorcentaje)
-  // })
+
+
 
   ngOnInit(): void {
-    this.porcentajeTD.set(this.porcentajeTd() || 0);
+ 
   }
 
   constructor(){
    // this.porcentajeTD.set(this.porcentajeTd() || 0);
     effect(() => {
       const total = this.totalCostExternal();
-      const porcentaje = this.porcentajeTD();
-      this.porcentajeChange.emit(porcentaje); 
       this.totalPricesChange.emit(total); // Emitir al componente padre
-      console.log('Precio total emitido:',this.prueba, this.porcentajeTD(), this.porcentajeTd()); // Debug
+     
     });
   
   }
+  onInputPorcentaje(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.porcentajeTD.set(parseFloat(input.value));
+    this.emitOperator(); 
+  }
+
 emtyFlight(){
   return this.newExternalOpe = {
     country: '',
@@ -98,16 +99,15 @@ onDelete(index: number){
 }
 
 private emitOperator() {
-  // this.prices.push(this.externalUtilityPrices())
-  // this.prices.push(this.externalTaxesPrices())
-  // this.prices.push(this.totalCostExternal())
  
+  this.porcentajeChange.emit(this.porcentajeTD()); 
   this.operatorsChange.emit(this.operators);
  
 }
 externalUtilityPrices = computed(() =>  {
   const totalPrices: number[] = [];
-  const td = this.porcentajeTd() 
+  const td = this.porcentajeTD() 
+
   // Recorrer cada vuelo (flight) en la tabla
   this.operators.forEach((flight: { prices: number[] }) => {
     // Recorrer cada precio dentro del array 'prices' del vuelo
@@ -121,7 +121,7 @@ externalUtilityPrices = computed(() =>  {
       }
     });
   });
-
+  
   const totalWithMultiplier = totalPrices.map(price => price * (td/100));
 
   return totalWithMultiplier;

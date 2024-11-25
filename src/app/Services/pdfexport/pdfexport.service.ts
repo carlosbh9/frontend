@@ -39,100 +39,13 @@ exportPdf(docDefinition: any): void {
 generatePdf(data : any,dataURL: string) : any {
 
 const tam = data.number_paxs.length;
+const tableBodyServices = this.createServicesTableContent(data, tam);
+const tableBodyHotels = this.createHotelsTableContent(data, tam);
+const tableBodyFlights = this.createFlightsTableContent(data, tam);
+    // Generar contenido de la tabla llamando a un solo método
+const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
 
-const tableHeader = [{ text: 'Day' ,style: 'header'}, { text: 'Date' ,style: 'header'},{ text: 'City' ,style: 'header'}, { text: 'Service',style: 'header' }, { text: 'Price Base' ,style: 'header'}];
-for (let i = 0; i < tam; i++) {
-    tableHeader.push({ text: `Price ${i + 1}`,style: 'header' });
-}
 
-const tableHeaderHotels = [
-  { text: 'Day' ,style: 'header'},
-  { text: 'Date'  ,style: 'header'},
-  { text: 'City'  ,style: 'header'},
-  { text: 'Hotel'  ,style: 'header'},
-  { text: 'Price Base' ,style: 'header' },
-];
-
-// Crear encabezados dinámicos para los precios según el número de pax
-for (let i = 0; i < tam; i++) {
-  tableHeaderHotels.push({ text: `Price ${i + 1}`  ,style: 'header'});
-}
- // Agregar las columnas de "Accommodations" y "Category" al final
- tableHeaderHotels.push({ text: 'Accommodations and Category' ,style: 'header' });
-// Iniciar el cuerpo de la tabla con el encabezado
-const tableBody = [tableHeader]
-const tableBodyhotels = [tableHeaderHotels];
-// Llenar el cuerpo de la tabla con los datos
-data.services.forEach((dayData : any)=> {
-    dayData.services.forEach((service: any) => {
-        const row = [
-           dayData.day.toString(),
-            dayData.date,
-            service.city,
-            service.name_service,
-            service.price_base.toString() 
-        ];
-
-        // Añadir precios en las columnas correspondientes
-        for (let i = 0; i < tam; i++) {
-            row.push( service.prices[i] !== undefined ? service.prices[i].toString() : '' );
-        }
-        console.log('totalrow1',row)
-        tableBody.push(row);
-    });   
-})
-
-//data.hotels.forEach((dayData: any) => {
-  data.hotels.forEach((hotel: any) => {
-    const row = [
-      hotel.day.toString(),
-    hotel.date,
-     hotel.city  ,
-      hotel.name_hotel ,
-    hotel.price_base.toString(),
-    ];
-
-    // Añadir precios en las columnas correspondientes
-    for (let i = 0; i < tam; i++) {
-      row.push(hotel.prices[i] !== undefined ? hotel.prices[i].toString() : '' );
-    }
-
-    // Añadir "Accommodations" y "Category" al final de la fila
-    row.push(hotel.accomodatios_category);
-
-    tableBodyhotels.push(row);
-  });
-//});
-
-  // Crear la fila de totales
-  const totalRow = [
-    { text: 'Total Prices', colSpan: 5, alignment: 'center', bold:true }, // Total Prices ocupa 4 columnas
-    {}, {}, {}, {}, // Deja las primeras 4 celdas vacías para que 'Total Prices' ocupe 4 columnas
-    ...data.total_prices.total_services.map((price: any) => {
-      return { text: price.toString(), bold:true }; // Mapea los totales de cada servicio a una celda
-    }),
-  ];
-
-  const totalRowHotels = [
-    { text: 'Total Prices', colSpan: 5, alignment: 'center' , bold:true}, // Total Prices ocupa las primeras 5 columnas
-    {}, {}, {}, {}, // Deja las primeras 5 celdas vacías
-    ...data.total_prices.total_services.map((price: any) => {
-      return { text: price.toString() , bold:true };
-    }),
-    '',  // Espacio vacío para "Accommodations"
-  ];
-
-  // Añadir la fila de totales al final de la tabla
-  tableBody.push(totalRow);
-
-  // Añadir la fila de totales al final de la tabla
-  tableBodyhotels.push(totalRowHotels);
-
-  const temp1 = 330-(tam*30)
-  const temp2 = ((330-(tam*30))/2)-10
-  
-
-  console.log('totalPrices:', data.total_prices);
     return {
       content: [
         {
@@ -175,7 +88,7 @@ data.services.forEach((dayData : any)=> {
             style: 'body',
             table: {
                 widths: [20, 60,30, '*', 30, ...Array(tam).fill(30)], // Ajustar anchos
-                body: tableBody
+                body: tableBodyServices
             },
             layout: 'lightHorizontalLines'
         },
@@ -185,40 +98,31 @@ data.services.forEach((dayData : any)=> {
         style: 'body',
         table: {
           widths: [20, 60, 50, '*', 30, ...Array(tam).fill(30), '*'], // Ajuste de anchos, añadiendo espacio para Accommodation y Category
-          body: tableBodyhotels,
+          body: tableBodyHotels,
         },
         layout: 'lightHorizontalLines'
       },
       { text: '\n\n' },
-      // {
-      //   style: 'bodytotals',
-      //   table: {
-      //     widths: ['50%', '50%'], // Ajustar ancho: columna de texto vs precios
-      //     body: [
-      //       [{ text: 'TOTAL COST', bold: true }, { text: `${data.total_prices.total_cost.join(' / ')}` }],
-      //       [{ text: 'EXTERNAL UTILITY', bold: true }, { text: `${data.total_prices.external_utility.join(' / ') || 'N/A'}` }],
-      //       [{ text: 'EXTERNAL TAXES', bold: true }, { text: `${data.total_prices.cost_external_taxes.join(' / ')}` }],
-      //       [{ text: 'TOTAL COST EXTERNAL', bold: true }, { text: `${data.total_prices.total_cost_external.join(' / ')}` }],
-      //     ],
-      //   },
-      //   layout: 'noBorders', // Opcional, si quieres bordes en la tabla
-      //   margin: [200, 0, 0, 0],
-      // },
-      // { text: '\n' }, // Espaciado entre tablas
-      // {
-      //   style: 'bodytotals',
-      //   table: {
-      //     widths: ['50%', '50%'], // Ajustar ancho
-      //     body: [
-      //       [{ text: 'SUBTOTAL', bold: true }, { text: `${data.total_prices.subtotal.join(' / ')}` }],
-      //       [{ text: 'COST OF TRANSFERS', bold: true }, { text: `${data.total_prices.cost_transfers.join(' / ')}` }],
-      //       [{ text: 'FINAL COST', bold: true }, { text: `${data.total_prices.final_cost.join(' / ')}` }],
-      //       [{ text: 'PER PERSON:', bold: true }, { text: `${data.total_prices.price_pp.join(' / ')}` }],
-      //     ],
-      //   },
-      //   layout: 'noBorders',
-      //   margin: [200, 0, 0, 0],
-      // },
+      { text: 'Flights \n', style: 'subtitles' },
+      {
+        style: 'body',
+        table: {
+          widths: [60, 60, 50, ...Array(tam).fill(30), '*'], // Ajuste de anchos, añadiendo espacio para Accommodation y Category
+          body: tableBodyFlights,
+        },
+        layout: 'lightHorizontalLines'
+      },
+      { text: '\n\n' },
+      { text: 'External Operators \n', style: 'subtitles' },
+      {
+        style: 'body',
+        table: {
+          widths: [70, 70, ...Array(tam).fill(50), '*'], // Ajustar anchos de las columnas
+          body: tableBodyOpertators,
+        },
+        layout: 'lightHorizontalLines',
+      },
+
     ],
     styles: {
         title: {fontSize: 18,
@@ -240,5 +144,209 @@ data.services.forEach((dayData : any)=> {
    
     
     }
+  }
+ // Método para generar contenido de la tabla de servicios
+ private createServicesTableContent(data: any, tam: number): any[] {
+  const tableHeader = [
+    { text: 'Day', style: 'header' },
+    { text: 'Date', style: 'header' },
+    { text: 'City', style: 'header' },
+    { text: 'Service', style: 'header' },
+    { text: 'Price Base', style: 'header' },
+  ];
+
+  // Crear encabezados dinámicos para los precios
+  for (let i = 0; i < tam; i++) {
+    tableHeader.push({ text: `Price ${i + 1}`, style: 'header' });
+  }
+
+  const tableBody: any[] = [tableHeader];
+
+  // Llenar el cuerpo de la tabla con datos de servicios
+  data.services.forEach((dayData: any) => {
+    dayData.services.forEach((service: any) => {
+      const row = [
+        dayData.day.toString(),
+        dayData.date,
+        service.city,
+        service.name_service,
+        service.price_base.toString(),
+      ];
+
+      // Añadir precios dinámicos
+      for (let i = 0; i < tam; i++) {
+        row.push(service.prices[i] !== undefined ? service.prices[i].toString() : '');
+      }
+
+      tableBody.push(row);
+    });
+  });
+
+  // Crear fila de totales
+  const totalRow = [
+    { text: 'Total Prices', colSpan: 5, alignment: 'center', bold: true },
+    {}, {}, {}, {}, // Celdas vacías para las columnas colapsadas
+    ...data.total_prices.total_services.map((price: any) => {
+      return { text: price.toString(), bold: true };
+    }),
+  ];
+
+  tableBody.push(totalRow);
+  return tableBody;
+}
+ // Método para generar contenido de la tabla de hoteles
+ private createHotelsTableContent(data: any, tam: number): any[] {
+  const tableHeaderHotels = [
+    { text: 'Day', style: 'header' },
+    { text: 'Date', style: 'header' },
+    { text: 'City', style: 'header' },
+    { text: 'Hotel', style: 'header' },
+    { text: 'Price Base', style: 'header' },
+  ];
+
+  // Crear encabezados dinámicos para los precios
+  for (let i = 0; i < tam; i++) {
+    tableHeaderHotels.push({ text: `Price ${i + 1}`, style: 'header' });
+  }
+
+  // Agregar columna de "Accommodations" y "Category"
+  tableHeaderHotels.push({ text: 'Accommodations and Category', style: 'header' });
+
+  const tableBodyHotels: any[] = [tableHeaderHotels];
+
+  // Llenar el cuerpo de la tabla con datos de hoteles
+  data.hotels.forEach((hotel: any) => {
+    const row = [
+      hotel.day.toString(),
+      hotel.date,
+      hotel.city,
+      hotel.name_hotel,
+      hotel.price_base.toString(),
+    ];
+
+    // Añadir precios dinámicos
+    for (let i = 0; i < tam; i++) {
+      row.push(hotel.prices[i] !== undefined ? hotel.prices[i].toString() : '');
+    }
+
+    // Añadir "Accommodations" y "Category"
+    row.push(hotel.accomodatios_category);
+
+    tableBodyHotels.push(row);
+  });
+
+  // Crear fila de totales
+  const totalRowHotels = [
+    { text: 'Total Prices', colSpan: 5, alignment: 'center', bold: true },
+    {}, {}, {}, {}, // Celdas vacías para las columnas colapsadas
+    ...data.total_prices.total_hoteles.map((price: any) => {
+      return { text: price.toString(), bold: true };
+    }),
+    '', // Espacio vacío para "Accommodations"
+  ];
+
+  tableBodyHotels.push(totalRowHotels);
+  return tableBodyHotels;
+}
+
+  private createFlightsTableContent(data: any, tam: number): any[] {
+    // Crear encabezados
+    const tableHeader = [
+      { text: 'Date', style: 'header' },
+      { text: 'Route', style: 'header' },
+      { text: 'Conf. Price', style: 'header' },
+    ];
+
+    // Agregar cabeceras dinámicas para precios
+    for (let i = 0; i < tam; i++) {
+      tableHeader.push({ text: `Price ${i + 1}`, style: 'header' });
+    }
+
+    // Agregar columna de notas
+    tableHeader.push({ text: 'Notes', style: 'header' });
+
+    // Crear cuerpo de la tabla
+    const tableBody: any[] = [tableHeader];
+    data.flights.forEach((flight: any) => {
+      const row = [
+        flight.date,
+        flight.route,
+        flight.price_conf.toString(),
+      ];
+
+      // Agregar precios dinámicos
+      for (let i = 0; i < tam; i++) {
+        row.push(flight.prices[i] !== undefined ? flight.prices[i].toString() : '');
+      }
+
+      // Agregar notas
+      row.push(flight.notes);
+
+      tableBody.push(row);
+    });
+
+    // Crear fila de totales
+    const totalRow = [
+      { text: 'Total Prices', colSpan: 3, alignment: 'center', bold: true },
+      {}, {}, // Celdas vacías para las columnas colapsadas
+      ...data.total_prices.total_flights.map((price: any) => {
+        return { text: price.toString(), bold: true };
+      }),
+      '', // Espacio vacío para "Notes"
+    ];
+
+    // Agregar la fila de totales al final del cuerpo
+    tableBody.push(totalRow);
+
+    return tableBody;
+  }
+  private createOperatorsTableContent(data: any, tam: number): any[] {
+    // Crear encabezados
+    const tableHeader = [
+      { text: 'Country', style: 'header' },
+      { text: 'Operator', style: 'header' },
+    ];
+
+    // Agregar cabeceras dinámicas para precios
+    for (let i = 0; i < tam; i++) {
+      tableHeader.push({ text: `Price ${i + 1}`, style: 'header' });
+    }
+
+    // Agregar columna de notas
+    tableHeader.push({ text: 'Notes', style: 'header' });
+
+    // Crear cuerpo de la tabla
+    const tableBody: any[] = [tableHeader];
+    data.operators.forEach((operator: any) => {
+      const row = [
+        operator.country,
+        operator.name_operator,
+      ];
+
+      // Agregar precios dinámicos
+      for (let i = 0; i < tam; i++) {
+        row.push(operator.prices[i] !== undefined ? operator.prices[i].toString() : '');
+      }
+
+      // Agregar notas
+      row.push(operator.notes);
+
+      tableBody.push(row);
+    });
+
+    // Crear fila de totales
+    const totalRow = [
+      { text: 'Total Prices', colSpan: 2, alignment: 'center', bold: true },
+      {}, // Celdas vacías para las columnas colapsadas
+      ...data.total_prices.total_ext_operator.map((price: any) => {
+        return { text: price.toString(), bold: true };
+      }),
+      '', // Espacio vacío para "Notes"
+    ];
+
+    // Agregar la fila de totales al final del cuerpo
+    tableBody.push(totalRow);
+
+    return tableBody;
   }
 }

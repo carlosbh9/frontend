@@ -48,6 +48,7 @@ export class QuoterFormComponent implements  OnInit{
   prueba3 = signal<number[]>([]);
   prueba4 = signal<number[]>([]);
   prueba5 = signal<number[]>([]);
+  prueba6 = signal<number[]>([]);
 
   destinations: string[] =['PERU','BOLIVIA','ECUADOR','COLOMBIA','ARGENTINA','CHILE']
 
@@ -72,7 +73,7 @@ export class QuoterFormComponent implements  OnInit{
       total_hoteles: [], // Array vacío de números
       total_services: [], // Array vacío de números
       total_cost:[],
-      external_utility:[],
+      external_utility:[0],
       cost_external_taxes:[],
       total_cost_external:[],
       total_ext_operator: [], // Array vacío de números
@@ -107,7 +108,7 @@ export class QuoterFormComponent implements  OnInit{
       total_hoteles: [], // Array vacío de números
       total_services: [], // Array vacío de números
       total_cost:[],
-      external_utility:[],
+      external_utility:[0],
       cost_external_taxes:[],
       total_cost_external:[],
       total_ext_operator: [], // Array vacío de números
@@ -137,6 +138,8 @@ export class QuoterFormComponent implements  OnInit{
         this.getQuoterbyId(id);
         this.showUpdate= true;
         this.idQuoter=id;
+       
+    
     
       }
     })
@@ -148,15 +151,25 @@ export class QuoterFormComponent implements  OnInit{
 
 
   }
+
+  onInputChange(event: Event, index: number) {
+    const input = event.target as HTMLInputElement;
+    const updatedValues = [...this.prueba6()]; // Copiar el array actual
+    updatedValues[index] = parseFloat(input.value); // Actualizar el valor en el índice correspondiente
+    this.prueba6.set(updatedValues); // Actualizar la señal
+  }
+
    async getQuoterbyId(Id: string): Promise<void>{
     try {
       this.newQuoter = await this.quoterService.getQuoterById(Id);
       
-      console.log('quoter cargado',this.newQuoter)
+      console.log('quoter cargado',this.newQuoter) 
+      // this.newQuoter.total_prices.external_utility= Array(this.newQuoter.number_paxs.length).fill(0)
       this.prueba.set(this.newQuoter.total_prices.total_hoteles)
       this.prueba2.set(this.newQuoter.total_prices.total_services)
       this.prueba3.set(this.newQuoter.total_prices.total_ext_operator)
       this.prueba4.set(this.newQuoter.total_prices.total_flights)
+      this.prueba6.set(this.newQuoter.total_prices.external_utility)
 
 
     } catch (error) {
@@ -342,12 +355,17 @@ export class QuoterFormComponent implements  OnInit{
   getExternalTaxes = computed(() => {
     const totalExternal: number[]=[];
       const totalCost = this.getTotalCosts();
+      const external_utility = this.prueba6()
       const maxLength = Math.max(this.newQuoter.number_paxs.length);
       for (let i = 0; i < maxLength; i++) {
         const temp = totalCost[i] || 0; // Si no existe valor, toma 0
-        totalExternal[i] = temp * 0.15;
+        const temp1 = external_utility[i] || 0
+        totalExternal[i] = (temp+temp1) * 0.15;
       }
       this.newQuoter.total_prices.cost_external_taxes=totalExternal
+      this.newQuoter.total_prices.external_utility=  this.prueba6()
+
+      console.log('prueba 6', this.prueba6(), this.newQuoter.total_prices.external_utility)
       return totalExternal
   });
 
@@ -427,7 +445,12 @@ export class QuoterFormComponent implements  OnInit{
     for (let i = 0; i < maxLength; i++) {
       const temp1 = finalCostValues[i] || 0;
       const temp2 = this.newQuoter.number_paxs[i] || 0;
-      price_pp[i] = temp1 /temp2;
+      // Validar que temp2 sea mayor que 0 antes de dividir
+    if (temp2 > 0) {
+      price_pp[i] = temp1 / temp2;
+    } else {
+      price_pp[i] = 0; // Valor por defecto si no es posible dividir
+    }
     }
     this.newQuoter.total_prices.price_pp= price_pp
     return price_pp
@@ -461,29 +484,6 @@ export class QuoterFormComponent implements  OnInit{
       const docDefinition = this.pdfExportService.generatePdf(this.newQuoter,dataURL);
       this.pdfExportService.exportPdf(docDefinition);
 
-    }
-    @ViewChild(HotelsComponent) hotelsComponent!: HotelsComponent;
+    }   @ViewChild(HotelsComponent) hotelsComponent!: HotelsComponent;
   
-  //  async  generatePDF() {
-  
-  // // Ocultar la columna en el hijo
-  // this.hotelsComponent.toggleColumnVisibility(true);
-
-  // // Esperar para asegurar que el DOM se renderice completamente
-  // await new Promise((resolve) => setTimeout(resolve, 200));
-
-  // const pdf = new jsPDF();
-  // const table = this.hotelsComponent.childTable.nativeElement;
-
-  // // Generar el canvas
-  // const canvas = await html2canvas(table, { scale: 1 });
-  // const imgData = canvas.toDataURL('image/jpeg', 0.8);
-  // pdf.addImage(imgData, 'JPEG', 0, 0, 210, (canvas.height * 210) / canvas.width);
-
-  // // Restaurar visibilidad de la columna
-  // this.hotelsComponent.toggleColumnVisibility(false);
-
-  // // Guardar el PDF
-  // pdf.save('tabla.pdf');
-  //   }
-}
+  }

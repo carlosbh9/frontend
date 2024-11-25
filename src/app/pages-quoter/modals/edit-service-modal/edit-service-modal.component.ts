@@ -162,10 +162,9 @@ async addItem(){
 
   this.item.number_paxs = this.number_paxs() || []; // Proporcionar un valor por defecto si es undefined
 
-  console.log('que paso?',this.item)
   
   item2  = await this.priceService.calculatePrice(this.item)
-  console.log('calculo?',item2)
+  
 
   this.dayData.services.push(item2.services[0])
 }
