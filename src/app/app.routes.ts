@@ -22,25 +22,29 @@ import { MasterQuoterComponent } from './pages-quoter/master-quoter/master-quote
 import { LimaGourmetComponent } from './pages/lima-gourmet/lima-gourmet.component';
 import { MasterQuoterListComponent } from './pages-quoter/master-quoter-list/master-quoter-list.component';
 
-export const routes: Routes = [
+import { authGuard } from '../app/Services/AuthService/auth.guard'
 
-    {   path:'',component: LayoutComponent,
+export const routes: Routes = [
+   // , canActivate: [authGuard] ,data:{role:'admin'}
+    {   path:'dashboard',component: LayoutComponent,
+        
         children:[
             {   path:'train', component: TrainComponent},
-            {   path:'entrance', component:EntrancesComponent},
-            {   path:'expeditions', component: ExpeditionsComponent},
-            {   path: 'experiences', component: ExperiencesComponent},
-            {   path: 'restaurant', component: RestaurantComponent},
-            {   path:'guides', component:GuidesComponent},
-            {   path:'operators', component : OperatorsComponent},
-            {   path:'services-operators/:id',component: OperatorsServicesComponent},
-            {   path:'train', component:TrainComponent},
-            {   path:'services-train/:id',component: TrainServicesComponent},
-            {   path:'transport', component:TransportComponent},
-            {   path:'hotel', component: HotelComponent},
-            {   path:'services-hotel/:id',component: HotelServicesComponent},
-            {   path:'lima-gourmet', component:LimaGourmetComponent},
+            {   path:'entrance', component:EntrancesComponent ,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path:'expeditions', component: ExpeditionsComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path: 'experiences', component: ExperiencesComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path: 'restaurant', component: RestaurantComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path:'guides', component:GuidesComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path:'operators', component : OperatorsComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path:'services-operators/:id',component: OperatorsServicesComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path:'train', component:TrainComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path:'services-train/:id',component: TrainServicesComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path:'transport', component:TransportComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path:'hotel', component: HotelComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path:'services-hotel/:id',component: HotelServicesComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path:'lima-gourmet', component:LimaGourmetComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
             {   path:'quoter-main',component: QuoterComponent,
+                canActivate: [authGuard] ,data:{role:['TD','ventas']},
                 children: [
                     {   path:'quoter-form', component:QuoterFormComponent}, 
                     {   path:'quoter-list', component:QuoterListComponent},
@@ -49,11 +53,12 @@ export const routes: Routes = [
                     {   path:'master-quoter-list', component:MasterQuoterListComponent},
                     {   path:'master-quoter-edit/:id',component:MasterQuoterComponent}
                 ]
-            },
-            {   path:'login',component: LoginComponent}
+            }
+            
         ]
-    }
+    },
+    {   path:'login',component: LoginComponent},
 
-    //{   path:'**',component: LayoutComponent}
+    {   path:'**',redirectTo:'dashboard',pathMatch:'full'}
 
 ];

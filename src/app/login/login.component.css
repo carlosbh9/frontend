@@ -1,0 +1,5 @@
+.login_img_section {
+    background: linear-gradient(rgba(2,2,2,.3),rgba(0,0,0,.3)),url('/images/login.jpg') center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }

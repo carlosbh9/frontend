@@ -1,5 +1,6 @@
 
 export interface Quoter {
+  //  contact: string;
     guest: string;
     FileCode: string;
     travelDate: {

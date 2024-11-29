@@ -25,6 +25,7 @@ export class SidebarComponent {
 @Input() isOpen = false;
 @Output() closeSidebar = new EventEmitter<void>();
 
+
 onCloseSidebar() {
   this.closeSidebar.emit();
 }

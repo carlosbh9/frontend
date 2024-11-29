@@ -19,34 +19,7 @@ export class MasterQuoterListComponent {
   filterText: string = '';
   // selectedQuoter: Quoter 
   
-  // emptyQuoter: Quoter = {
-  //   guest: '',
-  //   FileCode: '',
-  //   travelDate: {
-  //     start: '',
-  //     end: ''
-  //   },
-  //   accomodations: '',
-  //   totalNights: 0,
-  //   number_paxs: [0],
-  //   travel_agent: '',
-  //   exchange_rate: '',
-  //   services: [],
-  //   hotels: [],
-  //   flights: [],
-  //   operators:[],
-  //   total_prices:{
-  //     total_hoteles: [],
-  //     total_services: [],
-  //     total_ext_operator: [],
-  //     total_ext_cruises: [],
-  //     total_flights: [],
-  //     subtotal: [],
-  //     cost_transfers: [],
-  //     final_cost: [],
-  //     price_pp: []
-  //   }
-//}
+ 
   constructor(private router: Router,private route: ActivatedRoute) {
    // this.selectedQuoter = this.emptyQuoter; // Mueve la inicialización aquí
   }
@@ -54,13 +27,7 @@ export class MasterQuoterListComponent {
     this.fetchMasterQuoter();
   }
   async fetchMasterQuoter (){
-    // try{
-    //   this.Masterquotes = await this.MasterquoterService.getAllMasterQuoter();
-    //   this.filteredQuotes = this.Masterquotes
-    //   console.log(this.Masterquotes)
-    // }catch{
-    //   console.error('Error fetching entrances');
-    // }
+ 
     try {
       this.Masterquotes = await this.MasterquoterService.getAllMasterQuoter();
       

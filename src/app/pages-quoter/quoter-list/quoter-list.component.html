@@ -5,14 +5,14 @@
               <input
                 type="text"
                 [(ngModel)]="filterText"
-                (input)="filterQuotes()"
-                placeholder="Filter quotes..."
+                (input)="filterContacts()"
+                placeholder="Filter Contacts..."
                 class="p-2 border border-gray-300 rounded"
               />
             </div>
             <td>
            <!-- Botón para abrir el modal -->
-              <button (click)="quoterForm()" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Add Quoter</button>
+              <button (click)="contactForm()" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Add Quoter</button>
             </td>
           </div>    
         <div class="p-6 block w-full overflow-x-auto">
@@ -21,29 +21,66 @@
             <thead>
                 <tr>
                 <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-left">Guest</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">File Code</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">Travel Dates</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left">Accommodations</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">Total Nights</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">Number paxs</th>
-                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">Travel agent</th>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-left">Quoter</th>
                 <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @for (quoter of filteredQuotes; track $index) {
+                @for (contact of filteredContacts; track $index) {
                 <tr class="text-gray-700 dark:text-gray-1000">
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{quoter.guest}}</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{quoter.FileCode}}</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{quoter.travelDate.start | date }} - {{quoter.travelDate.end | date }}</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{quoter.accomodations}}</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{quoter.totalNights}}</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{quoter.number_paxs}}</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{quoter.travel_agent}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{contact.name}}</td>
+                    <!-- <td class="relative border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+                          <button 
+                          class="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded w-full text-left flex items-center justify-between"
+                          (click)="toggleDropdown()">
+                          Quotes
+                         
+                        </button>
+
+                        <ul 
+                          *ngIf="dropdownOpen" 
+                          class="absolute mt-1 w-86 bg-white border border-gray-300 rounded shadow">
+                          <li 
+                            *ngFor="let item of contact.cotizations" 
+                            (click)="selectOption(item)"
+                            class="absolute flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                            
+                            {{ item.createdAt | date  }} - {{ item.createdAt | date: 'shortTime' }} 
+                            <i class="bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2" (click)="editQuoter(item.id)"></i>
+                            <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteQuoter(item.id)" ></i>
+                            <i class='bx bx-download text-2xl text-green-500 dark:text-red-700 mr-2' (click)="generatePDF(item.id)"></i>
+                          </li>
+                        </ul>
+                    </td> -->
+                    <td class="relative border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4">
+                      <!-- Botón que activa el menú -->
+                      <button 
+                        class="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded w-full text-left flex items-center justify-between"
+                        (click)="toggleDropdown(contact._id)">
+                        Quotes
+                      </button>
+                    
+                      <!-- Opciones del menú -->
+                      <ul 
+                        *ngIf="dropdownOpen === contact._id" 
+                        [id]="'dropdown-' + contact.id"
+                        class="absolute left-0 mt-1 w-86 bg-white border border-gray-300 rounded shadow z-50">
+                        <li 
+                          *ngFor="let item of contact.cotizations" 
+                          (click)="selectOption(item)"
+                          class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                          {{ item.createdAt | date }} - {{ item.createdAt | date: 'shortTime' }}
+                          <i class="bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2" (click)="editQuoter(item.id)"></i>
+                          <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteQuoter(item.id)"></i>
+                          <i class='bx bx-download text-2xl text-green-500 dark:text-red-700 mr-2' (click)="generatePDF(item.id)"></i>
+                        </li>
+                      </ul>
+                    </td>
+                    
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                        <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="editQuoter(quoter._id)"></i>
-                        <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteQuoter(quoter._id)"></i>
-                        <i class='bx bx-download text-2xl text-green-500 dark:text-red-700 mr-2'></i>
+                        <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="editQuoter(contact._id)"></i>
+                        <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteContact(contact._id)"></i>
+                        <i class='bx bx-download text-2xl text-green-500 dark:text-red-700 mr-2' ></i>
                       </td>
                 </tr>
               }

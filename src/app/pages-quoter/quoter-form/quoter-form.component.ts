@@ -10,11 +10,13 @@ import { ServicesComponent } from '../services/services.component';
 import { HotelsComponent } from '../hotels/hotels.component';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { CalculatepricesService } from '../../Services/controllerprices/calculateprices.service';
 import { PdfexportService } from '../../Services/pdfexport/pdfexport.service';
 
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { CrucerosComponent } from '../cruceros/cruceros.component';
+import { ContactService } from '../../Services/contact/contact.service';
 (<any>pdfMake).addVirtualFileSystem(pdfFonts);
 
 @Component({
@@ -27,10 +29,17 @@ import { CrucerosComponent } from '../cruceros/cruceros.component';
 })
 export class QuoterFormComponent implements  OnInit{
   quoterService = inject(QuoterService)
+  contactService = inject(ContactService)
   route = inject(ActivatedRoute)
+  create = inject(CalculatepricesService)
   pdfExportService = inject(PdfexportService)
+
   modalOpen = signal(false);
   modalData = signal<any[]>([])
+  contacts : any[]=[]
+  filteredOptions: any[] = [];  // Opciones filtradas
+  showOptions: boolean = false;  // Controla la visibilidad de las opciones
+
   totalPriceHotels: number[] = [];
   totalPriceServices: number[] = [];
   totalPricesFlights: number[]=[]
@@ -53,6 +62,7 @@ export class QuoterFormComponent implements  OnInit{
   destinations: string[] =['PERU','BOLIVIA','ECUADOR','COLOMBIA','ARGENTINA','CHILE']
 
   newQuoter: Quoter = {
+    
     guest:'',
     FileCode: '',
     travelDate:{
@@ -130,7 +140,8 @@ export class QuoterFormComponent implements  OnInit{
 
 
   ngOnInit(): void {
-    //this.calculateTotalPrice();
+    
+    this.loadContacts();
     this.route.paramMap.subscribe(params => {
       
       const id = params.get('id');
@@ -158,6 +169,26 @@ export class QuoterFormComponent implements  OnInit{
     updatedValues[index] = parseFloat(input.value); // Actualizar el valor en el índice correspondiente
     this.prueba6.set(updatedValues); // Actualizar la señal
   }
+  
+async loadContacts() {
+  try {
+    this.contacts = await this.contactService.getAllContacts();
+    this.filteredOptions = this.contacts;  // Inicializa las opciones filtradas
+  } catch (error) {
+    console.log('Error al cargar los Master Quoters', error);
+  }
+}
+ // Filtrar opciones en Master Quoter
+ filterOptions(): void {
+  this.filteredOptions = this.contacts.filter(option =>
+    option.name.toLowerCase().includes(this.newQuoter.guest.toLowerCase())
+  );
+}
+// Seleccionar opción de Contacts
+selectOption(option: any): void {
+  this.newQuoter.guest= option.name// Filtrar días basados en la selección de Master Quoter
+  this.showOptions= false
+}
 
    async getQuoterbyId(Id: string): Promise<void>{
     try {
@@ -310,16 +341,28 @@ export class QuoterFormComponent implements  OnInit{
 
   onSubmit(){
    
-    this.quoterService.createQuoter(this.newQuoter).then(
-      response => {
-        console.log('Quoter added',response)
-        this.newQuoter=this.emptyQuoter
-        //this.fetchHotels();
+    // this.quoterService.createQuoter(this.newQuoter).then(
+    //   response => {
+    //     console.log('Quoter added',response)
+    //     this.newQuoter=this.emptyQuoter
+    //     //this.fetchHotels();
+    //   },
+    //   error => {
+    //     console.error('Error adding Quoter', error)
+    //   }
+    // )
+
+    this.create.createQuoter(this.newQuoter).subscribe({
+      next: response => {
+        console.log('Quoter added', response);
+        console.log('Quoter added', this.newQuoter);
       },
-      error => {
-        console.error('Error adding Quoter', error)
+      error: error => {
+        console.error('Error adding Quoter', error);
+        console.log('Quoter error', this.newQuoter);
       }
-    )
+    });
+
   }
   onUpdate(){
     this.quoterService.updateQuoter(this.idQuoter,this.newQuoter).then(
@@ -484,6 +527,7 @@ export class QuoterFormComponent implements  OnInit{
       const docDefinition = this.pdfExportService.generatePdf(this.newQuoter,dataURL);
       this.pdfExportService.exportPdf(docDefinition);
 
-    }   @ViewChild(HotelsComponent) hotelsComponent!: HotelsComponent;
+    }   
+    @ViewChild(HotelsComponent) hotelsComponent!: HotelsComponent;
   
   }

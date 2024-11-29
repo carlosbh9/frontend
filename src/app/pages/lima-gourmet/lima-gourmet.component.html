@@ -29,7 +29,7 @@
         <table class="items-center w-full bg-transparent border-collapse">
             <thead>
               <tr>
-                <th rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Code</th>
+      
                 <th rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Activitie</th>
                 <th rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Year</th>
                 <th rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Price per person</th>
@@ -47,7 +47,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let gourmet of filteredGourmets" class="text-gray-700 dark:text-gray-100">
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ gourmet.code }}</td>
+                
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ gourmet.activitie }}</td>
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ gourmet.year }}</td>
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 font-bold text-emerald-700">{{ gourmet.price_pp | currency }}</td>
@@ -102,10 +102,7 @@
         <div class="my-5 mr-5 ml-5 flex justify-center">
           <form (submit)="onSubmit()" id="add_lima_gourmet_form" class="w-full">
             <div class="">
-              <div class="mb-4">
-                <label for="code" class="block text-md text-gray-600 dark:text-gray-50">Code</label>
-                <input type="text" id="code" name="code" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Code" [(ngModel)]="newGourmet.code" required>
-              </div>
+             
               <div class="mb-4">
                 <label for="code" class="block text-md text-gray-600 dark:text-gray-50">Code</label>
                 <input type="text" id="activitie" name="activitie" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Activitie" [(ngModel)]="newGourmet.activitie" required>
@@ -182,10 +179,7 @@
         <div class="my-5 mr-5 ml-5 flex justify-center">
           <form (submit)="onEditSubmit()" id="edit_lima_gourmet_form" class="w-full">
             <div class="">
-              <div class="mb-4">
-                <label for="code" class="block text-md text-gray-600 dark:text-gray-50">Code</label>
-                <input type="text" id="code" name="code" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Code" [(ngModel)]="selectedGourmet.code" required>
-              </div>
+             
               <div class="mb-4">
                 <label for="code" class="block text-md text-gray-600 dark:text-gray-50">Code</label>
                 <input type="text" id="activitie" name="activitie" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Activitie" [(ngModel)]="selectedGourmet.activitie" required>

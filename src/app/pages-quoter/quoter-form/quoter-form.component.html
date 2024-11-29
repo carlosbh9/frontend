@@ -20,8 +20,30 @@
                            </select>
                         </div>
                         <div>
+                            <!-- <label for="guest"  class="block text-sm font-medium text-gray-700">Guest</label>
+                            <input [(ngModel)]="newQuoter.guest" name="newQuoter.guest" type="text" id="guest" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Guest"> -->
+                          
                             <label for="guest"  class="block text-sm font-medium text-gray-700">Guest</label>
-                            <input [(ngModel)]="newQuoter.guest" name="newQuoter.guest" type="text" id="guest" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Guest">
+                            <input
+                                id="searchInput"
+                                type="text"
+                                [(ngModel)]="newQuoter.guest"
+                                (input)="filterOptions()"  
+                                (focus)="showOptions = true"
+                                name="search"
+                                placeholder="Search Guest..."
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            />
+                            <!-- Opciones filtradas -->
+                            <ul id="optionsDropdown" *ngIf="showOptions && filteredOptions.length" class=" left-0 right-0 bg-white border border-gray-300 mt-1 rounded-md max-h-40 overflow-auto z-10">
+                                <li
+                                *ngFor="let option of filteredOptions"
+                                (click)="selectOption(option)"
+                                class="p-2 hover:bg-gray-200 cursor-pointer"
+                                >
+                                {{ option.name }}
+                                </li>
+                            </ul>
                         </div>
                   
                         <div>

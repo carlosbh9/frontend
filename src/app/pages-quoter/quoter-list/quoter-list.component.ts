@@ -1,10 +1,11 @@
 import { Component,inject ,OnInit} from '@angular/core';
-import { QuoterService} from '../../Services/quoter.service'
-import { Quoter } from '../../interfaces/quoter.interface';
 import { Router,ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { ContactService } from '../../Services/contact/contact.service';
+import { QuoterService } from '../../Services/quoter.service';
+import { PdfexportService } from '../../Services/pdfexport/pdfexport.service';
 @Component({
   selector: 'app-quoter-list',
   standalone: true,
@@ -14,77 +15,85 @@ import { RouterModule } from '@angular/router';
 })
 export class QuoterListComponent implements OnInit{
   quoterService = inject(QuoterService)
+  contactService = inject(ContactService)
+  pdfExportService = inject(PdfexportService)
   //router = inject(Router)
   //route= inject(ActivatedRoute) 
-  quotes: Quoter[] = []
-  filteredQuotes: any[] = [];
+  contacts: any[] = []
+  filteredContacts: any[] = [];
   filterText: string = '';
- // selectedQuoter: Quoter 
-  
-  // emptyQuoter: Quoter = {
-  //   guest: '',
-  //   FileCode: '',
-  //   travelDate: {
-  //     start: '',
-  //     end: ''
-  //   },
-  //   accomodations: '',
-  //   totalNights: 0,
-  //   number_paxs: [0],
-  //   travel_agent: '',
-  //   exchange_rate: '',
-  //   services: [],
-  //   hotels: [],
-  //   flights: [],
-  //   operators:[],
-  //   total_prices:{
-  //     total_hoteles: [],
-  //     total_services: [],
-  //     total_ext_operator: [],
-  //     total_ext_cruises: [],
-  //     total_flights: [],
-  //     subtotal: [],
-  //     cost_transfers: [],
-  //     final_cost: [],
-  //     price_pp: []
-  //   }
-  // }
+  dropdownOpen: string | null = null;
+ 
   constructor(private router: Router,private route: ActivatedRoute) {
   //  this.selectedQuoter = this.emptyQuoter; // Mueve la inicialización aquí
   }
   ngOnInit(): void {
-    this.fetchQuoter();
+    this.fetchContacts();
   }
-  async fetchQuoter (){
-    try{
-      this.quotes = await this.quoterService.getAllQuoter();
-      this.filteredQuotes = this.quotes
-      console.log(this.quotes)
-    }catch{
-      console.error('Error fetching entrances');
+
+  // Método para obtener todos los contactos
+  async fetchContacts() {
+    try {
+      this.contacts = await this.contactService.getAllContacts();
+      this.filteredContacts = this.contacts; // Inicializa los contactos filtrados con todos los contactos
+      console.log(this.contacts); // Muestra en consola los contactos obtenidos
+    } catch (error) {
+      console.error('Error fetching contacts', error);
     }
   }
 
-  filterQuotes() {
-    this.filteredQuotes = this.quotes.filter(quoter =>
-      quoter.guest.toLowerCase().includes(this.filterText.toLowerCase())
+  // Método para filtrar los contactos según el nombre
+  filterContacts() {
+    this.filteredContacts = this.contacts.filter(contact =>
+      contact.name.toLowerCase().includes(this.filterText.toLowerCase()) // Filtra por nombre
     );
   }
-  quoterForm() {
-    this.router.navigate([`../quoter-form`],{ relativeTo: this.route });
-  }
-  async deleteQuoter(id: string) {
-    try {
-      await this.quoterService.deleteQuoter(id);
-      this.fetchQuoter();
-    } catch (error) {
-      console.error('Error deleting quoter', error);
-    }
+
+  // Método para navegar al formulario de creación de contacto
+  contactForm() {
+    this.router.navigate([`../contact-form`], { relativeTo: this.route });
   }
 
+  // Método para eliminar un contacto
+  async deleteContact(id: string) {
+    try {
+      await this.contactService.deleteContact(id); // Elimina el contacto usando el servicio
+      this.fetchContacts(); // Vuelve a cargar la lista de contactos
+    } catch (error) {
+      console.error('Error deleting contact', error);
+    }
+  }
   editQuoter(id: string){
+    console.log('id',id)
     this.router.navigate([`../quoter-edit`,id],{ relativeTo: this.route });
   }
 
+  async deleteQuoter(id: string){
+    try {
+      await this.quoterService.deleteQuoter(id); // Elimina el contacto usando el servicio
+      this.fetchContacts(); // Vuelve a cargar la lista de contactos
+    } catch (error) {
+      console.error('Error deleting Quoter', error);
+    }
+  }
+
+
+  toggleDropdown(contactId: string) {
+    //this.dropdownOpen = !this.dropdownOpen;
+    this.dropdownOpen = this.dropdownOpen === contactId ? null : contactId;
+
+  }
+  selectOption(option: { label: string; iconClass: string }) {
+  //  this.selectedOption = option;
+  //  this.dropdownOpen = false;
+  }
+  async generatePDF(id:string) {
+    const quoter = await this.quoterService.getQuoterById(id)
+    const dataURL = await this.pdfExportService.convertImageToDataURL('/images/image.png');
+
+    const docDefinition = this.pdfExportService.generatePdf(quoter,dataURL);
+    this.pdfExportService.exportPdf(docDefinition);
+
+  }   
 }
 
