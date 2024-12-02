@@ -376,6 +376,8 @@ selectOption(option: any): void {
     )
   }
 
+  
+
 
   getTotalCosts = computed(() => { 
     const totalSum: number[] = [];

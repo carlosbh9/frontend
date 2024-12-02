@@ -36,8 +36,8 @@
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{quoter.destinations}}</td>
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                         <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="editQuoter(quoter._id)"></i>
-                        <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteQuoter(quoter._id)"></i>
-                        <i class='bx bx-download text-2xl text-green-500 dark:text-red-700 mr-2'></i>
+                        <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' [swal]="{title:'Confirmation', text:'Are you sure you want to delete this record?' , showCancelButton: true}" (confirm)="deleteQuoter(quoter._id)"></i>
+                       
                       </td>
                 </tr>
               }

@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 gap-2 mb-2  ">
+<div class="grid grid-cols-1 gap-2 mb-2 overflow-y-auto ">
     <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
         <div class="flex flex-wrap items-center px-4 py-2">
             <div class="relative w-full max-w-full flex-grow flex-1 text-right">
@@ -15,7 +15,8 @@
               <button (click)="contactForm()" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Add Quoter</button>
             </td>
           </div>    
-        <div class="p-6 block w-full overflow-x-auto">
+          <div class="p-6 min-h-[500px] overflow-y-auto w-full">
+
             <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">List of Quotes</h1>
             <table class="items-center w-full bg-transparent border border-collapse">
             <thead>
@@ -29,29 +30,7 @@
                 @for (contact of filteredContacts; track $index) {
                 <tr class="text-gray-700 dark:text-gray-1000">
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{contact.name}}</td>
-                    <!-- <td class="relative border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
-                          <button 
-                          class="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded w-full text-left flex items-center justify-between"
-                          (click)="toggleDropdown()">
-                          Quotes
-                         
-                        </button>
-
-                        <ul 
-                          *ngIf="dropdownOpen" 
-                          class="absolute mt-1 w-86 bg-white border border-gray-300 rounded shadow">
-                          <li 
-                            *ngFor="let item of contact.cotizations" 
-                            (click)="selectOption(item)"
-                            class="absolute flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                            
-                            {{ item.createdAt | date  }} - {{ item.createdAt | date: 'shortTime' }} 
-                            <i class="bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2" (click)="editQuoter(item.id)"></i>
-                            <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteQuoter(item.id)" ></i>
-                            <i class='bx bx-download text-2xl text-green-500 dark:text-red-700 mr-2' (click)="generatePDF(item.id)"></i>
-                          </li>
-                        </ul>
-                    </td> -->
+                  
                     <td class="relative border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4">
                       <!-- Botón que activa el menú -->
                       <button 

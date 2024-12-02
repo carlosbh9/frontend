@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ExperiencesService } from '../../Services/experiences.service';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-experiences',
   standalone: true,
-  imports: [CommonModule,FormsModule ],
+  imports: [CommonModule,FormsModule ,SweetAlert2Module],
   templateUrl: './experiences.component.html',
   styleUrl: './experiences.component.css'
 })
@@ -83,6 +85,7 @@ export class ExperiencesComponent implements OnInit {
   async deleteExperience(id: string) {
     try {
       await this.experienceService.deleteExperience(id);
+      Swal.fire('Success','Record deleted','success')
       this.fetchExperiences();
     } catch (error) {
       console.error('Error deleting experience', error);
@@ -161,6 +164,13 @@ removeEditPriceField(index: number) {
     this.experienceService.addExperience(this.newExperience).then(
       response => {
         console.log('Experience added', response);
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your work has been saved",
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.fetchExperiences();
         this.showAddModal = false;
         this.emptyExperience();

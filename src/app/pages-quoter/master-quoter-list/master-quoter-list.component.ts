@@ -3,11 +3,13 @@ import { MasterQuoterService } from '../../Services/master-quoter.service';
 import { Router ,ActivatedRoute} from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-master-quoter-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,SweetAlert2Module],
   templateUrl: './master-quoter-list.component.html',
   styleUrl: './master-quoter-list.component.css'
 })
@@ -64,6 +66,7 @@ export class MasterQuoterListComponent {
   async deleteQuoter(id: string) {
     try {
       await this.MasterquoterService.deleteMasterQuoter(id);
+      Swal.fire('Success','Record deleted','success')
       this.fetchMasterQuoter();
     } catch (error) {
       console.error('Error deleting quoter', error);

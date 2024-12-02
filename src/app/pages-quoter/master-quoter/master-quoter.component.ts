@@ -14,11 +14,13 @@ import { ActivatedRoute,Router } from '@angular/router';
 import { TrainService } from '../../Services/train.service';
 import { ExperiencesService } from '../../Services/experiences.service';
 import { GourmetService } from '../../Services/limagourmet/gourmet.service';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-master-quoter',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,SweetAlert2Module],
   templateUrl: './master-quoter.component.html',
   styleUrl: './master-quoter.component.css'
 })
@@ -260,6 +262,13 @@ onSubmit(){
   this.masterQuoterService.createMasterQuoter(this.masterQuoter).then(
     response => {
       console.log('Mater Quoter added',response)
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Your work has been saved",
+        showConfirmButton: false,
+        timer: 1500
+      });
       this.masterQuoter = this.emptyMasterQuoter
       //this.fetchHotels();
     },

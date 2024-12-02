@@ -3,11 +3,13 @@ import { GuidesService } from '../../Services/guides.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-guides',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,SweetAlert2Module],
   templateUrl: './guides.component.html',
   styleUrl: './guides.component.css'
 })
@@ -68,6 +70,7 @@ export class GuidesComponent {
   async deleteGuide(id: string) {
     try {
       await this.guidesService.deleteGuide(id);
+      Swal.fire('Success','Record deleted','success')
       this.fetchGuides();
     } catch (error) {
       console.error('Error deleting guide', error);
@@ -109,6 +112,13 @@ export class GuidesComponent {
     this.guidesService.addGuide(this.newGuide).then(
       response => {
         console.log('Guide added', response);
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Added record",
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.fetchGuides();
         this.showAddModal = false;
         this.emptyGuide();

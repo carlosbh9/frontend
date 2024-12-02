@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component,OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ExpeditionsService } from '../../Services/expeditions.service';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-expeditions',
   standalone: true,
-  imports: [CommonModule,FormsModule ],
+  imports: [CommonModule,FormsModule ,SweetAlert2Module],
   templateUrl: './expeditions.component.html',
   styleUrl: './expeditions.component.css'
 })
@@ -66,6 +68,7 @@ export class ExpeditionsComponent implements OnInit{
   async deleteExpedition(id: string) {
     try {
       await this.expeditionService.deleteExpedition(id);
+      Swal.fire('Success','Record deleted','success')
       this.fetchExpeditions();
     } catch (error) {
       console.error('Error deleting expedition', error);
@@ -103,6 +106,13 @@ export class ExpeditionsComponent implements OnInit{
     this.expeditionService.addExpedition(this.newExpedition).then(
       response => {
         console.log('Expedition added', response);
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your work has been saved",
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.fetchExpeditions();
         this.showAddModal= false;
         this.emptyExpedition();

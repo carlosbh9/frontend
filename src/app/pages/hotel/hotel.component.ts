@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-hotel',
   standalone: true,
-  imports: [CommonModule, FormsModule,RouterModule],
+  imports: [CommonModule, FormsModule,RouterModule,SweetAlert2Module],
   templateUrl: './hotel.component.html',
   styleUrl: './hotel.component.css'
 })
@@ -154,6 +156,13 @@ export class HotelComponent implements OnInit {
   
       await this.hotelService.addHotel(hotelToSubmit);
       this.closeAddModal();
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Added record",
+        showConfirmButton: false,
+        timer: 1500
+      });
       console.log('Hotel añadido exitosamente');
       console.log(hotelToSubmit);
       this.emptyHotel();
@@ -211,6 +220,7 @@ export class HotelComponent implements OnInit {
   async deleteHotel(id: string) {
     try {
       await this.hotelService.deleteHotel(id);
+      Swal.fire('Success','Record deleted','success')
       this.fetchHotels();
     } catch (error) {
       console.error('Error deleting hotel:', error);

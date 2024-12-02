@@ -77,7 +77,7 @@ export class EntrancesComponent implements OnInit{
   async deleteEntrance(id: string) {
     try {
       await this.entrancesService.deleteEntrance(id);
-      Swal.fire('Exsito','Registro borrado','success')
+      Swal.fire('Success','Record deleted','success')
       this.fetchEntrances();
     } catch (error) {
       console.error('Error deleting entrance', error);
@@ -120,6 +120,13 @@ export class EntrancesComponent implements OnInit{
     this.entrancesService.createEntrance(this.newEntrance).then(
       response => {
         console.log('Entrance added', response);
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your work has been saved",
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.fetchEntrances();
         this.showAddModal= false;
         this.emptyEntrance();
@@ -134,6 +141,7 @@ export class EntrancesComponent implements OnInit{
     this.entrancesService.updateEntrance(this.selectedEntrance._id, this.selectedEntrance).then(
       response => {
         console.log('Entrance updated', response);
+    
         this.fetchEntrances();
         this.showEditModal = false; // Cierra el modal después de enviar el formulario
       },
