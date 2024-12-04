@@ -48,26 +48,19 @@
                         <option value="experience">Experiencias</option>
                         <option value="gourmet">Lima Gourmet</option>
                         <option value="train">Train</option>
-                        <option value="crucero">Cruceros</option>
-                        <option value="puerto">Puerto maldonado</option>
+                        <option value="extra">Table Extras</option>          
                     </select>
                 </div>
                 <div>
                     <label for="selectedService" class="block text-sm font-medium text-gray-700">Services</label>
-                    @if (selectCategoria==='crucero' || selectCategoria=== 'puerto' ) {
-                        <div class="flex items-center">
-
-                        
-                        <input [(ngModel)]="categoria_temp" type="text" placeholder="Name service" class="mt-1 block w-32 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <i (click)="addCruceroAndPuerto()" class="bx bxs-plus-circle mt-1 mx-3 text-2xl text-green-500 dark:text-green-700 " ></i></div>
-                    }@else {
+                   
                     <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" name="selectedService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <option value="" disabled selected>Select Service</option>
                         @for (service of servicesOptions; track $index) {
                             <option [ngValue]="getServiceValue(service)">{{service.description || service.name || service.name_guide  || service.company || service.nombre || service.activitie || service.operador +' - '+ service.name_service}}</option>
                         }
                     </select>
-                }
+                
                 </div>
                 @if (selectCategoria === 'operator' || selectCategoria === 'train') {
                  <div>

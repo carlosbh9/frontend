@@ -16,11 +16,12 @@ export class RestaurantComponent implements OnInit{
   filterText: string = '';
   showAddModal = false;
   showEditModal = false;
-  filterYear : string = '2024'
+  filterYear : string = '2025'
 
   newRestaurant: any = {
     name: '',
     price_pp: 0,
+    priceperson: true,
     child_rate: [{ price_pp: 0, upTo: null }],
     price_guide_pp: 0,
     special_dates: [{ date: null, price_add: null }],
@@ -32,12 +33,13 @@ export class RestaurantComponent implements OnInit{
     politica_canc: '',
     contac_phone: '',
     observaciones: '',
-    year:''
+    year:'2025'
   };
 
   selectedRestaurant: any = {
     name: '',
-    price_pp: null,
+    price_pp: 0,
+    priceperson: true,
     child_rate: [{ price_pp: 0, upTo: null }],
     price_guide_pp: 0,
     special_dates: [{ date: null, price_add: null }],
@@ -49,7 +51,7 @@ export class RestaurantComponent implements OnInit{
     politica_canc: '',
     contac_phone: '',
     observaciones: '',
-    year:''
+    year:'2025'
   };
 
   constructor(private restaurantService: RestaurantService) { }
@@ -171,7 +173,8 @@ export class RestaurantComponent implements OnInit{
   emptyRestaurant(): void {
     this.newRestaurant = {
       name: '',
-      price_pp: null,
+      price_pp: 0,
+      priceperson: true,
       child_rate: [{ price_pp: 0, upTo: null }],
       price_guide_pp: 0,
       special_dates: [{ date: null, price_add: null }],

@@ -104,13 +104,30 @@
               <label for="category" class="block text-md text-gray-600 dark:text-gray-50">Category</label>
               <input type="text" id="category" name="category" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Category" [(ngModel)]="newExperience.category" required>
             </div>
-            <div class="mb-4">
-              <label for="guide_price" class="block text-md text-gray-600 dark:text-gray-50">Guide Price</label>
-              <input type="number" id="guide_price" name="guide_price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Guide Price" [(ngModel)]="newExperience.guide_price" required>
+            <div class="mb-4 flex flex-row items-center space-x-2">
+              <div>
+                <label for="guide_price" class="block text-md text-gray-600 dark:text-gray-50">Guide Price
+                  <input type="checkbox" name="guide" class="m-4" [(ngModel)]="newExperience.guide">
+
+                </label>
+                <input type="number" id="guide_price" name="guide_price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Guide Price" [(ngModel)]="newExperience.guide_price" required>
+              </div>
             </div>
             <div class="mb-4">
               <label for="approximateDuration" class="block text-md text-gray-600 dark:text-gray-50">Approximate Duration</label>
               <input type="text" id="approximateDuration" name="approximateDuration" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Approximate Duration" [(ngModel)]="newExperience.approximateDuration" required>
+            </div>
+            <div class="mb-4">
+              <label for="priceperson" class="block text-md text-gray-600 dark:text-gray-50">Price Type</label>
+              <div class="flex space-x-4">
+                  <label>
+                    <input type="radio" name="priceperson" [(ngModel)]="newExperience.priceperson" [value]="true" /> Price per Person
+                  </label>
+                  <label>
+                    <input type="radio" name="priceperson" [(ngModel)]="newExperience.priceperson" [value]="false" /> Group Price
+                  </label>
+                </div>
+                
             </div>
             <div class="mb-4">
               <label for="prices" class="block text-md text-gray-600 dark:text-gray-50">Prices</label>
@@ -121,24 +138,34 @@
               </div>
               <button type="button" (click)="addPriceField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Price</button>
           </div>
-            <div class="mb-4">
-              <label for="childRate" class="block text-md text-gray-600 dark:text-gray-50">Child Rate</label>
+            <div class="mb-4 flex flex-row space-x-2">
+              
+              <div>
+                <label for="childRate" class="block text-md text-gray-600 dark:text-gray-50">Child Rate Price</label>
               <input type="number" [(ngModel)]="newExperience.childRate.pp" placeholder="Price per Person" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="childRate-pp" required>
-              <input type="number" [(ngModel)]="newExperience.childRate.upTo" placeholder="Up To" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="childRate-upTo" required>
-              <input type="text" [(ngModel)]="newExperience.childRate.minimumAge" placeholder="Minimum Age" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="childRate-minimumAge" required>
+              </div>
+              <div>
+                <label for="childRate" class="block text-md text-gray-600 dark:text-gray-50">Up To Age</label>
+                <input type="number" [(ngModel)]="newExperience.childRate.upTo" placeholder="Up To" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="childRate-upTo" required>
+              </div>
+              <div>
+                <label for="childRate" class="block text-md text-gray-600 dark:text-gray-50">Minimun Age</label>
+                <input type="text" [(ngModel)]="newExperience.childRate.minimumAge" placeholder="Minimum Age" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="childRate-minimumAge" required>
+              </div>
+              
             </div>
             <div class="mb-4">
               <label for="take_notes" class="block text-md text-gray-600 dark:text-gray-50">Take notes</label>
               <textarea type="text" id="take_notes" name="take_notes" class="h-15 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take notes" [(ngModel)]="newExperience.take_notes" required></textarea>
             </div>
-            <div class="mb-4">
+            <!-- <div class="mb-4">
               <label for="politica_canc" class="block text-md text-gray-600 dark:text-gray-50">A Cancellation policy</label>
               <input type="text" id="politica_canc" name="politica_canc" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder=" Cancellation policy" [(ngModel)]="newExperience.politica_canc" required>
             </div>
             <div class="mb-4">
               <label for="contac_phone" class="block text-md text-gray-600 dark:text-gray-50">Contact phone</label>
               <input type="text" id="contac_phone" name="contac_phone" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Contact phone" [(ngModel)]="newExperience.contac_phone" required>
-            </div>
+            </div> -->
           </div>
         </form>
       </div>
@@ -185,12 +212,26 @@
               <input type="text" id="category" name="category" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Category" [(ngModel)]="selectedExperience.category" required>
             </div>
             <div class="mb-4">
-              <label for="guide_price" class="block text-md text-gray-600 dark:text-gray-50">Guide Price</label>
+              <label for="guide_price" class="block text-md text-gray-600 dark:text-gray-50">Guide Price
+                <input type="checkbox" name="guide" class="m-4" [(ngModel)]="selectedExperience.guide">
+              </label>
               <input type="number" id="guide_price" name="guide_price" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Guide Price" [(ngModel)]="selectedExperience.guide_price" required>
             </div>
             <div class="mb-4">
               <label for="approximateDuration" class="block text-md text-gray-600 dark:text-gray-50">Approximate Duration</label>
               <input type="text" id="approximateDuration" name="approximateDuration" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Approximate Duration" [(ngModel)]="selectedExperience.approximateDuration" required>
+            </div>
+            <div class="mb-4">
+              <label for="priceperson" class="block text-md text-gray-600 dark:text-gray-50">Price Type</label>
+              <div class="flex space-x-4">
+                  <label>
+                    <input type="radio" name="priceperson" [(ngModel)]="selectedExperience.priceperson" [value]="true" /> Price per Person
+                  </label>
+                  <label>
+                    <input type="radio" name="priceperson" [(ngModel)]="selectedExperience.priceperson" [value]="false" /> Group Price
+                  </label>
+                </div>
+                
             </div>
             <div class="mb-4">
               <label for="prices" class="block text-md text-gray-600 dark:text-gray-50">Prices</label>
@@ -201,24 +242,34 @@
               </div>
               <button type="button" (click)="addEditPriceField()" class="mt-2 px-4 bg-green-500 dark:bg-green-700 p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800">Add Price</button>
             </div>
-            <div class="mb-4">
-              <label for="childRate" class="block text-md text-gray-600 dark:text-gray-50">Child Rate</label>
+            <div class="mb-4 flex flex-row space-x-2">
+              
+              <div>
+                <label for="childRate" class="block text-md text-gray-600 dark:text-gray-50">Child Rate Price</label>
               <input type="number" [(ngModel)]="selectedExperience.childRate.pp" placeholder="Price per Person" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="childRate-pp" required>
-              <input type="number" [(ngModel)]="selectedExperience.childRate.upTo" placeholder="Up To" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="childRate-upTo" required>
-              <input type="text" [(ngModel)]="selectedExperience.childRate.minimumAge" placeholder="Minimum Age" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="childRate-minimumAge" required>
+              </div>
+              <div>
+                <label for="childRate" class="block text-md text-gray-600 dark:text-gray-50">Up To Age</label>
+                <input type="number" [(ngModel)]="selectedExperience.childRate.upTo" placeholder="Up To" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="childRate-upTo" required>
+              </div>
+              <div>
+                <label for="childRate" class="block text-md text-gray-600 dark:text-gray-50">Minimun Age</label>
+                <input type="text" [(ngModel)]="selectedExperience.childRate.minimumAge" placeholder="Minimum Age" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" name="childRate-minimumAge" required>
+              </div>
+              
             </div>
             <div class="mb-4">
               <label for="take_notes" class="block text-md text-gray-600 dark:text-gray-50">Take notes</label>
               <textarea type="text" id="take_notes" name="take_notes" class="h-15 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take notes" [(ngModel)]="selectedExperience.take_notes" required></textarea>
             </div>
-            <div class="mb-4">
+            <!-- <div class="mb-4">
               <label for="politica_canc" class="block text-md text-gray-600 dark:text-gray-50">A Cancellation policy</label>
               <input type="text" id="politica_canc" name="politica_canc" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder=" Cancellation policy" [(ngModel)]="selectedExperience.politica_canc" required>
             </div>
             <div class="mb-4">
               <label for="contac_phone" class="block text-md text-gray-600 dark:text-gray-50">Contact phone</label>
               <input type="text" id="contac_phone" name="contac_phone" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Contact phone" [(ngModel)]="selectedExperience.contac_phone" required>
-            </div>
+            </div> -->
           </div>
         </form>
       </div>

@@ -83,7 +83,7 @@
 
   <!-- Add Modal -->
   <div *ngIf="showAddModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
-    <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+    <div class="border border-gray-200 modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
       <div class="modal-content py-4 text-left px-6">
         <!-- Title -->
         <div class="flex justify-between items-center pb-3">
@@ -113,6 +113,17 @@
               <div class="mb-4">
                 <label for="price_pp" class="block text-md text-gray-600 dark:text-gray-50">Price per person</label>
                 <input type="number" id="price_pp" name="price_pp" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Price per person" [(ngModel)]="newRestaurant.price_pp" required>
+              </div>
+              <div class="mb-4">
+                <label for="priceperson" class="block text-md text-gray-600 dark:text-gray-50">Price Type</label>
+                <div class="flex space-x-4">
+                    <label>
+                      <input type="radio" name="priceperson" [(ngModel)]="newRestaurant.priceperson" [value]="true" /> Price per Person
+                    </label>
+                    <label>
+                      <input type="radio" name="priceperson" [(ngModel)]="newRestaurant.priceperson" [value]="false" /> Group Price
+                    </label>
+                  </div> 
               </div>
               <div class="mb-4">
                 <label for="child_rate" class="block text-md text-gray-600 dark:text-gray-50">Child Rate</label>
@@ -181,7 +192,7 @@
  <!-- Edit Modal -->
 
 <div *ngIf="showEditModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
-    <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+    <div class="border border-gray-200 modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
       <div class="modal-content py-4 text-left px-6">
         <!-- Title -->
         <div class="flex justify-between items-center pb-3">
@@ -211,6 +222,18 @@
               <div class="mb-4">
                 <label for="price_pp" class="block text-md text-gray-600 dark:text-gray-50">Price per person</label>
                 <input type="number" id="price_pp" name="price_pp" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Price per person" [(ngModel)]="selectedRestaurant.price_pp" required>
+              </div>
+              <div class="mb-4">
+                <label for="priceperson" class="block text-md text-gray-600 dark:text-gray-50">Price Type</label>
+                <div class="flex space-x-4">
+                    <label>
+                      <input type="radio" name="priceperson" [(ngModel)]="selectedRestaurant.priceperson" [value]="true" /> Price per Person
+                    </label>
+                    <label>
+                      <input type="radio" name="priceperson" [(ngModel)]="selectedRestaurant.priceperson" [value]="false" /> Group Price
+                    </label>
+                  </div>
+                  
               </div>
               <div class="mb-4">
                 <label for="child_rate" class="block text-md text-gray-600 dark:text-gray-50">Child Rate</label>

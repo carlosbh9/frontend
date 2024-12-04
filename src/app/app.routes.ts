@@ -23,6 +23,7 @@ import { LimaGourmetComponent } from './pages/lima-gourmet/lima-gourmet.componen
 import { MasterQuoterListComponent } from './pages-quoter/master-quoter-list/master-quoter-list.component';
 
 import { authGuard } from '../app/Services/AuthService/auth.guard'
+import { ExtraComponent } from './pages/extra/extra.component';
 
 export const routes: Routes = [
    // , canActivate: [authGuard] ,data:{role:'admin'}
@@ -30,6 +31,7 @@ export const routes: Routes = [
         
         children:[
             {   path:'train', component: TrainComponent},
+            {   path:'extra',component: ExtraComponent},
             {   path:'entrance', component:EntrancesComponent ,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
             {   path:'expeditions', component: ExpeditionsComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
             {   path: 'experiences', component: ExperiencesComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},

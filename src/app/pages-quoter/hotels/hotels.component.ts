@@ -18,6 +18,7 @@ export class HotelsComponent implements OnInit{
   @Input() hotels: any[]= []
  // hotels: any[]= []
   hotelsOption: any[]= []
+  filteredHotels: any[]=[]
   originalItem: any = {};
   selectedHotel: string = '';
   selectedService: string = '';
@@ -28,6 +29,20 @@ export class HotelsComponent implements OnInit{
   contHotel = 0 ;
   selectedPrice: number =0
   previousDateHotel: string = '';
+  destinations: {name:string, location: string}[] = [
+  { name: "HOTELES CUSCO", location: "CUZ" },
+  { name: "HOTELES VALLE SAGRADO", location: "VSQ" },
+  { name: "HOTELES MACHU PICCHU", location: "MPC" },
+  { name: "HOTELES LIMA", location: "LIM" },
+  { name: "HOTELES PUNO", location: "PUQ" },
+  { name: "HOTELES AREQUIPA", location: "ARQ" },
+  { name: "HOTELES COLCA", location: "COL" },
+  { name: "LODGES TAMBOPATA", location: "TAM" },
+  { name: "IQUITOS", location: "IQT" },
+  { name: "HOTELES ICA & PARACAS", location: "ICP" },
+  { name: "HOTELES NORTE DE PERU", location: "NPR" },
+  { name: "ALL", location:''}
+  ]
   newHotel: any ={
     day:'',
     city:'',
@@ -56,15 +71,34 @@ export class HotelsComponent implements OnInit{
   async loadHotels() {
     try {
       this.hotelsOption = await this.hotelService.getAllHotels();
-     // this.hotels = data;
+      this.filteredHotels = this.hotelsOption
+
     } catch (error) {
       console.error('Error fetching hotels:', error);
     }
     
   }
 
+  filterHotels(event: any): void{
+   
+    const selectedLocation =this.destinations.find(destination => destination.location === this.newHotel.city);
+    if (selectedLocation) { 
+      if (selectedLocation.location==='') {
+        this.filteredHotels = this.hotelsOption
+      }else {
+        const filteredHotels = this.hotelsOption.filter(hotel => hotel.location === selectedLocation.name);
+        this.filteredHotels = filteredHotels;
+      }
+  
+  } 
+
+    console.log('hoteles filter',this.filteredHotels)   
+     console.log('hotel seleccionado',selectedLocation,this.newHotel.city)
+
+  }
   ngOnInit(): void {
     this.loadHotels();
+    console.log('hoteles ',this.hotelsOption)   
   }
     // Función para actualizar el tamaño del array price_prueba
     updatePricePruebaArray(length: number) {

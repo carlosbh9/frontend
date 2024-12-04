@@ -18,12 +18,12 @@ export class ExperiencesComponent implements OnInit {
   filterText: string = '';
   showAddModal = false;
   showEditModal = false;
-  filterYear : string = '2024'
+  filterYear : string = '2025'
 
   newExperience: any = {
     name: '',
     category: '',
-    prices: [{ groupSize: null, pricePerPerson: 0 }],
+    prices: [{ groupSize: 1, pricePerPerson: 0 }],
     childRate: {
       pp: 0,
       upTo: 0,
@@ -31,16 +31,18 @@ export class ExperiencesComponent implements OnInit {
     },
     guide_price: 0,
     approximateDuration: '',
+    priceperson:true,
+    guide: false,
     take_notes:'',
     politica_canc:'',
     contac_phone:'',
-    year:''
+    year:'2025'
   };
 
   selectedExperience: any = {
     name: '',
     category: '',
-    prices: [{ groupSize: null, pricePerPerson: 0 }],
+    prices: [{ groupSize: 1, pricePerPerson: 0 }],
     childRate: {
       pp: 0,
       upTo: 0,
@@ -48,6 +50,8 @@ export class ExperiencesComponent implements OnInit {
     },
     guide_price: 0,
     approximateDuration: '',
+    priceperson:true,
+    guide: false,
     take_notes:'',
     politica_canc:'',
     contac_phone:'',
@@ -123,10 +127,12 @@ export class ExperiencesComponent implements OnInit {
       },
       guide_price: 0,
       approximateDuration: '',
+      priceperson:true,
+      guide: false,
       take_notes:'',
       politica_canc:'',
       contac_phone:'',
-      year:''
+      year:'2025'
     };
   }
  // Función para agregar un nuevo campo de precio en el formulario de agregar experiencia

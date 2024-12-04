@@ -16,6 +16,7 @@ import { ExperiencesService } from '../../Services/experiences.service';
 import { GourmetService } from '../../Services/limagourmet/gourmet.service';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2'
+import { ExtrasService } from '../../Services/serviceTarifario/extras.service';
 
 @Component({
   selector: 'app-master-quoter',
@@ -35,6 +36,7 @@ export class MasterQuoterComponent implements OnInit{
   trainService  = inject(TrainService)
   activitiesService = inject(ExperiencesService)
   gourmetService = inject(GourmetService)
+  extraService = inject(ExtrasService)
 
   masterQuoterService = inject(MasterQuoterService)
   route = inject(ActivatedRoute)
@@ -181,14 +183,11 @@ export class MasterQuoterComponent implements OnInit{
         this.servicesOptions =  operator.filter(item => item.year === this.selectedYear);
         break;
 
-        case 'crucero':
-          
-                        this.selectedService.service_type= this.selectCategoria
+        case 'extra': const extra = await this.extraService.getAllExtras();
+        this.servicesOptions =  extra.filter(item => item.year === this.selectedYear);
                         
         break;
 
-        case 'puerto': this.selectedService.name_service = this.categoria_temp
-        break;
       }
       console.log('categoria: ',this.servicesOptions)
 
@@ -231,18 +230,7 @@ getServiceValue(service: any) {
   }
 }
 
-addCruceroAndPuerto(){
-  const fecha = (new Date()).getTime().toString(16); // Convierte el timestamp actual en hexadecimal
-  const aleatorio = Math.random().toString(16).substring(2, 8); // Genera una cadena aleatoria de 6 caracteres
-      
-  this.selectedService.service_id = fecha+aleatorio
-  this.selectedService.name_service= this.categoria_temp
-  this.selectedService.type_service = this.selectedDayIndex.type
-  this.masterQuoter.day[this.selectedDayIndex.dayIndex].services.push(this.selectedService);
- 
-  console.log('jjjjj', this.masterQuoter.day[this.selectedDayIndex.dayIndex].services)
- 
-}
+
 
 addDays(){
   this.index++
@@ -258,7 +246,7 @@ addDays(){
 
 
 onSubmit(){
-
+  console.log('probando q se agrega',this.masterQuoter)
   this.masterQuoterService.createMasterQuoter(this.masterQuoter).then(
     response => {
       console.log('Mater Quoter added',response)

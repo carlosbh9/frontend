@@ -8,13 +8,10 @@
         <div class="w-1/4">
 
             <label for="issue-date" class="block text-sm font-medium text-gray-700">City</label>
-            <select [(ngModel)]="newHotel.city" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" name="selectedCity" id="selectedCity">
-                <option value="LIM">LIM</option>
-                <option value="CUZ">CUZ</option>
-                <option value="LIM/CUZ">LIM/CUZ</option>
-                <option value="SV">SV</option>
-                <option value="MP">MP</option>
-                <option value="PUN">PUN</option>
+            <select [(ngModel)]="newHotel.city" (change)="filterHotels($event)" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" name="selectedCity" id="selectedCity">
+                @for(option of destinations; track $index){
+                    <option [value]="option.location">{{option.name}}</option>
+                }
             </select>
             <!-- <input type="text" [(ngModel)]="selectedCity"  name="city" id="city" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" > -->
         </div>
@@ -29,7 +26,7 @@
                 <label for="hotel-select" class="block text-sm font-medium text-gray-700">Hoteles</label>
                 <select [(ngModel)]="selectedHotel" (change)="onHotelChange($event)" name="selectedHotel" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
                     <option value="" disabled selected>Select Hotel</option>
-                    @for (hotel of hotelsOption; track hotel._id) {
+                    @for (hotel of filteredHotels; track hotel._id) {
                         <option [value]="hotel._id">{{hotel.name}}</option>
                     }
                 </select>
@@ -65,7 +62,7 @@
                           id="confidential" 
                           [(ngModel)]="selectedPrice"
                           [value]="roomType.confidential"
-                          name="confidential"
+                          name="roomType"
                           class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" >
                           <label for="Confidential" class="ml-2 mr-2 text-sm">Confidential - ${{roomType.confidential}}</label>
                       </div>
@@ -75,7 +72,7 @@
                         id="rack" 
                         [(ngModel)]="selectedPrice"
                         [value]="roomType.rack"
-                        name="Rack"
+                        name="roomType"
                         class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded">
                         <label for="Rack" class="ml-2 text-sm mr-2">Rack - ${{roomType.rack}}</label>
                     </div>
@@ -92,15 +89,7 @@
                         <textarea [(ngModel)]="newHotel.notes" name="newHotel.notes" id="" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1"></textarea>
                     </div>
                 </div>
-                <!-- <div >
-                    <div>
-                        <label for="service-select" class="block text-sm font-medium text-gray-700">Prices</label>
-                        @for (item of [].constructor(priceLength()); track $index) {
-                            <input type="number" name="newHotel.prices-{{$index}}" [(ngModel)]="newHotel.prices[$index]" id="newHotel.prices-{{$index}}" class="pr-4 h-10 p-2 w-16 border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1 mr-2 mb-2">
-                        }
-                       
-                   </div>
-                </div> -->
+         
                 <div>
                     <div>
                       <label for="service-select" class="block text-sm font-medium text-gray-700">Prices</label>

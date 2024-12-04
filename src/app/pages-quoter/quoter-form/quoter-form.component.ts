@@ -208,65 +208,106 @@ selectOption(option: any): void {
     }
   }
   addNumberPaxs() {
-    if(this.newQuoter.hotels.length!=0){
-      this.updatePricesSizeHotels(this.newQuoter.hotels,this.newQuoter.number_paxs.length+1)
-      console.log('se actualizo hoteles?',this.newQuoter.hotels)
-    }
-    if(this.newQuoter.services.length!=0){
-      this.updatePricesSizeServices(this.newQuoter.services,this.newQuoter.number_paxs.length+1)
-
-    }
-    if(this.newQuoter.flights.length!=0){
-      this.updatePricesSizeFlights(this.newQuoter.flights,this.newQuoter.number_paxs.length+1)
-      console.log('comporando flights con 0',this.newQuoter.flights)
-    }
-    if(this.newQuoter.operators.length!=0){
-      this.updatePricesSizeOperators(this.newQuoter.operators,this.newQuoter.number_paxs.length+1)
-      console.log('comporando operadores con 0',this.newQuoter.operators)
-    }
+   
     this.newQuoter.number_paxs.push(0);
       // Agrega un nuevo input
-  
-      console.log('se cargo?',this.newQuoter)  }
-  updatePricesSizeHotels(hotels: any[], newSize: number): any[] {
-    return hotels.map(hotel => {
-      const currentSize = hotel.prices.length;
-      if (currentSize < newSize) {
-        hotel.prices = [...hotel.prices, ...new Array(newSize - currentSize).fill(0)];
-      }
-      return hotel;
-    });
-  }
-  updatePricesSizeServices(services: any[], newSize: number): any[] {
-    return services.map(service => {
-      const currentSize = service.prices.length;
-     if (currentSize < newSize) {
-        service.prices = [...service.prices, ...new Array(newSize - currentSize).fill(0)];
-      }
-      return service;
-    });
-  }
+    
+    
+    }
+    removeNumberPaxs(indexToRemove: number): void {
+      // Eliminar del array `number_paxs`
+    // const  indexToRemove =  this.newQuoter.number_paxs.length;
+      if (indexToRemove >= 0 && indexToRemove < this.newQuoter.number_paxs.length) {
+        this.newQuoter.number_paxs.splice(indexToRemove, 1);
+    
+        // Eliminar del atributo `prices` en los diferentes arreglos
+        ['hotels',  'flights', 'operators', 'cruises'].forEach((category) => {
+          (this.newQuoter as any)[category].forEach((item: any) => {
+            if (Array.isArray(item.prices) && item.prices.length > indexToRemove) {
+              item.prices.splice(indexToRemove, 1);
+            }
+          });
+        });
 
-  updatePricesSizeFlights(flights: any[], newSize: number): any[] {
-    return flights.map(flight => {
-      const currentSize = flight.prices.length;
-     if (currentSize < newSize) {
-      flight.prices = [...flight.prices, ...new Array(newSize - currentSize).fill(0)];
+        if (this.newQuoter.services) {
+          this.newQuoter.services.forEach((day) => {
+              if (day.services) {
+                  day.services.forEach((service : any) => {
+                      if (service.prices && service.prices[indexToRemove] !== undefined) {
+                          service.prices.splice(indexToRemove, 1);
+                      }
+                  });
+              }
+          });
       }
-      return flight;
-    });
-  }
-
-  updatePricesSizeOperators(operators: any[], newSize: number): any[] {
-    return operators.map(operator => {
-      const currentSize = operator.prices.length;
-     if (currentSize < newSize) {
-      operator.prices = [...operator.prices, ...new Array(newSize - currentSize).fill(0)];
+        // Eliminar de los totales en `total_prices`
+        Object.keys(this.newQuoter.total_prices).forEach((key) => {
+          const totalArray = (this.newQuoter.total_prices as any)[key];
+          if (Array.isArray(totalArray) && totalArray.length > indexToRemove) {
+            totalArray.splice(indexToRemove, 1);
+          }
+        });
+      // Asegúrate de que `total_prices.total_services` se actualice correctamente
+      if (this.newQuoter.total_prices.total_services.length > indexToRemove) {
+      this.newQuoter.total_prices.total_services.splice(indexToRemove, 1);
       }
-      return operator;
-    });
-  }
+      }
 
+    }
+   
+    updatePricesSizeHotels(hotels: any[], newSize: number): any[] {
+      return hotels.map(hotel => {
+        if (!hotel.prices) {
+          hotel.prices = []; // Asegurar que el campo prices exista
+        }
+        hotel.prices = hotel.prices.slice(0, newSize); // Ajustar el tamaño del array
+        return hotel;
+      });
+    }
+    
+    updatePricesSizeServices(services: any[], newSize: number): any[] {
+      return services.map(service => {
+        if (!service.prices) {
+          service.prices = []; // Asegurar que el campo prices exista
+        }
+        service.prices = service.prices.slice(0, newSize); // Ajustar el tamaño del array
+        return service;
+      });
+    }
+    
+    updatePricesSizeFlights(flights: any[], newSize: number): any[] {
+      return flights.map(flight => {
+        if (!flight.prices) {
+          flight.prices = []; // Asegurar que el campo prices exista
+        }
+        flight.prices = flight.prices.slice(0, newSize); // Ajustar el tamaño del array
+        return flight;
+      });
+    }
+    
+    updatePricesSizeOperators(operators: any[], newSize: number): any[] {
+      return operators.map(operator => {
+        if (!operator.prices) {
+          operator.prices = []; // Asegurar que el campo prices exista
+        }
+        operator.prices = operator.prices.slice(0, newSize); // Ajustar el tamaño del array
+        return operator;
+      });
+    }
+    removePriceFromTotalPrices(index: number) {
+      if (this.newQuoter.total_prices.total_cost && index < this.newQuoter.total_prices.total_cost.length) {
+        this.newQuoter.total_prices.total_cost.splice(index, 1);
+      }
+      if (this.newQuoter.total_prices.external_utility && index < this.newQuoter.total_prices.external_utility.length) {
+        this.newQuoter.total_prices.external_utility.splice(index, 1);
+      }
+      if (this.newQuoter.total_prices.cost_external_taxes && index < this.newQuoter.total_prices.cost_external_taxes.length) {
+        this.newQuoter.total_prices.cost_external_taxes.splice(index, 1);
+      }
+      if (this.newQuoter.total_prices.total_cost_external && index < this.newQuoter.total_prices.total_cost_external.length) {
+        this.newQuoter.total_prices.total_cost_external.splice(index, 1);
+      }
+    }
   // onModalmqQuoterChange(temp: any){
     
   //   this.newQuoter.services.push(...temp)

@@ -20,8 +20,7 @@
                            </select>
                         </div>
                         <div>
-                            <!-- <label for="guest"  class="block text-sm font-medium text-gray-700">Guest</label>
-                            <input [(ngModel)]="newQuoter.guest" name="newQuoter.guest" type="text" id="guest" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Guest"> -->
+                     
                           
                             <label for="guest"  class="block text-sm font-medium text-gray-700">Guest</label>
                             <input
@@ -63,9 +62,23 @@
                             <label for="number_paxs" class="block text-sm font-medium text-gray-700">Number of Guest</label>
                             <div class="flex flex-initial items-center space-x-4">
                                 @for (item of newQuoter.number_paxs; track $index) {
-                                    <input type="number" [(ngModel)]="newQuoter.number_paxs[$index]"   name="newQuoter.number_paxs_{{$index}}" id="number_paxs_{{$index}}" class="mt-1 block w-16 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value" required>
+                                    <!-- <input type="number" [(ngModel)]="newQuoter.number_paxs[$index]"   name="newQuoter.number_paxs_{{$index}}" id="number_paxs_{{$index}}" class="mt-1 block w-16 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value" required>
+                                    <i class="bx bx-minus-circle text-2xl text-red-500 dark:text-red-700 " (click)="removeNumberPaxs($index)"></i> -->
+                                    <div class="flex items-center space-x-2">
+                                        <!-- Input -->
+                                        <input type="number" [(ngModel)]="newQuoter.number_paxs[$index]" 
+                                               name="newQuoter.number_paxs_{{$index}}" 
+                                               id="number_paxs_{{$index}}" 
+                                               class="mt-1 block w-16 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+                                               placeholder="Value" required>
+                                      
+                                        <!-- Icono de eliminar -->
+                                        <i class="bx bx-minus-circle text-2xl text-red-500 dark:text-red-700 cursor-pointer" (click)="removeNumberPaxs($index)"></i>
+                                      </div>
                                 }
                                 <i class="bx bxs-plus-circle text-2xl text-green-500 dark:text-green-700 " (click)="addNumberPaxs()"></i>
+                                
+                              
                             </div>
 
                             @if (!newQuoter.number_paxs) {
