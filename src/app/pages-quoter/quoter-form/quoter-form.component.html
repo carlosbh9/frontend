@@ -2,11 +2,11 @@
 <div class="grid grid-cols-1 gap-2 mb-2  ">
     <!-- card  1 -->
      <div class="grid grid-cols-2 gap-4">
-        <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-            <div class="p-6 flex justify-between gap-4">
+        <div class=" bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+            <div class=" p-6 flex justify-between gap-4">
                 <!-- Columna Izquierda -->
                 <div class="w-full space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class=" grid grid-cols-2 gap-4">
                         <div>
                            <label for="travel_agent" class="block text-sm font-medium text-gray-700">Travel Designer</label>
                            <select name="travel_agent" id="travel_agent" [(ngModel)]="newQuoter.travel_agent" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -19,7 +19,7 @@
 
                            </select>
                         </div>
-                        <div>
+                        <div class="relative">
                      
                           
                             <label for="guest"  class="block text-sm font-medium text-gray-700">Guest</label>
@@ -34,7 +34,7 @@
                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             />
                             <!-- Opciones filtradas -->
-                            <ul id="optionsDropdown" *ngIf="showOptions && filteredOptions.length" class=" left-0 right-0 bg-white border border-gray-300 mt-1 rounded-md max-h-40 overflow-auto z-10">
+                            <ul id="optionsDropdown" *ngIf="showOptions && filteredOptions.length" class="absolute left-0 right-0 bg-white border border-gray-300 mt-1 rounded-md max-h-40 overflow-auto z-10">
                                 <li
                                 *ngFor="let option of filteredOptions"
                                 (click)="selectOption(option)"

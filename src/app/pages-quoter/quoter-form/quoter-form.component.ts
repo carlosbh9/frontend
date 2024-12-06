@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit,inject,signal ,ViewChild, computed,QueryList,ViewChildren ,ElementRef } from '@angular/core';
+import { Component, OnInit,inject,signal ,HostListener, computed} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QuoterService } from '../../Services/quoter.service';
 import { FlightsComponent } from '../flights/flights.component';
@@ -569,8 +569,20 @@ selectOption(option: any): void {
 
       const docDefinition = this.pdfExportService.generatePdf(this.newQuoter,dataURL);
       this.pdfExportService.exportPdf(docDefinition);
+      console.log('exportar ',this.newQuoter)
+ 
 
     }   
-    @ViewChild(HotelsComponent) hotelsComponent!: HotelsComponent;
-  
+  // Detectar clics fuera del input y la lista de opciones
+@HostListener('document:click', ['$event'])
+onClick(event: MouseEvent) {
+  const target = event.target as HTMLElement;
+  const inputElement = document.getElementById('searchInput'); // ID del input
+  const dropdownElement = document.getElementById('optionsDropdown'); // ID del dropdown
+
+  // Si el clic no es en el input o el dropdown, oculta las opciones
+  if (inputElement && !inputElement.contains(target) && dropdownElement && !dropdownElement.contains(target)) {
+    this.showOptions= false;
+  }
+}
   }

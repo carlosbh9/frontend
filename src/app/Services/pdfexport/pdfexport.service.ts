@@ -40,6 +40,7 @@ generatePdf(data : any,dataURL: string) : any {
 
 const tam = data.number_paxs.length;
 const tableBodyServices = this.createServicesTableContent(data, tam);
+console.log('tableBodyServices',tableBodyServices)
 const tableBodyHotels = this.createHotelsTableContent(data, tam);
 const tableBodyFlights = this.createFlightsTableContent(data, tam);
     // Generar contenido de la tabla llamando a un solo método
@@ -72,10 +73,10 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
             {
               width: '70%', // Ajusta el ancho de la columna derecha
               text: [
-                { text: `${data.guest} \n` },
-                { text: `${data.travel_agent} \n` },
-                { text: `${data.accomodations} \n` },
-                { text: `${data.travelDate.start} to ${data.travelDate.end} \n` },
+                { text: `${data.guest || 'N/A'} \n` },
+                { text: `${data.travel_agent || 'N/A'} \n` },
+                { text: `${data.accomodations || 'N/A'} \n` },
+                { text: `${data.travelDate.start|| 'N/A'} to ${data.travelDate.end || 'N/A'} \n` },
               ],
             },
           ]
@@ -88,17 +89,18 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
             style: 'body',
             table: {
                 widths: [20, 60,30, '*', 30, ...Array(tam).fill(30)], // Ajustar anchos
-                body: tableBodyServices
+                body: tableBodyServices.length ? tableBodyServices : [[{ text: 'No data available', colSpan: tam + 5 }]]
             },
             layout: 'lightHorizontalLines'
         },
+        { text: '\n\n' },
        // Sección de Hoteles
       { text: 'Hotels \n', style: 'subtitles' },
       {
         style: 'body',
         table: {
           widths: [20, 60, 50, '*', 30, ...Array(tam).fill(30), '*'], // Ajuste de anchos, añadiendo espacio para Accommodation y Category
-          body: tableBodyHotels,
+          body: tableBodyHotels.length ? tableBodyHotels : [[{ text: 'No data available', colSpan: tam + 6 }]],
         },
         layout: 'lightHorizontalLines'
       },
@@ -108,7 +110,7 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
         style: 'body',
         table: {
           widths: [60, 60, 50, ...Array(tam).fill(30), '*'], // Ajuste de anchos, añadiendo espacio para Accommodation y Category
-          body: tableBodyFlights,
+          body: tableBodyFlights.length ? tableBodyFlights : [[{ text: 'No data available', colSpan: tam + 4 }]],
         },
         layout: 'lightHorizontalLines'
       },
@@ -118,7 +120,7 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
         style: 'body',
         table: {
           widths: [70, 70, ...Array(tam).fill(50), '*'], // Ajustar anchos de las columnas
-          body: tableBodyOpertators,
+          body: tableBodyOpertators.length ? tableBodyOpertators : [[{ text: 'No data available', colSpan: tam + 3 }]],
         },
         layout: 'lightHorizontalLines',
       },
@@ -145,8 +147,9 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
     
     }
   }
- // Método para generar contenido de la tabla de servicios
+
  private createServicesTableContent(data: any, tam: number): any[] {
+  if (data.services.length !== 0) {
   const tableHeader = [
     { text: 'Day', style: 'header' },
     { text: 'Date', style: 'header' },
@@ -154,13 +157,13 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
     { text: 'Service', style: 'header' },
     { text: 'Price Base', style: 'header' },
   ];
-
   // Crear encabezados dinámicos para los precios
   for (let i = 0; i < tam; i++) {
     tableHeader.push({ text: `Price ${i + 1}`, style: 'header' });
   }
 
   const tableBody: any[] = [tableHeader];
+  let hasServices = false;
 
   // Llenar el cuerpo de la tabla con datos de servicios
   data.services.forEach((dayData: any) => {
@@ -179,9 +182,13 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
       }
 
       tableBody.push(row);
+      hasServices = true;
     });
   });
 
+  if(hasServices){
+
+  
   // Crear fila de totales
   const totalRow = [
     { text: 'Total Prices', colSpan: 5, alignment: 'center', bold: true },
@@ -192,10 +199,17 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
   ];
 
   tableBody.push(totalRow);
-  return tableBody;
 }
+  return tableBody;
+} else{
+  return []
+}
+
+}
+
  // Método para generar contenido de la tabla de hoteles
  private createHotelsTableContent(data: any, tam: number): any[] {
+  if (data.hotels.length !== 0) {
   const tableHeaderHotels = [
     { text: 'Day', style: 'header' },
     { text: 'Date', style: 'header' },
@@ -213,6 +227,7 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
   tableHeaderHotels.push({ text: 'Accommodations and Category', style: 'header' });
 
   const tableBodyHotels: any[] = [tableHeaderHotels];
+  let hasServices = false;
 
   // Llenar el cuerpo de la tabla con datos de hoteles
   data.hotels.forEach((hotel: any) => {
@@ -231,11 +246,13 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
 
     // Añadir "Accommodations" y "Category"
     row.push(hotel.accomodatios_category);
-
+    
     tableBodyHotels.push(row);
+    hasServices = true;
   });
 
-  // Crear fila de totales
+
+  if(hasServices){
   const totalRowHotels = [
     { text: 'Total Prices', colSpan: 5, alignment: 'center', bold: true },
     {}, {}, {}, {}, // Celdas vacías para las columnas colapsadas
@@ -244,12 +261,19 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
     }),
     '', // Espacio vacío para "Accommodations"
   ];
-
   tableBodyHotels.push(totalRowHotels);
+  }
+  
   return tableBodyHotels;
+} else {
+  return []
+}
 }
 
   private createFlightsTableContent(data: any, tam: number): any[] {
+
+    if(data.flights.length!==0){
+ 
     // Crear encabezados
     const tableHeader = [
       { text: 'Date', style: 'header' },
@@ -264,9 +288,10 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
 
     // Agregar columna de notas
     tableHeader.push({ text: 'Notes', style: 'header' });
-
+    
     // Crear cuerpo de la tabla
     const tableBody: any[] = [tableHeader];
+    let hasServices = false;
     data.flights.forEach((flight: any) => {
       const row = [
         flight.date,
@@ -283,9 +308,10 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
       row.push(flight.notes);
 
       tableBody.push(row);
+      hasServices = true;
     });
 
-    // Crear fila de totales
+    if(hasServices){
     const totalRow = [
       { text: 'Total Prices', colSpan: 3, alignment: 'center', bold: true },
       {}, {}, // Celdas vacías para las columnas colapsadas
@@ -297,11 +323,14 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
 
     // Agregar la fila de totales al final del cuerpo
     tableBody.push(totalRow);
-
+  }
     return tableBody;
+  }else {
+    return []
+  }
   }
   private createOperatorsTableContent(data: any, tam: number): any[] {
-    // Crear encabezados
+    if(data.operators.length!==0){
     const tableHeader = [
       { text: 'Country', style: 'header' },
       { text: 'Operator', style: 'header' },
@@ -317,36 +346,39 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
 
     // Crear cuerpo de la tabla
     const tableBody: any[] = [tableHeader];
+    let hasServices = false;
     data.operators.forEach((operator: any) => {
       const row = [
         operator.country,
         operator.name_operator,
       ];
-
       // Agregar precios dinámicos
       for (let i = 0; i < tam; i++) {
         row.push(operator.prices[i] !== undefined ? operator.prices[i].toString() : '');
       }
-
       // Agregar notas
       row.push(operator.notes);
 
       tableBody.push(row);
+      hasServices = true;
     });
 
-    // Crear fila de totales
+    if(hasServices){
     const totalRow = [
       { text: 'Total Prices', colSpan: 2, alignment: 'center', bold: true },
-      {}, // Celdas vacías para las columnas colapsadas
+      {}, 
       ...data.total_prices.total_ext_operator.map((price: any) => {
         return { text: price.toString(), bold: true };
       }),
-      '', // Espacio vacío para "Notes"
+      '', 
     ];
-
-    // Agregar la fila de totales al final del cuerpo
+  
     tableBody.push(totalRow);
+  }
 
     return tableBody;
+  }else {
+    return []
+  }
   }
 }
