@@ -1,6 +1,6 @@
 
 export interface Quoter {
-  //  contact: string;
+    name_version: string;
     guest: string;
     FileCode: string;
     travelDate: {

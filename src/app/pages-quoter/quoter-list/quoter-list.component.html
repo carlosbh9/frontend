@@ -48,10 +48,10 @@
                           *ngFor="let item of contact.cotizations" 
                           (click)="selectOption(item)"
                           class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                          {{ item.createdAt | date }} - {{ item.createdAt | date: 'shortTime' }}
-                          <i class="bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2" (click)="editQuoter(item.id)"></i>
-                          <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteQuoter(item.id)"></i>
-                          <i class='bx bx-download text-2xl text-green-500 dark:text-red-700 mr-2' (click)="generatePDF(item.id)"></i>
+                          {{item.name_version}}  
+                          <i class="bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2" (click)="editQuoter(item.quoter_id)"></i>
+                          <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteQuoter(item.quoter_id)"></i>
+                          <i class='bx bx-download text-2xl text-green-500 dark:text-red-700 mr-2' (click)="generatePDF(item.quoter_id)"></i>
                         </li>
                       </ul>
                     </td>
@@ -59,7 +59,7 @@
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                         <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="editQuoter(contact._id)"></i>
                         <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteContact(contact._id)"></i>
-                        <i class='bx bx-download text-2xl text-green-500 dark:text-red-700 mr-2' ></i>
+                      
                       </td>
                 </tr>
               }

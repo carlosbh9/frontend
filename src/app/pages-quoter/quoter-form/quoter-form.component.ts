@@ -8,8 +8,7 @@ import {ActivatedRoute} from '@angular/router';
 import { ExtOperatorComponent } from '../ext-operator/ext-operator.component';
 import { ServicesComponent } from '../services/services.component';
 import { HotelsComponent } from '../hotels/hotels.component';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+
 import { CalculatepricesService } from '../../Services/controllerprices/calculateprices.service';
 import { PdfexportService } from '../../Services/pdfexport/pdfexport.service';
 
@@ -39,7 +38,7 @@ export class QuoterFormComponent implements  OnInit{
   contacts : any[]=[]
   filteredOptions: any[] = [];  // Opciones filtradas
   showOptions: boolean = false;  // Controla la visibilidad de las opciones
-
+  showVersion: boolean = false
   totalPriceHotels: number[] = [];
   totalPriceServices: number[] = [];
   totalPricesFlights: number[]=[]
@@ -62,7 +61,7 @@ export class QuoterFormComponent implements  OnInit{
   destinations: string[] =['PERU','BOLIVIA','ECUADOR','COLOMBIA','ARGENTINA','CHILE']
 
   newQuoter: Quoter = {
-    
+    name_version:'version 1',
     guest:'',
     FileCode: '',
     travelDate:{
@@ -98,6 +97,7 @@ export class QuoterFormComponent implements  OnInit{
   };
 
   emptyQuoter: Quoter = {
+    name_version:'version 1',
     guest: '',
     FileCode: '',
     travelDate: {
@@ -403,6 +403,7 @@ selectOption(option: any): void {
         console.log('Quoter error', this.newQuoter);
       }
     });
+    this.closeModalVersion()
 
   }
   onUpdate(){
@@ -562,6 +563,15 @@ selectOption(option: any): void {
     // Method to close modal
     closeModal() {
       this.modalOpen.set(false);
+    }
+    openModalVersion() {
+      this.showVersion = true;
+      
+    }
+  
+    // Method to close modal
+    closeModalVersion() {
+      this.showVersion = false
     }
 
     async generatePDF() {
