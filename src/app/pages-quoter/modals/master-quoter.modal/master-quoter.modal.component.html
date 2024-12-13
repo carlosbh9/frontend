@@ -18,6 +18,7 @@
                 <label for="issue-date" class="block text-sm font-medium text-gray-700">Date</label>
                 <input type="date" [(ngModel)]="selectedServices.date"  name="date" id="date" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
               </div>
+            
               <div class="mb-4">
                 <label for="name_mq" class="block text-md text-gray-600 dark:text-gray-50">Name Master Quoter</label>
                 <input
@@ -41,7 +42,7 @@
                     </li>
                 </ul>
               </div>
-              <div class="mb-4">
+              <!-- <div class="mb-4">
                 <label for="name_mq" class="block text-md text-gray-600 dark:text-gray-50">days</label>
                 <input
                     id="searchInputDays"
@@ -53,7 +54,7 @@
                     placeholder="Search day..."
                     class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md"
                 />
-                <!-- Opciones filtradas -->
+             
                 <ul id="optionsDropdownDay" *ngIf="showOptionsDays && filteredDaysOptions.length" class=" left-0 right-0 bg-white border border-gray-300 mt-1 rounded-md max-h-40 overflow-auto z-10">
                     <li
                     *ngFor="let option of filteredDaysOptions"
@@ -63,8 +64,52 @@
                     {{option.city}} - {{ option.name_services }}
                     </li>
                 </ul>
+              </div> -->
+              @for (option of filteredDaysOptions; track $index) {
+              <div class="mb-4">
+                <details class="group">
+                  <summary class="flex justify-between items-center font-medium cursor-pointer list-none">
+                    <input
+                    type="checkbox"
+                    [name]="'selectAll-' + option._id"
+                    [(ngModel)]="option.selected"
+                    (change)="toggleAllServices(option)"
+                  />
+                    <span>{{option.city}} - {{ option.name_services }}</span>
+                    <span class="transition group-open:rotate-180">
+                          <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path>
+                        </svg>
+                        </span>
+                  </summary>
+                  <div *ngFor="let service of option.services">
+                    @switch (service.type_service) {
+                      @case ('services') {
+                        <label class="text-red-600">
+                          <input
+                            type="checkbox"
+                            [name]="'service-' + service.service_id"
+                            [(ngModel)]="service.selected"
+                          />
+                          {{ service.name_service }}
+                        </label>
+                      }
+                      @case ('options') {
+                        <label class="text-blue-600">
+                      <input
+                        type="checkbox"
+                        [name]="'option-' + service.service_id"
+                        [(ngModel)]="service.selected"
+                      />
+                      {{ service.name_service }}
+                    </label>
+                      }
+                    }
+                    
+                  </div>
+                </details>
               </div>
-              <div class="mt-4 p-5 border border-gray-300 rounded-lg bg-slate-100 ">
+            }
+              <!-- <div class="mt-4 p-5 border border-gray-300 rounded-lg bg-slate-100 ">
                 <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300">Services</h3>
                 <div *ngFor="let service of servicesList">
                   <label>
@@ -92,7 +137,7 @@
                     {{ option.name_service }}
                   </label>
                 </div>
-              </div>
+              </div> -->
             </div>
           </form>
         </div>

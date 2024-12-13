@@ -108,7 +108,6 @@ selectOptionDay(dayOption: any): void {
   this.servicesList.forEach(service => {
     this.selectedServices[service.service_id] = true;
   });
-  console.log('opcion seleccionada del dia',dayOption)
 }
 
 toggleService(service: any) {
@@ -130,7 +129,40 @@ toggleService(service: any) {
   
 }
 
+  // Función para gestionar el cambio del checkbox en la cabecera
+  toggleAllServices(option: any): void {
+    // Si el checkbox de la cabecera está seleccionado, seleccionamos todos los servicios de tipo 'services'
+    if (option.selected) {
+      option.services.forEach((service: any) => {
+        if (service.type_service === 'services') {
+          service.selected = true;
+        }
+      });
+    } else {
+      // Si el checkbox de la cabecera no está seleccionado, desmarcamos todos los servicios de tipo 'services'
+      option.services.forEach((service: any) => {
+        if (service.type_service === 'services') {
+          service.selected = false;
+        }
+      });
+    }
+  }
+
 async onAddMQuoter(){
+  // Recorrer todos los días (filteredDaysOptions)
+  this.filteredDaysOptions.forEach(option => {
+    // Filtrar los servicios seleccionados
+    const selectedDayServices = option.services.filter((service : any) => service.selected);
+
+    // Agregar el atributo 'city' de cada día a los servicios seleccionados
+   selectedDayServices.forEach((service: any) => {
+    service.city = option.city; // Asignamos la ciudad del día al servicio
+  });
+    // Agregar los servicios seleccionados al array
+    this.selectedServices.services.push(...selectedDayServices);
+  });
+
+   
   this.selectedServices.number_paxs=this.numberpaxs()
   this.preciosCalculados = await this.priceService.calculatePrice(this.selectedServices)
   this.preciosCalculados.date = this.selectedServices.date

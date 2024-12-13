@@ -53,6 +53,7 @@ selectedSubService: any = {}
   temp: number =0
   item = {
     services:[{
+      city:'',
       name_service: '',
       operator_service_id: '',
       service_id: '',
@@ -72,6 +73,7 @@ selectedSubService: any = {}
       city: null,
       name_services:null,
       services: [] as {
+        city: string | null,
       type_service: string | null,
       name_service: string | null,
       service_id: string | null,
@@ -90,6 +92,7 @@ selectedSubService: any = {}
       city: null,
       name_services:null,
       services: [] as {
+      city: string | null,
       type_service: string | null,
       name_service: string | null,
       service_id: string | null,
@@ -155,9 +158,11 @@ onDelete(index: number){
    
 }
 
-async addItem(){
+ async addItem(){
   let item2 : any = {}
+
   this.item.services[0]=(this.selectedService); // Cambia ...this.selectedService por this.selectedService si es un objeto
+  this.item.services[0].city = this.item.city
   this.item.date = this.dayData.date
 
   this.item.number_paxs = this.number_paxs() || []; // Proporcionar un valor por defecto si es undefined
@@ -165,7 +170,11 @@ async addItem(){
   
   item2  = await this.priceService.calculatePrice(this.item)
   
-
+  if(!item2.services[0].prices){
   this.dayData.services.push(item2.services[0])
+  }
+  
+
+  console.log('calccc',item2,this.item)
 }
 }

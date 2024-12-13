@@ -132,24 +132,50 @@
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap "><i class='bx bx-down-arrow-alt text-green-500' (lick)="moveFlightDown($index)"></i>
 
                     <i class='bx bx-up-arrow-alt text-red-500' (click)="moveFlightUp($index)"></i></td>
-             @if ($index === 0) {
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">{{hotel.day}}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">{{hotel.date | date }}</td>
-             }@else if (hotel.day!==hotels[$index-1].day) {
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">{{hotel.day}}</td>
+             <!-- @if ($index === 0) { -->
+              
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">
+                    @if (hotel.editHotel) {
+                        <input type="text" class="border border-gray-300 rounded-md" [(ngModel)]="hotel.day">
+                    }@else{
+                        <div>{{hotel.day}}</div>
+                    }
+                </td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">
+                    @if (hotel.editHotel) {
+                        <input type="date" class="border border-gray-300 rounded-md" [(ngModel)]="hotel.date">
+                    }@else{
+                        <div>{{hotel.date | date}}</div>
+                    }
+
+                </td>
+             <!-- }@else if (hotel.day!==hotels[$index-1].day) {
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">
+                    @if (hotel.editHotel) {
+                    <input type="text" class="border border-gray-300 rounded-md" [(ngModel)]="hotel.day">
+                }@else{
+                    <div>{{hotel.day}}</div>
+                }
+                </td>
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">{{hotel.date | date }}</td>
              }@else {
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap "></td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">
+                    @if (hotel.editHotel) {
+                        <input type="text" class="border border-gray-300 rounded-md" [(ngModel)]="hotel.day">
+                    }@else{
+                        <div>{{hotel.day}}</div>
+                    }
+                </td>
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap"></td>
-             }
+             } -->
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{hotel.city}}</td>
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{hotel.name_hotel}}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{hotel.price_base | currency}}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-normal">{{hotel.price_base | currency}}</td>
                 @for (price of hotel.prices; track $index) {
                     <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{price | currency}}</td>
                 }
 
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-normal ">
                     @if (hotel.editHotel) {
                         <input type="text" class="border border-gray-300 rounded-md" [(ngModel)]="hotel.accomodatios_category">
                       }@else {
@@ -158,7 +184,7 @@
                         </div>
                       }
                 </td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-normal ">
                     @if (hotel.editHotel) {
                         <input type="text" class="border border-gray-300 rounded-md" [(ngModel)]="hotel.notes">
                       }@else {

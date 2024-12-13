@@ -69,6 +69,7 @@
                                         <input type="number" [(ngModel)]="newQuoter.number_paxs[$index]" 
                                                name="newQuoter.number_paxs_{{$index}}" 
                                                id="number_paxs_{{$index}}" 
+                                           
                                                class="mt-1 block w-16 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
                                                placeholder="Value" required>
                                       
@@ -165,97 +166,44 @@
             <div class="w-full space-y-4">
                 <div class="grid grid-cols-1 gap-4 justify-start px-6 w-full overflow-x-auto">
                   
-                
+             
                 <div>
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
                     <tbody class="">
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Total Cost
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white ">Subtotal
                             </td>
-                              @for (price of getTotalCosts(); track $index) {
+                            @for (price of subTotal(); track $index) {
                               <td class="px-6 py-4">{{price | currency}}</td>
                             }@empty {
                               <td class="px-6 py-4">$0.00</td>
                             }
-            
                         </tr>
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-whit">EXTERNAL UTILITY
-                            </td>
-                            @for (price of [].constructor(newQuoter.number_paxs.length); track $index) {
-                              <td class="px-6 py-4">
-                                <!-- <input [value]="prueba6()[$index]" (input)="onInputChange($event, $index)"  type="number"> -->
-                                
-                                <div class="relative mt-2 rounded-md shadow-sm">
-                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                      <span class="text-gray-500 sm:text-sm">$</span>
-                                    </div>
-                                    <input  [value]="prueba6()[$index]" (input)="onInputChange($event, $index)"  type="number" name="price" id="price" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" placeholder="0.00">
-                                  </div>
-
-                              </td> 
-                            }@empty {
-                              <td class="px-6 py-4">$0.00</td>
-                            }
-                        </tr>
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                          <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">EXTERNAL TAXES
+                          <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Cost of Transfers
                           </td>
-                          @for (price of getExternalTaxes(); track $index) {
+                          @for (price of costOfTransfers(); track $index) {
                             <td class="px-6 py-4">{{price | currency}}</td>
                           }@empty {
                             <td class="px-6 py-4">$0.00</td>
                           }
                       </tr>
                       <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <td  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">TOTAL COST EXTERNAL</td>
-                            @for (price of getTotalCostExternal() ;track $index) {
+                        <td  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Final Cost</td>
+                            @for (price of final_cost(); track $index) {
                                 <td class="px-6 py-4">{{price | currency}}</td>
             
                             }@empty {
                                 <td class="px-6 py-4">$0.00</td>
                               }
                       </tr>
-                    </tbody>
-                    </table>
-                </div>
-                <div>
-                    <table class="items-center w-full bg-transparent border border-collapse ">
-                    <tbody class="bg-stone-200">
-                        <tr>
-                            <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">Subtotal
-                            </td>
-                            @for (price of subTotal(); track $index) {
-                              <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">{{price | currency}}</td>
-                            }@empty {
-                              <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
-                            }
-                        </tr>
-                        <tr>
-                          <td class="text-gray-600 text-sm font-medium ml-2 truncate text-right">Cost of Transfers
-                          </td>
-                          @for (price of costOfTransfers(); track $index) {
-                            <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">{{price | currency}}</td>
-                          }@empty {
-                            <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
-                          }
-                      </tr>
-                      <tr>
-                        <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">Final Cost</td>
-                            @for (price of final_cost(); track $index) {
-                                <td class="border-t-2 border-gray-300 px-4 py-2 text-emerald-500 text-left">{{price | currency}}</td>
-            
-                            }@empty {
-                                <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
-                              }
-                      </tr>
-                      <tr>
-                        <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">Cost Per Person</td>
+                      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Cost Per Person</td>
                             @for (price of price_per_person(); track $index) {
-                                <td class="border-t-2 border-gray-300 px-4 py-2 text-emerald-500 text-left"> {{ price | currency:'USD':'symbol':'1.2-2' }}</td>
+                                <td class="px-6 py-4"> {{ price | currency:'USD':'symbol':'1.2-2' }}</td>
             
                             }@empty {
-                                <td class="py-2 px-4 border-b text-emerald-500 border-b-gray-50">$0.00</td>
+                                <td class="px-6 py-4">$0.00</td>
                               }
                       </tr>
                     </tbody>
@@ -284,7 +232,60 @@
             (hotelsChange)="onHotelsUpdate($event)"
             (totalPricesChange)="onTotalPricesHotelsChange($event)">
             </app-hotels>
-           
+              
+            <div class="w-1/2">
+              <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+              <tbody class="">
+                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Total Cost
+                      </td>
+                        @for (price of getTotalCosts(); track $index) {
+                        <td class="px-6 py-4">{{price | currency}}</td>
+                      }@empty {
+                        <td class="px-6 py-4">$0.00</td>
+                      }
+      
+                  </tr>
+                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-whit">EXTERNAL UTILITY
+                      </td>
+                      @for (price of [].constructor(newQuoter.number_paxs.length); track $index) {
+                        <td class="px-6 py-4">
+                          <!-- <input [value]="prueba6()[$index]" (input)="onInputChange($event, $index)"  type="number"> -->
+                          
+                          <div class="relative mt-2 rounded-md shadow-sm">
+                              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                <span class="text-gray-500 sm:text-sm">$</span>
+                              </div>
+                              <input  [value]="prueba6()[$index]" (input)="onInputChange($event, $index)"  type="number" name="price" id="price" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" placeholder="0.00">
+                            </div>
+
+                        </td> 
+                      }@empty {
+                        <td class="px-6 py-4">$0.00</td>
+                      }
+                  </tr>
+                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">EXTERNAL TAXES
+                    </td>
+                    @for (price of getExternalTaxes(); track $index) {
+                      <td class="px-6 py-4">{{price | currency}}</td>
+                    }@empty {
+                      <td class="px-6 py-4">$0.00</td>
+                    }
+                </tr>
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">TOTAL COST EXTERNAL</td>
+                      @for (price of getTotalCostExternal() ;track $index) {
+                          <td class="px-6 py-4">{{price | currency}}</td>
+      
+                      }@empty {
+                          <td class="px-6 py-4">$0.00</td>
+                        }
+                </tr>
+              </tbody>
+              </table>
+          </div>
     </div>
     <!-- end card  2 -->
 

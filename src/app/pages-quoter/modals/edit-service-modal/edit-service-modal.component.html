@@ -1,5 +1,5 @@
 <div  class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-start animated fadeIn faster" style="background: rgba(0,0,0,.7);" >
-    <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-8/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+    <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-8/12 md:max-w-11/12 mx-auto rounded-xl z-50 overflow-y-auto">
       <div class="modal-content py-4 text-left px-6">
         <!-- Title -->
         <div class="flex justify-between items-center pb-3">
@@ -51,7 +51,7 @@
                         <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" name="selectedService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         <option value="" disabled selected>Select Service</option>
                             @for (service of servicesOptions; track $index) {
-                                <option [ngValue]="{type_service: selectedDayIndex.type ,service_id: service._id,service_type: selectCategoria, name_service: service.description || service.name|| service.name_guide || service.operador || service.company || service.nombre}">{{service.description || service.name || service.name_guide || service.operador || service.company || service.nombre}} </option>
+                                <option [ngValue]="{type_service: selectedDayIndex.type ,service_id: service._id,service_type: selectCategoria, name_service: service.description || service.name|| service.name_guide || service.operador || service.company || service.nombre}">{{service.description || service.name || service.name_guide || service.operador +' - ' + service.name_service || service.company || service.nombre}} </option>
                             }
                         </select>
                     </div>
@@ -91,9 +91,9 @@
                     <tr class="text-gray-700 dark:text-gray-1000">
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.city}}</td>
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.name_service}}</td>
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.price_base}}</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.price_base | currency}}</td>
                         @for (price of service.prices; track $index) {
-                           <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{price}}</td> 
+                           <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{price | currency}}</td> 
                         }
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap">
                         
