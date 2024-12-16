@@ -2,6 +2,7 @@
 export interface Quoter {
     name_version: string;
     guest: string;
+    destinations:string[];
     FileCode: string;
     travelDate: {
       start: string;

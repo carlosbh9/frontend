@@ -46,6 +46,8 @@ const tableBodyFlights = this.createFlightsTableContent(data, tam);
     // Generar contenido de la tabla llamando a un solo método
 const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
 
+const tableBodyCuises = this.createCruisesTableContent(data,tam)
+
 
     return {
       content: [
@@ -68,6 +70,7 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
                 { text: 'Travel Designer: \n', bold: true },
                 { text: 'Type of Accommodations: \n', bold: true },
                 { text: 'Travel Dates: \n', bold: true },
+                { text: 'Destinations: \n', bold: true },
               ],
             },
             {
@@ -77,6 +80,7 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
                 { text: `${data.travel_agent || 'N/A'} \n` },
                 { text: `${data.accomodations || 'N/A'} \n` },
                 { text: `${data.travelDate.start|| 'N/A'} to ${data.travelDate.end || 'N/A'} \n` },
+                 { text: `${data.destinations && Array.isArray(data.destinations) && data.destinations.length > 0 ? data.destinations.join(', ') : 'N/A'} \n`},
               ],
             },
           ]
@@ -89,7 +93,7 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
             style: 'body',
             table: {
                 widths: [20, 60,30, '*', 30, ...Array(tam).fill(30)], // Ajustar anchos
-                body: tableBodyServices.length ? tableBodyServices : [[{ text: 'No data available', colSpan: tam + 5 }]]
+                body: tableBodyServices.length ? tableBodyServices : [[{ text: 'No data available', colSpan: tam + 6 }]]
             },
             layout: 'lightHorizontalLines'
         },
@@ -99,8 +103,8 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
       {
         style: 'body',
         table: {
-          widths: [20, 60, 50, '*', 30, ...Array(tam).fill(30), '*'], // Ajuste de anchos, añadiendo espacio para Accommodation y Category
-          body: tableBodyHotels.length ? tableBodyHotels : [[{ text: 'No data available', colSpan: tam + 6 }]],
+          widths: [20, 45,20, '*', 30, ...Array(tam).fill(30), '*','*'], // Ajuste de anchos, añadiendo espacio para Accommodation y Category
+          body: tableBodyHotels.length ? tableBodyHotels : [[{ text: 'No data available', colSpan: tam + 7 }]],
         },
         layout: 'lightHorizontalLines'
       },
@@ -124,6 +128,17 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
         },
         layout: 'lightHorizontalLines',
       },
+      { text: '\n\n' },
+      { text: 'Cruises \n', style: 'subtitles' },
+      {
+        style: 'body',
+        table: {
+          widths: [70, 70, ...Array(tam).fill(50), '*'], // Ajustar anchos de las columnas
+          body: tableBodyCuises.length ? tableBodyCuises : [[{ text: 'No data available', colSpan: tam + 3 }]],
+        },
+        layout: 'lightHorizontalLines',
+      },
+
 
     ],
     styles: {
@@ -161,6 +176,8 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
   for (let i = 0; i < tam; i++) {
     tableHeader.push({ text: `Price ${i + 1}`, style: 'header' });
   }
+   // Agregar columna de notas
+ //  tableHeader.push({ text: 'Notes', style: 'header' });
 
   const tableBody: any[] = [tableHeader];
   let hasServices = false;
@@ -180,6 +197,7 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
       for (let i = 0; i < tam; i++) {
         row.push(service.prices[i] !== undefined ? service.prices[i].toString() : '');
       }
+     // row.push(dayData.notes);
 
       tableBody.push(row);
       hasServices = true;
@@ -187,9 +205,6 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
   });
 
   if(hasServices){
-
-  
-  // Crear fila de totales
   const totalRow = [
     { text: 'Total Prices', colSpan: 5, alignment: 'center', bold: true },
     {}, {}, {}, {}, // Celdas vacías para las columnas colapsadas
@@ -225,7 +240,7 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
 
   // Agregar columna de "Accommodations" y "Category"
   tableHeaderHotels.push({ text: 'Accommodations and Category', style: 'header' });
-
+  tableHeaderHotels.push({ text: 'Notes', style: 'header' });
   const tableBodyHotels: any[] = [tableHeaderHotels];
   let hasServices = false;
 
@@ -246,7 +261,7 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
 
     // Añadir "Accommodations" y "Category"
     row.push(hotel.accomodatios_category);
-    
+    row.push(hotel.notes);
     tableBodyHotels.push(row);
     hasServices = true;
   });
@@ -259,7 +274,7 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
     ...data.total_prices.total_hoteles.map((price: any) => {
       return { text: price.toString(), bold: true };
     }),
-    '', // Espacio vacío para "Accommodations"
+    '','', // Espacio vacío para "Accommodations"
   ];
   tableBodyHotels.push(totalRowHotels);
   }
@@ -380,5 +395,63 @@ const tableBodyOpertators = this.createOperatorsTableContent(data, tam);
   }else {
     return []
   }
+  }
+
+  private createCruisesTableContent(data: any, tam: number): any[] {
+    
+      if (data.cruises.length !== 0) {
+      const tableHeaderCruises = [
+        { text: 'Name', style: 'header' },
+        { text: 'Operator', style: 'header' },
+      ];
+    
+      // Crear encabezados dinámicos para los precios
+      for (let i = 0; i < tam; i++) {
+        tableHeaderCruises.push({ text: `Price ${i + 1}`, style: 'header' });
+      }
+    
+      // Agregar columna de "Accommodations" y "Category"
+      tableHeaderCruises.push({ text: 'Notes', style: 'header' });
+    
+      const tableBodyCruise: any[] = [tableHeaderCruises];
+      let hasCruises =false    
+      // Llenar el cuerpo de la tabla con datos de hoteles
+      data.cruises.forEach((cruise: any) => {
+        const row = [
+          cruise.name,
+          cruise.operator,
+         
+        ];
+    
+        // Añadir precios dinámicos
+        for (let i = 0; i < tam; i++) {
+          row.push(cruise.prices[i] !== undefined ? cruise.prices[i].toString() : '');
+        }
+    
+        // Añadir "Accommodations" y "Category"
+        row.push(cruise.notes);
+        
+        tableBodyCruise.push(row);
+        hasCruises = true;
+      });
+    
+    
+      if(hasCruises){
+      const totalRowHotels = [
+        { text: 'Total Prices', colSpan: 2, alignment: 'center', bold: true },
+        {},  // Celdas vacías para las columnas colapsadas
+        ...data.total_prices.total_ext_cruises.map((price: any) => {
+          return { text: price.toString(), bold: true };
+        }),
+        '', // Espacio vacío para "Accommodations"
+      ];
+      tableBodyCruise.push(totalRowHotels);
+      }
+      
+      return tableBodyCruise;
+    } else {
+      return []
+    }
+    
   }
 }

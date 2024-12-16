@@ -9,11 +9,13 @@ import { RestaurantService } from '../../../Services/restaurant.service';
 import { OperatorsService } from '../../../Services/operators.service';
 import { MasterQuoterService } from '../../../Services/master-quoter.service';
 import {CalculatepricesService}  from '../../../Services/controllerprices/calculateprices.service'
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-edit-service-modal',
   standalone: true,
-  imports: [ReactiveFormsModule,FormsModule,CommonModule],
+  imports: [ReactiveFormsModule,FormsModule,CommonModule,SweetAlert2Module],
   templateUrl: './edit-service-modal.component.html',
   styleUrl: './edit-service-modal.component.css'
 })
@@ -29,19 +31,22 @@ export class EditServiceModalComponent implements OnInit{
   @Output() closeModalEvent = new EventEmitter<void>();
   number_paxs = input<number[]>();
   @Input() dayData: any; // Recibimos el día completo con servicios
-
+ // dayData = input<any>();
   servicesOptions: any[]=[]
-
-
+  editService: boolean= false
+  originalItem: any = {};
 // Método para cerrar el modal (emite el evento)
 closeModal() {
-  this.dayData= this.tempPreviuw
+  //this.dayData= this.tempPreviuw
+  console.log('data recuperdad',this.dayData,this.tempPreviuw)
   this.closeModalEvent.emit();
   
 }
 ngOnInit(): void {
   this.tempPreviuw = this.dayData
+  console.log('data recuperdad init',this.dayData,this.tempPreviuw)
 }
+
 selectedDayIndex: any = {type: 'service',dayIndex: 0};
 subservicesOptions: any[]=[]
 selectCategoria: string =''
@@ -142,20 +147,19 @@ async onServiceChange(event: any){
    console.log('services seleccionado',this.selectedService)
 }
 onSubServiceChange(event: any){
-
-  //this.selectedService.operator_service_id = this.selectedDayIndex.type
+//this.selectedService.operator_service_id = this.selectedDayIndex.type
   //this.selectedSubService.service_id = this.selectedService.service_id
   this.selectedService.operator_service_id = this.selectedSubService.operator_service_id
  // this.selectedService.service_type= this.selectCategoria
- 
-
 
   console.log('services seleccionado',this.selectedService)
 }
 
 onDelete(index: number){
+  Swal.fire('Success','Record deleted','success')
   this.dayData.services.splice(index, 1); 
-   
+  console.log('data recuperdad delete',this.dayData,this.tempPreviuw)
+
 }
 
  async addItem(){
@@ -170,11 +174,29 @@ onDelete(index: number){
   
   item2  = await this.priceService.calculatePrice(this.item)
   
-  if(!item2.services[0].prices){
+  if(item2.services[0].prices.length > 0){
   this.dayData.services.push(item2.services[0])
   }
   
 
   console.log('calccc',item2,this.item)
+}
+onEdit(item: any, index: number) {
+  this.originalItem[index] = { ...item };
+  item.editService= true;
+  console.log('editando item', item, index);
+  //this.emitCruise(); 
+}
+
+onClose(item: any, index: number){
+// Revertir el item al estado original
+this.dayData.services[index] = { ...this.originalItem[index] };
+item.editService = false;
+//this.emitCruise(); 
+}
+onSave(item: any){
+item.editService= false
+this.originalItem = {};
+//this.emitCruise(); 
 }
 }

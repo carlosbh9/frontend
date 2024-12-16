@@ -63,6 +63,7 @@ export class QuoterFormComponent implements  OnInit{
   newQuoter: Quoter = {
     name_version:'version 1',
     guest:'',
+    destinations:[],
     FileCode: '',
     travelDate:{
         start:'',
@@ -99,6 +100,7 @@ export class QuoterFormComponent implements  OnInit{
   emptyQuoter: Quoter = {
     name_version:'version 1',
     guest: '',
+    destinations:[],
     FileCode: '',
     travelDate: {
       start: '',
@@ -162,7 +164,21 @@ export class QuoterFormComponent implements  OnInit{
 
 
   }
+  onCheckboxChange(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    const value = checkbox.value;
 
+    if (checkbox.checked) {
+      // Si el checkbox está seleccionado, lo añadimos al array
+      this.newQuoter.destinations.push(value);
+    } else {
+      // Si el checkbox está deseleccionado, lo eliminamos del array
+      const index = this.newQuoter.destinations.indexOf(value);
+      if (index > -1) {
+        this.newQuoter.destinations.splice(index, 1);
+      }
+    }
+  }
   onInputChange(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
     const updatedValues = [...this.prueba6()]; // Copiar el array actual

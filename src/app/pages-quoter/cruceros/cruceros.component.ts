@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component ,input,OnInit,Input, Output, EventEmitter} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-cruceros',
   standalone: true,
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule,CommonModule, SweetAlert2Module],
   templateUrl: './cruceros.component.html',
   styleUrl: './cruceros.component.css'
 })
@@ -65,6 +66,7 @@ onSave(item: any){
   this.emitCruise(); 
 }
 onDelete(index: number){
+  Swal.fire('Success','Record deleted','success')
   this.cruises.splice(index, 1); 
   this.emitCruise();
 }

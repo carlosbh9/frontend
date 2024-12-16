@@ -107,7 +107,7 @@
             }@else{
               <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="onEdit(item,$index)"></i>
             } 
-            <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="onDelete($index)" ></i>
+            <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (confirm)="onDelete($index)" [swal]="{title:'Confirmation', text:'Are you sure you want to delete this record?', showCancelButton: true}"></i>
         </td>
         </tr>
       }

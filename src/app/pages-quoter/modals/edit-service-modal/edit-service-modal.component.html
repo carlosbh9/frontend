@@ -83,6 +83,7 @@
                     @for (item of number_paxs() ? [].constructor(number_paxs()?.length || 0) : []; track $index) {
                         <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center" >Price {{$index+1}}</th>
         }
+                      <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center" >Notes</th>
                      <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center" >Actions</th>
                   </tr>
                 </thead>
@@ -95,9 +96,25 @@
                         @for (price of service.prices; track $index) {
                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{price | currency}}</td> 
                         }
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.notes }}
+                          @if (service.editService) {
+                            <div>
+                            <input [(ngModel)]="service.notes" type="text" class="border border-gray-300 rounded-md" [name]="'input-' + $index">
+                            </div>
+                          }@else{
+                            <div>
+                              {{service.notes}}
+                            </div>
+                          }
+                        </td> 
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap">
-                        
-                            <i (click)="onDelete($index)" class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2'></i>
+                          @if (service.editService) {
+                            <i class='bx bx-check text-2xl text-green-500 dark:text-red-700 mr-2' (click)="onSave(item)" ></i>
+                            <i class='bx bxs-x-circle text-2xl text-red-500 dark:text-red-700 mr-2' (click)="onClose(service,$index)" ></i>
+                          }@else{
+                            <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="onEdit(service,$index)"></i>
+                          }
+                            <i (confirm)="onDelete($index)" class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' [swal]="{title:'Confirmation', text:'Are you sure you want to delete this quoter?' , showCancelButton: true}"></i>
                         </td>
                     </tr>
                   }
@@ -109,8 +126,8 @@
         </div>
         <!-- Footer -->
         <div class="flex justify-end pt-2 space-x-14">
-          <button (click)="closeModal()" class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" >Cancel</button>
-          <button  type="submit" form="add_mquoter" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Save</button>
+          <!-- <button (click)="closeModal()" class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" >Cancel</button>
+          <button  type="submit" form="add_mquoter" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Save</button> -->
         </div>
       </div>
     </div>

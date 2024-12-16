@@ -6,10 +6,12 @@ import { RouterModule } from '@angular/router';
 import { ContactService } from '../../Services/contact/contact.service';
 import { QuoterService } from '../../Services/quoter.service';
 import { PdfexportService } from '../../Services/pdfexport/pdfexport.service';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import Swal from 'sweetalert2'
 @Component({
   selector: 'app-quoter-list',
   standalone: true,
-  imports: [CommonModule,FormsModule,RouterModule],
+  imports: [CommonModule,FormsModule,RouterModule,SweetAlert2Module],
   templateUrl: './quoter-list.component.html',
   styleUrl: './quoter-list.component.css'
 })
@@ -58,6 +60,7 @@ export class QuoterListComponent implements OnInit{
   async deleteContact(id: string) {
     try {
       await this.contactService.deleteContact(id); // Elimina el contacto usando el servicio
+      Swal.fire('Success','Record deleted','success')
       this.fetchContacts(); // Vuelve a cargar la lista de contactos
     } catch (error) {
       console.error('Error deleting contact', error);
@@ -71,6 +74,7 @@ export class QuoterListComponent implements OnInit{
   async deleteQuoter(id: string){
     try {
       await this.quoterService.deleteQuoter(id); // Elimina el contacto usando el servicio
+      Swal.fire('Success','Record deleted','success')
       this.fetchContacts(); // Vuelve a cargar la lista de contactos
     } catch (error) {
       console.error('Error deleting Quoter', error);
