@@ -38,7 +38,7 @@ export const routes: Routes = [
             {   path: 'restaurant', component: RestaurantComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
             {   path:'guides', component:GuidesComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
             {   path:'operators', component : OperatorsComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
-            {   path:'services-operators/:id',component: OperatorsServicesComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path:'services-operators/:id',component: OperatorsServicesComponent},
             {   path:'train', component:TrainComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
             {   path:'services-train/:id',component: TrainServicesComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
             {   path:'transport', component:TransportComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
@@ -61,6 +61,6 @@ export const routes: Routes = [
     },
     {   path:'login',component: LoginComponent},
 
-    {   path:'**',redirectTo:'dashboard',pathMatch:'full'}
+     {   path:'**',redirectTo:'dashboard',pathMatch:'full'}
 
 ];

@@ -96,7 +96,7 @@
                         @for (price of service.prices; track $index) {
                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{price | currency}}</td> 
                         }
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.notes }}
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">
                           @if (service.editService) {
                             <div>
                             <input [(ngModel)]="service.notes" type="text" class="border border-gray-300 rounded-md" [name]="'input-' + $index">
@@ -109,7 +109,7 @@
                         </td> 
                         <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap">
                           @if (service.editService) {
-                            <i class='bx bx-check text-2xl text-green-500 dark:text-red-700 mr-2' (click)="onSave(item)" ></i>
+                            <i class='bx bx-check text-2xl text-green-500 dark:text-red-700 mr-2' (click)="onSave(service)" ></i>
                             <i class='bx bxs-x-circle text-2xl text-red-500 dark:text-red-700 mr-2' (click)="onClose(service,$index)" ></i>
                           }@else{
                             <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="onEdit(service,$index)"></i>

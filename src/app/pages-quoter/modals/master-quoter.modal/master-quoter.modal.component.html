@@ -1,4 +1,4 @@
-<div  class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-start animated fadeIn faster" style="background: rgba(0,0,0,.7);" >
+<div id="modalMq" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-start animated fadeIn faster" style="background: rgba(0,0,0,.7);" >
     <div class="border border-gray-200 modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl   shadow-lg z-50 overflow-y-auto">
       <div class="modal-content py-4 text-left px-6">
         <!-- Title -->
@@ -18,7 +18,7 @@
                 <label for="issue-date" class="block text-sm font-medium text-gray-700">Date</label>
                 <input type="date" [(ngModel)]="selectedServices.date"  name="date" id="date" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
               </div>
-            
+
               <div class="mb-4">
                 <label for="name_mq" class="block text-md text-gray-600 dark:text-gray-50">Name Master Quoter</label>
                 <input
@@ -27,44 +27,23 @@
                     [(ngModel)]="searchTerm"
                     (input)="filterOptions()"  
                     (focus)="showOptions = true"
+                    (blur)="onBlur()"
                     name="search"
                     placeholder="Search Master Quoter..."
                     class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md"
                 />
                 <!-- Opciones filtradas -->
-                <ul id="optionsDropdown" *ngIf="showOptions && filteredOptions.length" class=" left-0 right-0 bg-white border border-gray-300 mt-1 rounded-md max-h-40 overflow-auto z-10">
+                <ul id="optionsDropdown" *ngIf="showOptions && filteredOptions.length" class="left-0 right-0 bg-white border border-gray-300 mt-1 rounded-md max-h-40 overflow-auto z-10">
                     <li
-                    *ngFor="let option of filteredOptions"
-                    (click)="selectOption(option)"
-                    class="p-2 hover:bg-gray-200 cursor-pointer"
+                        *ngFor="let option of filteredOptions"
+                        (click)="selectOption(option)"
+                        class="p-2 hover:bg-gray-200 cursor-pointer"
                     >
-                    {{ option.name }}
+                        {{ option.name }}
                     </li>
                 </ul>
-              </div>
-              <!-- <div class="mb-4">
-                <label for="name_mq" class="block text-md text-gray-600 dark:text-gray-50">days</label>
-                <input
-                    id="searchInputDays"
-                    type="text"
-                    [(ngModel)]="searchTermDays"
-                    (input)="filterOptionsDays()"  
-                    (focus)="showOptionsDays = true"
-                    name="search_days"
-                    placeholder="Search day..."
-                    class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md"
-                />
-             
-                <ul id="optionsDropdownDay" *ngIf="showOptionsDays && filteredDaysOptions.length" class=" left-0 right-0 bg-white border border-gray-300 mt-1 rounded-md max-h-40 overflow-auto z-10">
-                    <li
-                    *ngFor="let option of filteredDaysOptions"
-                    (click)="selectOptionDay(option)"
-                    class="p-2 hover:bg-gray-200 cursor-pointer"
-                    >
-                    {{option.city}} - {{ option.name_services }}
-                    </li>
-                </ul>
-              </div> -->
+            </div>
+        
               @for (option of filteredDaysOptions; track $index) {
               <div class="mb-4">
                 <details class="group">

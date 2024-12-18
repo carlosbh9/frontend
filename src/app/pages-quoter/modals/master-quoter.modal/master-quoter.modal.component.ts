@@ -69,9 +69,16 @@ async loadmqServices() {
 }
  // Filtrar opciones en Master Quoter
  filterOptions(): void {
-  this.filteredOptions = this.mqQuoters.filter(option =>
-    option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-  );
+  // this.filteredOptions = this.mqQuoters.filter(option =>
+  //   option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+  // );
+  if (this.searchTerm.trim()) {
+    this.filteredOptions = this.mqQuoters.filter(option => 
+      option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  } else {
+    this.filteredOptions = [];
+  }
 }
 
 // Seleccionar opción en Master Quoter
@@ -177,25 +184,27 @@ hideOptions() {
   this.showOptionsDays = false // Cambia el estado para ocultar las opciones
 }
 
-// Detectar clics fuera del input y la lista de opciones
 @HostListener('document:click', ['$event'])
 onClick(event: MouseEvent) {
   const target = event.target as HTMLElement;
-  const inputElement = document.getElementById('searchInput'); // ID del input
-  const dropdownElement = document.getElementById('optionsDropdown'); // ID del dropdown
 
-  const inputElement2 = document.getElementById('searchInputDays'); // ID del input
-  const dropdownElement2 = document.getElementById('optionsDropdownDay'); // ID del dropdown
+  // Verificar si el clic fue fuera del modal y dropdown
+  const modalElement = document.getElementById('modalMq');  // ID del modal
+  const inputElement = document.getElementById('searchInput');
+  const dropdownElement = document.getElementById('optionsDropdown');
 
-  // Si el clic no es en el input o el dropdown, oculta las opciones
-  if (inputElement && !inputElement.contains(target) && dropdownElement && !dropdownElement.contains(target)) {
-    this.hideOptions();
-  }
-
-  if (inputElement2 && !inputElement2.contains(target) && dropdownElement2 && !dropdownElement2.contains(target)) {
+  // Si el clic no es en el modal, el input ni el dropdown, ocultamos las opciones
+  if (modalElement && !modalElement.contains(target) && 
+      inputElement && !inputElement.contains(target) && 
+      dropdownElement && !dropdownElement.contains(target)) {
     this.hideOptions();
   }
 }
 
-//  [ngModelOptions]="{standalone: true}"
+onBlur() {
+  setTimeout(() => {
+    this.showOptions = false;
+  }, 200);  // Permite un pequeño retraso para registrar el clic en las opciones
+}
+
 }

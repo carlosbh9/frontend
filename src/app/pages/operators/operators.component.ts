@@ -135,7 +135,8 @@ export class OperatorsComponent implements OnInit {
   }
 
   viewServices(operator: any) {
-    this.router.navigate([`services-operators`, operator._id]);
+    this.router.navigate([`dashboard/services-operators`, operator._id]);
+    console.log('el operador enviado',operator)
   }
 
 

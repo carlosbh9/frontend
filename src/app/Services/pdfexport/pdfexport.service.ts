@@ -92,8 +92,8 @@ const tableBodyCuises = this.createCruisesTableContent(data,tam)
         {
             style: 'body',
             table: {
-                widths: [20, 60,30, '*', 30, ...Array(tam).fill(30)], // Ajustar anchos
-                body: tableBodyServices.length ? tableBodyServices : [[{ text: 'No data available', colSpan: tam + 6 }]]
+                widths: [20, 60,30, '*', 30, ...Array(tam).fill(30),'*'], // Ajustar anchos
+                body: tableBodyServices.length ? tableBodyServices : [[{ text: 'No data available', colSpan: tam + 7 }]]
             },
             layout: 'lightHorizontalLines'
         },
@@ -176,8 +176,8 @@ const tableBodyCuises = this.createCruisesTableContent(data,tam)
   for (let i = 0; i < tam; i++) {
     tableHeader.push({ text: `Price ${i + 1}`, style: 'header' });
   }
-   // Agregar columna de notas
- //  tableHeader.push({ text: 'Notes', style: 'header' });
+
+   tableHeader.push({ text: 'Notes', style: 'header' });
 
   const tableBody: any[] = [tableHeader];
   let hasServices = false;
@@ -197,7 +197,7 @@ const tableBodyCuises = this.createCruisesTableContent(data,tam)
       for (let i = 0; i < tam; i++) {
         row.push(service.prices[i] !== undefined ? service.prices[i].toString() : '');
       }
-     // row.push(dayData.notes);
+      row.push(service.notes|| '');
 
       tableBody.push(row);
       hasServices = true;
@@ -210,7 +210,7 @@ const tableBodyCuises = this.createCruisesTableContent(data,tam)
     {}, {}, {}, {}, // Celdas vacías para las columnas colapsadas
     ...data.total_prices.total_services.map((price: any) => {
       return { text: price.toString(), bold: true };
-    }),
+    }),'',
   ];
 
   tableBody.push(totalRow);
@@ -260,8 +260,8 @@ const tableBodyCuises = this.createCruisesTableContent(data,tam)
     }
 
     // Añadir "Accommodations" y "Category"
-    row.push(hotel.accomodatios_category);
-    row.push(hotel.notes);
+    row.push(hotel.accomodatios_category || '');
+    row.push(hotel.notes || '');
     tableBodyHotels.push(row);
     hasServices = true;
   });
@@ -372,7 +372,7 @@ const tableBodyCuises = this.createCruisesTableContent(data,tam)
         row.push(operator.prices[i] !== undefined ? operator.prices[i].toString() : '');
       }
       // Agregar notas
-      row.push(operator.notes);
+      row.push(operator.notes || '');
 
       tableBody.push(row);
       hasServices = true;
@@ -429,7 +429,7 @@ const tableBodyCuises = this.createCruisesTableContent(data,tam)
         }
     
         // Añadir "Accommodations" y "Category"
-        row.push(cruise.notes);
+        row.push(cruise.notes || '');
         
         tableBodyCruise.push(row);
         hasCruises = true;
@@ -437,7 +437,7 @@ const tableBodyCuises = this.createCruisesTableContent(data,tam)
     
     
       if(hasCruises){
-      const totalRowHotels = [
+      const totalRowCruises = [
         { text: 'Total Prices', colSpan: 2, alignment: 'center', bold: true },
         {},  // Celdas vacías para las columnas colapsadas
         ...data.total_prices.total_ext_cruises.map((price: any) => {
@@ -445,7 +445,7 @@ const tableBodyCuises = this.createCruisesTableContent(data,tam)
         }),
         '', // Espacio vacío para "Accommodations"
       ];
-      tableBodyCruise.push(totalRowHotels);
+      tableBodyCruise.push(totalRowCruises);
       }
       
       return tableBodyCruise;

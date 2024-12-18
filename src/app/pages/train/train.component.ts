@@ -157,6 +157,6 @@ export class TrainComponent implements OnInit {
 
 
   viewServices(operator: any) {
-    this.router.navigate([`services-train`, operator._id]);
+    this.router.navigate([`dashboard/services-train`, operator._id]);
   }
 }
