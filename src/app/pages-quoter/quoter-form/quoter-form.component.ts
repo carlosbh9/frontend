@@ -64,6 +64,7 @@ export class QuoterFormComponent implements  OnInit{
     name_version:'version 1',
     guest:'',
     destinations:[],
+    children_ages: [],
     FileCode: '',
     travelDate:{
         start:'',
@@ -101,6 +102,7 @@ export class QuoterFormComponent implements  OnInit{
     name_version:'version 1',
     guest: '',
     destinations:[],
+    children_ages: [],
     FileCode: '',
     travelDate: {
       start: '',
@@ -224,12 +226,20 @@ selectOption(option: any): void {
     }
   }
   addNumberPaxs() {
-   
     this.newQuoter.number_paxs.push(0);
-      // Agrega un nuevo input
-    
-    
+
     }
+  addChildrenAges() {
+    if (!this.newQuoter.children_ages) {
+        this.newQuoter.children_ages = [];
+    }
+    this.newQuoter.children_ages.push(0);
+  }
+    removeChildrenAges(indexToRemove: number): void {
+      if (Array.isArray(this.newQuoter.children_ages) && indexToRemove >= 0 && indexToRemove < this.newQuoter.children_ages.length) {
+          this.newQuoter.children_ages.splice(indexToRemove, 1); 
+      }
+  }
     removeNumberPaxs(indexToRemove: number): void {
       // Eliminar del array `number_paxs`
     // const  indexToRemove =  this.newQuoter.number_paxs.length;
@@ -324,10 +334,7 @@ selectOption(option: any): void {
         this.newQuoter.total_prices.total_cost_external.splice(index, 1);
       }
     }
-  // onModalmqQuoterChange(temp: any){
-    
-  //   this.newQuoter.services.push(...temp)
-  // }
+
 
   onCruiseUpdate(cruises: any[]) {
     // this.datosrecibidosFlights = flights;
@@ -397,17 +404,7 @@ selectOption(option: any): void {
 
 
   onSubmit(){
-   
-    // this.quoterService.createQuoter(this.newQuoter).then(
-    //   response => {
-    //     console.log('Quoter added',response)
-    //     this.newQuoter=this.emptyQuoter
-    //     //this.fetchHotels();
-    //   },
-    //   error => {
-    //     console.error('Error adding Quoter', error)
-    //   }
-    // )
+ 
 
     this.create.createQuoter(this.newQuoter).subscribe({
       next: response => {

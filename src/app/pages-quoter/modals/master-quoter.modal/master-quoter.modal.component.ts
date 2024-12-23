@@ -17,6 +17,7 @@ export class MasterQuoterModalComponent implements OnInit {
 servicesChange = output<any>()
 priceService = inject(CalculatepricesService);
 numberpaxs = input<number[]>();
+childrenAges = input<number[]>();
 mqService = inject(MasterQuoterService)
 //mqQuoters: any[]=[]
 // Método para cerrar el modal (emite el evento)
@@ -99,44 +100,46 @@ filterOptionsDays(): void {
   } else {
     this.filteredDaysOptions = [];
   }
+ 
 }
 
 
-// Seleccionar un día específico
-selectOptionDay(dayOption: any): void {
-  this.selectedServices.city = dayOption.city
-  this.showOptionsDays = false;
-  this.searchTermDays = `${dayOption.city} - ${dayOption.name_services}`;
+// // Seleccionar un día específico
+// selectOptionDay(dayOption: any): void {
+//   this.selectedServices.city = dayOption.city
+//   this.showOptionsDays = false;
+//   this.searchTermDays = `${dayOption.city} - ${dayOption.name_services}`;
  
-  this.servicesList = dayOption.services.filter((service: any) => service.type_service === 'services');
-  this.optionsList = dayOption.services.filter((service: any) => service.type_service === 'options');
+//   this.servicesList = dayOption.services.filter((service: any) => service.type_service === 'services');
+//   this.optionsList = dayOption.services.filter((service: any) => service.type_service === 'options');
 
-  //Marca los `services` como seleccionados por defecto
-  this.servicesList.forEach(service => {
-    this.selectedServices[service.service_id] = true;
-  });
-}
+//   //Marca los `services` como seleccionados por defecto
+//   this.servicesList.forEach(service => {
+//     this.selectedServices[service.service_id] = true;
+//   });
+// }
 
-toggleService(service: any) {
+// toggleService(service: any) {
 
-     // Crea una clave única basada en service_id y el id adicional
-     const uniqueKey = `${service.service_id}_${service.operator_service_id || service.train_service_id || ''}`;
+//      // Crea una clave única basada en service_id y el id adicional
+//      const uniqueKey = `${service.service_id}_${service.operator_service_id || service.train_service_id || ''}`;
 
-     const index = this.selectedServices.services.findIndex((s:any) => 
-       `${s.service_id}_${s.operator_service_id || s.train_service_id || ''}` === uniqueKey
-     );
+//      const index = this.selectedServices.services.findIndex((s:any) => 
+//        `${s.service_id}_${s.operator_service_id || s.train_service_id || ''}` === uniqueKey
+//      );
  
-     if (index > -1) {
-       // Si ya está seleccionado, quitarlo
-       this.selectedServices.services.splice(index, 1);
-     } else {
-       // Si no está seleccionado, agregarlo
-       this.selectedServices.services.push(service);
-     }
+//      if (index > -1) {
+//        // Si ya está seleccionado, quitarlo
+//        this.selectedServices.services.splice(index, 1);
+//      } else {
+//        // Si no está seleccionado, agregarlo
+//        this.selectedServices.services.push(service);
+//      }
   
-}
+// }
 
   // Función para gestionar el cambio del checkbox en la cabecera
+  
   toggleAllServices(option: any): void {
     // Si el checkbox de la cabecera está seleccionado, seleccionamos todos los servicios de tipo 'services'
     if (option.selected) {
@@ -171,10 +174,12 @@ async onAddMQuoter(){
 
    
   this.selectedServices.number_paxs=this.numberpaxs()
+  this.selectedServices.children_ages= this.childrenAges()
   this.preciosCalculados = await this.priceService.calculatePrice(this.selectedServices)
   this.preciosCalculados.date = this.selectedServices.date
   this.servicesChange.emit(this.preciosCalculados)
   this.closeModal()
+  console.log('los dias seleecionado',this.filteredDaysOptions)
 }
 
 

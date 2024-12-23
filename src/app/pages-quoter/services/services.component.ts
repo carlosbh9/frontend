@@ -17,6 +17,7 @@ export class ServicesComponent {
  // @Output() servicesChange = new EventEmitter<any[]>();
   @Output() servicesChange = new EventEmitter<any>();
   @Output() totalPricesChange = new EventEmitter<number[]>();
+  children_ages = input<number[]>()
   modalOpen = signal(false);
   selectserviceEdit: any ={} 
   modalOpenEditService = signal(false);

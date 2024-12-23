@@ -3,6 +3,7 @@ export interface Quoter {
     name_version: string;
     guest: string;
     destinations:string[];
+    children_ages: number[];
     FileCode: string;
     travelDate: {
       start: string;

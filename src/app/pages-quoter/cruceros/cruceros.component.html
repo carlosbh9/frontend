@@ -1,4 +1,16 @@
-<div class="p-6 flex flex-col space-y-4">
+<details class="group">
+  <!-- Título del acordeón -->
+  <summary class="flex justify-start items-center px-4 py-2 bg-green-100 cursor-pointer rounded-lg group-open:bg-blue-100 " >
+      <span class="transition group-open:rotate-180">
+          <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24">
+              <path d="M6 9l6 6 6-6"></path>
+          </svg>
+      </span>
+      <span class="font-bold">Cuises</span>
+      
+  </summary>
+  <div class="px-8">
+<div class="p-2 flex flex-col space-y-4">
     <div class="flex flex-wrap space-x-4 justify-start">
         <div class="w-1/4">
             <label  for="name" class="block text-sm font-medium text-gray-700">Name</label>
@@ -32,7 +44,7 @@
         </div>
     </div>
   
-  <div class="p-6 block w-full overflow-x-auto">
+  <div class="p-2 block w-full overflow-x-auto">
     <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Cruises</h1>
     <table class="items-center w-full bg-transparent border border-collapse">
       <thead>
@@ -70,7 +82,7 @@
             </div>
           }
         </td>
-          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 text-green-600 ">
             @if (item.editCruise) {
               <input type="number" class="w-16 border border-gray-300 rounded-md" [(ngModel)]="item.price_conf">
             }@else {
@@ -81,7 +93,7 @@
           </td>
           @for (price of item.prices; track $index) {
             
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 text-blue-600">
               @if (item.editCruise) {
                 <input type="number" class="w-16 border border-gray-300 rounded-md" [(ngModel)]="item.prices[$index]">
               }@else {
@@ -116,11 +128,12 @@
         <tr class="font-semibold text-gray-700 dark:text-gray-1000">
             <td colspan="3" class="border-t-2 border-gray-300 px-4 py-2 text-left">TOTAL COST EXTERNAL</td>
             @for (price of getTotalPrices(); track $index) {
-              <td class="border-t-2 border-gray-300 px-4 py-2 text-left">{{price | currency}}</td>
+              <td class="border-t-2 border-gray-300 px-4 py-2 text-left text-blue-600">{{price | currency}}</td>
             }
             
         </tr>
     </tfoot>
     </table>
   </div>
-  
+</div>
+</details>

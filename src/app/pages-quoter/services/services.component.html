@@ -1,79 +1,122 @@
-<div class="p-6 flex flex-col space-y-4 ">
+<details class="group">
+    <!-- Título del acordeón -->
+    <summary class="flex justify-start items-center px-4 py-2 bg-green-100 cursor-pointer rounded-lg group-open:bg-blue-100 " >
+        <span class="transition group-open:rotate-180">
+            <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24">
+                <path d="M6 9l6 6 6-6"></path>
+            </svg>
+        </span>
+        <span class="font-bold">Services</span>
+        
+    </summary>
+<div class="px-8">
+<div class="p-1 flex flex-col space-y-4 ">
     <div class="flex flex-wrap space-x-4 justify-start">
-    
-            <button class=" top-4 right-4 px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Open Master Quoter</button>    
+            <button class=" top-4 right-4 p-2 bg-blue-500 dark:bg-blue-700 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Open Master Quoter</button>    
     </div> 
 </div>
-<div class="p-6 block w-full overflow-x-auto" id="table-container" #tableContainer>
+<div class="p-2 block w-full overflow-x-auto" id="table-container" #tableContainer>
     <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Services</h1>
-    <table class="items-center w-full bg-transparent border border-collapse" >
-    <thead>
-        <tr>
-        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-center">Day</th>
-        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">Date</th>
-        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left">City</th>
-        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left">Name Service</th>
-        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">Price</th>
-        @for (item of [].constructor(number_paxs().length); track $index) {
-                        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-140-px">Price {{$index+1}}</th>
-        }
-        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/4 font-semibold text-left min-w-140-px">Notes</th>
-        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-10 font-semibold text-left min-w-20-px">Actions</th>
-        </tr>
-    </thead>
-    <tbody >
-    
-        @for (dayService of services; track $index; ;let i=$index) {
-            @for (service of dayService.services; track $index ;let innerIndex=$index) {
-                <tr class="text-gray-700 dark:text-gray-1000">
-                    @if (innerIndex === 0) {
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">
-                            {{dayService.day}}
-                        </td>
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">
-                            {{dayService.date | date }}
-                        </td>
-                    } @else {
-                        <td class="border-t-0 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4"></td>
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap"></td>
-                    }
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.city}}</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.name_service}}</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.price_base | currency}}</td>
-                    @for (price of service.prices; track $index ; let priceIndex = $index) {
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{price | currency}}</td>
-                    }
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap">{{service.notes}}</td>
-
-                    @if (innerIndex===0) {
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap">
-                    <i (click)="openModalEdit(dayService)" class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2'></i>
-                    <i (click)="deleteService(i)" class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2'></i>
-                </td>
-            }@else{
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap"></td>
-            }
+    <table class="items-center w-full bg-transparent border border-collapse">
+        <thead>
+            <tr>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-950 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase w-20 font-semibold text-center">City</th>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-950 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase w-2/6 font-semibold text-left">Name Service</th>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase w-20 font-semibold text-left"></th>
+                @for (priceIndex of [].constructor(number_paxs().length); track $index) {
+                    <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase w-16 font-semibold text-left"></th>
+                }
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase w-2/6 font-semibold text-left"></th>
+                <!-- <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase w-20 font-semibold text-left">Actions</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            @for (dayService of services; track $index; let i = $index) {
+                <tr>
+                    <td colspan="100%" class="p-0">
+                        <details class="group">
+                            <summary class="flex justify-between items-center bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 px-4 py-2 cursor-pointer border-b border-gray-300">
+                                <div class="flex items-center">
+                                    <span class="transition group-open:rotate-180 ml-4">
+                                        <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24">
+                                            <path d="M6 9l6 6 6-6"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="font-semibold">Day {{dayService.day}}</span>
+                                    <span class="ml-4 text-sm">{{dayService.date | date}}</span>
+                                    <span class="ml-4 text-sm">Services ({{dayService.services.length}})</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i (click)="openModalEdit(dayService)" class="bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2 cursor-pointer"></i>
+                                    <i (click)="deleteService(i)" class="bx bx-trash text-2xl text-red-500 dark:text-red-700 cursor-pointer"></i>
+                                    
+                                </div>
+                            </summary>
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th class="px-4 py-2 text-left w-20">City</th>
+                                        <th class="px-4 py-2 text-left w-2/6">Name Service</th>
+                                        <th class="px-4 py-2 text-left w-20">Price Base</th>
+                                        @for (priceIndex of [].constructor(number_paxs().length); track $index) {
+                                            <th class="px-4 py-2 text-left  w-16">Price {{$index + 1}}</th>
+                                        }
+                                        <th class="px-4 py-2 text-left w-2/6">Notes</th>
+                                       
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    @for (service of dayService.services; track $index; let innerIndex = $index) {
+                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-200">
+                                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s w-20">
+                                                {{service.city}}
+                                            </td>
+                                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s ">
+                                                {{service.name_service}}
+                                            </td>
+                                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s text-green-700">
+                                                {{service.price_base | currency}}
+                                            </td>
+                                            @for (price of service.prices; track $index; let priceIndex = $index) {
+                                                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s text-blue-700 ">{{price | currency}}</td>
+                                            }
+                                            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s reak-words">
+                                                {{service.notes}}
+                                            </td>
+                                          
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </details>
+                    </td>
                 </tr>
-
             }
-            
-        }
-    </tbody>
-    <tfoot>
-        <tr class="font-semibold text-gray-700 dark:text-gray-1000">
-            <td colspan="5" class="border-t-2 border-gray-300 px-4 py-2 text-left">Total Price</td>
-            @for (price of getTotalPricesServices(); track $index) {
-            <td  class="border-t-2 border-gray-300 px-4 py-2 text-right">${{price.toFixed(2)}}</td>
-            }
-            <td colspan="2" class="border-t-2 border-gray-300 px-4 py-2 text-right"></td>
-        </tr>
-    </tfoot>
+        </tbody>
+     
+        <tfoot>
+            <tr class="font-semibold text-gray-700 dark:text-gray-1000">
+                <!-- "Total Price" ocupará hasta "Price Base" -->
+                <td colspan="3" class="border-t-2 border-gray-300 px-4 py-2 text-left">Total Price</td>
+                
+                <!-- Columnas dinámicas para los precios -->
+                @for (price of getTotalPricesServices(); track $index) {
+                    <td class="border-t-2 border-gray-300 px-4 py-2 text-center text-blue-700">{{price | currency}}</td>
+                }
+                
+                <!-- Celdas vacías para las columnas restantes -->
+                <td colspan="2" class="border-t-2 border-gray-300 px-4 py-2 text-left"></td>
+            </tr>
+        </tfoot>
+        
     </table>
 </div>
+</div>
+</details>
 @if (modalOpen()) {
-    <app-master-quoter (servicesChange)="onModalmqQuoterChange($event)" [numberpaxs]="number_paxs()" (closeModalEvent)="closeModal()"></app-master-quoter>
+    <app-master-quoter (servicesChange)="onModalmqQuoterChange($event)" [numberpaxs]="number_paxs()" (closeModalEvent)="closeModal()" [childrenAges]="children_ages() || []" ></app-master-quoter>
 }
 
 @if (modalOpenEditService()) {
-    <app-edit-service-modal [dayData]="selectserviceEdit" [number_paxs]="number_paxs()" (closeModalEvent)="closeModalEdit()"></app-edit-service-modal>
+    <app-edit-service-modal [dayData]="selectserviceEdit" [number_paxs]="number_paxs()" (closeModalEvent)="closeModalEdit()" ></app-edit-service-modal>
 }

@@ -58,12 +58,12 @@
                             <label for="accommodations" class="block text-sm font-medium text-gray-700">Type of Accommodations</label>
                             <input type="text" [(ngModel)]="newQuoter.accomodations" name="newQuoter.acomodations" id="accommodations" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Accommodations">
                         </div>
+                        
                         <div>
                             <label for="number_paxs" class="block text-sm font-medium text-gray-700">Number of Guest</label>
                             <div class="flex flex-initial items-center space-x-4">
                                 @for (item of newQuoter.number_paxs; track $index) {
-                                    <!-- <input type="number" [(ngModel)]="newQuoter.number_paxs[$index]"   name="newQuoter.number_paxs_{{$index}}" id="number_paxs_{{$index}}" class="mt-1 block w-16 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Value" required>
-                                    <i class="bx bx-minus-circle text-2xl text-red-500 dark:text-red-700 " (click)="removeNumberPaxs($index)"></i> -->
+                                  
                                     <div class="flex items-center space-x-2">
                                         <!-- Input -->
                                         <input type="number" [(ngModel)]="newQuoter.number_paxs[$index]" 
@@ -81,13 +81,36 @@
                                 
                               
                             </div>
+                            
 
-                            @if (!newQuoter.number_paxs) {
-                                <span class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
-                                    Invalid username field !
-                                </span>
-                            }
-
+                        </div>
+                        <div >
+                          <details class="group">
+                            <summary class="flex justify-between items-center font-medium cursor-pointer list-none">
+                              <span class="block text-sm font-medium text-gray-700">Children Ages</span>
+                              <span class="transition group-open:rotate-180">
+                                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path>
+                                  </svg>
+                                  </span>
+                            </summary>
+                            
+                            <div class="flex flex-initial items-center space-x-4">
+                                @for (item of newQuoter.children_ages; track $index) {
+                                  
+                                    <div class="flex items-center space-x-2">
+                                        <input type="number" [(ngModel)]="newQuoter.children_ages[$index]" 
+                                               name="newQuoter.children_ages{{$index}}" 
+                                               id="children_ages{{$index}}" 
+                                           
+                                               class="mt-1 block w-16 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+                                               placeholder="Value" required>
+                                        <i class="bx bx-minus-circle text-2xl text-red-500 dark:text-red-700 cursor-pointer" (click)="removeChildrenAges($index)"></i>
+                                      </div>
+                                }
+                                <i class="bx bxs-plus-circle text-2xl text-green-500 dark:text-green-700 " (click)="addChildrenAges()"></i>
+                                
+                            </div>
+                          </details>
                         </div>
                         <div class="col-span-2">
                             <div>
@@ -226,7 +249,8 @@
             [services]="newQuoter.services"      
             (servicesChange)="onServicesUpdate($event)"
             (openModalEvent)="openModal()"
-            (totalPricesChange)="onTotalPricesServicesChange($event)">
+            (totalPricesChange)="onTotalPricesServicesChange($event)"
+            [children_ages]=" newQuoter.children_ages">
             </app-services>
             <app-hotels
             [priceLength]="newQuoter.number_paxs.length"
