@@ -99,5 +99,10 @@ export class QuoterListComponent implements OnInit{
     this.pdfExportService.exportPdf(docDefinition);
 
   }   
+  expandedRows: { [key: string]: boolean } = {};
+
+  toggleDetails(contactId: string): void {
+    this.expandedRows[contactId] = !this.expandedRows[contactId];
+  }
 }
 

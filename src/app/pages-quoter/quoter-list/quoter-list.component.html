@@ -68,3 +68,57 @@
         </div>
     </div>
 </div>
+
+
+<div class="p-4">
+  <table class="table-auto w-full border-collapse border border-gray-300">
+    <thead class="bg-gray-200">
+      <tr>
+        <th class="border border-gray-300 p-2 text-left">Name</th>
+        <th class="border border-gray-300 p-2 text-left">Email</th>
+        <th class="border border-gray-300 p-2 text-left">Phone</th>
+        <th class="border border-gray-300 p-2 text-left">Source</th>
+        <th class="border border-gray-300 p-2 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let contact of filteredContacts">
+        <!-- Fila Principal -->
+        <tr class="bg-white hover:bg-gray-50">
+          <td class="border border-gray-300 p-2">{{ contact.name }}</td>
+          <td class="border border-gray-300 p-2">{{ contact.email }}</td>
+          <td class="border border-gray-300 p-2">{{ contact.phone }}</td>
+          <td class="border border-gray-300 p-2">{{ contact.source }}</td>
+          <td class="border border-gray-300 p-2 text-center">
+            <button
+              class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+              (click)="toggleDetails(contact.id)">
+              {{ expandedRows[contact.id] ? 'Hide' : 'Show' }} Cotizations
+            </button>
+          </td>
+        </tr>
+        <!-- Fila Expandible -->
+        <tr *ngIf="expandedRows[contact.id]">
+          <td colspan="5" class="border border-gray-300 p-4 bg-gray-100">
+            <h4 class="font-semibold mb-2">Cotizations:</h4>
+            <table class="table-auto w-full border-collapse border border-gray-300">
+              <thead class="bg-gray-300">
+                <tr>
+                  <th class="border border-gray-300 p-2 text-left">Name Version</th>
+                  <th class="border border-gray-300 p-2 text-left">Quoter ID</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let cotization of contact.cotizations" class="bg-white hover:bg-gray-50">
+                  <td class="border border-gray-300 p-2">{{ cotization.name_version }}</td>
+                  <td class="border border-gray-300 p-2">{{ cotization.quoter_id }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>
+

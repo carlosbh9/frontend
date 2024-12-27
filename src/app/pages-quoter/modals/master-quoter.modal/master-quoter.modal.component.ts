@@ -88,20 +88,21 @@ selectOption(option: any): void {
   this.showOptions = false;
   this.searchTerm = option.name;
   this.filteredDaysOptions = option.day; // Filtrar días basados en la selección de Master Quoter
+  console.log('el mq seleccionado?',option)
 }
 
-// Filtrar opciones en days
-filterOptionsDays(): void {
-  if (this.selectedMasterQuoter?.day) {
-    this.filteredDaysOptions = this.selectedMasterQuoter.day.filter((day: { city?: string; name_services?: string }) =>
-      (day.city && day.city.toLowerCase().includes(this.searchTermDays.toLowerCase())) ||
-      (day.name_services && day.name_services.toLowerCase().includes(this.searchTermDays.toLowerCase()))
-    );
-  } else {
-    this.filteredDaysOptions = [];
-  }
+// // Filtrar opciones en days
+// filterOptionsDays(): void {
+//   if (this.selectedMasterQuoter?.day) {
+//     this.filteredDaysOptions = this.selectedMasterQuoter.day.filter((day: { city?: string; name_services?: string }) =>
+//       (day.city && day.city.toLowerCase().includes(this.searchTermDays.toLowerCase())) ||
+//       (day.name_services && day.name_services.toLowerCase().includes(this.searchTermDays.toLowerCase()))
+//     );
+//   } else {
+//     this.filteredDaysOptions = [];
+//   }
  
-}
+// }
 
 
 // // Seleccionar un día específico
@@ -159,27 +160,38 @@ filterOptionsDays(): void {
   }
 
 async onAddMQuoter(){
+  this.selectedServices.number_paxs=this.numberpaxs()
+  this.selectedServices.children_ages= this.childrenAges()
+  let dayCounter = 1; // Contador para los días
   // Recorrer todos los días (filteredDaysOptions)
   this.filteredDaysOptions.forEach(option => {
     // Filtrar los servicios seleccionados
-    const selectedDayServices = option.services.filter((service : any) => service.selected);
-
+    const selectedDayServices = option.services.filter((service : any, index: number) => service.selected);
     // Agregar el atributo 'city' de cada día a los servicios seleccionados
    selectedDayServices.forEach((service: any) => {
-    service.city = option.city; // Asignamos la ciudad del día al servicio
-  });
-    // Agregar los servicios seleccionados al array
-    this.selectedServices.services.push(...selectedDayServices);
+    service.city = option.city; 
+    service.day = dayCounter;
   });
 
-   
+    // Agregar los servicios seleccionados al array
+    // this.selectedServices.services.push(...selectedDayServices);
+    // let preciosCalculados =  await this.priceService.calculatePrice(this.selectedServices)
+    // this.servicesChange.emit(preciosCalculados)
+
+    console.log('los servicios seleccionados por servicios',selectedDayServices)
+    dayCounter++;
+  });
+
+  console.log('los servicios seleccionados 1',this.selectedServices)
+  
+
   this.selectedServices.number_paxs=this.numberpaxs()
   this.selectedServices.children_ages= this.childrenAges()
   this.preciosCalculados = await this.priceService.calculatePrice(this.selectedServices)
   this.preciosCalculados.date = this.selectedServices.date
   this.servicesChange.emit(this.preciosCalculados)
   this.closeModal()
-  console.log('los dias seleecionado',this.filteredDaysOptions)
+  
 }
 
 
