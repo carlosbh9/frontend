@@ -27,7 +27,7 @@ import { ExtraComponent } from './pages/extra/extra.component';
 
 export const routes: Routes = [
    // , canActivate: [authGuard] ,data:{role:'admin'}
-    {   path:'dashboard',component: LayoutComponent,
+    {   path:'dashboard',component: LayoutComponent,canActivate: [authGuard],
         
         children:[
             {   path:'train', component: TrainComponent},
@@ -36,7 +36,7 @@ export const routes: Routes = [
             {   path:'expeditions', component: ExpeditionsComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
             {   path: 'experiences', component: ExperiencesComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
             {   path: 'restaurant', component: RestaurantComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
-            {   path:'guides', component:GuidesComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path:'guides', loadComponent: () => import('./pages/guides/guides.component').then(m => m.GuidesComponent),canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
             {   path:'operators', component : OperatorsComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
             {   path:'services-operators/:id',component: OperatorsServicesComponent},
             {   path:'train', component:TrainComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},

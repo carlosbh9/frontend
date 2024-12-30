@@ -1,5 +1,5 @@
 <div id="modalMq" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-start animated fadeIn faster" style="background: rgba(0,0,0,.7);" >
-    <div class="border border-gray-200 modal-container bg-gray-50 dark:bg-gray-800 w-6/12 md:max-w-11/12 mx-auto rounded-xl   shadow-lg z-50 overflow-y-auto">
+    <div class="border border-gray-200 modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl   shadow-lg z-50 overflow-y-auto">
       <div class="modal-content py-4 text-left px-6">
         <!-- Title -->
         <div class="flex justify-between items-center pb-3">
@@ -16,9 +16,9 @@
             <div class="">
 
 
-              <div class="grid grid-cols-2 gap-2 mb-4">
-                <div class="3/4">
-                <label for="name_mq" class="block text-md text-gray-600 dark:text-gray-50">Name Master Quoter</label>
+              <div class="flex flex-row w-full space-x-2 mb-4">
+                <div class="basis-3/5">
+                <label for="name_mq" class="block text-md text-gray-600 dark:text-gray-50 whitespace-nowrap">Name Master Quoter</label>
                 <input
                     id="searchInput"
                     type="text"
@@ -41,7 +41,7 @@
                     </li>
                 </ul>
               </div>
-              <div class="w-full">
+              <div class="basis-1/5">
 
                 <label for="travel-start-date" class="block text-md text-gray-600 dark:text-gray-50 whitespace-nowrap">Number Paxs</label>
                 <div class=" flex items-center space-x-2">
@@ -52,13 +52,24 @@
                 </div>
                 <!-- <input  [value]="paxs.[$index]" (input)="onInputChange($event, $index)"  type="number" name="price" id="price" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" placeholder="0.00"> -->
               </div>
+              <div class="basis-1/5">
+                <label for="travel-start-date" class="block text-md text-gray-600 dark:text-gray-50 whitespace-nowrap">Children</label>
+                <div class="mt-1 py-2 p-3">
+                  @for (child of childrenAges(); track $index) {
+                  <label for="">
+                    <input type="checkbox"class="">
+                    {{child}}
+                  </label>
+                  }
+                </div>
+              </div>
             </div>
-            @if (selectedMasterQuoter?.days === 1) {
+            <!-- @if (selectedMasterQuoter?.days === 1) { -->
             <div class="mb-4">
               <label for="issue-date" class="block text-sm font-medium text-gray-700">Date</label>
               <input type="date" [(ngModel)]="selectedServices.date"  name="date" id="date" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md mt-1" >
             </div>
-          }
+          <!-- } -->
               @for (option of filteredDaysOptions; track $index) {
               <div class="mb-4">
                 <details class="group">

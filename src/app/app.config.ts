@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient,withInterceptors  } from '@angular/common/http';
@@ -10,9 +10,18 @@ import { environment } from '../enviroment/environment';
 import { SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2'
 
 import { authInterceptor  } from '../app/Services/AuthService/auth.interceptor';
+import { spinnerInterceptor } from './interceptors/spinner.interceptor';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideHttpClient(),provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+  providers: [
+    provideHttpClient(),
+    provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideRouter(routes,withComponentInputBinding()),
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()), importProvidersFrom([]), importProvidersFrom([SweetAlert2Module.forRoot()]) ,provideHttpClient(withInterceptors([authInterceptor]))]
+    provideFirestore(() => getFirestore()), importProvidersFrom([]), importProvidersFrom([SweetAlert2Module.forRoot()]) ,
+    provideHttpClient(
+        withInterceptors([authInterceptor,spinnerInterceptor]))
+  
+  ]
 };

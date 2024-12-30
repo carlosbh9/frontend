@@ -7,11 +7,12 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { environment } from '../enviroment/environment';
 
 import { AuthService } from './Services/AuthService/auth.service';
+import { SpinnerComponent } from "./components/spinner/spinner.component";
 //CommonModule, RouterOutlet, RouterLinkActive
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, SpinnerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

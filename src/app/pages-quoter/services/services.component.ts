@@ -49,21 +49,21 @@ export class ServicesComponent {
     }
   }
 
-  onSubmitService(){
-    if (this.datosrecibidosService.date !== this.previousDateService) {
-      this.contDayServices++; // Incrementa el día solo si la fecha cambia
-      this.previousDateService = this.datosrecibidosService.date; // Actualiza la fecha previa
-    }
-    if(this.datosrecibidosService!){
-          this.datosrecibidosService.day=this.contDayServices
-          this.services.push(this.datosrecibidosService)
-          console.log('agregado correctamente',this.services)
-    }
-    this.emitServices()
-   // this.datosrecibidosService = null
+//   onSubmitService(){
+//     if (this.datosrecibidosService.date !== this.previousDateService) {
+//       this.contDayServices++; // Incrementa el día solo si la fecha cambia
+//       this.previousDateService = this.datosrecibidosService.date; // Actualiza la fecha previa
+//     }
+//     if(this.datosrecibidosService!){
+//           this.datosrecibidosService.day=this.contDayServices
+//           this.services.push(this.datosrecibidosService)
+//           console.log('agregado correctamente',this.services)
+//     }
+//     this.emitServices()
+//    // this.datosrecibidosService = null
   
-//  console.log('estas los precios',this.datosrecibidosService)
-  }
+// //  console.log('estas los precios',this.datosrecibidosService)
+//   }
 
   // getTotalPricesServices(): number[] {
   //   const totalPrices: number[] = [];
@@ -131,11 +131,41 @@ export class ServicesComponent {
 
   onModalmqQuoterChange(temp: any){
    
-    this.newService.day = this.count++
+    //this.newService.day = this.count++
     // this.services.push(...temp)
-    this.newService.date = temp.date
-    this.newService.services.push(...temp.services)
-    this.services.push(this.newService)
+    //this.newService.date = temp.date
+    const startDate = new Date(temp.date); // Fecha inicial recibida del servidor
+    let currentDay: number = 0; // Variable para almacenar el día actual
+    let newService = { day: 0, date: '', services: [] as any[] }; // Estructura de servicio por día
+
+    // Recorrer los servicios de la respuesta del servidor
+    temp.services.forEach((service: any) => {
+        // Si el día cambia, agregamos el servicio anterior y comenzamos uno nuevo
+        if (currentDay !== service.day) {
+            // Si no es el primer día, guardamos el newService en 'services'
+            if (newService.day !== 0) {
+                this.services.push(newService);
+            }
+
+            // Calcular la fecha para el día actual usando la fecha base (startDate)
+            newService = {
+                day: service.day,
+                date: this.convertDateToString(this.calculateDateForDay(service.day, startDate)), // Calcular la fecha para el día actual
+                services: [service], // Iniciar con el primer servicio del día
+            };
+            currentDay = service.day; // Actualizar el día actual
+        } else {
+            // Si seguimos en el mismo día, agregamos el servicio al newService
+            newService.services.push(service);
+        }
+    });
+
+    // Al final, agregamos el último newService al array
+    if (newService.day !== 0) {
+        this.services.push(newService);
+    }
+   // this.newService.services.push(...temp.services)
+    //this.services.push(this.newService)
     this.emtyService();
     this.emitServices()
 
@@ -147,4 +177,19 @@ export class ServicesComponent {
   getTableContainer(): ElementRef {
     return this.tableContainer;
   }
+  
+// Método para calcular la fecha correspondiente al día
+calculateDateForDay(day: number, startDate: Date): Date {
+  const newDate = new Date(startDate);
+  newDate.setDate(startDate.getDate() + day); // Sumar los días (day, ya que day 0 es el primer día)
+  return newDate; // Retorna el objeto Date
+}
+
+// Método para convertir la fecha de tipo Date a un string ISO "YYYY-MM-DD"
+convertDateToString(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Asegurar que el mes tenga dos dígitos
+  const day = String(date.getDate()).padStart(2, '0'); // Asegurar que el día tenga dos dígitos
+  return `${year}-${month}-${day}`; // Retorna la fecha en formato "YYYY-MM-DD"
+}
 }

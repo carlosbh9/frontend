@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
 import { TrainService } from '../../Services/train.service';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -14,7 +14,9 @@ import { FormsModule } from '@angular/forms';
 export class TrainServicesComponent implements OnInit {
   services: any[] = [];
   filteredServices: any[] = [];
-  trainId: string = '';
+  trainId = input.required<string>({alias: 'id'});
+
+  //trainId: string = '';
   filterText: string = '';
   showAddModal = false;
   showEditModal = false;
@@ -53,9 +55,9 @@ ngOnInit(): void {
   this.route.paramMap.subscribe((params) => {
     const id = params.get('id');
     if (id) {
-      this.trainId = id;
-      this.fetchTrainServices(id);
-      this.getTrainById(id);
+      //this.trainId = id;
+      this.fetchTrainServices(this.trainId());
+      this.getTrainById(this.trainId());
     }
   });
   
@@ -76,9 +78,9 @@ filterServices() {
 
 async onSubmit() {
   try {
-    const response = await this.trainService.addServiceToTrain(this.trainId, this.newService);
+    const response = await this.trainService.addServiceToTrain(this.trainId(), this.newService);
     console.log('Servicio añadido', response);
-    this.fetchTrainServices(this.trainId);  // Actualizar la lista de servicios
+    this.fetchTrainServices(this.trainId());  // Actualizar la lista de servicios
     this.emptyService()
     this.showAddModal = false;
     
@@ -90,9 +92,9 @@ async onSubmit() {
 
 async onEditSubmit() {
   try {
-    await this.trainService.updateService(this.trainId, this.selectService._id, this.selectService);
+    await this.trainService.updateService(this.trainId(), this.selectService._id, this.selectService);
     console.log('Servicio actualizado');
-    this.fetchTrainServices(this.trainId);
+    this.fetchTrainServices(this.trainId());
     this.showEditModal = false;
   } catch (error) {
     console.error('Error al actualizar servicio', error);
@@ -101,9 +103,9 @@ async onEditSubmit() {
 
 async deleteService(serviceId: string) {
   try {
-    await this.trainService.deleteService(this.trainId, serviceId);
+    await this.trainService.deleteService(this.trainId(), serviceId);
     console.log('Servicio eliminado');
-    this.fetchTrainServices(this.trainId);
+    this.fetchTrainServices(this.trainId());
   } catch (error) {
     console.error('Error al eliminar servicio', error);
   }
@@ -125,7 +127,7 @@ openEditModal(operator: any) {
 
 closeEditModal() {
   this.showEditModal = false;
-  this.fetchTrainServices(this.trainId);
+  this.fetchTrainServices(this.trainId());
 }
 
 openModal() {

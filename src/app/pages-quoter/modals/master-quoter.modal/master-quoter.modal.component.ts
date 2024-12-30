@@ -57,7 +57,6 @@ preciosCalculados: any = {
 
 ngOnInit(): void {
   this.loadmqServices();
-  console.log('dddd los paxs',this.numberpaxs())
 }
 
 async loadmqServices() {
@@ -88,58 +87,9 @@ selectOption(option: any): void {
   this.showOptions = false;
   this.searchTerm = option.name;
   this.filteredDaysOptions = option.day; // Filtrar días basados en la selección de Master Quoter
-  console.log('el mq seleccionado?',option)
 }
 
-// // Filtrar opciones en days
-// filterOptionsDays(): void {
-//   if (this.selectedMasterQuoter?.day) {
-//     this.filteredDaysOptions = this.selectedMasterQuoter.day.filter((day: { city?: string; name_services?: string }) =>
-//       (day.city && day.city.toLowerCase().includes(this.searchTermDays.toLowerCase())) ||
-//       (day.name_services && day.name_services.toLowerCase().includes(this.searchTermDays.toLowerCase()))
-//     );
-//   } else {
-//     this.filteredDaysOptions = [];
-//   }
- 
-// }
 
-
-// // Seleccionar un día específico
-// selectOptionDay(dayOption: any): void {
-//   this.selectedServices.city = dayOption.city
-//   this.showOptionsDays = false;
-//   this.searchTermDays = `${dayOption.city} - ${dayOption.name_services}`;
- 
-//   this.servicesList = dayOption.services.filter((service: any) => service.type_service === 'services');
-//   this.optionsList = dayOption.services.filter((service: any) => service.type_service === 'options');
-
-//   //Marca los `services` como seleccionados por defecto
-//   this.servicesList.forEach(service => {
-//     this.selectedServices[service.service_id] = true;
-//   });
-// }
-
-// toggleService(service: any) {
-
-//      // Crea una clave única basada en service_id y el id adicional
-//      const uniqueKey = `${service.service_id}_${service.operator_service_id || service.train_service_id || ''}`;
-
-//      const index = this.selectedServices.services.findIndex((s:any) => 
-//        `${s.service_id}_${s.operator_service_id || s.train_service_id || ''}` === uniqueKey
-//      );
- 
-//      if (index > -1) {
-//        // Si ya está seleccionado, quitarlo
-//        this.selectedServices.services.splice(index, 1);
-//      } else {
-//        // Si no está seleccionado, agregarlo
-//        this.selectedServices.services.push(service);
-//      }
-  
-// }
-
-  // Función para gestionar el cambio del checkbox en la cabecera
   
   toggleAllServices(option: any): void {
     // Si el checkbox de la cabecera está seleccionado, seleccionamos todos los servicios de tipo 'services'
@@ -174,15 +124,13 @@ async onAddMQuoter(){
   });
 
     // Agregar los servicios seleccionados al array
-    // this.selectedServices.services.push(...selectedDayServices);
+     this.selectedServices.services.push(...selectedDayServices);
     // let preciosCalculados =  await this.priceService.calculatePrice(this.selectedServices)
     // this.servicesChange.emit(preciosCalculados)
 
-    console.log('los servicios seleccionados por servicios',selectedDayServices)
     dayCounter++;
   });
 
-  console.log('los servicios seleccionados 1',this.selectedServices)
   
 
   this.selectedServices.number_paxs=this.numberpaxs()
