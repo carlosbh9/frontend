@@ -41,26 +41,67 @@
                     </li>
                 </ul>
               </div>
-              <div class="basis-1/5">
-
-                <label for="travel-start-date" class="block text-md text-gray-600 dark:text-gray-50 whitespace-nowrap">Number Paxs</label>
+              <div class="basis-1/5 content-end">
+                <!-- <label for="travel-start-date" class="block text-md text-gray-600 dark:text-gray-50 whitespace-nowrap">Number Paxs</label>
                 <div class=" flex items-center space-x-2">
                   @for (paxs of numberpaxs(); track $index) {
-                  <!-- <input type="number" [value]="paxs" name="newQuoter.travelDate.start" id="travel-start-date" class="h-10 p-1 w-6 border-2 border-gray-300 dark:border-gray-700 rounded-md"> -->
+                
                     <input type="number"[value]="paxs" class=" h-10 p-2 w-16 border-2 border-gray-300 dark:border-gray-700 rounded-md">
                 }
+                </div> -->
+                <div class="relative inline-block text-left">
+                  <button (click)="toggleDropdown()" type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white h-10 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 whitespace-nowrap" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                    Paxs Options
+                    <svg class="-mr-1 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                      <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                @if (isDropdownOpen) {
+                  <div class="absolute right-0 z-10 mt-2 w-36 origin-top-right divide-y divide-gray-100 rounded-md bg-white ring-1 shadow-lg ring-black/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                    <div class="grid grid-cols-1 p-2"  role="none">
+                      @for (paxs of numberpaxs(); track $index) {
+                        <label for="" class="block text-left">
+                          <input type="checkbox">For {{paxs}}
+                        </label>
+                        <div class="flex flex-col items-center pl-4">
+                          @for (pax of [].constructor(paxs); track $index) {
+                            <label for="">
+                              <input type="checkbox" id="check-item-{{pax}}-{{$index}}">
+                              Pax - {{$index + 1}}
+                            </label>
+                          }
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
                 </div>
-                <!-- <input  [value]="paxs.[$index]" (input)="onInputChange($event, $index)"  type="number" name="price" id="price" class="block w-full rounded-md border-0 py-1.5 pl-7 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" placeholder="0.00"> -->
               </div>
-              <div class="basis-1/5">
-                <label for="travel-start-date" class="block text-md text-gray-600 dark:text-gray-50 whitespace-nowrap">Children</label>
-                <div class="mt-1 py-2 p-3">
-                  @for (child of childrenAges(); track $index) {
-                  <label for="">
-                    <input type="checkbox"class="">
-                    {{child}}
-                  </label>
-                  }
+              <div class="basis-1/5 content-end">
+                <div class="relative inline-block text-left">
+                  <button (click)="toggleDropdownChild()" type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white h-10 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 whitespace-nowrap" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                    Children Options
+                    <svg class="-mr-1 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                      <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                @if (isDropdownOpenChild) {
+                  <div class="absolute right-0 z-10 mt-2 w-24 origin-top-right divide-y divide-gray-100 rounded-md bg-white ring-1 shadow-lg ring-black/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                    <div class="grid grid-cols-1 p-2"  role="none">
+                      @for (child of childrenAges(); track $index) {
+                        
+                        <div class="flex flex-col items-start pl-4">
+                          
+                            <label for="">
+                              <input type="checkbox" id="check-item-{{child}}-{{$index}}">
+                              {{child}}
+                            </label>
+                          
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
                 </div>
               </div>
             </div>

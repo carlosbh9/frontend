@@ -12,14 +12,14 @@ import { SpinnerComponent } from "./components/spinner/spinner.component";
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SpinnerComponent],
+  imports: [RouterOutlet,SpinnerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 
 
 export class AppComponent {
- // authService = inject(AuthService)
+ 
   title = 'frontend';
   isSidebarOpen = false;
 

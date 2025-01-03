@@ -17,7 +17,7 @@ export class MasterQuoterModalComponent implements OnInit {
 servicesChange = output<any>()
 priceService = inject(CalculatepricesService);
 numberpaxs = input<number[]>();
-childrenAges = input<number[]>();
+childrenAges = input<number[]>() ;
 mqService = inject(MasterQuoterService)
 //mqQuoters: any[]=[]
 // Método para cerrar el modal (emite el evento)
@@ -40,6 +40,16 @@ filteredDaysOptions: any[]= []
 //selectedServices:  any [] = [];
 servicesList: any[] = []; // Aquí guardarás los de type_service 'services'
 optionsList: any[] = []; // Aquí guardarás los de type_service 'options'
+isDropdownOpen: boolean = false;
+isDropdownOpenChild: boolean = false;
+
+toggleDropdown() {
+     this.isDropdownOpen = !this.isDropdownOpen;
+ }
+
+toggleDropdownChild() {
+     this.isDropdownOpenChild = !this.isDropdownOpenChild;
+ }
 
 selectedServices: any = {
   services: [],
