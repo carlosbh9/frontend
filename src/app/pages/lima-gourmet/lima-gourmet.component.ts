@@ -17,7 +17,7 @@ export class LimaGourmetComponent {
   filterText: string = '';
   showAddModal = false;
   showEditModal= false;
-  filterYear : string = '2024'
+  filterYear : string = '2025'
 
   newGourmet = {
     code: '',
