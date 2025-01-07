@@ -11,6 +11,7 @@ import { HotelsComponent } from '../hotels/hotels.component';
 
 import { CalculatepricesService } from '../../Services/controllerprices/calculateprices.service';
 import { PdfexportService } from '../../Services/pdfexport/pdfexport.service';
+import { ExportExcelService } from '../../Services/exportExcel/export-excel.service';
 
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
@@ -32,6 +33,7 @@ export class QuoterFormComponent implements  OnInit{
   route = inject(ActivatedRoute)
   create = inject(CalculatepricesService)
   pdfExportService = inject(PdfexportService)
+  excelService = inject(ExportExcelService)
 
   modalOpen = signal(false);
   modalData = signal<any[]>([])
@@ -213,7 +215,7 @@ selectOption(option: any): void {
       this.newQuoter = await this.quoterService.getQuoterById(Id);
       
       console.log('quoter cargado',this.newQuoter) 
-      // this.newQuoter.total_prices.external_utility= Array(this.newQuoter.number_paxs.length).fill(0)
+    
       this.prueba.set(this.newQuoter.total_prices.total_hoteles)
       this.prueba2.set(this.newQuoter.total_prices.total_services)
       this.prueba3.set(this.newQuoter.total_prices.total_ext_operator)
@@ -593,7 +595,10 @@ selectOption(option: any): void {
       const docDefinition = this.pdfExportService.generatePdf(this.newQuoter,dataURL);
       this.pdfExportService.exportPdf(docDefinition);
       console.log('exportar ',this.newQuoter)
- 
+    }   
+
+    generateExcel() {
+      this.excelService.downloadQuotationAsExcel(this.newQuoter, 'Quotation');
 
     }   
   // Detectar clics fuera del input y la lista de opciones
