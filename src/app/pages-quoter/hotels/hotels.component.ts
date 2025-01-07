@@ -109,13 +109,13 @@ export class HotelsComponent implements OnInit{
       this.newHotel.prices.splice(index, 1);
       this.addedPricesCount--;
     }
+
     addPrices(){
       if (this.addedPricesCount < this.priceLength()) {
        // Agregamos el precio actual al final del arreglo
        this.newHotel.prices[this.addedPricesCount] = this.selectedPrice;
        this.addedPricesCount++; // Incrementamos el contador
      } else {
-       // Si ya se ha alcanzado el límite de precios, mostramos un mensaje
        console.log("No se pueden agregar más precios, el arreglo está lleno.");
      }
      }
@@ -143,9 +143,17 @@ export class HotelsComponent implements OnInit{
   
 
   onSubmitHotel(){
-    this.newHotel.price_base = this.newHotel.prices[0]
-    this.newHotel.day= this.contHotel
-    this.hotels.push(this.newHotel);
+    const hotelToAdd = {
+      ...this.newHotel,
+      price_base: this.newHotel.prices[0],
+      day: this.contHotel
+    };
+
+    // this.newHotel.price_base = this.newHotel.prices[0]
+    // this.newHotel.day= this.contHotel
+    // this.hotels.push(this.newHotel);
+
+    this.hotels.push(hotelToAdd);
     console.log('prbandoddd',this.hotels);
    
     this.emitHotels();
