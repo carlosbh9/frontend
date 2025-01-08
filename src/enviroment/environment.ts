@@ -8,7 +8,7 @@ export const environment = {
       messagingSenderId: "393118170179",
       appId: "1:393118170179:web:1fd5ba1bcace54069668f6"
     },
-    apiUrl: 'http://localhost:3000/api'
-   // apiUrl: 'https://back-end-h8h9.onrender.com/api'
+    //apiUrl: 'http://localhost:3000/api'
+    apiUrl: 'https://back-end-h8h9.onrender.com/api'
     // URL del backend para desarrollo
   };

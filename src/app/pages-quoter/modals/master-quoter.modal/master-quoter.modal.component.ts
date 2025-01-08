@@ -18,6 +18,7 @@ priceService = inject(CalculatepricesService);
 numberpaxs = input<number[]>([]);
 childrenAges = input<number[]>() ;
 mqService = inject(MasterQuoterService)
+startDateQuoter = input.required<string>();
 
 mqQuoters: any[] = [];
 mqQuotersDays: any[]=[]
@@ -76,7 +77,8 @@ selectedServices: any = {
   number_paxs: [] as number[],
   children_ages: [],
   date: '',
-  city:''
+  city:'',
+  day:0,
 };
 closeModal() {
   this.closeModalEvent.emit();
@@ -116,6 +118,7 @@ selectOption(option: any): void {
   this.showOptions = false;
   this.searchTerm = option.name;
   this.filteredDaysOptions = option.day; 
+  console.log('el mas seleccionado',this.selectedMasterQuoter)
 }
 
 toggleAllServices(option: any): void {
@@ -135,6 +138,11 @@ toggleAllServices(option: any): void {
 }
 
 async onAddMQuoter(){
+
+  if (this.selectedMasterQuoter?.type === 'Templates') { 
+    this.selectedServices.date = this.startDateQuoter()
+  }
+  
   //this.selectedServices.number_paxs=this.numberpaxs()
   this.selectedServices.number_paxs =  this.numberpaxs().map((_, groupIndex) => this.getSelectedCountForGroup(groupIndex));
  
@@ -156,6 +164,7 @@ async onAddMQuoter(){
   console.log('se envio', this.selectedServices)
   this.preciosCalculados = await this.priceService.calculatePrice(this.selectedServices)
   this.preciosCalculados.date = this.selectedServices.date
+  this.preciosCalculados.day = this.selectedServices.day 
   this.servicesChange.emit(this.preciosCalculados)
   this.closeModal()
   

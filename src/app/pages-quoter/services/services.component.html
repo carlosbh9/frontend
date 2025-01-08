@@ -31,7 +31,7 @@
             </tr>
         </thead>
         <tbody>
-            @for (dayService of services; track $index; let i = $index) {
+            @for (dayService of sortedServices(); track $index; let i = $index) {
                 <tr>
                     <td colspan="100%" class="p-0">
                         <details class="group">
@@ -114,7 +114,7 @@
 </div>
 </details>
 @if (modalOpen()) {
-    <app-master-quoter (servicesChange)="onModalmqQuoterChange($event)" [numberpaxs]="number_paxs()" (closeModalEvent)="closeModal()" [childrenAges]="children_ages() || []" ></app-master-quoter>
+    <app-master-quoter (servicesChange)="onModalmqQuoterChange($event)" [numberpaxs]="number_paxs()" (closeModalEvent)="closeModal()" [childrenAges]="children_ages() || []" [startDateQuoter]="startDateQuoter()" ></app-master-quoter>
 }
 
 @if (modalOpenEditService()) {

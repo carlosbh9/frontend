@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component,Input ,input,Output,EventEmitter, signal,ViewChild,
-  ElementRef } from '@angular/core';
+  ElementRef, 
+  OnChanges,SimpleChanges,computed, effect,WritableSignal,
+  OnInit} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { MasterQuoterModalComponent } from '../modals/master-quoter.modal/master-quoter.modal.component';
@@ -13,15 +15,18 @@ import { EditServiceModalComponent } from '../modals/edit-service-modal/edit-ser
   templateUrl: './services.component.html',
   styleUrl: './services.component.css'
 })
-export class ServicesComponent {
- // @Output() servicesChange = new EventEmitter<any[]>();
+export class ServicesComponent  {
+
   @Output() servicesChange = new EventEmitter<any>();
   @Output() totalPricesChange = new EventEmitter<number[]>();
   children_ages = input<number[]>()
+  startDateQuoter = input.required<string>();
   modalOpen = signal(false);
   selectserviceEdit: any ={} 
   modalOpenEditService = signal(false);
-  @Input() services: any[]=[]
+  //@Input() services: any[]=[]
+  services = input<any[]>([])
+
   selectedDateService: string ='';
   selectedCityService: string = '';
   selectedCategory: string = '';
@@ -31,13 +36,13 @@ export class ServicesComponent {
   contDayServices  = 0
   previousDateService=''
   showmodalMasterQuoter = false
+
  // services: any[]=[]
  // Ejemplo de datos para un nuevo servicio
  newService = {
   day: 1,
   date:'',
   services: [] as any[],
-
 };
 
   emtyService(){
@@ -49,61 +54,56 @@ export class ServicesComponent {
     }
   }
 
-//   onSubmitService(){
-//     if (this.datosrecibidosService.date !== this.previousDateService) {
-//       this.contDayServices++; // Incrementa el día solo si la fecha cambia
-//       this.previousDateService = this.datosrecibidosService.date; // Actualiza la fecha previa
-//     }
-//     if(this.datosrecibidosService!){
-//           this.datosrecibidosService.day=this.contDayServices
-//           this.services.push(this.datosrecibidosService)
-//           console.log('agregado correctamente',this.services)
-//     }
-//     this.emitServices()
-//    // this.datosrecibidosService = null
-  
-// //  console.log('estas los precios',this.datosrecibidosService)
-//   }
+  sortedServices = computed(() =>
+    [...this.services()].sort((a, b) => a.day - b.day)
+  );
 
-  // getTotalPricesServices(): number[] {
-  //   const totalPrices: number[] = [];
-   
-  //   this.services.forEach((service: { prices: number[] }) => { // Especificar el tipo de 'hotel'
-  //     service.prices.forEach((price: number, index: number) => { // Especificar el tipo de 'price'
-  //       if (totalPrices[index]) {
-  //         totalPrices[index] += price; // Sumar al total existente
-  //       } else {
-  //         totalPrices[index] = price; // Inicializar el total
-  //       }
-  //     });
-  //   });
+  private isEmitting = false; // Evitar bucles al emitir datos al padre
 
-  //   return totalPrices;
-  // }
+  constructor() {
+    // Efecto para emitir servicios al padre cuando cambien los servicios ordenados
+    effect(() => {
+      if (!this.isEmitting) {
+        const sorted = this.sortedServices();
+        console.log('Servicios ordenados:', sorted);
+        //this.emitServices(); // Emite los servicios ordenados y precios totales
+      }
+    });
+  }
+
+
   getTotalPricesServices(): number[] {
     const totalPrices: number[] = [];
     
     // Itera sobre cada día
-    this.services.forEach((day: { services: { prices: number[] }[] }) => {
-      // Itera sobre cada servicio dentro del día
+    // this.sortedServices().forEach((day: { services: { prices: number[] }[] }) => {
+    //   // Itera sobre cada servicio dentro del día
+    //   day.services.forEach((service: { prices: number[] }) => {
+    //     service.prices.forEach((price: number, index: number) => {
+    //       if (totalPrices[index]) {
+    //         totalPrices[index] += price; // Sumar al total existente en la posición index
+    //       } else {
+    //         totalPrices[index] = price; // Inicializar el total en la posición index
+    //       }
+    //     });
+    //   });
+    // });
+    this.sortedServices().forEach((day: { services: { prices: number[] }[] }) => {
       day.services.forEach((service: { prices: number[] }) => {
         service.prices.forEach((price: number, index: number) => {
-          if (totalPrices[index]) {
-            totalPrices[index] += price; // Sumar al total existente en la posición index
-          } else {
-            totalPrices[index] = price; // Inicializar el total en la posición index
-          }
+          totalPrices[index] = (totalPrices[index] || 0) + price;
         });
       });
     });
-  
     return totalPrices;
   }
 
   private emitServices() {
-   // this.servicesChange.emit(this.services);
-    this.servicesChange.emit(this.services);
+    this.isEmitting = true; 
+    this.servicesChange.emit(this.sortedServices());
+    //this.servicesChange.emit(this.services);
     this.totalPricesChange.emit(this.getTotalPricesServices())
+    this.isEmitting = false; 
   }
   openModal() {
     this.modalOpen.set(true);
@@ -125,29 +125,34 @@ export class ServicesComponent {
   }
 
   deleteService(index: number){
-    this.services.splice(index,1)
+    // const updatedServices = [...this.sortedServices()];
+    // updatedServices.splice(index, 1);
+    // this.servicesChange.emit(updatedServices); // Emite los cambios al padre
+
+    this.sortedServices().splice(index,1)
     this.emitServices()
   }
 
   onModalmqQuoterChange(temp: any){
-   
+    console.log('recibido de mq:', temp)
     //this.newService.day = this.count++
     // this.services.push(...temp)
     //this.newService.date = temp.date
-    const startDate = new Date(temp.date); // Fecha inicial recibida del servidor
-    let currentDay: number = 0; // Variable para almacenar el día actual
-    let newService = { day: 0, date: '', services: [] as any[] }; // Estructura de servicio por día
-
-    // Recorrer los servicios de la respuesta del servidor
+   
+    const startDate = new Date(temp.date);
+    let currentDay: number = 0; 
+    let newService = { day: 0, date: '', services: [] as any[] }; 
+    // Esructura de servicio por día
+    if(temp.day >= 1){
+        this.sortedServices().push(temp);
+        console.log('pushh a la tabla ', temp)
+    }else {
+ 
     temp.services.forEach((service: any) => {
-        // Si el día cambia, agregamos el servicio anterior y comenzamos uno nuevo
         if (currentDay !== service.day) {
-            // Si no es el primer día, guardamos el newService en 'services'
             if (newService.day !== 0) {
-                this.services.push(newService);
+                this.sortedServices().push(newService);
             }
-
-            // Calcular la fecha para el día actual usando la fecha base (startDate)
             newService = {
                 day: service.day,
                 date: this.convertDateToString(this.calculateDateForDay(service.day, startDate)), // Calcular la fecha para el día actual
@@ -159,24 +164,15 @@ export class ServicesComponent {
             newService.services.push(service);
         }
     });
-
-    // Al final, agregamos el último newService al array
     if (newService.day !== 0) {
-        this.services.push(newService);
+        this.sortedServices().push(newService);
     }
-   // this.newService.services.push(...temp.services)
-    //this.services.push(this.newService)
+    }
     this.emtyService();
     this.emitServices()
 
-    console.log('los ',temp)
-    console.log('tabla',this.services)
   }
-  @ViewChild('tableContainer', { static: false }) tableContainer!: ElementRef;
-
-  getTableContainer(): ElementRef {
-    return this.tableContainer;
-  }
+ 
   
 // Método para calcular la fecha correspondiente al día
 calculateDateForDay(day: number, startDate: Date): Date {
