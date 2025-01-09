@@ -1,6 +1,6 @@
 <div id="modalMq" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-start animated fadeIn faster" style="background: rgba(0,0,0,.7);" >
-    <div class="border border-gray-200 modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl   shadow-lg z-50 overflow-y-auto">
-      <div class="modal-content py-4 text-left px-6">
+    <div class="border border-gray-200 modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto " >
+      <div class="modal-content py-4 text-left px-6 min-h-48" style="min-height: 200px;">
         <!-- Title -->
         <div class="flex justify-between items-center pb-3">
           <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Master Quoter</p>
@@ -155,10 +155,10 @@
                         </svg>
                         </span>
                   </summary>
-                  <div *ngFor="let service of option.services">
+                  <div *ngFor="let service of option.services" class=" bg-gray-100">
                     @switch (service.type_service) {
                       @case ('services') {
-                        <label class="text-red-600">
+                        <label class="text-blue-400">
                           <input
                             type="checkbox"
                             [name]="'service-' + service.service_id"
@@ -168,7 +168,7 @@
                         </label>
                       }
                       @case ('options') {
-                        <label class="text-blue-600">
+                        <label class="text-green-400">
                       <input
                         type="checkbox"
                         [name]="'option-' + service.service_id"

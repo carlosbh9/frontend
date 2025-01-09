@@ -598,7 +598,7 @@ selectOption(option: any): void {
     }   
 
     generateExcel() {
-      this.excelService.downloadQuotationAsExcel(this.newQuoter, 'Quotation');
+      this.excelService.downloadQuotationAsExcel(this.newQuoter, `${this.newQuoter.guest}`);
 
     }   
   // Detectar clics fuera del input y la lista de opciones

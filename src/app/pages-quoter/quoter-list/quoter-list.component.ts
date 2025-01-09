@@ -8,6 +8,7 @@ import { QuoterService } from '../../Services/quoter.service';
 import { PdfexportService } from '../../Services/pdfexport/pdfexport.service';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2'
+import { ExportExcelService } from '../../Services/exportExcel/export-excel.service';
 @Component({
   selector: 'app-quoter-list',
   standalone: true,
@@ -19,13 +20,24 @@ export class QuoterListComponent implements OnInit{
   quoterService = inject(QuoterService)
   contactService = inject(ContactService)
   pdfExportService = inject(PdfexportService)
-  //router = inject(Router)
-  //route= inject(ActivatedRoute) 
+  excelService = inject(ExportExcelService)
+
   contacts: any[] = []
   filteredContacts: any[] = [];
   filterText: string = '';
   dropdownOpen: string | null = null;
- 
+
+  statuses = ['WIP', 'HOLD', 'SOLD', 'LOST'];
+  statusColors: { [key: string]: string } = {
+    WIP: 'text-blue-500 bg-blue-100', // Azul
+    HOLD: 'text-yellow-500 bg-yellow-100', // Amarillo
+    SOLD: 'text-green-500 bg-green-100', // Verde
+    LOST: 'text-red-500 bg-red-100', // Rojo
+  };
+
+  getStatusClass(status: string): string {
+    return this.statusColors[status] || 'bg-gray-100';
+  }
   constructor(private router: Router,private route: ActivatedRoute) {
   //  this.selectedQuoter = this.emptyQuoter; // Mueve la inicialización aquí
   }
@@ -81,16 +93,26 @@ export class QuoterListComponent implements OnInit{
     }
   }
 
+  async updateCotizationStatus(contactId: string, updatedCotization: any): Promise<void> {
+    try {
+      const contact = this.contacts.find((c) => c._id === contactId);
+  
+      const updatedCotizations = contact.cotizations.map((cotization: any) =>
+        cotization.quoter_id === updatedCotization.quoter_id
+          ? { ...cotization, status: updatedCotization.status } 
+          : cotization );
+      const response = await this.contactService.updateContact(contactId, { cotizations: updatedCotizations });
+      console.log('Cotización actualizada:', response);
+    } catch (error) {
+      console.error('Error al actualizar la cotización:', error);
+    }
+  }
 
   toggleDropdown(contactId: string) {
-    //this.dropdownOpen = !this.dropdownOpen;
     this.dropdownOpen = this.dropdownOpen === contactId ? null : contactId;
 
   }
-  selectOption(option: { label: string; iconClass: string }) {
-  //  this.selectedOption = option;
-  //  this.dropdownOpen = false;
-  }
+ 
   async generatePDF(id:string) {
     const quoter = await this.quoterService.getQuoterById(id)
     const dataURL = await this.pdfExportService.convertImageToDataURL('/images/image.png');
@@ -99,10 +121,11 @@ export class QuoterListComponent implements OnInit{
     this.pdfExportService.exportPdf(docDefinition);
 
   }   
-  expandedRows: { [key: string]: boolean } = {};
+  async generateExcel(id:string) {
+    const quoter = await this.quoterService.getQuoterById(id)
+    this.excelService.downloadQuotationAsExcel(quoter, `${quoter.guest}`);
 
-  toggleDetails(contactId: string): void {
-    this.expandedRows[contactId] = !this.expandedRows[contactId];
-  }
+  }   
+
 }
 
