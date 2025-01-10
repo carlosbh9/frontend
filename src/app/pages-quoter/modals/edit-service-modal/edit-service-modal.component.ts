@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Output,EventEmitter ,Input, inject, input, OnInit} from '@angular/core';
+import { Component, Output,EventEmitter ,Input, inject, HostListener,input, OnInit, output} from '@angular/core';
 import { ReactiveFormsModule,FormBuilder, FormGroup, FormArray, FormsModule } from '@angular/forms';
 
 import { EntrancesService } from '../../../Services/entrances.service'
@@ -26,24 +26,32 @@ export class EditServiceModalComponent implements OnInit{
   restaurantService = inject(RestaurantService)
   operatorsService = inject(OperatorsService)
   masterQuoterService = inject(MasterQuoterService)
+  mqService = inject(MasterQuoterService)
   tempPreviuw : any = {}
- priceService = inject(CalculatepricesService);
+  priceService = inject(CalculatepricesService);
   @Output() closeModalEvent = new EventEmitter<void>();
+
+  
   number_paxs = input<number[]>();
-  @Input() dayData: any; // Recibimos el día completo con servicios
- // dayData = input<any>();
+  @Input() dayData: any; 
+ 
+  searchTerm: string = ''; //mquoter
+  filteredOptions: any[] = [];  //mquoter
+  mqQuoters: any[] = []; //mquoter
+  showOptions: boolean = false;  
+
   servicesOptions: any[]=[]
   editService: boolean= false
   originalItem: any = {};
 // Método para cerrar el modal (emite el evento)
 closeModal() {
-  //this.dayData= this.tempPreviuw
   console.log('data recuperdad',this.dayData,this.tempPreviuw)
   this.closeModalEvent.emit();
-  
 }
+
 ngOnInit(): void {
   this.tempPreviuw = this.dayData
+  this.loadmqServicesMQuoter()
   console.log('data recuperdad init',this.dayData,this.tempPreviuw)
 }
 
@@ -155,6 +163,26 @@ onSubServiceChange(event: any){
   console.log('services seleccionado',this.selectedService)
 }
 
+filterOptions(): void {
+  if (this.searchTerm.trim()) {
+    this.filteredOptions = this.mqQuoters.filter(option => 
+      option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  } else {
+    this.filteredOptions = [];
+  }
+}
+async loadmqServicesMQuoter() {
+  try {
+    this.mqQuoters = await this.mqService.getAllMasterQuoter();
+    this.filteredOptions = this.mqQuoters; 
+    
+  } catch (error) {
+    console.log('Error al cargar los Master Quoters', error);
+  }
+}
+selectOptionMquoter(option: any): void {}
+
 onDelete(index: number){
   Swal.fire('Success','Record deleted','success')
   this.dayData.services.splice(index, 1); 
@@ -165,12 +193,12 @@ onDelete(index: number){
  async addItem(){
   let item2 : any = {}
 
-  this.item.services[0]=(this.selectedService); // Cambia ...this.selectedService por this.selectedService si es un objeto
+  this.item.services[0]=(this.selectedService); // Cambia ...this.selectedService por this.
   this.item.services[0].city = this.item.city
   this.item.date = this.dayData.date
-
+  
   this.item.number_paxs = this.number_paxs() || []; // Proporcionar un valor por defecto si es undefined
-
+console.log('ca ppodemos enviar?',this.item)
   
   item2  = await this.priceService.calculatePrice(this.item)
   
@@ -199,4 +227,28 @@ item.editService= false
 this.originalItem = {};
 //this.emitCruise(); 
 }
+
+@HostListener('document:click', ['$event'])
+onClick(event: MouseEvent) {
+  const target = event.target as HTMLElement;
+
+  const modalElement = document.getElementById('modalMq'); 
+  const inputElement = document.getElementById('searchInput');
+  const dropdownElement = document.getElementById('optionsDropdown');
+
+  if (modalElement && !modalElement.contains(target) && 
+      inputElement && !inputElement.contains(target) && 
+      dropdownElement && !dropdownElement.contains(target)) {
+    this.hideOptions();
+  }
+}
+hideOptions() {
+  this.showOptions = false;   
+}
+onBlur() {
+  setTimeout(() => {
+    this.showOptions = false;
+  }, 200);  
+}
+
 }

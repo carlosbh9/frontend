@@ -110,7 +110,13 @@ export class ServicesComponent  {
   }
 // Method to close modal
   closeModal() {
+
     this.modalOpen.set(false);
+  }
+  openMasterQuoter() {
+    
+    this.openModal()
+
   }
 
   openModalEdit(dayService:any) {

@@ -28,10 +28,10 @@ import { ExtraComponent } from './pages/extra/extra.component';
 export const routes: Routes = [
    // , canActivate: [authGuard] ,data:{role:'admin'}
     {   path:'dashboard',component: LayoutComponent,canActivate: [authGuard],
-        
+        data:{role:['OPE','ventas','TD']},
         children:[
-            {   path:'train', component: TrainComponent},
-            {   path:'extra',component: ExtraComponent},
+            {   path:'train', component: TrainComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
+            {   path:'extra',component: ExtraComponent ,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
             {   path:'entrance', component:EntrancesComponent ,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
             {   path:'expeditions', component: ExpeditionsComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},
             {   path: 'experiences', component: ExperiencesComponent,canActivate: [authGuard] ,data:{role:['OPE','ventas']}},

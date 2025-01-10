@@ -1,4 +1,4 @@
-<div  class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-start animated fadeIn faster" style="background: rgba(0,0,0,.7);" >
+<div id="modalMq"  class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-start animated fadeIn faster" style="background: rgba(0,0,0,.7);" >
     <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-8/12 md:max-w-11/12 mx-auto rounded-xl z-50 overflow-y-auto">
       <div class="modal-content py-4 text-left px-6">
         <!-- Title -->
@@ -16,23 +16,29 @@
 
             <form id="edit_mquoter" class="w-full">
               <!-- Campos de Día y Fecha -->
-              <div class="mb-4 flex justify-start space-x-4">
-                <label class="block text-md text-gray-600 dark:text-gray-50">Día:</label>
-                <input [(ngModel)]="dayData.day" name="day" type="number" class=" w-32 border-2 border-gray-300 dark:border-gray-700 rounded-md" />
-          
-                <label class="block text-md text-gray-600 dark:text-gray-50">Fecha:</label>
-                <input [(ngModel)]="dayData.date" name="date" type="date" class=" w-32 border-2 border-gray-300 dark:border-gray-700 rounded-md" />
-                <label class="block text-md text-gray-600 dark:text-gray-50">City</label>
+              <div class="mb-4 flex justify-between space-x-4">
+                <div class="flex flex-auto space-x-3">
+                  <label class="block text-md text-gray-600 dark:text-gray-50">Día:</label>
+                  <input [(ngModel)]="dayData.day" name="day" type="number" class=" w-32 border-2 border-gray-300 dark:border-gray-700 rounded-md" />
+           
+                  <label class="block text-md text-gray-600 dark:text-gray-50">Fecha:</label>
+                  <input [(ngModel)]="dayData.date" name="date" type="date" class=" w-32 border-2 border-gray-300 dark:border-gray-700 rounded-md" />
+             
+                  <label class="block text-md text-gray-600 dark:text-gray-50">City</label>
                 <select [(ngModel)]="item.city" name="city" id="city" class=" w-32 border-2 border-gray-300 dark:border-gray-700 rounded-md">
                     <option value="LIM">LIM</option>
                     <option value="CUZ">CUZ</option>
                     <option value="PUN">PUN</option>
                     <option value="MP">MP</option>
-
                 </select>
+                </div>
+                
+                <button (click)="addItem()"  class="w-32  bg-blue-500 dark:bg-green-700 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800 ">
+                  Add Item
+                </button>
               </div>
               <div class="mb-4">
-                <div class="grid grid-cols-4 gap-4">
+                <div class="grid grid-cols-4 gap-4 ">
                     <div>
                         <label for="selectCategoria" class="block text-sm font-medium text-gray-700">Selecione la categoria</label>
                         <select  [(ngModel)]="selectCategoria" (change)="onCategoriaChange($event)" name="selectedCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
@@ -66,10 +72,31 @@
                         </select>
                     </div>
                     }
-                    <div class="col-start-4 flex justify-end">
-                        <button (click)="addItem()"  class="w-32 mt-3 px-4 bg-blue-500 dark:bg-green-700 p-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800 self-start">
-                          Add Item
-                        </button>
+                    <div class="col-start-4 flex justify-end relative">
+                      <div >
+                        <label for="name_mq" class="block text-md text-gray-600 dark:text-gray-50 whitespace-nowrap">Name Master Quoter</label>
+                        <input
+                            id="searchInput"
+                            type="text"
+                            [(ngModel)]="searchTerm"
+                            (input)="filterOptions()"
+                            (focus)="showOptions = true"
+                            (blur)="onBlur()"
+                            name="search"
+                            placeholder="Search Master Quoter..."
+                            class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md"
+                        />
+                        <!-- Opciones filtradas -->
+                        <ul id="optionsDropdown" *ngIf="showOptions && filteredOptions.length" class="absolute left-0 right-0 bg-white border border-gray-300 mt-1 rounded-md max-h-40 overflow-auto z-10">
+                            <li
+                                *ngFor="let option of filteredOptions"
+                                (click)="selectOptionMquoter(option)"
+                                class="p-2 hover:bg-gray-200 cursor-pointer"
+                            >
+                                {{ option.name }}
+                            </li>
+                        </ul>
+                    </div>
                       </div>
                 </div>
               </div>
@@ -126,8 +153,7 @@
         </div>
         <!-- Footer -->
         <div class="flex justify-end pt-2 space-x-14">
-          <!-- <button (click)="closeModal()" class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" >Cancel</button>
-          <button  type="submit" form="add_mquoter" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Save</button> -->
+       
         </div>
       </div>
     </div>
