@@ -19,14 +19,14 @@
                     </div>
                 </div>
                 <div class="p-2 md:block text-left">
-                    <h2 class="text-sm font-semibold text-gray-800">{{user?.name}}</h2>
+                    <h2 class="text-sm font-semibold text-gray-800">{{user?.username}}</h2>
                     <p class="text-xs text-gray-500">{{user?.role}}</p>
                 </div>                
             </button>
             <ul [ngClass]="{'hidden': !isOpen}" class="absolute shadow-md shadow-black/5 z-30 hidden py-1.5 rounded-md bg-white border border-gray-100 w-full max-w-[140px]">
                
                 <li>
-                    <a href="#" class="flex items-center text-[13px] py-1.5 px-4 text-gray-600 hover:text-[#f84525] hover:bg-gray-50">Welcome {{user?.name}}</a>
+                    <a href="#" class="flex items-center text-[13px] py-1.5 px-4 text-gray-600 hover:text-[#f84525] hover:bg-gray-50">Welcome {{user?.username}}</a>
                 </li>
                 <li>
                     <a href="#" class="flex items-center text-[13px] py-1.5 px-4 text-gray-600 hover:text-[#f84525] hover:bg-gray-50">Settings</a>

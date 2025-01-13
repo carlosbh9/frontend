@@ -6,13 +6,15 @@
         
     </a>
     <ul class="mt-4">
-        <!-- @if (role === 'admin') { -->
-        <li class="mb-1">
+   
+        <li  *hasRole="['admin','ventas','TD','OPE']" class="mb-1">
+           
             <a (click)="toggleDropdown()" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md">
                 <i class='bx bx-user mr-3 text-lg'></i>
                 <span class="text-sm">Tarifario General</span>
                 <i class="ri-arrow-right-s-line ml-auto" [class.rotate-90]="isDropdownOpen"></i>
             </a>
+        
             <ul *ngIf="isDropdownOpen" class="pl-7 mt-2">
                 <li class="mb-4">
                     <a  routerLink="entrance" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">
@@ -67,13 +69,15 @@
                 </li>
             </ul>
         </li>
-        
-        <li class="mb-1 group">
-            <a (click)="toggleDropdown2()" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md">
+    
+        <li *hasRole="['admin','ventas','TD','OPE']" class="mb-1 group">
+          
+            <a  (click)="toggleDropdown2()" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md">
                 <i class='bx bxs-buildings mr-3 text-lg'></i>
                 <span class="text-sm">Tarifario Hoteles</span>
                 <i class="ri-arrow-right-s-line ml-auto" [class.rotate-90]="isDropdownOpen"></i>
             </a>
+        
             <ul *ngIf="isDropdownOpen2" class="pl-7 mt-2">
                 <li class="mb-4">
                     <a  routerLink="hotel" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">
@@ -82,12 +86,14 @@
                 </li>
             </ul>
         </li>
-        <li class="mb-1 group">
-            <a routerLink="quoter-main/quoter-form" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+       
+        <li *hasRole="['admin','ventas','TD']" class="mb-1 group">
+            <a  routerLink="quoter-main/quoter-form" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                 <i class='bx bx-task mr-3 text-lg'></i>
                 <span class="text-sm">Cotizador</span>
             </a>
         </li>
+    
     </ul>
 </div>
 <div class="fixed top-0 left-0 w-full h-full bg-black/50 z-40 md:hidden sidebar-overlay"></div>

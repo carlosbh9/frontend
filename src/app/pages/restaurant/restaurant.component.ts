@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RestaurantService } from '../../Services/restaurant.service';
 import { CommonModule } from '@angular/common';
+import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 @Component({
   selector: 'app-restaurant',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,HasRoleDirective],
   templateUrl: './restaurant.component.html',
   styleUrl: './restaurant.component.css'
 })

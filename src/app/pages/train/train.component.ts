@@ -4,12 +4,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 
 
 @Component({
   selector: 'app-train',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule, HasRoleDirective],
   templateUrl: './train.component.html',
   styleUrl: './train.component.css'
 })

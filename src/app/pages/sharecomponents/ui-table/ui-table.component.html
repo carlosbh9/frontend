@@ -5,7 +5,7 @@
         <th *ngFor="let column of columns" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 font-semibold text-left">
           {{ column.header }}
         </th>
-        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 font-semibold text-left min-w-[140px]">
+        <th *hasRole="['admin','OPE']"  class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 font-semibold text-left min-w-[140px]">
           Actions
         </th>
       </tr>
@@ -18,7 +18,8 @@
         </td>
   
         <!-- Acción, como los botones de editar y eliminar -->
-        <td *ngIf="actions?.length" class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-normal p-1">
+        <td *hasRole="['admin','OPE']" class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-normal p-1">
+         
           <ng-container *ngFor="let action of actions; let i = index">
             <i class="text-2xl mr-2"
               [ngClass]="action.class"

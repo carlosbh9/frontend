@@ -6,11 +6,12 @@ import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2'
+import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 
 @Component({
   selector: 'app-hotel',
   standalone: true,
-  imports: [CommonModule, FormsModule,RouterModule,SweetAlert2Module],
+  imports: [CommonModule, FormsModule,RouterModule,SweetAlert2Module,HasRoleDirective],
   templateUrl: './hotel.component.html',
   styleUrl: './hotel.component.css'
 })

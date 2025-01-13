@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2'
+import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 
 @Component({
   selector: 'app-guides',
   standalone: true,
-  imports: [CommonModule,FormsModule,SweetAlert2Module],
+  imports: [CommonModule,FormsModule,SweetAlert2Module,HasRoleDirective],
   templateUrl: './guides.component.html',
   styleUrl: './guides.component.css'
 })

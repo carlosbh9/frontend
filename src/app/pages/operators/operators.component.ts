@@ -5,11 +5,12 @@ import { Router } from '@angular/router';
 import { OperatorsService } from '../../Services/operators.service';
 
 import { RouterModule } from '@angular/router';
+import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 
 @Component({
   selector: 'app-operators',
   standalone: true,
-  imports: [CommonModule, FormsModule,RouterModule],
+  imports: [CommonModule, FormsModule,RouterModule,HasRoleDirective],
   templateUrl: './operators.component.html',
   styleUrl: './operators.component.css'
 })

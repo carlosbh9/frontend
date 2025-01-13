@@ -3,10 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HotelService } from '../../Services/hotel.service';
+import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 @Component({
   selector: 'app-hotel-services',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,HasRoleDirective],
   templateUrl: './hotel-services.component.html',
   styleUrl: './hotel-services.component.css'
 })

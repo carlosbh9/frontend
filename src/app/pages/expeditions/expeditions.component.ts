@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { ExpeditionsService } from '../../Services/expeditions.service';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2'
+import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 
 @Component({
   selector: 'app-expeditions',
   standalone: true,
-  imports: [CommonModule,FormsModule ,SweetAlert2Module],
+  imports: [CommonModule,FormsModule ,SweetAlert2Module,HasRoleDirective],
   templateUrl: './expeditions.component.html',
   styleUrl: './expeditions.component.css'
 })

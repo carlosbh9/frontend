@@ -145,7 +145,7 @@
                   <summary class="flex justify-start items-center font-medium cursor-pointer list-none space-x-2">
                     <input
                     type="checkbox"
-                    [name]="'selectAll-' + option._id"
+                    [name]="'selectAll-' + option._id+ $index"
                     [(ngModel)]="option.selected"
                     (change)="toggleAllServices(option)"
                   />

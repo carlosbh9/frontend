@@ -3,11 +3,12 @@ import { OperatorsService } from '../../Services/operators.service';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 
 @Component({
   selector: 'app-operators-services',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,HasRoleDirective],
   templateUrl: './operators-services.component.html',
   styleUrl: './operators-services.component.css'
 })

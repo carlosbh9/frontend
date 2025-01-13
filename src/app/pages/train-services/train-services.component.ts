@@ -3,11 +3,12 @@ import { TrainService } from '../../Services/train.service';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 
 @Component({
   selector: 'app-train-services',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HasRoleDirective],
   templateUrl: './train-services.component.html',
   styleUrl: './train-services.component.css'
 })

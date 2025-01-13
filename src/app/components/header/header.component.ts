@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component,Output,EventEmitter, inject, OnInit} from '@angular/core';
 import { AuthService } from '../../Services/AuthService/auth.service';
-
+import { UserPayload } from '../../interfaces/user.interface';
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -12,7 +12,7 @@ import { AuthService } from '../../Services/AuthService/auth.service';
 export class HeaderComponent implements OnInit{
    authService = inject(AuthService)
   @Output() toggleSidebar = new EventEmitter<void>();
-  user: {id: string, username: string; role: string , name: string} | null = null;
+  user: UserPayload | null = null;
 
   ngOnInit() {
     this.user = this.authService.getUserData(); // Obtener datos del usuario

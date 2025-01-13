@@ -3,11 +3,12 @@ import { Component , OnInit} from '@angular/core';
 import { GourmetService } from '../../Services/limagourmet/gourmet.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 
 @Component({
   selector: 'app-lima-gourmet',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,HasRoleDirective],
   templateUrl: './lima-gourmet.component.html',
   styleUrl: './lima-gourmet.component.css'
 })
