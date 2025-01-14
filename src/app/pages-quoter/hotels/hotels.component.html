@@ -74,7 +74,7 @@
                                 [value]="roomType.confidential"
                                 name="roomType"
                                 class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded" >
-                                <label for="Confidential" class="ml-2 mr-2 text-sm">Confidential - ${{roomType.confidential}}</label>
+                                <label for="Confidential" class="ml-2 mr-2 text-sm">Confidential - {{roomType.confidential | currency}}</label>
                             </div>
                             <div  class="flex items-center mx-2">
                                 <input
@@ -84,7 +84,7 @@
                                 [value]="roomType.rack"
                                 name="roomType"
                                 class="form-checkbox h-10 w-4 text-blue-600 border-gray-300 rounded">
-                                <label for="Rack" class="ml-2 text-sm mr-2">Rack - ${{roomType.rack}}</label>
+                                <label for="Rack" class="ml-2 text-sm mr-2">Rack - {{roomType.rack  | currency}}</label>
                             </div>
                             }
                         }
@@ -204,7 +204,7 @@
     <tr class="font-semibold text-gray-700 dark:text-gray-1000">
         <td colspan="6" class="border-t-2 border-gray-300 px-4 py-2 text-left">Total Price</td>
    @for (price of getTotalPricesHotels(); track $index) {
-        <td  class="border-t-2 border-gray-300 px-4 py-2 text-right text-blue-700">${{price.toFixed(2)}}</td>
+        <td  class="border-t-2 border-gray-300 px-4 py-2 text-right text-blue-700">{{price | currency}}</td>
     }@empty {
         <td  class="border-t-2 border-gray-300 px-4 py-2 text-right text-blue-700">$0.00</td>
     }

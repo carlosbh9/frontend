@@ -20,7 +20,7 @@ export class GuidesComponent {
   filterText: string = '';
   showAddModal = false;
   showEditModal = false;
-  filterYear : string = '2024'
+  filterYear : string = '2025'
 
   newGuide: any = {
     name_guide: '',

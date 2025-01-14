@@ -148,9 +148,8 @@
                                 @for (item of newQuoter.children_ages; track $index) {
                                     <div class="flex items-center space-x-2">
                                         <input type="number" [(ngModel)]="newQuoter.children_ages[$index]"
-                                               name="newQuoter.children_ages{{$index}}"
-                                               id="children_ages{{$index}}"
-
+                                               name="newQuoter.children_ages-{{$index}}"
+                                               id="children_ages-{{$index}}"
                                                class="mt-1 block w-16 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                                placeholder="Value" required>
                                         <i class="bx bx-minus-circle text-2xl text-red-500 dark:text-red-700 cursor-pointer" (click)="removeChildrenAges($index)"></i>
@@ -169,6 +168,7 @@
                                     [value]="item"
                                     name="Destinations"
                                     (change)="onCheckboxChange($event)"
+                                    [checked]="newQuoter.destinations.includes(item)" 
                                   />
                                   {{item}}
                                </label>

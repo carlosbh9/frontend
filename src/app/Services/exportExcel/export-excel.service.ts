@@ -53,8 +53,7 @@ export class ExportExcelService {
 
     // Encabezados de la tabla
     const serviceHeaders = ['Day', 'Date', 'City', 'Service Name', 'Price Base'];
-    const maxServicePrices = Math.max(...data.services.flatMap((s: any) => s.services.flatMap((srv: any) => srv.prices.length)));
-    for (let i = 0; i < maxServicePrices; i++) {
+    for (let i = 0; i < maxPrices; i++) {
       serviceHeaders.push(`Price ${i + 1}`);
     }
     serviceHeaders.push('Notes');
@@ -105,8 +104,7 @@ export class ExportExcelService {
 
     // Encabezados de la tabla
     const hotelHeaders = ['Day', 'Date', 'City', 'Hotel Name','Price Base'];
-    const maxHotelPrices = Math.max(...data.hotels.map((hotel: any) => hotel.prices.length));
-    for (let i = 0; i < maxHotelPrices; i++) {
+    for (let i = 0; i < maxPrices; i++) {
       hotelHeaders.push(`Price ${i + 1}`);
     }
     hotelHeaders.push( 'Accommodation Category','Notes');
@@ -174,8 +172,7 @@ export class ExportExcelService {
     });
     
     // Cabeceras dinámicas para "Price" y "Notes"
-    const maxFlightPrices = Math.max(...data.flights.map((flight: any) => flight.prices.length));
-    for (let i = 0; i < maxFlightPrices; i++) {
+    for (let i = 0; i < maxPrices; i++) {
       const column = worksheet.getCell(currentRow, 6 + i);
       column.value = `Price ${i + 1}`;
       column.font = { bold: true };
@@ -184,7 +181,7 @@ export class ExportExcelService {
     }
     
     // Agregar "Notes" columna
-    const notesColumn = worksheet.getCell(currentRow, 6 + maxFlightPrices);
+    const notesColumn = worksheet.getCell(currentRow, 6 + maxPrices);
     notesColumn.value = 'Notes';
     notesColumn.font = { bold: true };
     notesColumn.alignment = { horizontal: 'center', vertical: 'middle' };
@@ -245,8 +242,7 @@ operatorHeaders.forEach(header => {
 
 
 // Cabeceras dinámicas para "Price" y "Notes"
-const maxOperatorPrices = Math.max(...data.operators.map((op: any) => op.prices.length));
-for (let i = 0; i < maxOperatorPrices; i++) {
+for (let i = 0; i < maxPrices; i++) {
   const column = worksheet.getCell(currentRow, 6 + i);
   column.value = `Price ${i + 1}`;
   column.font = { bold: true };
@@ -260,7 +256,7 @@ for (let i = 0; i < maxOperatorPrices; i++) {
 }
 
 // Agregar "Notes" columna
-const notesColumn2 = worksheet.getCell(currentRow, 6 + maxOperatorPrices);
+const notesColumn2 = worksheet.getCell(currentRow, 6 + maxPrices);
 notesColumn2.value = 'Notes';
 notesColumn2.font = { bold: true };
 notesColumn2.alignment = { horizontal: 'center', vertical: 'middle' };
@@ -323,14 +319,13 @@ currentRow++;
     });
     
     // Obtener el número máximo de precios dinámicos
-    const maxCruisePrices = Math.max(...data.cruises.map((cruise: any) => cruise.prices.length));
     
     // Agregar las cabeceras dinámicas ("Price 1", "Price 2", ..., "Notes")
-    for (let i = 0; i <= maxCruisePrices; i++) {
+    for (let i = 0; i <= maxPrices; i++) {
       const columnIndex = 6 + i; // Comenzar desde la columna G (índice 7)
       const column = worksheet.getCell(currentRow, columnIndex);
     
-      if (i < maxCruisePrices) {
+      if (i < maxPrices) {
         column.value = `Price ${i + 1}`;
       } else {
         column.value = 'Notes'; // Última columna es para Notes

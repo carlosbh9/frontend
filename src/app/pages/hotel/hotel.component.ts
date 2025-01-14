@@ -24,7 +24,7 @@ export class HotelComponent implements OnInit {
   filterText: string = '';
   showAddModal: boolean = false;
   showEditModal: boolean = false;
-  filterYear : string = '2024'
+  filterYear : string = '2025'
   filterDestinations: string = ''
   newHotel: any = {
     name: '',

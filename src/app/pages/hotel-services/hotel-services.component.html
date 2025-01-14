@@ -26,7 +26,7 @@
                 <th colspan="6" class="px-1 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 font-semibold text-center min-w-64" >
                     Price range
                 </th>
-                <th *hasRole="['admin','OPE']"  rowspan="3" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-center min-w-64">Actions</th>
+                <th *hasRole="['admin','OPE','ventas']"  rowspan="3" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-center min-w-64">Actions</th>
             </tr>
             <tr>
                 <th colspan="3" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold  text-center">CONFIDENTIAL PRICES</th>
@@ -60,7 +60,7 @@
                     </td>
                     }
                   <!-- Columnas de Acciones -->
-                  <td *hasRole="['admin','OPE']"  class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
+                  <td *hasRole="['admin','OPE','ventas']"  class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
                       <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="openEditModal(service)"></i>
                       <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteService(service._id)"></i>
                   </td>

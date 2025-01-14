@@ -66,7 +66,7 @@ export class QuoterFormComponent implements  OnInit{
     name_version:'version 1',
     guest:'',
     destinations:[],
-    children_ages: [],
+    children_ages: [0],
     FileCode: '',
     travelDate:{
         start:'',
@@ -171,17 +171,22 @@ export class QuoterFormComponent implements  OnInit{
   onCheckboxChange(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     const value = checkbox.value;
-
+  
+    // Asegurarse de que destinations esté inicializado como array
+    if (!Array.isArray(this.newQuoter.destinations)) {
+      this.newQuoter.destinations = [];
+    }
+  
     if (checkbox.checked) {
-      // Si el checkbox está seleccionado, lo añadimos al array
       this.newQuoter.destinations.push(value);
     } else {
-      // Si el checkbox está deseleccionado, lo eliminamos del array
       const index = this.newQuoter.destinations.indexOf(value);
       if (index > -1) {
         this.newQuoter.destinations.splice(index, 1);
       }
     }
+  
+    console.log('Destinos seleccionados:', this.newQuoter.destinations);
   }
   onInputChange(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
