@@ -16,6 +16,8 @@ import Swal from 'sweetalert2'
 import { GourmetService } from '../../../Services/limagourmet/gourmet.service';
 import { ExtrasService } from '../../../Services/serviceTarifario/extras.service';
 import { ExperiencesService } from '../../../Services/experiences.service';
+import { ServiceCalc } from '../../../interfaces/servicepricecalculation.interface';
+
 
 @Component({
   selector: 'app-edit-service-modal',
@@ -35,6 +37,7 @@ export class EditServiceModalComponent implements OnInit{
   activitiesService = inject(ExperiencesService)
   gourmetService = inject(GourmetService)
   extraService = inject(ExtrasService)
+  fb = inject(FormBuilder)
 
   masterQuoterService = inject(MasterQuoterService)
   mqService = inject(MasterQuoterService)
@@ -44,80 +47,50 @@ export class EditServiceModalComponent implements OnInit{
 
   
   number_paxs = input<number[]>();
+  children_ages = input<number[]>()
   @Input() dayData: any; 
   selectedYear: string =  '2025'
   searchTerm: string = ''; //mquoter
   filteredOptions: any[] = [];  //mquoter
   mqQuoters: any[] = []; //mquoter
   showOptions: boolean = false;  
-
+  city: string = ''
   servicesOptions: any[]=[]
   editService: boolean= false
   originalItem: any = {};
   filteredDaysOptions: any[]= []
- 
-closeModal() {
-  console.log('data recuperdad',this.dayData,this.tempPreviuw)
-  this.closeModalEvent.emit();
-}
+  checkboxes: boolean[][] = [];
+  childrenAgesChecks : boolean[] = [];
+  isDropdownOpen: boolean = false;
+  isDropdownOpenChild: boolean = false;
+  public form!: FormGroup;
 
-ngOnInit(): void {
-  this.tempPreviuw = this.dayData
-  this.loadmqServicesMQuoter()
-
-}
-
-selectedDayIndex: any = {type: 'service',dayIndex: 0};
-subservicesOptions: any[]=[]
-selectCategoria: string =''
-selectedService: any = {}
-selectedSubService: any = {}
+  selectedDayIndex: any = {type: 'service',dayIndex: 0};
+  subservicesOptions: any[]=[]
+  selectCategoria: string =''
+  selectedService: any = {}
+  selectedSubService: any = {}
   tags: any[] = []; // Etiquetas seleccionadas
   options: any[] = []; // Etiquetas seleccionadas
   index: number = 0
   temp: number =0
   item = {
-    services:[{
-      city:'',
-      name_service: '',
-      operator_service_id: '',
-      service_id: '',
-      service_type:'', 
-      type_service: ''
-  }],
-    date:'',
-    number_paxs:[0],
-    children_ages:[],
-    city:''
-  }
-  // masterQuoter = {
-  //   name: null,
-  //   days: null,
-  //   destinations: null,
-  //   day:[{
-  //     city: null,
-  //     name_services:null,
-  //     services: [] as {
-  //       city: string | null,
-  //     type_service: string | null,
-  //     name_service: string | null,
-  //     service_id: string | null,
-  //     service_type: string | null,
-  //     operator_service_id: string | null,
-  //     train_service_id: string | null,
-  //   }[]
-  //   }],
+      services: [] as ServiceCalc[],
+      date:'',
+      number_paxs:[0],
+      children_ages:[] as number[],
+      city:''
+    }
 
-  // };
  emptyMasterQuoter = {
-    name: null,
+   name: null,
     days: null,
     destinations: null,
     day:[{
       city: null,
       name_services:null,
       services: [] as {
-      city: string | null,
+        city: string | null,
       type_service: string | null,
       name_service: string | null,
       service_id: string | null,
@@ -129,7 +102,20 @@ selectedSubService: any = {}
 
   };
 
- async onCategoriaChange(event: any){
+  ngOnInit(): void {
+   // this.tempPreviuw = this.dayData
+    this.checkboxes = this.dayData.number_paxs.map((groupSize: any) => Array(groupSize).fill(true));
+    this.childrenAgesChecks = this.dayData.children_ages.map(() => true);
+
+
+    this.loadmqServicesMQuoter();
+    
+  }
+  closeModal() {
+    console.log('data recuperdad',this.dayData,this.tempPreviuw)
+    this.closeModalEvent.emit();
+  }
+  async onCategoriaChange(event: any){
     console.log('categoria: ',this.selectCategoria)
 
       switch(this.selectCategoria){
@@ -176,18 +162,6 @@ async onServiceChange(event: any){
 
     if(this.selectCategoria==='train'){this.subservicesOptions = await this.trainService.getServicesByTrainId(this.selectedService.service_id);}
 
-    // const index = this.masterQuoter.day[this.selectedDayIndex.dayIndex].services.findIndex(tag => tag.service_id === this.selectedService.service_id);
-   
-    // if(this.selectCategoria!='operator'){
-    //   if (index === -1) {
-    //       this.masterQuoter.day[this.selectedDayIndex.dayIndex].services.push(this.selectedService);
-       
-    //   } else {
-    //     this.masterQuoter.day[this.selectedDayIndex.dayIndex].services.splice(index, 1); 
-    //   }
-    // }
-
-   //console.log('services in edit service',this.masterQuoter)
 }
 
 getServiceValue(service: any) {
@@ -260,72 +234,100 @@ onDelete(index: number){
   console.log('data recuperdad delete',this.dayData,this.tempPreviuw)
 
 }
+   addItem(){
+    this.item.services.push(this.selectedService);
+    this.selectedService.city = this.city
+    console.log('capturar los seleccionados',this.item,this.selectedService)
+    this.pushPrices()
+    this.emptyItem()
+  }
 
- async addItem(){
+ async pushPrices(){
+    let item2 : any = {}
+    this.item.date = this.dayData.date
+  //  this.item.number_paxs = this.number_paxs() || [];
+    this.item.number_paxs = this.dayData.number_paxs.map((_ : any, groupIndex : any) => this.getSelectedCountForGroup(groupIndex));
+    this.item.children_ages = this.children_ages()?.filter((_: any, i: any) => this.childrenAgesChecks[i]) || [];
+    this.dayData.number_paxs = this.item.number_paxs
+    this.dayData.children_ages = this.item.children_ages 
+    item2  = await this.priceService.calculatePrice(this.item)
+    console.log('add a daydata',this.item)
+    item2.services.forEach( (service: any) => {
+      if (!service.city) {
+        service.city = this.filteredDaysOptions[0].city 
+      }
+      
+      this.dayData.services.push(service)
+    })
+  }
+  addItembyMq(){
 
   this.filteredDaysOptions.forEach(option => {
     const selectedDayServices = option.services.filter((service : any, index: number) => service.selected);
     this.item.services.push(...selectedDayServices);
   });
-  console.log('capturar la ciudad',this.filteredDaysOptions)
-  let item2 : any = {}
 
-  this.item.services[0]=(this.selectedService); // Cambia ...this.selectedService por this.
-  this.item.services[0].city = this.item.city
-  this.item.date = this.dayData.date
-  
-  this.item.number_paxs = this.number_paxs() || []; // Proporcionar un valor por defecto si es undefined
-console.log('ca ppodemos enviar?',this.item)
-  
-  item2  = await this.priceService.calculatePrice(this.item)
-  
-  item2.services.forEach( (service: any) => {
-    if (!service.city) {
-      service.city = this.filteredDaysOptions[0].city; // Asignar el día seleccionado
-    }
-    this.dayData.services.push(service)
-  })
-  
+  console.log('capturar los seleccionados',this.item.services)
+  console.log('capturar los seleccionados2',this.selectedService)
+  let item2 : any = {}
+  this.pushPrices()
   this.resetFileterOptions();
   this.emptyItem();
 }
 
 resetFileterOptions() {
-  // Reiniciar opciones seleccionadas
   this.filteredDaysOptions.forEach(option => {
     option.services.forEach((service: any) => {
-      service.selected = false; // Desmarcar todos los servicios
+      service.selected = false;
     });
   });
-  console.log('Variables reiniciadas resetFileterOptions:', this.filteredDaysOptions, this.item);
+
 }
 emptyItem(){
   this.item = {
-    ...this.item, // Mantener las demás propiedades intactas
-    services: [], // Reiniciar los servicios
-    city: '',     // Reiniciar la ciudad
+    ...this.item, 
+    services: [], 
+    city: '',    
   };
-  console.log('Variables reiniciadas emptyItem:', this.item);
 }
 onEdit(item: any, index: number) {
   this.originalItem[index] = { ...item };
   item.editService= true;
   console.log('editando item', item, index);
-  //this.emitCruise(); 
+
 }
 
 onClose(item: any, index: number){
-// Revertir el item al estado original
+
 this.dayData.services[index] = { ...this.originalItem[index] };
 item.editService = false;
-//this.emitCruise(); 
 }
 onSave(item: any){
 item.editService= false
 this.originalItem = {};
-//this.emitCruise(); 
 }
 
+
+toggleCheckbox(groupIndex: number, checkboxIndex: number) {
+  this.checkboxes[groupIndex][checkboxIndex] = !this.checkboxes[groupIndex][checkboxIndex];
+  //console.log(this.checkboxes)
+}
+toggleCheckboxChild(index: number): void {
+  this.childrenAgesChecks[index] = !this.childrenAgesChecks[index];
+  console.log(this.childrenAgesChecks);
+}
+getSelectedCountForGroup(groupIndex: number): number {
+  return this.checkboxes[groupIndex]?.filter(checkbox => checkbox).length || 0;
+}
+getSelectedCount(): number {
+  return this.childrenAgesChecks.filter(chk => chk).length;
+}
+toggleDropdown() {
+     this.isDropdownOpen = !this.isDropdownOpen;
+ }
+ toggleDropdownChild() {
+  this.isDropdownOpenChild = !this.isDropdownOpenChild;
+}
 @HostListener('document:click', ['$event'])
 onClick(event: MouseEvent) {
   const target = event.target as HTMLElement;

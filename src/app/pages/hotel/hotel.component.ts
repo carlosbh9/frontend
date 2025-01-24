@@ -4,14 +4,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
-import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import Swal from 'sweetalert2'
+
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-hotel',
   standalone: true,
-  imports: [CommonModule, FormsModule,RouterModule,SweetAlert2Module,HasRoleDirective],
+  imports: [CommonModule, FormsModule,RouterModule,HasRoleDirective],
   templateUrl: './hotel.component.html',
   styleUrl: './hotel.component.css'
 })
@@ -157,45 +157,41 @@ export class HotelComponent implements OnInit {
   
       await this.hotelService.addHotel(hotelToSubmit);
       this.closeAddModal();
-      Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: "Added record",
-        showConfirmButton: false,
-        timer: 1500
-      });
+      toast.success("Added record");
       console.log('Hotel añadido exitosamente');
       console.log(hotelToSubmit);
       this.emptyHotel();
       this.fetchHotels(); // Actualizar la lista de hoteles
     } catch (error) {
-      console.error('Error al añadir hotel:', error);
-      
+      console.error('Error adding hotel:', error);
+      toast.error('Error adding hotel:')
     }
   }
 
 
-  onEditSubmit2() {
-    // Crear una copia profunda del hotel seleccionado
-    const hotelToUpdate = JSON.parse(JSON.stringify(this.selectedHotel));
+  // onEditSubmit2() {
+  //   // Crear una copia profunda del hotel seleccionado
+  //   const hotelToUpdate = JSON.parse(JSON.stringify(this.selectedHotel));
   
-    // Convertir informacion_general a un objeto plano
-    hotelToUpdate.informacion_general = this.selectedHotel.informacion_general.reduce((acc: {[key: string]: string}, item: {key: string, value: string}) => {
-      if (item.key && item.value) {
-        acc[item.key] = item.value;
-      }
-      return acc;
-    }, {});
-    this.hotelService.updateHotel(hotelToUpdate._id, hotelToUpdate).then(
-      response => {
-        console.log('Hotel actualizado con éxito', response);
-        this.fetchHotels();
-        this.closeEditModal();
-      }
-    ).catch(error => {
-      console.error('Error al actualizar el hotel:', error);
-    });
-  }
+  //   // Convertir informacion_general a un objeto plano
+  //   hotelToUpdate.informacion_general = this.selectedHotel.informacion_general.reduce((acc: {[key: string]: string}, item: {key: string, value: string}) => {
+  //     if (item.key && item.value) {
+  //       acc[item.key] = item.value;
+  //     }
+  //     return acc;
+  //   }, {});
+  //   this.hotelService.updateHotel(hotelToUpdate._id, hotelToUpdate).then(
+  //     response => {
+  //       console.log('Hotel successfully updated', response);
+  //       toast.success('Hotel successfully updated')
+  //       this.fetchHotels();
+  //       this.closeEditModal();
+  //     }
+  //   ).catch(error => {
+  //     console.error('Error updating hotel:', error);
+  //     toast.error('Error updating hotel:')
+  //   });
+  // }
   async onEditSubmit() {
     try {
       // Crear una copia profunda del hotel seleccionado
@@ -210,21 +206,43 @@ export class HotelComponent implements OnInit {
 
       // Actualizar el hotel
       const response = await this.hotelService.updateHotel(hotelToUpdate._id, hotelToUpdate);
-      
       console.log('Hotel actualizado con éxito', response);
+      toast.success('Hotel successfully updated')
       this.fetchHotels();
       this.closeEditModal();
     } catch (error) {
       console.error('Error al actualizar el hotel:', error);
+      toast.error('Error updating hotel:')
     }
+  }
+
+  confirmDelete(id: string) {
+    toast('Are you sure you want to delete this record?', {
+     
+      action: {
+        label: 'Confirm',
+        onClick: async () => {
+        await this.deleteHotel(id);
+        }
+      },
+      cancel: {
+        label:'Cancel',
+        onClick: () => {
+          toast.info('Delete cancelled');
+        },
+      },
+      position: 'top-center',
+   
+    });
   }
   async deleteHotel(id: string) {
     try {
       await this.hotelService.deleteHotel(id);
-      Swal.fire('Success','Record deleted','success')
+      toast.success('Record deleted')
       this.fetchHotels();
     } catch (error) {
       console.error('Error deleting hotel:', error);
+      toast.error('Error deleting hotel')
     }
   }
 
@@ -237,10 +255,10 @@ export class HotelComponent implements OnInit {
 
   }
   removeSpecialdateField(index: number) {
-    if (this.newHotel.special_dates.length >= 1) { // Prevent removing the only special date
+    if (this.newHotel.special_dates.length >= 1) { 
       this.newHotel.special_dates.splice(index, 1);
     } else {
-      console.warn('Cannot remove the only price field.');
+      toast.warning('Cannot remove the only price field.');
     }
 
   }
@@ -249,8 +267,7 @@ export class HotelComponent implements OnInit {
     if (this.selectedHotel.special_dates.length >= 1) { // Prevent removing the only special date
       this.selectedHotel.special_dates.splice(index, 1);
     } else {
-      // Handle the case of removing the only price field (optional: clear values or display a message)
-      console.warn('Cannot remove the only price field.');
+      toast.warning('Cannot remove the only price field.');
     }
   
   }
@@ -264,7 +281,7 @@ export class HotelComponent implements OnInit {
     if (this.newHotel.informacion_general.length >= 1) { 
       this.newHotel.informacion_general.splice(index, 1);
     } else {
-      console.warn('Cannot remove the only price field.');
+      toast.warning('Cannot remove the only price field.');
     }
   }
 
@@ -277,7 +294,7 @@ export class HotelComponent implements OnInit {
       this.selectedHotel.informacion_general.splice(index, 1);
     } else {
       // Handle the case of removing the only price field (optional: clear values or display a message)
-      console.warn('Cannot remove the only price field.');
+      toast.warning('Cannot remove the only price field.');
     }
   }
 

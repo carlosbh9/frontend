@@ -4,6 +4,7 @@ import { GourmetService } from '../../Services/limagourmet/gourmet.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-lima-gourmet',
@@ -80,13 +81,33 @@ export class LimaGourmetComponent {
     );
    
   }
-
+  confirmDelete(id: string) {
+    toast('Are you sure you want to delete this record?', {
+     
+      action: {
+        label: 'Confirm',
+        onClick: async () => {
+        await this.deleteGourmet(id);
+        }
+      },
+      cancel: {
+        label:'Cancel',
+        onClick: () => {
+          toast.info('Delete cancelled');
+        },
+      },
+      position: 'top-center',
+   
+    });
+  }
   async deleteGourmet(id: string) {
     try {
       await this.limaGourmetService.deleteLimagourmet(id);
+      toast.success('Deleting successful')
       this.fetchGourmet();
     } catch (error) {
       console.error('Error deleting gourmet', error);
+      toast.error('Error deleting gourmet')
     }
   }
 
@@ -130,13 +151,14 @@ export class LimaGourmetComponent {
     this.limaGourmetService.createLimagourmet(this.newGourmet).then(
       response => {
         console.log('Gourmet added', response);
+        toast.success('Gourmet created successfully')
         this.fetchGourmet();
         this.showAddModal= false;
         this.emptyEntrance();
       },
       error => {
         console.error('Error adding gourmet', error);
-        console.log('nuevo lima',this.newGourmet)
+        toast.error('Error creating gourmet')
       }
     );
   }
@@ -145,37 +167,39 @@ export class LimaGourmetComponent {
     this.limaGourmetService.updateLimagourmet(this.selectedGourmet._id, this.selectedGourmet).then(
       response => {
         console.log('Gourmet updated', response);
+        toast.success('Gourmet updated successfully')
         this.fetchGourmet();
-        this.showEditModal = false; // Cierra el modal después de enviar el formulario
+        this.showEditModal = false; 
       },
       error => {
         console.error('Error updating gourmet', error);
+        toast.error('Error updating gourmet')
       }
     );
   }
   addClosingdateField() {
     this.newGourmet.closing_date.push({ date: null });
   }
-  // Función para agregar un nuevo campo de closing date en el formulario de editar restaurant
+
   addEditClosingDateField() {
     this.selectedGourmet.closing_date.push({ date: null});
   }
   removeClosingdateField(index: number) {
-    if (this.newGourmet.closing_date.length > 1) { // Prevent removing the only special date
+    if (this.newGourmet.closing_date.length > 1) { 
       this.newGourmet.closing_date.splice(index, 1);
     } else {
-      // Handle the case of removing the only price field (optional: clear values or display a message)
-      console.warn('Cannot remove the only price field.');
+ 
+      toast.warning('Cannot remove the only price field.');
     }
 
   }
 
   removeEditClosingdateField(index: number) {
-    if (this.selectedGourmet.closing_date.length > 1) { // Prevent removing the only special date
+    if (this.selectedGourmet.closing_date.length > 1) { 
       this.selectedGourmet.closing_date.splice(index, 1);
     } else {
-      // Handle the case of removing the only price field (optional: clear values or display a message)
-      console.warn('Cannot remove the only price field.');
+    
+      toast.warning('Cannot remove the only price field.');
     }
 
   }

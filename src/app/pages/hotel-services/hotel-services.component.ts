@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HotelService } from '../../Services/hotel.service';
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
+import { toast } from 'ngx-sonner';
 @Component({
   selector: 'app-hotel-services',
   standalone: true,
@@ -71,6 +72,7 @@ async fetchServices(id: string){
    console.log('services:',this.filteredServices);
   }catch(error){
     console.error('Error fetching services:', error);
+ 
   }
 }
 
@@ -82,10 +84,12 @@ async onSubmit(){
   try{
     const response = await this.hotelService.addServiceToHotel(this.hotelId, this.newService);
     this.fetchServices(this.hotelId);
-    console.log('Service created successfully:', response);
+    console.log('Service created successfully', response);
+    toast.success('Service created successfully')
     this.showAddModal = false;
   }catch(error){
     console.error('Error creating service:', error);
+    toast.error('Error creating service')
   }
 }
 
@@ -93,20 +97,39 @@ async onEditSubmit(){
   try {
     await this.hotelService.updateService(this.hotelId, this.selectedService._id, this.selectedService);
     this.fetchServices(this.hotelId);
-    console.log('Service updated successfully:', this.selectedService);
+    toast.success('Service updated successfully');
     this.showEditModal = false;
   } catch (error) {
-    console.error('Error updating service:', error);
+    toast.error('Error updating service:');
   }
+}
+confirmDelete(id: string) {
+  toast('Are you sure you want to delete this record?', {
+   
+    action: {
+      label: 'Confirm',
+      onClick: async () => {
+      await this.deleteService(id);
+      }
+    },
+    cancel: {
+      label:'Cancel',
+      onClick: () => {
+        toast.info('Delete cancelled');
+      },
+    },
+    position: 'top-center',
+ 
+  });
 }
 
 async deleteService(serviceId: string){
   try {
     await this.hotelService.deleteService(this.hotelId, serviceId);
     this.fetchServices(this.hotelId);
-    console.log('Service deleted successfully:', serviceId);
+    toast.success('Service deleted successfully');
   } catch (error) {
-    console.error('Error deleting service:', error);
+    toast.error('Error deleting service:');
   }
 }
 
@@ -115,6 +138,7 @@ async getHotelId(hotelId: string){
     this.selectedHotel = await this.hotelService.getHotelById(hotelId);
   } catch (error) {
     console.error('Error get hotel by id:', error);
+    toast.error('Error get hotel by id:')
   }
 }
 

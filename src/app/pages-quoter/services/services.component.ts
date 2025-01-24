@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 
 import { MasterQuoterModalComponent } from '../modals/master-quoter.modal/master-quoter.modal.component';
 import { EditServiceModalComponent } from '../modals/edit-service-modal/edit-service-modal.component';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-services',
@@ -42,6 +43,8 @@ export class ServicesComponent  {
  newService = {
   day: 1,
   date:'',
+  number_paxs: [],
+  children_ages:[],
   services: [] as any[],
 };
 
@@ -49,6 +52,8 @@ export class ServicesComponent  {
     this.newService = {
         day: 1,
         date:'',
+        number_paxs: [],
+        children_ages:[],
         services: [] as any[]
 
     }
@@ -106,7 +111,11 @@ export class ServicesComponent  {
     this.isEmitting = false; 
   }
   openModal() {
-    this.modalOpen.set(true);
+    if (!this.startDateQuoter()) {
+      toast.warning('Travel dates are required');
+    } else {
+      this.modalOpen.set(true);
+    }
   }
 // Method to close modal
   closeModal() {
@@ -147,7 +156,8 @@ export class ServicesComponent  {
    
     const startDate = new Date(temp.date);
     let currentDay: number = 0; 
-    let newService = { day: 0, date: '', services: [] as any[] }; 
+    let newService = { day: 0, date: '',number_paxs: temp.number_paxs, 
+      children_ages: temp.children_ages , services: [] as any[] }; 
     // Esructura de servicio por día
     if(temp.day >= 1){
         this.sortedServices().push(temp);
@@ -161,12 +171,14 @@ export class ServicesComponent  {
             }
             newService = {
                 day: service.day,
-                date: this.convertDateToString(this.calculateDateForDay(service.day, startDate)), // Calcular la fecha para el día actual
-                services: [service], // Iniciar con el primer servicio del día
+                date: this.convertDateToString(this.calculateDateForDay(service.day, startDate)),
+                services: [service],
+                number_paxs: temp.number_paxs, 
+                children_ages: temp.children_ages, 
             };
             currentDay = service.day; // Actualizar el día actual
         } else {
-            // Si seguimos en el mismo día, agregamos el servicio al newService
+       
             newService.services.push(service);
         }
     });
@@ -174,6 +186,7 @@ export class ServicesComponent  {
         this.sortedServices().push(newService);
     }
     }
+
     this.emtyService();
     this.emitServices()
 

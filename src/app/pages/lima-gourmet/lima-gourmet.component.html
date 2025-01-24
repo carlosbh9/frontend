@@ -47,35 +47,35 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let gourmet of filteredGourmets" class="text-gray-700 dark:text-gray-100">
+              <tr *ngFor="let gourmet of filteredGourmets" class="text-gray-700 dark:text-gray-100 border-b">
                 
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ gourmet.activitie }}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ gourmet.year }}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 font-bold text-emerald-700">{{ gourmet.price_pp | currency }}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 font-bold text-emerald-700">{{ gourmet.price_for_one_person  | currency }}</td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">{{ gourmet.activitie }}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">{{ gourmet.year }}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2 font-bold text-emerald-700">{{ gourmet.price_pp | currency }}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2 font-bold text-emerald-700">{{ gourmet.price_for_one_person  | currency }}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
                   <div>
                     <span class="px-2 bg-gray-100 dark:bg-gray-600 text-emerald-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left block" *ngIf="gourmet.childRate.from">{{ gourmet.childRate.from }}</span>
                   </div>
                 </td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
                   <div>
                     <span class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left block" *ngIf="gourmet.childRate.upTo">{{ gourmet.childRate.upTo }}</span>
                   </div>
                 </td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
                   <span class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left block" *ngIf="gourmet.childRate.price">{{ gourmet.childRate.price  | currency}}</span>
                 </td>
-                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ gourmet.aprox_duration }}</td>
+                <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">{{ gourmet.aprox_duration }}</td>
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 whitespace-nowrap ">
                     <span *ngFor="let date of gourmet.closing_date" class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-medium text-left block">
                       {{ date.date | date }} 
                     </span>
                   </td>
                 
-                <td *hasRole="['admin','OPE','ventas']"  class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                <td *hasRole="['admin','OPE','ventas']"  class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
                   <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="openEditModal(gourmet)"></i>
-                  <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteGourmet(gourmet._id)"></i>
+                  <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="confirmDelete(gourmet._id)"></i>
                 </td>
               </tr>
             </tbody>

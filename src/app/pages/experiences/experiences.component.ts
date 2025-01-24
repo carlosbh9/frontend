@@ -2,14 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ExperiencesService } from '../../Services/experiences.service';
-import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import Swal from 'sweetalert2'
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
-
+import { toast } from 'ngx-sonner';
 @Component({
   selector: 'app-experiences',
   standalone: true,
-  imports: [CommonModule,FormsModule ,SweetAlert2Module,HasRoleDirective],
+  imports: [CommonModule,FormsModule ,HasRoleDirective],
   templateUrl: './experiences.component.html',
   styleUrl: './experiences.component.css'
 })
@@ -86,14 +84,32 @@ export class ExperiencesComponent implements OnInit {
     this.filterExperiences();
     
   }
-
+  confirmDelete(id: string) {
+    toast('Are you sure you want to delete this record?', {
+     
+      action: {
+        label: 'Confirm',
+        onClick: async () => {
+        await this.deleteExperience(id);
+        }
+      },
+      cancel: {
+        label:'Cancel',
+        onClick: () => {
+          toast.info('Delete cancelled');
+        },
+      },
+      position: 'top-center',
+   
+    });
+  }
   async deleteExperience(id: string) {
     try {
       await this.experienceService.deleteExperience(id);
-      Swal.fire('Success','Record deleted','success')
+      toast.success('Record deleted');
       this.fetchExperiences();
     } catch (error) {
-      console.error('Error deleting experience', error);
+      toast.error('Unable to delete record');
     }
   }
 
@@ -171,19 +187,14 @@ removeEditPriceField(index: number) {
     this.experienceService.addExperience(this.newExperience).then(
       response => {
         console.log('Experience added', response);
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Your work has been saved",
-          showConfirmButton: false,
-          timer: 1500
-        });
+        toast.success("Your work has been saved");
         this.fetchExperiences();
         this.showAddModal = false;
         this.emptyExperience();
       },
       error => {
         console.error('Error adding experience', error);
+        toast.error('Error adding experience')
       }
     );
   }
@@ -192,11 +203,13 @@ removeEditPriceField(index: number) {
     this.experienceService.updateExperience(this.selectedExperience._id, this.selectedExperience).then(
       response => {
         console.log('Experience updated', response);
+        toast.success('Experience updated')
         this.fetchExperiences();
         this.showEditModal = false;
       },
       error => {
         console.error('Error updating experience', error);
+        toast.error('Error updating experience')
       }
     );
   }

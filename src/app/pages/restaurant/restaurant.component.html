@@ -47,32 +47,32 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let restaurant of filteredRestaurants" class="text-gray-700 dark:text-gray-100">
-              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.name }}</td>
-              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.year }}</td>
-              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4 font-bold text-emerald-700">{{ restaurant.price_pp | currency }}</td>
-              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4 font-bold text-emerald-700">{{restaurant.child_rate[0].price_pp | currency}}</td>
-              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4 font-bold">{{restaurant.child_rate[0].upTo}} años</td>
-              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 font-bold text-emerald-700">{{ restaurant.price_guide_pp | currency }}</td>
-              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">
+            <tr *ngFor="let restaurant of filteredRestaurants" class="text-gray-700 dark:text-gray-100 border-b">
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-2">{{ restaurant.name }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-2">{{ restaurant.year }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-2 font-bold text-emerald-700">{{ restaurant.price_pp | currency }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-2 font-bold text-emerald-700">{{restaurant.child_rate[0].price_pp | currency}}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-2 font-bold">{{restaurant.child_rate[0].upTo}} años</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2 font-bold text-emerald-700">{{ restaurant.price_guide_pp | currency }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-2">
                 <span *ngFor="let date of restaurant.special_dates" class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0  font-medium text-left block">
                   {{ date.date | date }} -> {{ date.price_add }}
                 </span>
               </td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 ">
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-2 ">
                 <span *ngFor="let date of restaurant.closing_date" class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 font-medium text-left block">
                   {{ date.date | date }} -> {{ date.price_add }}
                 </span>
                 
               </td>
-              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.schedules }}</td>
-              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4">{{ restaurant.location }}</td>
-              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-4 max-h-24 overflow-y-auto block ">{{ restaurant.take_notes }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-2">{{ restaurant.schedules }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-2">{{ restaurant.location }}</td>
+              <td class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs p-2 max-h-24 overflow-y-auto block ">{{ restaurant.take_notes }}</td>
               
 
-              <td *hasRole="['admin','OPE','ventas']"  class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+              <td *hasRole="['admin','OPE','ventas']"  class="border-t-0 px-2 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
                 <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="openEditModal(restaurant)"></i>
-                <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteRestaurant(restaurant._id)"></i>
+                <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="confirmDelete(restaurant._id)"></i>
               </td>
             </tr>
           </tbody>

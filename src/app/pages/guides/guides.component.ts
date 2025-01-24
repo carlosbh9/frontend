@@ -3,14 +3,14 @@ import { GuidesService } from '../../Services/guides.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
-import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import Swal from 'sweetalert2'
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
+import { toast } from 'ngx-sonner';
+
 
 @Component({
   selector: 'app-guides',
   standalone: true,
-  imports: [CommonModule,FormsModule,SweetAlert2Module,HasRoleDirective],
+  imports: [CommonModule,FormsModule,HasRoleDirective],
   templateUrl: './guides.component.html',
   styleUrl: './guides.component.css'
 })
@@ -67,14 +67,33 @@ export class GuidesComponent {
     this.filterGuides();
     
   }
-
+  confirmDelete(id: string) {
+    toast('Are you sure you want to delete this record?', {
+     
+      action: {
+        label: 'Confirm',
+        onClick: async () => {
+        await this.deleteGuide(id);
+        }
+      },
+      cancel: {
+        label:'Cancel',
+        onClick: () => {
+          toast.info('Delete cancelled');
+        },
+      },
+      position: 'top-center',
+   
+    });
+  }
   async deleteGuide(id: string) {
     try {
       await this.guidesService.deleteGuide(id);
-      Swal.fire('Success','Record deleted','success')
+      toast.success('Record deleted')
       this.fetchGuides();
     } catch (error) {
       console.error('Error deleting guide', error);
+      toast.error('Error deleting guide')
     }
   }
 
@@ -113,19 +132,14 @@ export class GuidesComponent {
     this.guidesService.addGuide(this.newGuide).then(
       response => {
         console.log('Guide added', response);
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Added record",
-          showConfirmButton: false,
-          timer: 1500
-        });
+        toast.success("Added record")
         this.fetchGuides();
         this.showAddModal = false;
         this.emptyGuide();
       },
       error => {
         console.error('Error adding guide', error);
+        toast.error('Error adding guide')
       }
     );
   }
@@ -134,11 +148,13 @@ export class GuidesComponent {
     this.guidesService.updateGuide(this.selectedGuide._id, this.selectedGuide).then(
       response => {
         console.log('Guide updated', response);
+        toast.success('Guide updated')
         this.fetchGuides();
         this.showEditModal = false;
       },
       error => {
         console.error('Error updating guide', error);
+        toast.error('Error updating guide')
       }
     );
   }

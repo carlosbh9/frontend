@@ -37,11 +37,11 @@
           </thead>
           <tbody>
             @for (transport of filteredTransports; track transport._id) {
-            <tr class="text-gray-700 dark:text-gray-100">
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ transport.nombre }}</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ transport.year }}</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ transport.type_service }}</td>
-              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+            <tr class="text-gray-700 dark:text-gray-100 border-b">
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">{{ transport.nombre }}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">{{ transport.year }}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">{{ transport.type_service }}</td>
+              <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
                 @for (vehicle of transport.type_vehicle; track $index) {
                         <span class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left block ">
                           {{ vehicle.name_type_vehicle }}: 
@@ -51,9 +51,9 @@
                         </span>
               }
               </td>
-              <td *hasRole="['admin','OPE','ventas']" class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+              <td *hasRole="['admin','OPE','ventas']" class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
                 <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="openEditModal(transport)"></i>
-                <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteTransport(transport._id)"></i>
+                <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="confirmDelete(transport._id)"></i>
               </td>
             </tr>
             }

@@ -36,24 +36,24 @@
           </thead>
           <tbody >
             @for (service of filteredServices; track $index) {
-              <tr class="text-gray-700 dark:text-gray-1000">
-                  <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">{{ service.serviceName }}</td>
+              <tr class="text-gray-700 dark:text-gray-1000 border-b">
+                  <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2 ">{{ service.serviceName }}</td>
                     
                       @if (service.prices.season!='Regular') {
-                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"> {{service.prices.season}} - {{ service.prices.adultPrice | currency }}
-                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"> {{service.prices.season}} - {{ service.prices.childPrice | currency}}</td>
-                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"> {{service.prices.season}} - {{ service.prices.guidePrice | currency }}</td>
+                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"> {{service.prices.season}} - {{ service.prices.adultPrice | currency }}
+                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"> {{service.prices.season}} - {{ service.prices.childPrice | currency}}</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2"> {{service.prices.season}} - {{ service.prices.guidePrice | currency }}</td>
                       }@else{
-                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ service.prices.adultPrice | currency }}</td>
-                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ service.prices.childPrice | currency}}</td>
-                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ service.prices.guidePrice | currency}}</td>
+                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">{{ service.prices.adultPrice | currency }}</td>
+                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">{{ service.prices.childPrice | currency}}</td>
+                          <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">{{ service.prices.guidePrice | currency}}</td>
                       }
                     
                     
-                  <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-normal p-4">{{ service.observations }}</td>
-                  <td *hasRole="['admin','OPE','ventas']" class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                  <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-normal p-2">{{ service.observations }}</td>
+                  <td *hasRole="['admin','OPE','ventas']" class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
                     <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="openEditModal(service)"></i>
-                    <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteService(service._id)"></i>
+                    <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="confirmDelete(service._id)"></i>
                   </td>
                 </tr>
             }

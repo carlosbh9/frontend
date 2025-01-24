@@ -14,7 +14,6 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) { }
 
   login(username: string, password: string) {
-
     return this.http.post<{ token: string }>(this.baseUrl, { username, password }).subscribe(
       (response) => {
         const token = response.token; // Obtener el token de la respuesta
@@ -29,7 +28,8 @@ export class AuthService {
         }
       
       this.router.navigate(['/dashboard/quoter-main/quoter-list']);
-    });
+    }
+  );
   }
 
   getToken() {
@@ -38,6 +38,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem(this.tokenKey);
+    localStorage.clear()
     this.router.navigate(['/login']);
   }
 

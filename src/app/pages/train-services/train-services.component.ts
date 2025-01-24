@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
+import { toast } from 'ngx-sonner';
+
 
 @Component({
   selector: 'app-train-services',
@@ -80,13 +82,14 @@ filterServices() {
 async onSubmit() {
   try {
     const response = await this.trainService.addServiceToTrain(this.trainId(), this.newService);
-    console.log('Servicio añadido', response);
+    toast.success('Service created successfully')
     this.fetchTrainServices(this.trainId());  // Actualizar la lista de servicios
     this.emptyService()
     this.showAddModal = false;
     
   } catch (error) {
     console.error('Error al añadir servicio', error);
+    toast.error('Error creating service')
     
   }
 }
@@ -94,21 +97,44 @@ async onSubmit() {
 async onEditSubmit() {
   try {
     await this.trainService.updateService(this.trainId(), this.selectService._id, this.selectService);
-    console.log('Servicio actualizado');
+    
+    toast.success('Service updated successfully');
     this.fetchTrainServices(this.trainId());
     this.showEditModal = false;
   } catch (error) {
     console.error('Error al actualizar servicio', error);
+    toast.error('Error updating service:');
   }
 }
 
+confirmDelete(id: string) {
+  toast('Are you sure you want to delete this record?', {
+   
+    action: {
+      label: 'Confirm',
+      onClick: async () => {
+      await this.deleteService(id);
+      }
+    },
+    cancel: {
+      label:'Cancel',
+      onClick: () => {
+        toast.info('Delete cancelled');
+      },
+    },
+    position: 'top-center',
+ 
+  });
+}
 async deleteService(serviceId: string) {
   try {
     await this.trainService.deleteService(this.trainId(), serviceId);
-    console.log('Servicio eliminado');
+   
+    toast.success('Service deleted successfully')
     this.fetchTrainServices(this.trainId());
   } catch (error) {
-    console.error('Error al eliminar servicio', error);
+   
+    toast.error('Error deleting service:');
   }
 }
 

@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { RestaurantService } from '../../Services/restaurant.service';
 import { CommonModule } from '@angular/common';
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
+import { toast } from 'ngx-sonner';
+
 @Component({
   selector: 'app-restaurant',
   standalone: true,
@@ -84,13 +86,33 @@ export class RestaurantComponent implements OnInit{
     this.filterRestaurant();
     
   }
-
+  confirmDelete(id: string) {
+    toast('Are you sure you want to delete this record?', {
+     
+      action: {
+        label: 'Confirm',
+        onClick: async () => {
+        await this.deleteRestaurant(id);
+        }
+      },
+      cancel: {
+        label:'Cancel',
+        onClick: () => {
+          toast.info('Delete cancelled');
+        },
+      },
+      position: 'top-center',
+   
+    });
+  }
   async deleteRestaurant(id: string) {
     try {
       await this.restaurantService.deleteRestaurant(id);
+      toast.success('restaurant deleted successfully')
       this.fetchRestaurants();
     } catch (error) {
       console.error('Error deleting restaurant', error);
+      toast.error('Error deleting restaurant:');
     }
   }
 
@@ -107,7 +129,7 @@ export class RestaurantComponent implements OnInit{
       this.newRestaurant.special_dates.splice(index, 1);
     } else {
       // Handle the case of removing the only price field (optional: clear values or display a message)
-      console.warn('Cannot remove the only price field.');
+      toast.warning('Cannot remove the only price field.');
     }
 
   }
@@ -118,7 +140,7 @@ export class RestaurantComponent implements OnInit{
       this.selectedRestaurant.special_dates.splice(index, 1);
     } else {
       // Handle the case of removing the only price field (optional: clear values or display a message)
-      console.warn('Cannot remove the only price field.');
+      toast.warning('Cannot remove the only price field.');
     }
   
   }
@@ -137,7 +159,7 @@ export class RestaurantComponent implements OnInit{
       this.newRestaurant.closing_date.splice(index, 1);
     } else {
       // Handle the case of removing the only price field (optional: clear values or display a message)
-      console.warn('Cannot remove the only price field.');
+      toast.warning('Cannot remove the only price field.');
     }
 
   }
@@ -147,7 +169,7 @@ export class RestaurantComponent implements OnInit{
       this.selectedRestaurant.closing_date.splice(index, 1);
     } else {
       // Handle the case of removing the only price field (optional: clear values or display a message)
-      console.warn('Cannot remove the only price field.');
+      toast.warning('Cannot remove the only price field.');
     }
 
   }
@@ -195,6 +217,7 @@ export class RestaurantComponent implements OnInit{
     this.restaurantService.addRestaurant(this.newRestaurant).then(
       response => {
         console.log('Restaurant added', response);
+        toast.success('Restaurant created successfully')
         this.fetchRestaurants();
         this.showAddModal = false;
         this.emptyRestaurant();
@@ -202,6 +225,7 @@ export class RestaurantComponent implements OnInit{
       },
       error => {
         console.error('Error adding restaurant', error);
+        toast.error('Error creating restaurant')
       }
     );
   }
@@ -210,12 +234,14 @@ export class RestaurantComponent implements OnInit{
     this.restaurantService.updateRestaurant(this.selectedRestaurant._id, this.selectedRestaurant).then(
       response => {
         console.log('Restaurant updated', response);
+        toast.success('Restaurant updated successfully');
         this.fetchRestaurants();
         this.showEditModal = false;
         console.log(this.selectedRestaurant)
       },
       error => {
         console.error('Error updating restaurant', error);
+        toast.error('Error updating restaurant:');
       }
     );
   }

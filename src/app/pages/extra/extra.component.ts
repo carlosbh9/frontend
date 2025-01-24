@@ -1,16 +1,15 @@
 import { Component, inject,WritableSignal ,signal,Signal} from '@angular/core';
 import { UiTableComponent } from '../sharecomponents/ui-table/ui-table.component';
-import { EntrancesService } from '../../Services/entrances.service';
 import { ExtrasService } from '../../Services/serviceTarifario/extras.service';
-import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import Swal from 'sweetalert2'
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { toast } from 'ngx-sonner';
+
 
 @Component({
   selector: 'app-extra',
   standalone: true,
-  imports: [UiTableComponent,SweetAlert2Module,CommonModule,FormsModule],
+  imports: [UiTableComponent,CommonModule,FormsModule],
   templateUrl: './extra.component.html',
   styleUrl: './extra.component.css'
 })
@@ -58,6 +57,7 @@ actions = [
       console.log('los datos cargados',this.extras)
     } catch (error) {
       console.error('Error fetching Extras', error);
+      toast.error('Error fetching Extras')
     }
   }
 
@@ -75,12 +75,13 @@ actions = [
     this.extrasService.updateExtra(this.selectedExtra._id, this.selectedExtra).then(
       response => {
         console.log('Extra updated', response);
-    
+        toast.success('Extra updated')
         this.fetchExtras();
         this.showEditModal = false; // Cierra el modal después de enviar el formulario
       },
       error => {
         console.error('Error updating extra', error);
+        toast.error('Error updating extra')
       }
     );
   }
@@ -90,34 +91,29 @@ actions = [
     this.extrasService.createExtra(this.newExtra).then(
       response => {
         console.log('Extra added', response);
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Your work has been saved",
-          showConfirmButton: false,
-          timer: 1500
-      
-        });
+        toast.success("Your work has been saved");
         this.fetchExtras();
         this.showAddModal= false;
         this.emptyExtra();
       },
       error => {
         console.error('Error adding extra', error);
+        toast.error('Error adding extra')
       }
     );
   }
   async deleteEntrance(id: string) {
     try {
       await this.extrasService.deleteExtra(id);
-      Swal.fire('Success', 'Record deleted', 'success');
+      toast.success( 'Record deleted');
       this.fetchExtras(); // Refrescar la tabla
     } catch (error) {
-      console.error('Error deleting extra', error);
+      //console.error('Error deleting extra', error);
+      toast.error('Error deleting extra')
     }
   }
   openEditModal(extra: any) {
-    console.log('editar esto',extra)
+    
     this.selectedExtra = { ...extra }; // Clona la entrada seleccionada
     this.showEditModal = true;
   }

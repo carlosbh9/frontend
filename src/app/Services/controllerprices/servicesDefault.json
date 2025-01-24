@@ -1,0 +1,14 @@
+{
+    "services": [
+        {
+            "service_id": "675338d351e154dca7ff5714",
+            "service_type": "extra"
+        }
+    
+    ],
+    "date": "",
+    "number_paxs": [
+        3,6
+    ],
+    "children_ages": [9,6]
+}

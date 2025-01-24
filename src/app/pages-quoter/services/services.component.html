@@ -118,5 +118,5 @@
 }
 
 @if (modalOpenEditService()) {
-    <app-edit-service-modal [dayData]="selectserviceEdit" [number_paxs]="number_paxs()" (closeModalEvent)="closeModalEdit()"  (openMasterQuoter)="openMasterQuoter()"></app-edit-service-modal>
+    <app-edit-service-modal [dayData]="selectserviceEdit" [number_paxs]="number_paxs()" [children_ages]="children_ages() || []"  (closeModalEvent)="closeModalEdit()"  (openMasterQuoter)="openMasterQuoter()"></app-edit-service-modal>
 }

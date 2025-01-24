@@ -20,6 +20,7 @@ childrenAges = input<number[]>() ;
 mqService = inject(MasterQuoterService)
 startDateQuoter = input.required<string>();
 
+
 mqQuoters: any[] = [];
 mqQuotersDays: any[]=[]
 selectedMqQuoterOption: any = {};
@@ -159,12 +160,16 @@ async onAddMQuoter(){
     this.selectedServices.services.push(...selectedDayServices);
     dayCounter++;
   });
- // this.selectedServices.number_paxs=this.numberpaxs()
-  //this.selectedServices.children_ages= this.childrenAges()
+ 
   console.log('se envio', this.selectedServices)
   this.preciosCalculados = await this.priceService.calculatePrice(this.selectedServices)
   this.preciosCalculados.date = this.selectedServices.date
   this.preciosCalculados.day = this.selectedServices.day 
+  
+  this.preciosCalculados.number_paxs = this.selectedServices.number_paxs
+  this.preciosCalculados.children_ages = this.selectedServices.children_ages
+  
+  console.log('se emitio a services', this.preciosCalculados)
   this.servicesChange.emit(this.preciosCalculados)
   this.closeModal()
   

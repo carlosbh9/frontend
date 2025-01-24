@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
+import { toast } from 'ngx-sonner';
 
 
 @Component({
@@ -125,9 +126,11 @@ export class TrainComponent implements OnInit {
       this.fetchTrains();
       this.showAddModal = false;
        console.log('Tren añadido',this.newTrain);
+       toast.success('Train created successfully')
       this.emptyTrain();
     } catch (error) {
       console.error('Error al añadir el tren', error);
+      toast.error('Error creating Train')
     }
   }
 
@@ -135,24 +138,47 @@ export class TrainComponent implements OnInit {
     this.trainService.updateTrain(this.selectedTrain._id, this.selectedTrain).then(
       response => {
         console.log('Tren actualizado', response);
-        console.log('Tren actualizado', this.selectedTrain);
+        toast.success('Train updated successfully');
         this.fetchTrains();
         this.showEditModal = false;
       },
       error => {
         console.error('Error al actualizar el tren', error);
+        toast.error('Error updating Train:');
+
       }
     );
   }
 
 
-
+  confirmDelete(id: string) {
+    toast('Are you sure you want to delete this record?', {
+     
+      action: {
+        label: 'Confirm',
+        onClick: async () => {
+        await this.deleteTrain(id);
+        }
+      },
+      cancel: {
+        label:'Cancel',
+        onClick: () => {
+          toast.info('Delete cancelled');
+        },
+      },
+      position: 'top-center',
+   
+    });
+  }
   async deleteTrain(id: string) {
     try {
       await this.trainService.deleteTrain(id);
+      toast.success('Train deleted successfully')
       this.fetchTrains();
     } catch (error) {
       console.error('Error al eliminar el tren', error);
+      toast.error('Error deleting Train:');
+
     }
   }
 

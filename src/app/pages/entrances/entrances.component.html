@@ -42,26 +42,29 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let entrance of filteredEntrances" class="text-gray-700 dark:text-gray-100" >
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ entrance.description }}</td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{{ entrance.year }}</td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 font-bold text-emerald-700">{{ entrance.price_pp | currency}}</td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-              <div>
-                <span class="px-2 bg-gray-100 dark:bg-gray-600 text-emerald-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left block" *ngIf="entrance.childRate.pp">{{ entrance.childRate.pp | currency }}</span>
-                
-              </div>
+          <tr *ngFor="let entrance of filteredEntrances" class="text-gray-700 dark:text-gray-100 border-b" >
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">{{ entrance.description }}</td>
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">{{ entrance.year }}</td>
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2 font-bold text-emerald-700">{{ entrance.price_pp | currency}}</td>
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2 font-bold text-emerald-700">
+              @if (entrance.childRate.pp) {
+                {{ entrance.childRate.pp | currency }}
+              }
+       
             </td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
               <div>
                 <span class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left block" *ngIf="entrance.childRate.upTo">{{ entrance.childRate.upTo }}</span>
               </div>
             </td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-4 max-h-24 overflow-y-auto block">{{ entrance.take_note }}</td>
-            <td *hasRole="['admin','OPE','ventas']" class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-2 max-h-24 overflow-y-auto block">{{ entrance.take_note }}</td>
+            <td *hasRole="['admin','OPE','ventas']" class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
               <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2'  
               (click)="openEditModal(entrance)" ></i>
-              <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' [swal]="{title:'Confirmation', text:'Are you sure you want to delete this record?' , showCancelButton: true}" (confirm)="deleteEntrance(entrance._id)" ></i>
+             
+           
+              <!-- <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' [swal]="{title:'Confirmation', text:'Are you sure you want to delete this record?' , showCancelButton: true}" (confirm)="deleteEntrance(entrance._id)" ></i> -->
+              <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2'  (click)="confirmDelete(entrance._id)" ></i>
             </td>
           </tr>
         </tbody>
@@ -183,6 +186,5 @@
     </div>
   </div>
 </div>
-
 
 

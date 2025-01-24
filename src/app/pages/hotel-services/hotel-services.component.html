@@ -43,9 +43,9 @@
         </thead>
           <tbody >
             @for (service of filteredServices; track service._id) {
-              <tr class="text-gray-700 dark:text-gray-100 text-xs">
+              <tr class="text-gray-700 dark:text-gray-100 text-xs border-b">
                   <!-- Nombre del Servicio -->
-                  <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">
+                  <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-2">
                       {{ service.name_service }}
                   </td>
                   <!-- Iterar sobre Tipo de Habitaciones -->
@@ -60,9 +60,9 @@
                     </td>
                     }
                   <!-- Columnas de Acciones -->
-                  <td *hasRole="['admin','OPE','ventas']"  class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
+                  <td *hasRole="['admin','OPE','ventas']"  class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2 text-center">
                       <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="openEditModal(service)"></i>
-                      <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="deleteService(service._id)"></i>
+                      <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="confirmDelete(service._id)"></i>
                   </td>
               </tr>
           }
