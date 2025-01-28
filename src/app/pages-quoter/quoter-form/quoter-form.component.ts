@@ -163,8 +163,6 @@ export class QuoterFormComponent implements  OnInit{
         this.getQuoterbyId(id);
         this.showUpdate= true;
         this.idQuoter=id;
-       
-    
     
       }else {
         
@@ -172,23 +170,40 @@ export class QuoterFormComponent implements  OnInit{
       
     })
     
-    this.create.getData().subscribe(
-      (data) => {
-        this.dataDefault = data;  // Aquí asignas los datos al objeto `dataDefault`
-        console.log('Datos recibidos:', this.dataDefault);  // Muestra el JSON en la consola
-        this.create.calculatePrice(this.dataDefault).then(
-          (response) => {
-            console.log('Precios calculados:', response);  // Muestra los precios calculados
-          },
-          (error) => {
-            console.error('Error calculando precios:', error);
-          }
-        );
-      },
-      (error) => {
-        console.error('Error al obtener los datos:', error);
-      }
-    );
+    // this.create.getData().subscribe({
+    //   next: (data) => {
+    //     this.dataDefault = data;  // Aquí asignas los datos al objeto `dataDefault`
+    //     console.log('Datos recibidos:', this.dataDefault);  // Muestra el JSON en la consola
+    //     this.create.calculatePrice(this.dataDefault).then(
+    //       (response:  any ) => { 
+    //         console.log('Precios calculados:', response);  
+    //         if (response.services) {
+    //           const newServiceItem = {
+    //             day: 1, 
+    //             date: null, 
+    //             number_paxs: [], 
+    //             children_ages: [], 
+    //             services: response.services.map((service: any) => ({
+    //                 city: "", // Puedes establecer la ciudad si es necesario
+    //                 name_service: service.name_service,
+    //                 price_base: service.price_base,
+    //                 prices: service.prices,
+    //                 notes: "" // Puedes establecer notas si es necesario
+    //             }))
+    //         };
+    //           this.newQuoter.services.push(newServiceItem);
+    //           console.log('Precios calculados en tabla:',  this.newQuoter);
+    //         }
+    //       },
+    //       (error) => {
+    //         console.error('Error calculando precios:', error);
+    //       }
+    //     );
+    //   },
+    //   error: (error) => {
+    //     console.error('Error al obtener los datos:', error);
+    //   }
+    //});
     
     //console.log('precios calculados',nuevo)
 
@@ -652,7 +667,6 @@ selectOption(option: any): void {
         toast.error('A problem occurred while exporting Excel');
       }
     }   
-  // Detectar clics fuera del input y la lista de opciones
 @HostListener('document:click', ['$event'])
 onClick(event: MouseEvent) {
   const target = event.target as HTMLElement;

@@ -1,6 +1,6 @@
 <div class="grid grid-cols-1 gap-2 mb-2  ">
     <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-        <div class="p-6 flex justify-between gap-4">
+        <div class=" p-6 flex justify-between gap-4">
           <!-- columna de la izquierda -->
             <div class="w-1/4 space-y-4">
                 <div >
@@ -33,9 +33,10 @@
                 </div>
             </div>
             <!-- columna de la derecha -->
-            <div class="w-full space-y-4">
-            <div class="grid grid-cols-4 gap-4">
-                <div>
+            <div class="relative w-3/4 space-y-4">
+            <div class="bg-gray-200 border  border-gray-600 rounded-md sticky top-14 z-10 flex justify-between p-4">
+                <div class="flex space-x-4">
+                <div class="w-40">
                     <label for="selectCategoria" class="block text-sm font-medium text-gray-700">Selecione la categoria</label>
                     <select  [(ngModel)]="selectCategoria" (change)="onCategoriaChange($event)" name="selectedCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
                         <option value="" disabled selected>Select Category</option>
@@ -51,7 +52,7 @@
                         <option value="extra">Table Extras</option>          
                     </select>
                 </div>
-                <div>
+                <div class="w-1/2">
                     <label for="selectedService" class="block text-sm font-medium text-gray-700">Services</label>
                    
                     <select [(ngModel)]="selectedService" (change)="onServiceChange($event)" name="selectedService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -63,7 +64,7 @@
                 
                 </div>
                 @if (selectCategoria === 'operator' || selectCategoria === 'train') {
-                 <div>
+                 <div class="w-1/2">
                     <label for="selectedSubService" class="block text-sm font-medium text-gray-700">Services</label>
                     <select [(ngModel)]="selectedSubService" (change)="onSubServiceChange($event)" name="selectedSubService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <option value="" disabled selected>Select Service</option>
@@ -73,7 +74,9 @@
                     </select>
                 </div>
                 }
-                <div class="col-start-4 flex justify-end">
+                </div>
+                
+                <div class="flex flex-nowrap space-x-4">
                     <div>
                     <label for="selectedSubService" class="block text-sm font-medium text-gray-700">Selected Year</label>
                     <select [(ngModel)]="selectedYear"name="selectedSubService" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -87,6 +90,7 @@
                     </button>
                   </div>
             </div>
+            <div class="pt-[60px]">
             @for (day of masterQuoter.day; track  $index; let i = $index) {
 
             <div>
@@ -146,6 +150,7 @@
 
             </div>
             }
+            </div>
             </div>
         </div>
     </div>

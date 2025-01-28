@@ -28,7 +28,11 @@ export class PdfexportService {
         resolve(canvas.toDataURL('image/png'));
       };
 
-      image.onerror = (error) => reject(error);
+      image.onerror = (error) => 
+        {console.error('Error al cargar la imagen:', error);
+          reject('Error al cargar la imagen');
+
+        }
     });
   }
   // Método para exportar el PDF
@@ -93,7 +97,7 @@ const tableBodyCuises = this.createCruisesTableContent(data,tam)
             style: 'body',
             table: {
                 widths: [20, 60,30, '*', 30, ...Array(tam).fill(30),'*'], // Ajustar anchos
-                body: tableBodyServices.length ? tableBodyServices : [[{ text: 'No data available', colSpan: tam + 7 }]]
+                body: tableBodyServices.length ? tableBodyServices : [[{ text: 'No data available', colSpan: tam + 6 }]]
             },
             layout: 'lightHorizontalLines'
         },

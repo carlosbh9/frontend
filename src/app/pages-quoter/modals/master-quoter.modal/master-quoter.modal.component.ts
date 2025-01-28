@@ -3,6 +3,7 @@ import { Component,Output, EventEmitter, inject, OnInit ,HostListener, input, ou
 import { FormGroup, FormsModule } from '@angular/forms';
 import { MasterQuoterService } from '../../../Services/master-quoter.service';
 import {CalculatepricesService}  from '../../../Services/controllerprices/calculateprices.service'
+import { toast } from 'ngx-sonner';
 @Component({
   selector: 'app-master-quoter',
   standalone: true,
@@ -40,28 +41,28 @@ isDropdownOpen: boolean = false;
 isDropdownOpenChild: boolean = false;
 checkboxes: boolean[][] = [];
 selectedValues: number[] = [];
+childrenAgesChecks : boolean[] = [];
+
+ngOnInit(): void {
+  this.loadmqServices();
+  this.checkboxes = this.numberpaxs().map(groupSize => Array(groupSize).fill(true));
+  this.childrenAgesChecks = this.childrenAges()?.map(() => true) ?? [];
+  //this.selectedServices.children_ages = this.childrenAges()?.filter((age, i) => this.childrenAgesChecks[i]);
+ 
+}
 
 toggleCheckbox(groupIndex: number, checkboxIndex: number) {
   this.checkboxes[groupIndex][checkboxIndex] = !this.checkboxes[groupIndex][checkboxIndex];
+ 
 }
 
 getSelectedCountForGroup(groupIndex: number): number {
   return this.checkboxes[groupIndex]?.filter(checkbox => checkbox).length || 0;
 }
 
-toggleCheckboxChildrenAges(childAge: number, event: Event): void {
-  const isChecked = (event.target as HTMLInputElement).checked;
-  if (isChecked) {
-    // Si está seleccionado, agregar la edad al arreglo
-    this.selectedServices.children_ages.push(childAge);
-  } else {
-    // Si no está seleccionado, quitar la edad del arreglo
-    const index = this.selectedServices.children_ages.indexOf(childAge);
-    if (index !== -1) {
-      this.selectedServices.children_ages.splice(index, 1);
-    }
-  }
-  console.log('Selected ages:', this.selectedServices.children_ages);  // Imprimir el resultado para depuración
+toggleCheckboxChildrenAges(index: number){
+  this.childrenAgesChecks[index] = !this.childrenAgesChecks[index];
+  //this.selectedServices.children_ages = this.childrenAges()?.filter((age, i) => this.childrenAgesChecks[i]);
 
 }
 
@@ -90,29 +91,30 @@ preciosCalculados: any = {
   date:''
 };
 
-ngOnInit(): void {
-  this.loadmqServices();
-  this.checkboxes = this.numberpaxs().map(groupSize => Array(groupSize).fill(true));
-}
+
 
 async loadmqServices() {
   try {
     this.mqQuoters = await this.mqService.getAllMasterQuoter();
     this.filteredOptions = this.mqQuoters;  // Inicializa las opciones filtradas
   } catch (error) {
-    console.log('Error al cargar los Master Quoters', error);
+    console.error('Error al cargar los Master Quoters', error);
   }
 }
- filterOptions(): void {
-  if (this.searchTerm.trim()) {
-    this.filteredOptions = this.mqQuoters.filter(option => 
-      option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-  } else {
-    this.filteredOptions = [];
-  }
+//  filterOptions(): void {
+//   if (this.searchTerm.trim()) {
+//     this.filteredOptions = this.mqQuoters.filter(option => 
+//       option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+//     );
+//   } else {
+//     this.filteredOptions = [];
+//   }
+// }
+filterOptions(): void {
+  this.filteredOptions = this.searchTerm.trim() 
+    ? this.mqQuoters.filter(option => option.name.toLowerCase().includes(this.searchTerm.toLowerCase()))
+    : [];
 }
-
 
 selectOption(option: any): void {
   this.selectedMasterQuoter = option;
@@ -143,29 +145,31 @@ async onAddMQuoter(){
   if (this.selectedMasterQuoter?.type === 'Templates') { 
     this.selectedServices.date = this.startDateQuoter()
   }
-  
-  //this.selectedServices.number_paxs=this.numberpaxs()
   this.selectedServices.number_paxs =  this.numberpaxs().map((_, groupIndex) => this.getSelectedCountForGroup(groupIndex));
- 
-  //this.selectedServices.children_ages= this.childrenAges()
+  this.selectedServices.children_ages = this.childrenAges()?.filter((age, i) => this.childrenAgesChecks[i]);
   let dayCounter = 1; 
   this.filteredDaysOptions.forEach(option => {
-    const selectedDayServices = option.services.filter((service : any, index: number) => service.selected);
-  
-   selectedDayServices.forEach((service: any) => {
+    const selectedDayServices = option.services.filter((service : any) => service.selected);
+    selectedDayServices.forEach((service: any) => {
     service.city = option.city; 
     service.day = dayCounter;
   });
-
     this.selectedServices.services.push(...selectedDayServices);
     dayCounter++;
   });
- 
   console.log('se envio', this.selectedServices)
   this.preciosCalculados = await this.priceService.calculatePrice(this.selectedServices)
+
+  if(this.preciosCalculados.alerts.length>0){
+    this.preciosCalculados.alerts.forEach( (message: string , index: number)=> {
+      setTimeout(() => {
+        toast.info(message, { duration: 10000 });
+      }, index * 500);
+    })
+    
+  }
   this.preciosCalculados.date = this.selectedServices.date
   this.preciosCalculados.day = this.selectedServices.day 
-  
   this.preciosCalculados.number_paxs = this.selectedServices.number_paxs
   this.preciosCalculados.children_ages = this.selectedServices.children_ages
   

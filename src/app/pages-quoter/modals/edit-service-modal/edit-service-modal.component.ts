@@ -105,7 +105,11 @@ export class EditServiceModalComponent implements OnInit{
   ngOnInit(): void {
    // this.tempPreviuw = this.dayData
     this.checkboxes = this.dayData.number_paxs.map((groupSize: any) => Array(groupSize).fill(true));
-    this.childrenAgesChecks = this.dayData.children_ages.map(() => true);
+    this.childrenAgesChecks = this.children_ages()?.map((age: number) => 
+      this.dayData.children_ages?.includes(age) || false
+    ) || []; 
+    // const uniqueSelectedAges = Array.from(new Set(this.dayData.children_ages));
+    // this.childrenAgesChecks = this.children_ages()?.map(age => uniqueSelectedAges.includes(age)) ?? [];
 
 
     this.loadmqServicesMQuoter();
@@ -312,16 +316,27 @@ toggleCheckbox(groupIndex: number, checkboxIndex: number) {
   this.checkboxes[groupIndex][checkboxIndex] = !this.checkboxes[groupIndex][checkboxIndex];
   //console.log(this.checkboxes)
 }
+
 toggleCheckboxChild(index: number): void {
+  // Cambiar el valor del checkbox
   this.childrenAgesChecks[index] = !this.childrenAgesChecks[index];
-  console.log(this.childrenAgesChecks);
+  
+  
+   this.dayData.children_ages = this.children_ages()?.filter((age, i) => this.childrenAgesChecks[i]);
+ 
+  console.log(this.dayData.children_ages); // Verifica los datos actualizados
+}
+
+
+getSelectedCount(): number {
+  return this.childrenAgesChecks.filter(chk => chk).length;
 }
 getSelectedCountForGroup(groupIndex: number): number {
   return this.checkboxes[groupIndex]?.filter(checkbox => checkbox).length || 0;
 }
-getSelectedCount(): number {
-  return this.childrenAgesChecks.filter(chk => chk).length;
-}
+// getSelectedCount(): number {
+//   return this.childrenAgesChecks.filter(chk => chk).length;
+// }
 toggleDropdown() {
      this.isDropdownOpen = !this.isDropdownOpen;
  }

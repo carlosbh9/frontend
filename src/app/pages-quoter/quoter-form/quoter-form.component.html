@@ -15,6 +15,7 @@
                             <input
                                 id="searchInput"
                                 type="text"
+                                autocomplete="off"
                                 [(ngModel)]="newQuoter.guest"
                                 (input)="filterOptions()"
                                 (focus)="showOptions = true"
@@ -48,7 +49,7 @@
                         <div class="flex col-span-2 space-x-2 w-full">
                           <div class="w-2/5">
                             <label for="accommodations" class="block text-sm font-medium text-gray-700 whitespace-nowrap">Type of Accommodations</label>
-                            <input type="text" [(ngModel)]="newQuoter.accomodations" name="newQuoter.acomodations" id="accommodations" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Accommodations">
+                            <input type="text" autocomplete="off" [(ngModel)]="newQuoter.accomodations" name="newQuoter.acomodations" id="accommodations" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Accommodations">
                           </div>
                           <div>
                             <label for="number_paxs" class="block text-sm font-medium text-gray-700">Number of Guest</label>
