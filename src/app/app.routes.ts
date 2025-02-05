@@ -17,7 +17,7 @@ import { HotelServicesComponent } from './pages/hotel-services/hotel-services.co
 import { QuoterComponent } from './pages-quoter/quoter/quoter.component';
 import { QuoterFormComponent } from './pages-quoter/quoter-form/quoter-form.component';
 import { LoginComponent } from './login/login.component';
-import { QuoterListComponent } from './pages-quoter/quoter-list/quoter-list.component';
+import { QuoterListComponent } from './pages-quoter/quoter-list/contacts/quoter-list.component';
 import { MasterQuoterComponent } from './pages-quoter/master-quoter/master-quoter.component';
 import { LimaGourmetComponent } from './pages/lima-gourmet/lima-gourmet.component';
 import { MasterQuoterListComponent } from './pages-quoter/master-quoter-list/master-quoter-list.component';
@@ -193,7 +193,7 @@ export const routes: Routes = [
               {
                 path: 'quoter-list',
                 loadComponent: () =>
-                  import('./pages-quoter/quoter-list/quoter-list.component').then(
+                  import('./pages-quoter/quoter-list/contacts/quoter-list.component').then(
                     (m) => m.QuoterListComponent
                   ),
               },

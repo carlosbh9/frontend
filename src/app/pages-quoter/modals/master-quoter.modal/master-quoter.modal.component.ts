@@ -49,6 +49,7 @@ ngOnInit(): void {
   this.childrenAgesChecks = this.childrenAges()?.map(() => true) ?? [];
   //this.selectedServices.children_ages = this.childrenAges()?.filter((age, i) => this.childrenAgesChecks[i]);
  
+ 
 }
 
 toggleCheckbox(groupIndex: number, checkboxIndex: number) {
@@ -62,7 +63,7 @@ getSelectedCountForGroup(groupIndex: number): number {
 
 toggleCheckboxChildrenAges(index: number){
   this.childrenAgesChecks[index] = !this.childrenAgesChecks[index];
-  //this.selectedServices.children_ages = this.childrenAges()?.filter((age, i) => this.childrenAgesChecks[i]);
+
 
 }
 
@@ -92,24 +93,19 @@ preciosCalculados: any = {
 };
 
 
+ 
+
 
 async loadmqServices() {
   try {
     this.mqQuoters = await this.mqService.getAllMasterQuoter();
     this.filteredOptions = this.mqQuoters;  // Inicializa las opciones filtradas
+    console.log('cargando las opciones disponibles',this.mqQuoters)
   } catch (error) {
     console.error('Error al cargar los Master Quoters', error);
   }
 }
-//  filterOptions(): void {
-//   if (this.searchTerm.trim()) {
-//     this.filteredOptions = this.mqQuoters.filter(option => 
-//       option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-//     );
-//   } else {
-//     this.filteredOptions = [];
-//   }
-// }
+
 filterOptions(): void {
   this.filteredOptions = this.searchTerm.trim() 
     ? this.mqQuoters.filter(option => option.name.toLowerCase().includes(this.searchTerm.toLowerCase()))
@@ -121,9 +117,19 @@ selectOption(option: any): void {
   this.showOptions = false;
   this.searchTerm = option.name;
   this.filteredDaysOptions = option.day; 
+  if(option.type === 'Templates'){
+    this.setLastDayServicesSelected();
+  }
   console.log('el mas seleccionado',this.selectedMasterQuoter)
 }
-
+setLastDayServicesSelected(): void {
+  const lastDay = this.filteredDaysOptions.at(-1);
+  if (lastDay) {
+    lastDay.selected = true;
+    // lastDay.isFixedLast = true
+    lastDay.services.forEach((service: any) => service.selected = true);
+  }
+}
 toggleAllServices(option: any): void {
     if (option.selected) {
       option.services.forEach((service: any) => {
@@ -139,7 +145,9 @@ toggleAllServices(option: any): void {
       });
     }
 }
-
+isLastElement(index: number): boolean {
+  return this.selectedMasterQuoter?.type === 'Templates' && index === this.filteredDaysOptions.length - 1;
+}
 async onAddMQuoter(){
 
   if (this.selectedMasterQuoter?.type === 'Templates') { 

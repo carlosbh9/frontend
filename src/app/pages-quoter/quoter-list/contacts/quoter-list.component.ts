@@ -3,12 +3,12 @@ import { Router,ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { ContactService } from '../../Services/contact/contact.service';
-import { QuoterService } from '../../Services/quoter.service';
-import { PdfexportService } from '../../Services/pdfexport/pdfexport.service';
+import { ContactService } from '../../../Services/contact/contact.service';
+import { QuoterService } from '../../../Services/quoter.service';
+import { PdfexportService } from '../../../Services/pdfexport/pdfexport.service';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2'
-import { ExportExcelService } from '../../Services/exportExcel/export-excel.service';
+import { ExportExcelService } from '../../../Services/exportExcel/export-excel.service';
 @Component({
   selector: 'app-quoter-list',
   standalone: true,

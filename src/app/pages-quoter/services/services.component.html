@@ -47,9 +47,10 @@
                                     <span class="ml-4 text-sm">Services ({{dayService.services.length}})</span>
                                 </div>
                                 <div class="flex items-center">
+                                    @if (!isLastElement(i)) {
                                     <i (click)="openModalEdit(dayService)" class="bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2 cursor-pointer"></i>
                                     <i (click)="deleteService(i)" class="bx bx-trash text-2xl text-red-500 dark:text-red-700 cursor-pointer"></i>
-                                    
+                                    }
                                 </div>
                             </summary>
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

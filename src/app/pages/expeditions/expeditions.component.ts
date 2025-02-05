@@ -2,9 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component,OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ExpeditionsService } from '../../Services/expeditions.service';
+import { Expedition } from '../../interfaces/expeditions.interface';
 
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 import { toast } from 'ngx-sonner';
+
 
 @Component({
   selector: 'app-expeditions',
@@ -21,16 +23,20 @@ export class ExpeditionsComponent implements OnInit{
   showEditModal= false;
   filterYear : string = '2025'
 
-  newExpedition: any = {
+  newExpedition: Expedition = {
+    _id: null,
     name: '',
     price_pp: 0,
+    priceperson: null,
     remarks: '',
     year:''
   };
 
-  selectedExpedition: any = {
+  selectedExpedition: Expedition = {
+    _id: '',
     name: '',
     price_pp: 0,
+    priceperson: null,
     remarks: '',
     year:''
   };
@@ -114,8 +120,10 @@ export class ExpeditionsComponent implements OnInit{
 
   emptyExpedition(): void {
     this.newExpedition = {
+      _id: null,
       name: '',
       price_pp: 0,
+      priceperson: null,
       remarks: '',
       year:''
     };
@@ -137,19 +145,24 @@ export class ExpeditionsComponent implements OnInit{
     );
   }
 
-  onEditSubmit() {
-    this.expeditionService.updateExpedition(this.selectedExpedition._id, this.selectedExpedition).then(
-      response => {
-        console.log('Expedition updated', response);
+  async onEditSubmit() {
+    if (this.selectedExpedition?._id) {
+      try {
+        const response = await this.expeditionService.updateExpedition(
+          this.selectedExpedition._id, 
+          this.selectedExpedition
+        );
+        console.log('Expedition updated:', response);
         toast.success('Expedition updated');
         this.fetchExpeditions();
-        
-        this.showEditModal = false; // Cierra el modal después de enviar el formulario
-      },
-      error => {
-        console.error('Error updating expedition', error);
+        this.showEditModal = false;
+
+      } catch (error) {
+        console.error('Error updating expedition:', error);
         toast.error('Error updating expedition');
       }
-    );
+    } else {
+      toast.error('Invalid expedition data');
+    }
   }
 }

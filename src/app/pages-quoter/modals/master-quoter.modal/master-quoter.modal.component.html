@@ -149,6 +149,7 @@
                     [name]="'selectAll-' + option._id+ $index"
                     [(ngModel)]="option.selected"
                     (change)="toggleAllServices(option)"
+                    [disabled]="isLastElement($index)"
                   />
                     <span>{{option.city}} - {{ option.name_services }}</span>
                     <span class="transition group-open:rotate-180">
@@ -164,6 +165,7 @@
                             type="checkbox"
                             [name]="'service-' + service.service_id"
                             [(ngModel)]="service.selected"
+                            [disabled]="isLastElement($index)"
                           />
                           {{ service.name_service }}
                         </label>
@@ -174,6 +176,7 @@
                         type="checkbox"
                         [name]="'option-' + service.service_id"
                         [(ngModel)]="service.selected"
+                        [disabled]="isLastElement($index)"
                       />
                       {{ service.name_service }}
                     </label>

@@ -59,9 +59,25 @@ export class ServicesComponent  {
     }
   }
 
-  sortedServices = computed(() =>
-    [...this.services()].sort((a, b) => a.day - b.day)
-  );
+  // sortedServices = computed(() =>
+  //   [...this.services()].sort((a, b) => a.day - b.day)
+  // );
+  sortedServices = computed(() => {
+    const servicesCopy = [...this.services()];
+    if (!servicesCopy.length) return [];
+    const lastElement = servicesCopy.find(service => service.isFixedLast);
+    const filteredServices = lastElement
+      ? servicesCopy.filter(service => !service.isFixedLast)
+      : servicesCopy;
+
+    filteredServices.sort((a, b) => a.day - b.day);
+    if (lastElement) {
+        const maxDay = filteredServices[filteredServices.length - 1].day;
+        lastElement.day = maxDay + 1; // Asignar un día mayor al máximo encontrado
+        return [...filteredServices, lastElement];
+    }
+    return filteredServices;
+});
 
   private isEmitting = false; // Evitar bucles al emitir datos al padre
 
@@ -79,20 +95,7 @@ export class ServicesComponent  {
 
   getTotalPricesServices(): number[] {
     const totalPrices: number[] = [];
-    
-    // Itera sobre cada día
-    // this.sortedServices().forEach((day: { services: { prices: number[] }[] }) => {
-    //   // Itera sobre cada servicio dentro del día
-    //   day.services.forEach((service: { prices: number[] }) => {
-    //     service.prices.forEach((price: number, index: number) => {
-    //       if (totalPrices[index]) {
-    //         totalPrices[index] += price; // Sumar al total existente en la posición index
-    //       } else {
-    //         totalPrices[index] = price; // Inicializar el total en la posición index
-    //       }
-    //     });
-    //   });
-    // });
+   
     this.sortedServices().forEach((day: { services: { prices: number[] }[] }) => {
       day.services.forEach((service: { prices: number[] }) => {
         service.prices.forEach((price: number, index: number) => {
@@ -147,49 +150,83 @@ export class ServicesComponent  {
     this.sortedServices().splice(index,1)
     this.emitServices()
   }
+  isLastElement(index: number): boolean {
+    return index === this.sortedServices().length - 1;
+  }
 
   onModalmqQuoterChange(temp: any){
+    const length = temp.services.length-1
+    
     console.log('recibido de mq:', temp)
-    //this.newService.day = this.count++
-    // this.services.push(...temp)
-    //this.newService.date = temp.date
-   
     const startDate = new Date(temp.date);
     let currentDay: number = 0; 
     let newService = { day: 0, date: '',number_paxs: temp.number_paxs, 
-      children_ages: temp.children_ages , services: [] as any[] }; 
+      children_ages: temp.children_ages ,isFixedLast: false, services: [] as any[] }; 
     // Esructura de servicio por día
-    if(temp.day >= 1){
+    if(temp.day >= 1 ){
         this.sortedServices().push(temp);
         console.log('pushh a la tabla ', temp)
     }else {
- 
-    temp.services.forEach((service: any) => {
-        if (currentDay !== service.day) {
-            if (newService.day !== 0) {
-                this.sortedServices().push(newService);
-            }
-            newService = {
-                day: service.day,
-                date: this.convertDateToString(this.calculateDateForDay(service.day, startDate)),
-                services: [service],
-                number_paxs: temp.number_paxs, 
-                children_ages: temp.children_ages, 
-            };
-            currentDay = service.day; // Actualizar el día actual
-        } else {
-       
-            newService.services.push(service);
-        }
-    });
-    if (newService.day !== 0) {
-        this.sortedServices().push(newService);
+    // temp.services.forEach((service: any, index: number) => {
+    //     if (currentDay !== service.day) {
+    //         if (newService.day !== 0) {
+    //           if (index === temp.services.length - 1) {
+    //             newService.isFixedLast = true;
+    //         }
+    //             this.sortedServices().push(newService);
+    //         }
+    //         newService = {
+    //             day: service.day,
+    //             date: this.convertDateToString(this.calculateDateForDay(service.day, startDate)),
+    //             isFixedLast: false,
+    //             services: [service],
+    //             number_paxs: temp.number_paxs, 
+    //             children_ages: temp.children_ages, 
+    //         };
+    //         currentDay = service.day; // Actualizar el día actual
+    //     } else {
+    //         newService.services.push(service);
+    //     }
+    // });
+    // if (newService.day !== 0) {
+    //     this.sortedServices().push(newService);
+    // }
+    temp.services.forEach((service: any, index: number) => {
+      if (currentDay !== service.day) {
+          if (newService.day !== 0) {
+              // Asigna 'isFixedLast: true' al último elemento antes de hacer push
+              if (index === temp.services.length - 1) {
+                  newService.isFixedLast = true;
+              }
+              this.sortedServices().push(newService);
+          }
+          
+          // Crear un nuevo objeto de servicio
+          newService = {
+              day: service.day,
+              date: this.convertDateToString(this.calculateDateForDay(service.day, startDate)),
+              isFixedLast: false,
+              services: [service],
+              number_paxs: temp.number_paxs,
+              children_ages: temp.children_ages,
+          };
+          
+          // Actualizar el día actual
+          currentDay = service.day;
+      } else {
+          // Si es el mismo día, agregar el servicio al objeto existente
+          newService.services.push(service);
+      }
+  
+      // Verifica si este es el último servicio en la lista y aún no se hizo push
+      if (index === temp.services.length - 1 && newService.day !== 0) {
+          newService.isFixedLast = true;
+          this.sortedServices().push(newService);
+      }
+  });
     }
-    }
-
     this.emtyService();
     this.emitServices()
-
   }
  
   

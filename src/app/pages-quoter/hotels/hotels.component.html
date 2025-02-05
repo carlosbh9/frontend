@@ -139,7 +139,7 @@
                     <i class='bx bx-up-arrow-alt text-red-500' (click)="moveFlightUp($index)"></i></td>
                 <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap ">
                     @if (hotel.editHotel) {
-                        <input type="text" class="border border-gray-300 rounded-md" [(ngModel)]="hotel.day">
+                        <input type="text" class="w-10 border border-gray-300 rounded-md" [(ngModel)]="hotel.day">
                     }@else{
                         <div>{{hotel.day}}</div>
                     }
@@ -159,7 +159,7 @@
                         @if (hotel.editHotel) {
                             <input
                                 type="number"
-                                class="border border-gray-300 rounded-md"
+                                class="w-24 border border-gray-300 rounded-md"
                                 [(ngModel)]="hotel.prices[$index]"
                                 step="0.01"
                             />

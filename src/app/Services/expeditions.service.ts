@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../enviroment/environment';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom,catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -35,11 +35,19 @@ export class ExpeditionsService {
 
   // Actualizar una expedición existente
   async updateExpedition(id: string, expedition: any): Promise<any> {
+ 
     try {
-      const res = await firstValueFrom(this.http.patch<any>(`${this.baseUrl}/${id}`, expedition));
-      return res;
+      const response = await firstValueFrom(
+        this.http.patch<any>(`${this.baseUrl}/${id}`, expedition).pipe(
+          catchError(error => {
+            console.error('Error while trying to update expedition:', error);
+            return throwError(() => error);  // Lanza nuevamente el error
+          })
+        )
+      );
+      return response;
     } catch (error) {
-      console.log('Error while trying to update Expedition', error);
+      console.error('Error caught in updateExpedition method:', error);
       throw error;
     }
   }
