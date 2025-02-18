@@ -1,0 +1,114 @@
+<div class="pt-3">
+    <div class="grid grid-cols-1 gap-2 mb-2 overflow-y-auto ">
+        <div class="bg-white rounded-md border border-gray-100 p-3 shadow-md shadow-black/5">
+            <div class="flex flex-wrap items-center px-4 py-2">
+                <div class="relative w-full max-w-full flex-grow flex-1 text-right">
+                <h1 class="font-semibold text-left text-gray-900 dark:text-gray-50 p-6">List of Contacts</h1>
+                <div class="flex w-full">
+                <table class="items-center w-1/2 bg-transparent border border-collapse">
+                    <thead>  
+                        <tr>
+                        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">name</th>
+                        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">role</th>
+                        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">user name</th>
+                        <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (item of users(); track $index) {
+                            <tr class="text-gray-700 text-left dark:text-gray-1000 border-b ">
+                                <td class="p-2 ">{{item.username}}</td>  
+                                <td class="p-2">{{item.name}}</td>
+                                <td class="p-2 ">{{item.role}}</td>
+                                <button
+                                type="button"
+                                (click)="editUser(item)"
+                                class="bg-green-500 hover:bg-green-600 text-white font-bold p-2 px-3 rounded"
+                              >
+                                Editar
+                              </button>
+                            </tr>
+                            }
+                    </tbody>
+                </table>
+                <div class="max-w-lg mx-auto p-6 w- w-full bg-white rounded-md shadow-md">
+                    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                      <!-- Campo: User -->
+                      <div class="mb-4">
+                        <label for="username" class="block text-gray-700 mb-2">User</label>
+                        <input
+                          type="text"
+                          id="username"
+                          formControlName="username"
+                          placeholder="Ingresa el usuario"
+                          class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-500"
+                        />
+                      </div>
+                  
+                      <!-- Campo: Name -->
+                      <div class="mb-4">
+                        <label for="name" class="block text-gray-700 mb-2">Name</label>
+                        <input
+                          type="text"
+                          id="name"
+                          formControlName="name"
+                          placeholder="Ingresa el nombre"
+                          class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-500"
+                        />
+                      </div>
+                  
+                      <!-- Campo: Password -->
+                      <div class="mb-4">
+                        <label for="password" class="block text-gray-700 mb-2">Password</label>
+                        <input
+                          type="password"
+                          id="password"
+                          formControlName="password"
+                          placeholder="Ingresa la contraseña"
+                          class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-500"
+                        />
+                      </div>
+                  
+                      <!-- Campo: Role -->
+                      <div class="mb-4">
+                        <label for="role" class="block text-gray-700 mb-2">Role</label>
+                        <select
+                          id="role"
+                          formControlName="role"
+                          class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-500"
+                        >
+                          <option value="" disabled selected>Selecciona un rol</option>
+                          <option value="admin">Admin</option>
+                          <option value="OPE">Operations</option>
+                          <option value="TD">Travel designed</option>
+                          <option value="ventas">Ventas</option>
+                        </select>
+                      </div>
+                  
+                      <!-- Botones -->
+                      <div class="flex justify-between">
+                        <button
+                        type="submit"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+                      >
+                        {{ isEditing ? 'Update' : 'Save' }}
+                      </button>
+                      <!-- Botón para cancelar la edición (opcional) -->
+                      @if (isEditing) {
+                      <button
+                        type="button"
+                        (click)="cancelEdit()"
+                        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
+                      >
+                        Cancelar
+                      </button>
+                    }
+                      </div>
+                    </form>
+                  </div>
+                  
+            </div>
+            </div>
+        </div>
+    </div>       
+</div>

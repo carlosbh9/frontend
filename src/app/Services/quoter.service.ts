@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../enviroment/environment';
-import { firstValueFrom } from 'rxjs';
+import { environment } from '../../enviroments/environment';
+import { firstValueFrom,catchError,Observable,throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import { firstValueFrom } from 'rxjs';
 export class QuoterService {
 
   private baseUrl = `${environment.apiUrl}/quoter`
-
+  private baseUrl2 = `${environment.apiUrl}/createquoter`
   constructor(private http: HttpClient) { }
 
 async getAllQuoter(): Promise<any[]> {
@@ -30,17 +30,6 @@ async getQuoterById(id: string): Promise<any> {
     return res;
   } catch (error) {
     console.log('Error while trying to get Quoter by ID: ', error);
-    throw error;
-  }
-}
-
-// Método para crear una nueva cotizacion
-async createQuoter(quoter: any): Promise<any> {
-  try {
-    const res = await firstValueFrom(this.http.post<any>(this.baseUrl, quoter));
-    return res;
-  } catch (error) {
-    console.log('Error while trying to create Quoter: ', error);
     throw error;
   }
 }
@@ -77,4 +66,13 @@ async deleteQuoter(id: string): Promise<any> {
   }
 }
 
+   // Método para crear una cotización
+   createQuoter(newQuoterData: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl2, newQuoterData).pipe(
+      catchError((error) => {
+        console.error('Error en createQuoter:', error);
+        return throwError(() => error);
+    
+    }));
+  }
 }

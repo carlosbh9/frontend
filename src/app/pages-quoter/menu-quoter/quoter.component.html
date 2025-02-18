@@ -1,0 +1,41 @@
+
+<div class="py-3 px-5 bg-white rounded shadow-xl">
+    <div class="-mx-1">
+      <ul class="flex w-full flex-wrap items-center h-10">
+        <!-- Elemento con Submenú -->
+        <li class="block relative" *ngFor="let item of menuItems; let i = index">
+          <a 
+             class="flex items-center h-10 leading-10 px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 text-gray-900 hover:bg-gray-950 hover:text-gray-100"
+             (click)="toggleMenu(i, item.hasChildren)">
+            <span class="mr-1 text-xl">
+              <i [class]="item.icon"></i>
+            </span>
+            <span>{{ item.label }}</span>
+            <span *ngIf="item.hasChildren" class="ml-2">
+              <i class="bx bx-chevron-down" [ngClass]="{'rotate-180': activeMenu === i}"></i>
+            </span>
+          </a>
+  
+          <!-- Submenú -->
+          <div *ngIf="activeMenu === i && item.hasChildren"
+               class="bg-white shadow-md rounded border border-gray-300 text-sm absolute top-auto left-0 min-w-full w-56 z-30 mt-1 transition-all ease-in-out duration-300">
+            <span class="absolute top-0 left-0 w-3 h-3 bg-white border transform rotate-45 -mt-1 ml-6"></span>
+            <div class="bg-white rounded w-full relative z-10 py-1">
+              <ul class="list-reset">
+                <li *ngFor="let sub of item.children">
+                  <a [routerLink]="sub.router"
+                    (click)="closeMenu()"
+                     class="px-4 py-2 flex w-full items-start hover:bg-gray-100 no-underline transition-colors duration-100 cursor-pointer">
+                    <span class="flex-1">{{ sub.label }}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+<div class="pt-3">
+    <router-outlet></router-outlet>
+</div>

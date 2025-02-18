@@ -1,7 +1,7 @@
 <details class="group">
     <!-- Título del acordeón -->
     <summary class="flex justify-start items-center px-4 py-2 bg-green-100 cursor-pointer rounded-lg group-open:bg-blue-100 " >
-        <span class="transition group-open:rotate-180">
+        <span class="transition group-open:-rotate-90">
             <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24">
                 <path d="M6 9l6 6 6-6"></path>
             </svg>
@@ -15,7 +15,7 @@
             <button class=" top-4 right-4 p-2 bg-blue-500 dark:bg-blue-700 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Open Master Quoter</button>    
     </div> 
 </div>
-<div class="p-2 block w-full overflow-x-auto  max-h-96" id="table-container">
+<div class="p-2 block w-full overflow-x-auto  max-h-screen" id="table-container">
     <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">Services</h1>
     <table class="items-center w-full bg-transparent border border-collapse">
         <thead>
@@ -35,9 +35,9 @@
                 <tr>
                     <td colspan="100%" class="p-0">
                         <details class="group">
-                            <summary class="flex justify-between items-center bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 px-4 py-2 cursor-pointer border-b border-gray-300">
+                            <summary class="flex justify-between items-center bg-white-100 dark:bg-gray-600 font-bold dark:text-gray-100 px-4 py-2 cursor-pointer border-b  border-gray-300 ">
                                 <div class="flex items-center">
-                                    <span class="transition group-open:rotate-180 ml-4">
+                                    <span class="transition group-open:rotate-180  ml-4">
                                         <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24">
                                             <path d="M6 9l6 6 6-6"></path>
                                         </svg>
@@ -45,11 +45,16 @@
                                     <span class="font-semibold">Day {{dayService.day}}</span>
                                     <span class="ml-4 text-sm">{{dayService.date | date}}</span>
                                     <span class="ml-4 text-sm">Services ({{dayService.services.length}})</span>
+                                    
                                 </div>
-                                <div class="flex items-center">
+                                <div class="flex items-center space-x-8">
+                                    <span class="ml-4 text-sm">Number Paxs {{dayService.number_paxs}}</span>
+                                    <span class="ml-4 text-sm">Children Ages {{dayService.children_ages}}</span>
                                     @if (!isLastElement(i)) {
-                                    <i (click)="openModalEdit(dayService)" class="bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2 cursor-pointer"></i>
-                                    <i (click)="deleteService(i)" class="bx bx-trash text-2xl text-red-500 dark:text-red-700 cursor-pointer"></i>
+                                        <div>
+                                            <i (click)="openModalEdit(dayService)" class="bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2 cursor-pointer"></i>
+                                            <i (click)="deleteService(i)" class="bx bx-trash text-2xl text-red-500 dark:text-red-700 cursor-pointer"></i>
+                                        </div>
                                     }
                                 </div>
                             </summary>

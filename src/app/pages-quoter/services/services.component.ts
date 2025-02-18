@@ -72,10 +72,18 @@ export class ServicesComponent  {
 
     filteredServices.sort((a, b) => a.day - b.day);
     if (lastElement) {
-        const maxDay = filteredServices[filteredServices.length - 1].day;
-        lastElement.day = maxDay + 1; // Asignar un día mayor al máximo encontrado
-        return [...filteredServices, lastElement];
-    }
+        // const maxDay = filteredServices[filteredServices.length - 1].day;
+        // lastElement.day = maxDay + 1; 
+        // return [...filteredServices, lastElement];
+        if (filteredServices.length > 0) {
+          const maxDay = filteredServices[filteredServices.length - 1].day;  // Asegura que no accedemos a un elemento undefined
+          lastElement.day = maxDay + 1;
+          return [...filteredServices, lastElement];
+        } else {
+          // Si no hay servicios filtrados, devuelve solo el elemento fijo
+          return [lastElement];
+        }
+      }
     return filteredServices;
 });
 
@@ -155,8 +163,6 @@ export class ServicesComponent  {
   }
 
   onModalmqQuoterChange(temp: any){
-    const length = temp.services.length-1
-    
     console.log('recibido de mq:', temp)
     const startDate = new Date(temp.date);
     let currentDay: number = 0; 
@@ -167,30 +173,6 @@ export class ServicesComponent  {
         this.sortedServices().push(temp);
         console.log('pushh a la tabla ', temp)
     }else {
-    // temp.services.forEach((service: any, index: number) => {
-    //     if (currentDay !== service.day) {
-    //         if (newService.day !== 0) {
-    //           if (index === temp.services.length - 1) {
-    //             newService.isFixedLast = true;
-    //         }
-    //             this.sortedServices().push(newService);
-    //         }
-    //         newService = {
-    //             day: service.day,
-    //             date: this.convertDateToString(this.calculateDateForDay(service.day, startDate)),
-    //             isFixedLast: false,
-    //             services: [service],
-    //             number_paxs: temp.number_paxs, 
-    //             children_ages: temp.children_ages, 
-    //         };
-    //         currentDay = service.day; // Actualizar el día actual
-    //     } else {
-    //         newService.services.push(service);
-    //     }
-    // });
-    // if (newService.day !== 0) {
-    //     this.sortedServices().push(newService);
-    // }
     temp.services.forEach((service: any, index: number) => {
       if (currentDay !== service.day) {
           if (newService.day !== 0) {
@@ -201,7 +183,6 @@ export class ServicesComponent  {
               this.sortedServices().push(newService);
           }
           
-          // Crear un nuevo objeto de servicio
           newService = {
               day: service.day,
               date: this.convertDateToString(this.calculateDateForDay(service.day, startDate)),

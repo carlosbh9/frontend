@@ -9,7 +9,6 @@ import { ExtOperatorComponent } from '../ext-operator/ext-operator.component';
 import { ServicesComponent } from '../services/services.component';
 import { HotelsComponent } from '../hotels/hotels.component';
 
-import { CalculatepricesService } from '../../Services/controllerprices/calculateprices.service';
 import { PdfexportService } from '../../Services/pdfexport/pdfexport.service';
 import { ExportExcelService } from '../../Services/exportExcel/export-excel.service';
 
@@ -36,12 +35,11 @@ export class QuoterFormComponent implements  OnInit{
   quoterService = inject(QuoterService)
   contactService = inject(ContactService)
   route = inject(ActivatedRoute)
-  create = inject(CalculatepricesService)
   pdfExportService = inject(PdfexportService)
   excelService = inject(ExportExcelService)
 
   constructor() {}
- 
+  private blurTimeout: any;
   dataDefault: any;
   modalOpen = signal(false);
   modalData = signal<any[]>([])
@@ -169,45 +167,7 @@ export class QuoterFormComponent implements  OnInit{
       }
       
     })
-    
-    // this.create.getData().subscribe({
-    //   next: (data) => {
-    //     this.dataDefault = data;  // Aquí asignas los datos al objeto `dataDefault`
-    //     console.log('Datos recibidos:', this.dataDefault);  // Muestra el JSON en la consola
-    //     this.create.calculatePrice(this.dataDefault).then(
-    //       (response:  any ) => { 
-    //         console.log('Precios calculados:', response);  
-    //         if (response.services) {
-    //           const newServiceItem = {
-    //             day: 1, 
-    //             date: null, 
-    //             number_paxs: [], 
-    //             children_ages: [], 
-    //             services: response.services.map((service: any) => ({
-    //                 city: "", // Puedes establecer la ciudad si es necesario
-    //                 name_service: service.name_service,
-    //                 price_base: service.price_base,
-    //                 prices: service.prices,
-    //                 notes: "" // Puedes establecer notas si es necesario
-    //             }))
-    //         };
-    //           this.newQuoter.services.push(newServiceItem);
-    //           console.log('Precios calculados en tabla:',  this.newQuoter);
-    //         }
-    //       },
-    //       (error) => {
-    //         console.error('Error calculando precios:', error);
-    //       }
-    //     );
-    //   },
-    //   error: (error) => {
-    //     console.error('Error al obtener los datos:', error);
-    //   }
-    //});
-    
-    //console.log('precios calculados',nuevo)
 
-    //this.newQuoter.services.push(nuevo)
     this.datosrecibidosHotel = null
     this.datosrecibidosService = null
 
@@ -241,17 +201,18 @@ export class QuoterFormComponent implements  OnInit{
   
 async loadContacts() {
   try {
-    this.contacts = await this.contactService.getAllContacts();
-    this.filteredOptions = this.contacts;  
+    const result = await this.contactService.getAllContacts();
+    this.filteredOptions = result.contacts
+    
   } catch (error) {
     console.log('Error al cargar los Master Quoters', error);
   }
 }
  // Filtrar opciones en Master Quoter
- filterOptions(): void {
-  this.filteredOptions = this.contacts.filter(option =>
-    option.name.toLowerCase().includes(this.newQuoter.guest.toLowerCase())
-  );
+ async filterOptions(){
+  const result = await this.contactService.getAllContacts(this.newQuoter.guest);
+  this.filteredOptions = result.contacts
+ 
 }
 // Seleccionar opción de Contacts
 selectOption(option: any): void {
@@ -458,7 +419,7 @@ selectOption(option: any): void {
 
 
   onSubmit(){
-    this.create.createQuoter(this.newQuoter).subscribe({
+    this.quoterService.createQuoter(this.newQuoter).subscribe({
       next: (response) => {
         console.log('Quoter added', response);
         toast.success('Quoter added');
@@ -677,5 +638,18 @@ onClick(event: MouseEvent) {
   if (inputElement && !inputElement.contains(target) && dropdownElement && !dropdownElement.contains(target)) {
     this.showOptions= false;
   }
+}
+onInputFocus(): void {
+  clearTimeout(this.blurTimeout); // Cancelar el timeout que oculta las opciones
+  if (this.filteredOptions.length) {
+    this.showOptions = true; // Mostrar opciones solo si hay resultados filtrados
+  }
+}
+
+onInputBlur(): void {
+  // Retrasar el cierre del menú para permitir seleccionar opciones
+  this.blurTimeout = setTimeout(() => {
+    this.showOptions = false;
+  }, 200);
 }
   }

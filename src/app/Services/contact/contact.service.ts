@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../../enviroment/environment';
+import { environment } from '../../../enviroments/environment';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({
@@ -12,16 +12,45 @@ export class ContactService {
   constructor(private http: HttpClient) { }
   
   // Método para obtener todos los contactos
-  async getAllContacts(): Promise<any[]> {
+  async getAllContacts(filter:string =''): Promise<{ contacts: any[]; totalContacts: number }> {
     try {
-      const res = await firstValueFrom(this.http.get<any[]>(this.baseUrl));
-      return res;
+      console.log('API URL:', environment.apiUrl);
+      console.log('Producción:', environment.production);
+      let params = new HttpParams()
+        .set('all', 'true')
+        .set('filter',filter)
+        
+        const res = await firstValueFrom(this.http.get<{ contacts: any[]; totalContacts: number }>(this.baseUrl, { params }));
+        console.log(res)
+        return res;
     } catch (error) {
       console.log('Error while trying to get all Contacts: ', error);
       throw error;
     }
   }
-  
+   // Obtener todos los contactos, con posibilidad de agregar filtros o parámetros
+   async getContactsPaginated(page: number, pageSize: number, filterText: string = ''): Promise<{ contacts: any[]; totalContacts: number }> {
+    try {
+      let params = new HttpParams()
+        .set('page', page.toString())
+        .set('pageSize', pageSize.toString());
+
+        if (filterText) {
+          params = params.set('filter', filterText);
+        }
+        // if (options) {
+        //   if (options.page) params = params.set('page', options.page.toString());
+        //   if (options.pageSize) params = params.set('pageSize', options.pageSize.toString());
+        //   if (options.filter) params = params.set('filter', options.filter);
+        //   if (options.all) params = params.set('all', 'true');
+        // }
+      const res = await firstValueFrom(this.http.get<{ contacts: any[]; totalContacts: number }>(this.baseUrl, { params }));
+      return res;
+    } catch (error) {
+      console.error('Error fetching paginated contacts:', error);
+      throw error;
+    }
+  }
   // Método para obtener un contacto por ID
   async getContactById(id: string): Promise<any> {
     try {

@@ -174,7 +174,6 @@ async onAddMQuoter(){
         toast.info(message, { duration: 10000 });
       }, index * 500);
     })
-    
   }
   this.preciosCalculados.date = this.selectedServices.date
   this.preciosCalculados.day = this.selectedServices.day 

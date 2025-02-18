@@ -40,7 +40,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         // Mostrar la notificación de error usando ngx-sonner
         toast.error(message, {
           duration: 3000, // Duración en milisegundos
-          position: 'top-right', // Posición de la notificación
+          position: 'bottom-right', // Posición de la notificación
           style: {
             backgroundColor: '#f8d7da', // Fondo rojo claro
             color: '#721c24', // Texto rojo oscuro

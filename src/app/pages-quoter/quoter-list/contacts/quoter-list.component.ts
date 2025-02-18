@@ -1,4 +1,4 @@
-import { Component,inject ,OnInit} from '@angular/core';
+import { Component,effect,inject ,OnInit,signal} from '@angular/core';
 import { Router,ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { PdfexportService } from '../../../Services/pdfexport/pdfexport.service'
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2'
 import { ExportExcelService } from '../../../Services/exportExcel/export-excel.service';
+import { Contact } from '../../../interfaces/contact.interface';
 @Component({
   selector: 'app-quoter-list',
   standalone: true,
@@ -22,48 +23,75 @@ export class QuoterListComponent implements OnInit{
   pdfExportService = inject(PdfexportService)
   excelService = inject(ExportExcelService)
 
+  itemsPerPage = signal(10);
+  currentPage = signal(1);
+  totalContacts = signal(0);
+
+  isModalOpen = signal(false);
+  currentContact: Contact  = {
+    name: '',
+    td_designed:'',
+  };
   contacts: any[] = []
   filteredContacts: any[] = [];
+  paginatedContacts: any[] = [];
   filterText: string = '';
   dropdownOpen: string | null = null;
 
   statuses = ['WIP', 'HOLD', 'SOLD', 'LOST'];
   statusColors: { [key: string]: string } = {
-    WIP: 'text-blue-500 bg-blue-100', // Azul
-    HOLD: 'text-yellow-500 bg-yellow-100', // Amarillo
-    SOLD: 'text-green-500 bg-green-100', // Verde
-    LOST: 'text-red-500 bg-red-100', // Rojo
+    WIP: 'bg-blue-100', // Azul
+    HOLD: 'bg-yellow-100', // Amarillo
+    SOLD: 'bg-green-100', // Verde
+    LOST: 'bg-red-100', // Rojo
   };
 
   getStatusClass(status: string): string {
     return this.statusColors[status] || 'bg-gray-100';
   }
   constructor(private router: Router,private route: ActivatedRoute) {
-  //  this.selectedQuoter = this.emptyQuoter; // Mueve la inicialización aquí
+  effect(() => {
+    const page = this.currentPage()
+    const pageSize = this.itemsPerPage()
+    this.fetchContacts(page,pageSize)
+  },{allowSignalWrites: true});
+  effect(() => {
+    this.updatePaginatedContacts();
+  });
   }
-  ngOnInit(): void {
-    this.fetchContacts();
+   ngOnInit(): void {
+   
   }
 
-  // Método para obtener todos los contactos
-  async fetchContacts() {
+  async fetchContacts(page: number, pageSize: number) {
     try {
-      this.contacts = await this.contactService.getAllContacts();
-      this.filteredContacts = this.contacts; // Inicializa los contactos filtrados con todos los contactos
-      console.log(this.contacts); // Muestra en consola los contactos obtenidos
+      const result = await this.contactService.getContactsPaginated(page, pageSize);
+      this.contacts = result.contacts
+      this.filteredContacts = this.contacts; 
+      //this.updatePaginatedContacts();
+      this.totalContacts.set(result.totalContacts)
     } catch (error) {
       console.error('Error fetching contacts', error);
     }
   }
-
+ 
   // Método para filtrar los contactos según el nombre
-  filterContacts() {
-    this.filteredContacts = this.contacts.filter(contact =>
-      contact.name.toLowerCase().includes(this.filterText.toLowerCase()) // Filtra por nombre
-    );
+  async filterContacts() {
+
+    this.currentPage.set(1); 
+    this.currentPage.set(1); 
+
+    try {
+      const result = await this.contactService.getContactsPaginated(this.currentPage(), this.itemsPerPage(), this.filterText);
+      this.contacts = result.contacts;
+      this.filteredContacts = result.contacts;
+      this.totalContacts.set(result.totalContacts);
+      this.updatePaginatedContacts();
+    } catch (error) {
+      console.error('Error fetching filtered contacts:', error);
+    }
   }
 
-  // Método para navegar al formulario de creación de contacto
   contactForm() {
     this.router.navigate([`../contact-form`], { relativeTo: this.route });
   }
@@ -71,9 +99,9 @@ export class QuoterListComponent implements OnInit{
   // Método para eliminar un contacto
   async deleteContact(id: string) {
     try {
-      await this.contactService.deleteContact(id); // Elimina el contacto usando el servicio
+      await this.contactService.deleteContact(id); 
       Swal.fire('Success','Record deleted','success')
-      this.fetchContacts(); // Vuelve a cargar la lista de contactos
+      this.fetchContacts(this.currentPage(),this.itemsPerPage()); 
     } catch (error) {
       console.error('Error deleting contact', error);
     }
@@ -85,9 +113,9 @@ export class QuoterListComponent implements OnInit{
 
   async deleteQuoter(id: string){
     try {
-      await this.quoterService.deleteQuoter(id); // Elimina el contacto usando el servicio
+      await this.quoterService.deleteQuoter(id); 
       Swal.fire('Success','Record deleted','success')
-      this.fetchContacts(); // Vuelve a cargar la lista de contactos
+      this.fetchContacts(this.currentPage(),this.itemsPerPage()); 
     } catch (error) {
       console.error('Error deleting Quoter', error);
     }
@@ -126,6 +154,35 @@ export class QuoterListComponent implements OnInit{
     this.excelService.downloadQuotationAsExcel(quoter, `${quoter.guest}`);
 
   }   
+  openModal(contact: Contact) {
+    this.currentContact = { ...contact };
+    this.isModalOpen.set(true);
+  }
 
+  closeModal() {
+    this.isModalOpen.set(false);
+   // this.currentContact = {null};
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.totalContacts() / this.itemsPerPage());
+  }
+
+  getPagesNumbers(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  onPageChange(page: number) {
+    if (page !== this.currentPage()) {
+      this.currentPage.set(page);
+    }
+    
+  }
+
+  updatePaginatedContacts() {
+    const startIndex = (this.currentPage() - 1) * this.itemsPerPage();
+    const endIndex = startIndex + this.itemsPerPage();
+    this.paginatedContacts = this.filteredContacts.slice(startIndex, endIndex);
+  }
 }
 

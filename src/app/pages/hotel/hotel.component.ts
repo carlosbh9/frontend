@@ -300,6 +300,6 @@ export class HotelComponent implements OnInit {
 
 
   viewServices(hotel: any) {
-    this.router.navigate([`dashboard/services-hotel`, hotel._id])
+    this.router.navigate([`dashboard/tariff/services-hotel`, hotel._id])
   }
 }

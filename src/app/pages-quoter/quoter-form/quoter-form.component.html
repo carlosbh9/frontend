@@ -19,6 +19,7 @@
                                 [(ngModel)]="newQuoter.guest"
                                 (input)="filterOptions()"
                                 (focus)="showOptions = true"
+                                (blur)="onInputBlur()"
                                 name="search"
                                 placeholder="Search Guest..."
                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -89,7 +90,7 @@
                                   <div class="pt-1 order-last">
                                     @if (showUpdate== false) {
                                       
-                                        <button (click)="onSubmit()" type="button" class="inline-flex items-center gap-x-2 rounded-md bg-transparent px-3.5 py-2.5 text-sm font-semibold text-gray-400 shadow-sm hover:bg-gray-300 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
+                                        <button (click)="openModalVersion()" type="button" class="inline-flex items-center gap-x-2 rounded-md bg-transparent px-3.5 py-2.5 text-sm font-semibold text-gray-400 shadow-sm hover:bg-gray-300 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
                                             <span class="">
                                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
@@ -366,6 +367,7 @@
                   type="text"
                   [(ngModel)]="newQuoter.name_version"
                   name="search"
+                  autocomplete="off"
                   placeholder="Search Master Quoter..."
                   class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md"
               />

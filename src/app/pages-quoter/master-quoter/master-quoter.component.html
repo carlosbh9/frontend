@@ -5,12 +5,12 @@
             <div class="w-1/4 space-y-4">
                 <div >
                         <label for="name_mq" class="block text-sm font-medium text-gray-700">Name Master Quoter</label>
-                        <input [(ngModel)]="masterQuoter.name" name="name_mq" type="text" id="name_mq" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Name Master Quoter">
+                        <input [(ngModel)]="masterQuoter.name" name="name_mq" type="text" id="name_mq" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Name Master Quoter" autocomplete="off">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div class=" " >
                         <label for="destinations" class="block text-sm font-medium text-gray-700">Destinations</label>
-                        <input [(ngModel)]="masterQuoter.destinations" type="text"  name="destinations" id="destinations" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Destinations" required>
+                        <input [(ngModel)]="masterQuoter.destinations" type="text"  name="destinations" id="destinations" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Destinations" autocomplete="off" required>
                     </div>
                     <div>
                         <label for="days" class="block text-sm font-medium text-gray-700">Days</label>
