@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 import { toast } from 'ngx-sonner';
+import { HasPermissionsDirective } from '../../Services/AuthService/has-permissions.directive';
 
 @Component({
   selector: 'app-operators-services',
   standalone: true,
-  imports: [CommonModule, FormsModule,HasRoleDirective],
+  imports: [CommonModule, FormsModule,HasPermissionsDirective],
   templateUrl: './operators-services.component.html',
   styleUrl: './operators-services.component.css'
 })

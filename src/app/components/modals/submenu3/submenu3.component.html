@@ -1,0 +1,97 @@
+<div class="grid grid-cols-1 gap-2">
+<h3 class="text-lg text-gray-950">Personal & Passport Infromation</h3>
+<div class="grid grid-cols-1 gap-2 ">
+    <details class="group">
+        <summary class="flex justify-between  items-center font-medium cursor-pointer list-none space-x-2 hover:text-blue-700 group-open:bg-blue-100 ">
+            <div class="font-bold flex">
+                <span class="transition group-open:-rotate-90">
+                      <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path>
+                    </svg>
+                    </span>
+                <span>information guest 1 </span>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" class="sr-only peer" 
+                (change)="onToggle($event)"
+                [checked]="toggleStateEdit()">
+                <div class="w-11 h-4 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-gray-500 rounded-full peer dark:bg-gray-700 peer-checked:bg-black"></div>
+                <div class="absolute left-0.5 top-0.5 w-5 h-3 bg-white border border-gray-300 rounded-full transition-transform peer-checked:translate-x-full"></div>
+            </label>
+          </summary>
+          <div class="mx-6 my-2 grid grid-cols-2">
+            <div class="text-sm">
+                <p class="font-bold text-base">Travel Insurance</p>
+                <p class="whitespace-nowrap">nombre: 
+                    @if (toggleStateEdit()) {
+                        <input type="text" value="input 1" class="border border-green-500">
+                    }@else {
+                        input 1
+                    }
+                </p> 
+                <p class="whitespace-nowrap">nombre: 
+                    @if (toggleStateEdit()) {
+                        <input type="text" value="input 2" class="rder border-green-500">
+                    }@else {
+                        input 2
+                    }
+                </p> 
+                <p class="whitespace-nowrap">nombre: 
+                    @if (toggleStateEdit()) {
+                        <input type="text" value="input 3" class="rder border-green-500">
+                    }@else {
+                        input 3
+                    }
+                </p>    
+            </div>
+             <div>
+                <p class="font-bold">Physical Info</p>
+              
+            </div>
+            <div>
+                <p class="font-bold">Emergency Contact</p>
+                
+            </div>
+            <div>
+                <p class="font-bold">Complementary Info</p>
+                 
+            </div>
+            <div>
+                <p class="font-bold">Dietary & Medical Information</p>
+                  
+            </div>
+            <div>
+                <img src="/sss" alt="jajajaj "> 
+            </div>
+          </div>
+          
+          
+        </details>
+        
+</div>
+
+<h3 class="text-lg text-gray-950">Flights Information</h3>
+<div class="grid grid-cols-1 gap-2 ">
+    <details class="group">
+        <summary class="flex justify-start items-center font-medium cursor-pointer list-none space-x-2 hover:text-blue-700">
+            <span class="transition group-open:-rotate-90">
+                  <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path>
+                </svg>
+                </span>
+            <span>vuelos 1</span>
+          </summary>
+
+        </details>
+</div>
+<h3 class="text-lg text-gray-950">Traveler-Made Reservations</h3>
+<div class="grid grid-cols-1 gap-2 ">
+    <details class="group">
+        <summary class="flex justify-start items-center font-medium cursor-pointer list-none space-x-2 hover:text-blue-700">
+            <span class="transition group-open:-rotate-90">
+                  <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path>
+                </svg>
+                </span>
+            <span>hotel 1</span>
+          </summary>
+        </details>
+</div>
+</div>

@@ -4,12 +4,13 @@ import { ExtrasService } from '../../Services/serviceTarifario/extras.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { toast } from 'ngx-sonner';
+import { HasPermissionsDirective } from '../../Services/AuthService/has-permissions.directive';
 
 
 @Component({
   selector: 'app-extra',
   standalone: true,
-  imports: [UiTableComponent,CommonModule,FormsModule],
+  imports: [UiTableComponent,CommonModule,FormsModule,HasPermissionsDirective],
   templateUrl: './extra.component.html',
   styleUrl: './extra.component.css'
 })

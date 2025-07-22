@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './components/login/login.component';
 import { authGuard } from '../app/Services/AuthService/auth.guard'
 
 export const routes: Routes = [
@@ -8,15 +8,13 @@ export const routes: Routes = [
         path: 'dashboard',
         loadComponent: () =>
           import('./components/layout/layout.component').then((m) => m.LayoutComponent),
-        canActivate: [authGuard],
-        data: { role: ['OPE', 'ventas', 'TD'] },
         children: [
           {
             path: 'quoter-main',
             loadComponent: () =>
               import('./pages-quoter/menu-quoter/quoter.component').then((m) => m.QuoterComponent),
             canActivate: [authGuard],
-            data: { role: ['TD', 'ventas'] },
+            data: { permission: 'view_quoter' },
             children: [
               {
                 path: 'quoter-form',
@@ -66,69 +64,54 @@ export const routes: Routes = [
             path: 'tariff',
             loadComponent: () => import('./pages/menu-tariff/menu-tariff.component').then((m) => m.MenuTariffComponent ),
             canActivate: [authGuard],
-            data: { role: ['OPE', 'ventas', 'TD']},
+            data: { permission: 'view_tariff'},
             children:[
               {
                 path: 'train',
                 loadComponent: () =>
-                  import('./pages/train/train.component').then((m) => m.TrainComponent),
-                canActivate: [authGuard],
-                data: { role: ['OPE', 'ventas', 'TD'] },
+                  import('./pages/train/train.component').then((m) => m.TrainComponent)
+
               },
               {
                 path: 'extra',
                 loadComponent: () =>
-                  import('./pages/extra/extra.component').then((m) => m.ExtraComponent),
-                canActivate: [authGuard],
-                data: { role: ['OPE', 'ventas', 'TD'] },
+                  import('./pages/extra/extra.component').then((m) => m.ExtraComponent)
               },
               {
                 path: 'entrance',
                 loadComponent: () =>
-                  import('./pages/entrances/entrances.component').then((m) => m.EntrancesComponent),
-                canActivate: [authGuard],
-                data: { role: ['OPE', 'ventas', 'TD'] },
+                  import('./pages/entrances/entrances.component').then((m) => m.EntrancesComponent)
               },
               {
                 path: 'expeditions',
                 loadComponent: () =>
                   import('./pages/expeditions/expeditions.component').then(
                     (m) => m.ExpeditionsComponent
-                  ),
-                canActivate: [authGuard],
-                data: { role: ['OPE', 'ventas', 'TD'] },
+                  )
               },
               {
                 path: 'experiences',
                 loadComponent: () =>
                   import('./pages/experiences/experiences.component').then(
                     (m) => m.ExperiencesComponent
-                  ),
-                canActivate: [authGuard],
-                data: { role: ['OPE', 'ventas', 'TD'] },
+                  )
               },
               {
                 path: 'restaurant',
                 loadComponent: () =>
                   import('./pages/restaurant/restaurant.component').then(
                     (m) => m.RestaurantComponent
-                  ),
-                canActivate: [authGuard],
-                data: { role: ['OPE', 'ventas', 'TD'] },
+                  )
               },
               {
                 path: 'guides',
                 loadComponent: () =>
-                  import('./pages/guides/guides.component').then((m) => m.GuidesComponent),
-                canActivate: [authGuard],
-                data: { role: ['OPE', 'ventas', 'TD'] },
+                  import('./pages/guides/guides.component').then((m) => m.GuidesComponent)
               },
               {
                 path: 'operators',
                 loadComponent: () =>
-                  import('./pages/operators/operators.component').then((m) => m.OperatorsComponent),
-                canActivate: [authGuard],
-                data: { role: ['OPE', 'ventas', 'TD'] },
+                  import('./pages/operators/operators.component').then((m) => m.OperatorsComponent)
               },
               {
                 path: 'services-operators/:id',
@@ -142,41 +125,31 @@ export const routes: Routes = [
                 loadComponent: () =>
                   import('./pages/train-services/train-services.component').then(
                     (m) => m.TrainServicesComponent
-                  ),
-                canActivate: [authGuard],
-                data: { role: ['OPE', 'ventas', 'TD'] },
+                  )
               },
               {
                 path: 'transport',
                 loadComponent: () =>
-                  import('./pages/transport/transport.component').then((m) => m.TransportComponent),
-                canActivate: [authGuard],
-                data: { role: ['OPE', 'ventas', 'TD'] },
+                  import('./pages/transport/transport.component').then((m) => m.TransportComponent)
               },
               {
                 path: 'hotel',
                 loadComponent: () =>
-                  import('./pages/hotel/hotel.component').then((m) => m.HotelComponent),
-                canActivate: [authGuard],
-                data: { role: ['OPE', 'ventas', 'TD'] },
+                  import('./pages/hotel/hotel.component').then((m) => m.HotelComponent)
               },
               {
                 path: 'services-hotel/:id',
                 loadComponent: () =>
                   import('./pages/hotel-services/hotel-services.component').then(
                     (m) => m.HotelServicesComponent
-                  ),
-                canActivate: [authGuard],
-                data: { role: ['OPE', 'ventas', 'TD'] },
+                  )
               },
               {
                 path: 'lima-gourmet',
                 loadComponent: () =>
                   import('./pages/lima-gourmet/lima-gourmet.component').then(
                     (m) => m.LimaGourmetComponent
-                  ),
-                canActivate: [authGuard],
-                data: { role: ['OPE', 'ventas', 'TD'] },
+                  )
               }
             ]
           },
@@ -184,10 +157,27 @@ export const routes: Routes = [
             path:'manageUsers',
             loadComponent: () => import('./ManageUsersComponent/manage-users.component').then((m) => m.ManageUsersComponent),
             canActivate:[authGuard],
-            data: { role: []},
-          }
-        ],
+            data: { permission: 'view_users'},
+          },
+          {
+            path:'operations',
+            loadComponent: () => import('./operations/operations.component').then((m) => m.OperationsComponent),
+            canActivate:[authGuard],
+            children:[
+              {
+                path: 'biblia',
+                loadComponent: () =>
+                  import('./operations/biblia/biblia.component').then((m) => m.BibliaComponent)
+              },
+              {
+                path:'reservations',
+                loadComponent: () => import('./operations/reservas-status/reservas-status.component').then((m) => m.ReservasStatusComponent)
+              }
+            ],
+        },
+      ]
     },
+
     {   path:'login',component: LoginComponent},
 
      {   path:'**',redirectTo:'dashboard/quoter-main/quoter-list',pathMatch:'full'}

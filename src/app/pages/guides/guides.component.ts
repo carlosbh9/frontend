@@ -5,12 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 import { toast } from 'ngx-sonner';
+import { HasPermissionsDirective } from '../../Services/AuthService/has-permissions.directive';
 
 
 @Component({
   selector: 'app-guides',
   standalone: true,
-  imports: [CommonModule,FormsModule,HasRoleDirective],
+  imports: [CommonModule,FormsModule,HasPermissionsDirective],
   templateUrl: './guides.component.html',
   styleUrl: './guides.component.css'
 })

@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../Services/AuthService/auth.service';
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
+import { HasPermissionsDirective } from '../../Services/AuthService/has-permissions.directive';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [ RouterModule, CommonModule,HasRoleDirective],
+  imports: [ RouterModule, CommonModule,HasPermissionsDirective],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })

@@ -4,12 +4,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 import { toast} from 'ngx-sonner';
+import { HasPermissionsDirective } from '../../Services/AuthService/has-permissions.directive';
 
 
 @Component({
   selector: 'app-entrances',
   standalone: true,
-  imports: [CommonModule,FormsModule ,HasRoleDirective
+  imports: [CommonModule,FormsModule ,HasPermissionsDirective
   ],
   templateUrl: './entrances.component.html',
   styleUrl: './entrances.component.css',
@@ -88,10 +89,10 @@ export class EntrancesComponent implements OnInit{
       cancel: {
         label:'Cancel',
         onClick: () => {
-          toast.info('Delete cancelled');
+          
         },
       },
-      position: 'top-center',
+      position: 'bottom-center',
     });
   }
 
@@ -107,7 +108,7 @@ export class EntrancesComponent implements OnInit{
   }
 
   openEditModal(entrance: any) {
-    this.selectedEntrance = { ...entrance }; 
+    this.selectedEntrance = { ...entrance}; 
     this.showEditModal = true;
  
 
@@ -118,8 +119,6 @@ export class EntrancesComponent implements OnInit{
     this.fetchEntrances();
   }
  
-
-
   openModal() {
     this.showAddModal = true;
   }

@@ -10,16 +10,14 @@ export class ContactService {
   private baseUrl = `${environment.apiUrl}/contacts`;
 
   constructor(private http: HttpClient) { }
-  
+
   // Método para obtener todos los contactos
   async getAllContacts(filter:string =''): Promise<{ contacts: any[]; totalContacts: number }> {
     try {
-      console.log('API URL:', environment.apiUrl);
-      console.log('Producción:', environment.production);
       let params = new HttpParams()
         .set('all', 'true')
         .set('filter',filter)
-        
+
         const res = await firstValueFrom(this.http.get<{ contacts: any[]; totalContacts: number }>(this.baseUrl, { params }));
         console.log(res)
         return res;
@@ -38,12 +36,6 @@ export class ContactService {
         if (filterText) {
           params = params.set('filter', filterText);
         }
-        // if (options) {
-        //   if (options.page) params = params.set('page', options.page.toString());
-        //   if (options.pageSize) params = params.set('pageSize', options.pageSize.toString());
-        //   if (options.filter) params = params.set('filter', options.filter);
-        //   if (options.all) params = params.set('all', 'true');
-        // }
       const res = await firstValueFrom(this.http.get<{ contacts: any[]; totalContacts: number }>(this.baseUrl, { params }));
       return res;
     } catch (error) {
@@ -61,7 +53,7 @@ export class ContactService {
       throw error;
     }
   }
-  
+
   // Método para crear un nuevo contacto
   async createContact(contact: any): Promise<any> {
     try {
@@ -72,10 +64,11 @@ export class ContactService {
       throw error;
     }
   }
-  
+
   // Método para actualizar un contacto existente
   async updateContact(id: string, contact: any): Promise<any> {
     try {
+      console.log('se actualizao?',contact)
       const res = await firstValueFrom(this.http.patch<any>(`${this.baseUrl}/${id}`, contact));
       return res;
     } catch (error) {
@@ -83,7 +76,7 @@ export class ContactService {
       throw error;
     }
   }
-  
+
   // Método para eliminar un contacto
   async deleteContact(id: string): Promise<any> {
     try {
@@ -103,6 +96,6 @@ export class ContactService {
       console.log('Error while trying to get all Contacts and QuoterId: ', error);
       throw error;
     }
-    
+
   }
 }

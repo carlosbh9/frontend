@@ -2,16 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component,OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ExpeditionsService } from '../../Services/expeditions.service';
-import { Expedition } from '../../interfaces/expeditions.interface';
-
-import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
+import { Expedition } from '../../interfaces/tariff.interface';
 import { toast } from 'ngx-sonner';
+import { HasPermissionsDirective } from '../../Services/AuthService/has-permissions.directive';
 
 
 @Component({
   selector: 'app-expeditions',
   standalone: true,
-  imports: [CommonModule,FormsModule ,HasRoleDirective],
+  imports: [CommonModule,FormsModule ,HasPermissionsDirective],
   templateUrl: './expeditions.component.html',
   styleUrl: './expeditions.component.css'
 })
@@ -68,7 +67,7 @@ export class ExpeditionsComponent implements OnInit{
     const selectElement = event.target as HTMLSelectElement; // Casting a HTMLSelectElement
     this.filterYear = String(selectElement.value); // Convertir el valor a número
     this.filterExpedition();
-    
+
   }
 
   confirmDelete(id: string) {
@@ -149,7 +148,7 @@ export class ExpeditionsComponent implements OnInit{
     if (this.selectedExpedition?._id) {
       try {
         const response = await this.expeditionService.updateExpedition(
-          this.selectedExpedition._id, 
+          this.selectedExpedition._id,
           this.selectedExpedition
         );
         console.log('Expedition updated:', response);

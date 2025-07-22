@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RestaurantService } from '../../Services/restaurant.service';
 import { CommonModule } from '@angular/common';
-import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 import { toast } from 'ngx-sonner';
+import { HasPermissionsDirective } from '../../Services/AuthService/has-permissions.directive';
 
 @Component({
   selector: 'app-restaurant',
   standalone: true,
-  imports: [CommonModule,FormsModule,HasRoleDirective],
+  imports: [CommonModule,FormsModule,HasPermissionsDirective],
   templateUrl: './restaurant.component.html',
   styleUrl: './restaurant.component.css'
 })

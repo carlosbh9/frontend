@@ -19,7 +19,7 @@
           class="p-2 border border-gray-300 rounded"
         />
       </div>
-      <td>
+      <td *hasPermission="['create_tariff']">
         <!-- Botón para abrir el modal -->
         <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Add activity</button>
       </td>
@@ -36,7 +36,7 @@
            
             <th rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Approximate Duration</th>
             <th rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Take notes</th>
-            <th *hasRole="['admin','OPE','ventas']"  rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Actions</th>
+            <th *hasPermission="['actions_tariff']"  rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Actions</th>
           </tr>
           <tr>
             <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Price</th>
@@ -60,7 +60,7 @@
             
             <td class="border-t-0 px-4 align-top border-l-0 border-r-0 text-xs whitespace-nowrap p-2 text-left">{{ experience.approximateDuration }}</td>
             <td class="border-t-0 px-4 align-top text-letf border-l-0 border-r-0 text-xs max-h-24 overflow-y-auto block p-2 ">{{ experience.take_notes }}</td>
-            <td *hasRole="['admin','OPE','ventas']"  class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+            <td *hasPermission="['actions_tariff']" class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
               <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="openEditModal(experience)"></i>
               <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2'  (click)="confirmDelete(experience._id)"></i>
             </td>

@@ -7,12 +7,13 @@ import { OperatorsService } from '../../Services/operators.service';
 import { RouterModule } from '@angular/router';
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 import { toast } from 'ngx-sonner';
+import { HasPermissionsDirective } from '../../Services/AuthService/has-permissions.directive';
 
 
 @Component({
   selector: 'app-operators',
   standalone: true,
-  imports: [CommonModule, FormsModule,RouterModule,HasRoleDirective],
+  imports: [CommonModule, FormsModule,RouterModule,HasPermissionsDirective],
   templateUrl: './operators.component.html',
   styleUrl: './operators.component.css'
 })
@@ -69,11 +70,11 @@ export class OperatorsComponent implements OnInit {
     const selectElement = event.target as HTMLSelectElement; // Casting a HTMLSelectElement
     this.filterYear = String(selectElement.value); // Convertir el valor a número
     this.filterOperators();
-    
+
   }
   confirmDelete(id: string) {
     toast('Are you sure you want to delete this record?', {
-     
+
       action: {
         label: 'Confirm',
         onClick: async () => {
@@ -87,7 +88,7 @@ export class OperatorsComponent implements OnInit {
         },
       },
       position: 'top-center',
-   
+
     });
   }
   async deleteOperator(id: string) {

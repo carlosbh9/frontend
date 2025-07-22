@@ -5,13 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 
-import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 import { toast } from 'ngx-sonner';
+import { HasPermissionsDirective } from '../../Services/AuthService/has-permissions.directive';
 
 @Component({
   selector: 'app-hotel',
   standalone: true,
-  imports: [CommonModule, FormsModule,RouterModule,HasRoleDirective],
+  imports: [CommonModule, FormsModule,RouterModule,HasPermissionsDirective],
   templateUrl: './hotel.component.html',
   styleUrl: './hotel.component.css'
 })

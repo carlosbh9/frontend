@@ -1,0 +1,58 @@
+<div id="modalMq"  class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-start animated fadeIn faster" style="background: rgba(0,0,0,.7);" >
+    <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-1/3 md:max-w-11/12 mx-auto rounded-xl z-50 overflow-y-auto">
+      <div class="modal-content py-4 text-left px-6">
+          <!-- Title -->
+          <div class="flex justify-between items-center pb-3">
+            <p class="text-lg font-bold text-gray-900 dark:text-gray-50">Info paxs</p>
+            <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
+              <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+                <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+              </svg>
+            </div>
+          </div>
+           <!-- Body -->
+            <nav class="mb-4">
+                <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
+                    <li>
+                      <a
+                        (click)="selectTab('submenu1')"
+                        role="button"
+                        class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                      >
+                      General information 
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        (click)="selectTab('submenu2')"
+                        role="button"
+                        class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                      >
+                      Guest Profile
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                      (click)="selectTab('submenu3')"
+                      role="button"
+                        class="block py-2 pr-4 pl-3 text-gray-700 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                      >
+                      Booking Form
+                      </a>
+                    </li>
+                  </ul>
+            </nav>
+            <div class="p-4 mb-4 border rounded-lg border-t-indigo-500">
+                @switch (selectedTab()) {
+                @case ('submenu1') {
+                    <app-submenu1/>
+                }@case ('submenu2') {
+                    <app-submenu2/>
+                }@case ('submenu3') {
+                    <app-submenu3/>
+                }
+            }
+            </div>
+</div>
+</div>
+</div>

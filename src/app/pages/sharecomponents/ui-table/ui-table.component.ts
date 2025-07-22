@@ -3,13 +3,13 @@ import { Component, output, OnChanges, SimpleChanges,Signal,WritableSignal ,Inpu
 import { FormsModule } from '@angular/forms';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { SweetAlertOptions } from 'sweetalert2'; // Asegúrate de que la ruta sea correcta
-import { HasRoleDirective } from '../../../Services/AuthService/has-role.directive';
+import { HasPermissionsDirective } from '../../../Services/AuthService/has-permissions.directive';
 
 
 @Component({
   selector: 'app-ui-table',
   standalone: true,
-  imports: [CommonModule,FormsModule,SweetAlert2Module,HasRoleDirective],
+  imports: [CommonModule,FormsModule,SweetAlert2Module,HasPermissionsDirective],
   templateUrl: './ui-table.component.html',
   styleUrl: './ui-table.component.css'
 })

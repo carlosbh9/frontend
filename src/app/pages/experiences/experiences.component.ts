@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ExperiencesService } from '../../Services/experiences.service';
-import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 import { toast } from 'ngx-sonner';
+import { HasPermissionsDirective } from '../../Services/AuthService/has-permissions.directive';
 @Component({
   selector: 'app-experiences',
   standalone: true,
-  imports: [CommonModule,FormsModule ,HasRoleDirective],
+  imports: [CommonModule,FormsModule ,HasPermissionsDirective],
   templateUrl: './experiences.component.html',
   styleUrl: './experiences.component.css'
 })

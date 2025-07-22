@@ -8,6 +8,9 @@ import { firstValueFrom } from 'rxjs';
 })
 export class UsersService {
 private baseUrl = `${environment.apiUrl}/all-users`
+private deleteUrl =  `${environment.apiUrl}/delete-user`
+private updateUrl = `${environment.apiUrl}/update-user`
+private signupUrl = `${environment.apiUrl}/signup`
 constructor(private http: HttpClient) { }
 
 
@@ -20,8 +23,33 @@ async getAllUsers(): Promise<User[]>{
     throw error;
   }
 }
+// Método para actualizar una entrada existente
+async updateUser(id: string, user: any): Promise<any> {
+  try {
+    const res = await firstValueFrom(this.http.patch<any>(`${this.updateUrl}/${id}`, user));
+    return res;
+  } catch (error) {
+    console.log('Error while trying to update User: ', error);
+    throw error;
+  }
+}
+async deleteUser(id: string): Promise<any> {
+  try {
+    const res = await firstValueFrom(this.http.delete<any>(`${this.deleteUrl}/${id}`));
+    return res;
+  } catch (error) {
+    console.log('Error while trying to delete User: ', error);
+    throw error;
+  }
+}
 
-updateUser(): void{
-
+async createUser(user: any): Promise<any> {
+  try {
+    const res = await firstValueFrom(this.http.post<any>(this.signupUrl, user));
+    return res;
+  } catch (error) {
+    console.log('Error while trying to create User: ', error);
+    throw error;
+  }
 }
 }

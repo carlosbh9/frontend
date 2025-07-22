@@ -5,19 +5,34 @@
         <h2 class="font-bold text-2xl mx-auto">Quoter</h2>
     </a>
     <ul class="mt-4">
-        <li *hasRole="['admin','ventas','TD','OPE']" class="mb-1 group">
+        <!-- *hasRole="['admin','ventas','TD','OPE']" -->
+        <li *hasPermission="['view_tariff']" class="mb-1 group">
             <a  routerLink="tariff/hotel" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                 <i class='bx bx-money-withdraw mr-3 text-lg'></i>
                 <span class="text-sm">Tariff menu</span>
             </a>
         </li>
-        <li *hasRole="['admin','ventas','TD']" class="mb-1 group">
+        <!-- *hasRole="['admin','ventas','TD']" -->
+        <li *hasPermission="['view_quoter']" class="mb-1 group">
             <a  routerLink="quoter-main/quoter-form" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                 <i class='bx bx-task mr-3 text-lg'></i>
-                <span class="text-sm">Quoter</span>
+                <span class="text-sm">Ventas</span>
             </a>
         </li>
-        <li *hasRole="['admin']" class="mb-1 group">
+         <li class="mb-1 group">
+            <a  routerLink="operations" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+                <i class='bx bx-smile mr-3 text-lg'></i>
+                <span class="text-sm">Operaciones</span>
+            </a>
+        </li>
+        <li class="mb-1 group">
+            <a  routerLink="" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+                <i class='bx bx-money mr-3 text-lg'></i>
+                <span class="text-sm">Tesoreria</span>
+            </a>
+        </li>
+        <!-- *hasRole="['admin']" -->
+          <li *hasPermission="['view_users']" class="mb-1 group">
             <a  routerLink="manageUsers" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                 <i class='bx bxs-user-detail mr-3 text-lg'></i>
                 <span class="text-sm">Users</span>

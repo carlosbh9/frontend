@@ -14,15 +14,16 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) { }
 
   login(username: string, password: string) {
-    return this.http.post<{ token: string }>(this.baseUrl, { username, password }).subscribe(
+    return this.http.post<{ token: string,tokenPermission: string }>(this.baseUrl, { username, password }).subscribe(
       (response) => {
         const token = response.token; // Obtener el token de la respuesta
+        //const tokepermission = response.tokenPermission
         if (token) { // Verificar que el token exista antes de proceder
           localStorage.setItem(this.tokenKey, token); // Guardar el token en localStorage
   
           // Decodificar el token y guardar los datos del usuario
           const payload = JSON.parse(atob(token.split('.')[1]));
-          localStorage.setItem('userData', JSON.stringify(payload));
+          localStorage.setItem('UserData', JSON.stringify(payload));
         } else {
           console.error('Error: Token no encontrado en la respuesta.');
         }
@@ -48,6 +49,13 @@ export class AuthService {
 
     const payload = JSON.parse(atob(token.split('.')[1]));
     return payload.role;
+  }
+  getPermisions(): string[] {
+    const token = this.getToken();
+    if (!token) return [];
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.permissions;
   }
 
   getUserData() : UserPayload | null{
