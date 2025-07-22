@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TransportService } from '../../Services/transport.service';
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-transport',
@@ -71,13 +72,34 @@ onYearChange(event: Event) {
   this.filterYear = String(selectElement.value); // Convertir el valor a número
   this.filterTransports();
 }
-//delete transport
+
+confirmDelete(id: string) {
+  toast('Are you sure you want to delete this record?', {
+   
+    action: {
+      label: 'Confirm',
+      onClick: async () => {
+      await this.deleteTransport(id);
+      }
+    },
+    cancel: {
+      label:'Cancel',
+      onClick: () => {
+        toast.info('Delete cancelled');
+      },
+    },
+    position: 'top-center',
+ 
+  });
+}
 async deleteTransport(id: string) {
   try {
     await this.transportService.deletetransport(id);
+    toast.success('Transport deleted successfully')
     this.fetchTransports();
   } catch (error) {
     console.error('Error deleting transport:', error);
+    toast.error('Error deleting transport:');
   }
 }
 
@@ -112,21 +134,23 @@ emptyTransport(): void {
 
 onSubmit(){
   this.transportService.addtransport(this.newTransport).then(response => {
-    console.log('Transport added successfully:', response);
+    toast.success('Transport created successfully')
     this.fetchTransports();
     this.closeModal();
   }).catch(error => {
     console.error('Error adding transport:', error);
+    toast.error('Error creating transport')
   });
 }
 
 onEditSubmit(){
   this.transportService.updatetransport(this.selectedTransport._id, this.selectedTransport).then(response => {
-    console.log('Transport updated successfully:', response);
+    toast.success('Transport updated successfully');
     this.fetchTransports();
     this.closeEditModal();
   }).catch(error => {
     console.error('Error updating transport:', error);
+    toast.error('Error updating transport:');
   });
 }
 
@@ -143,7 +167,7 @@ removeEditPriceField(index: number) {
     this.selectedTransport.type_vehicle.splice(index, 1);
   } else {
     // Handle the case of removing the only price field (optional: clear values or display a message)
-    console.warn('Cannot remove the only price field.');
+    toast.warning('Cannot remove the only price field.');
   }
 }
 
@@ -152,7 +176,7 @@ removePriceField(index: number) {
     this.newTransport.type_vehicle.splice(index, 1);
   } else {
     // Handle the case of removing the only price field (optional: clear values or display a message)
-    console.warn('Cannot remove the only price field.');
+    toast.warning('Cannot remove the only price field.');
   }
 }
 

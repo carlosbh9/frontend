@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { environment } from '../../../enviroment/environment';
+import { environment } from '../../../enviroments/environment';
 //import { environment } from '../../../environment/environment';
 import { UserPayload } from '../../interfaces/user.interface';
 
@@ -14,22 +14,23 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) { }
 
   login(username: string, password: string) {
-
-    return this.http.post<{ token: string }>(this.baseUrl, { username, password }).subscribe(
+    return this.http.post<{ token: string,tokenPermission: string }>(this.baseUrl, { username, password }).subscribe(
       (response) => {
         const token = response.token; // Obtener el token de la respuesta
+        //const tokepermission = response.tokenPermission
         if (token) { // Verificar que el token exista antes de proceder
           localStorage.setItem(this.tokenKey, token); // Guardar el token en localStorage
   
           // Decodificar el token y guardar los datos del usuario
           const payload = JSON.parse(atob(token.split('.')[1]));
-          localStorage.setItem('userData', JSON.stringify(payload));
+          localStorage.setItem('UserData', JSON.stringify(payload));
         } else {
           console.error('Error: Token no encontrado en la respuesta.');
         }
       
       this.router.navigate(['/dashboard/quoter-main/quoter-list']);
-    });
+    }
+  );
   }
 
   getToken() {
@@ -38,6 +39,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem(this.tokenKey);
+    localStorage.clear()
     this.router.navigate(['/login']);
   }
 
@@ -47,6 +49,13 @@ export class AuthService {
 
     const payload = JSON.parse(atob(token.split('.')[1]));
     return payload.role;
+  }
+  getPermisions(): string[] {
+    const token = this.getToken();
+    if (!token) return [];
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.permissions;
   }
 
   getUserData() : UserPayload | null{

@@ -6,11 +6,14 @@ import { OperatorsService } from '../../Services/operators.service';
 
 import { RouterModule } from '@angular/router';
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
+import { toast } from 'ngx-sonner';
+import { HasPermissionsDirective } from '../../Services/AuthService/has-permissions.directive';
+
 
 @Component({
   selector: 'app-operators',
   standalone: true,
-  imports: [CommonModule, FormsModule,RouterModule,HasRoleDirective],
+  imports: [CommonModule, FormsModule,RouterModule,HasPermissionsDirective],
   templateUrl: './operators.component.html',
   styleUrl: './operators.component.css'
 })
@@ -67,14 +70,35 @@ export class OperatorsComponent implements OnInit {
     const selectElement = event.target as HTMLSelectElement; // Casting a HTMLSelectElement
     this.filterYear = String(selectElement.value); // Convertir el valor a número
     this.filterOperators();
-    
+
+  }
+  confirmDelete(id: string) {
+    toast('Are you sure you want to delete this record?', {
+
+      action: {
+        label: 'Confirm',
+        onClick: async () => {
+        await this.deleteOperator(id);
+        }
+      },
+      cancel: {
+        label:'Cancel',
+        onClick: () => {
+          toast.info('Delete cancelled');
+        },
+      },
+      position: 'top-center',
+
+    });
   }
   async deleteOperator(id: string) {
     try {
       await this.operatorsService.deleteOperator(id);
+      toast.success('Deleted successfully');
       this.fetchOperators();
     } catch (error) {
       console.error('Error deleting operator', error);
+      toast.error('Error deleting operator')
     }
   }
 
@@ -112,12 +136,14 @@ export class OperatorsComponent implements OnInit {
     this.operatorsService.addOperator(this.newOperator).then(
       response => {
         console.log('Operator added', response);
+        toast.success('Operator created successfully')
         this.fetchOperators();
         this.showAddModal = false;
         this.emptyOperator();
       },
       error => {
         console.error('Error adding operator', error);
+        toast.error('Error creating operator')
       }
     );
   }
@@ -126,18 +152,20 @@ export class OperatorsComponent implements OnInit {
     this.operatorsService.updateOperator(this.selectedOperator._id, this.selectedOperator).then(
       response => {
         console.log('Operator updated', response);
+        toast.success('Operator updated successfully')
         this.fetchOperators();
         this.showEditModal = false;
       },
       error => {
         console.error('Error updating operator', error);
+        toast.error('Error updating operator')
       }
     );
   }
 
   viewServices(operator: any) {
-    this.router.navigate([`dashboard/services-operators`, operator._id]);
-    console.log('el operador enviado',operator)
+    this.router.navigate([`dashboard/tariff/services-operators`, operator._id]);
+
   }
 
 
@@ -152,7 +180,7 @@ removePriceField(index: number) {
     this.newOperator.pricesRange.splice(index, 1);
   } else {
     // Handle the case of removing the only price field (optional: clear values or display a message)
-    console.warn('Cannot remove the only price field.');
+    toast.warning('Cannot remove the only price field.');
   }
 }
 
@@ -170,7 +198,7 @@ removeeditPriceField(index: number) {
     this.selectedOperator.pricesRange.splice(index, 1);
   } else {
     // Handle the case of removing the only price field (optional: clear values or display a message)
-    console.warn('Cannot remove the only price field.');
+    toast.warning('Cannot remove the only price field.');
   }
 
 }

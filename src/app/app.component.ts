@@ -1,33 +1,40 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { LayoutComponent } from './components/layout/layout.component';
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { provideAuth, getAuth } from '@angular/fire/auth';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
-import { environment } from '../enviroment/environment';
 
-import { AuthService } from './Services/AuthService/auth.service';
+
 import { SpinnerComponent } from "./components/spinner/spinner.component";
-//CommonModule, RouterOutlet, RouterLinkActive
+import {  NgxSonnerToaster } from 'ngx-sonner';
+
+
+
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,SpinnerComponent],
+  imports: [RouterOutlet,SpinnerComponent,NgxSonnerToaster],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
+  providers:[]
 })
 
 
-export class AppComponent {
+export class AppComponent implements OnInit{
  
+  constructor() {}
   title = 'frontend';
   isSidebarOpen = false;
 
+  ngOnInit() {
+
+}
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
+   
   }
 
   closeSidebar() {
     this.isSidebarOpen = false;
   }
+
 }
+

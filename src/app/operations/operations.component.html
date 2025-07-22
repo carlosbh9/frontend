@@ -1,0 +1,54 @@
+
+<div class="py-3 px-5 bg-white rounded shadow-xl">
+    <div class="-mx-1">
+      <ul class="flex w-full flex-wrap items-center h-10">
+        <!-- Elemento con Submenú -->
+        <li class="block relative">
+          <a routerLink="biblia"
+             class="flex items-center h-10 leading-10 px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 text-gray-900 hover:bg-gray-950 hover:text-gray-100"
+             >
+            <span class="mr-1 text-xl">
+              <i ></i>
+            </span>
+            <span>Biblia</span>
+            <span class="ml-2">
+              <i class="bx bx-chevron-down" ></i>
+            </span>
+          </a>
+        </li>
+         <li class="block relative">
+          <a routerLink="reservations"
+             class="flex items-center h-10 leading-10 px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 text-gray-900 hover:bg-gray-950 hover:text-gray-100"
+             >
+            <span class="mr-1 text-xl">
+              <i ></i>
+            </span>
+            <span>Estado de reservas</span>
+            <span class="ml-2">
+              <i class="bx bx-chevron-down" ></i>
+            </span>
+          </a>
+        </li>
+         <li class="block relative">
+          <a  routerLink="reservations"
+             class="flex items-center h-10 leading-10 px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 text-gray-900 hover:bg-gray-950 hover:text-gray-100"
+             >
+            <span class="mr-1 text-xl">
+              <i ></i>
+            </span>
+            <span>Asignación de guías & transporte</span>
+            <span class="ml-2">
+              <i class="bx bx-chevron-down" ></i>
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+<div class="pt-3">
+  <div class="grid grid-cols-1 gap-2 mb-2  ">
+    <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+            <router-outlet></router-outlet>
+        </div>
+      </div>
+</div>

@@ -9,7 +9,6 @@ import { ExtOperatorComponent } from '../ext-operator/ext-operator.component';
 import { ServicesComponent } from '../services/services.component';
 import { HotelsComponent } from '../hotels/hotels.component';
 
-import { CalculatepricesService } from '../../Services/controllerprices/calculateprices.service';
 import { PdfexportService } from '../../Services/pdfexport/pdfexport.service';
 import { ExportExcelService } from '../../Services/exportExcel/export-excel.service';
 
@@ -17,13 +16,18 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { CrucerosComponent } from '../cruceros/cruceros.component';
 import { ContactService } from '../../Services/contact/contact.service';
+import { toast } from 'ngx-sonner';
+
+
 (<any>pdfMake).addVirtualFileSystem(pdfFonts);
 
 @Component({
   selector: 'app-quoter-form',
   standalone: true,
+  providers: [], 
   imports: [CommonModule
-    ,FormsModule,FlightsComponent,ExtOperatorComponent,ServicesComponent,HotelsComponent,CrucerosComponent],
+    ,FormsModule,FlightsComponent,ExtOperatorComponent,ServicesComponent,HotelsComponent,CrucerosComponent
+   ],
   templateUrl: './quoter-form.component.html',
   styleUrl: './quoter-form.component.css'
 })
@@ -31,10 +35,12 @@ export class QuoterFormComponent implements  OnInit{
   quoterService = inject(QuoterService)
   contactService = inject(ContactService)
   route = inject(ActivatedRoute)
-  create = inject(CalculatepricesService)
   pdfExportService = inject(PdfexportService)
   excelService = inject(ExportExcelService)
 
+  constructor() {}
+  private blurTimeout: any;
+  dataDefault: any;
   modalOpen = signal(false);
   modalData = signal<any[]>([])
   contacts : any[]=[]
@@ -155,13 +161,12 @@ export class QuoterFormComponent implements  OnInit{
         this.getQuoterbyId(id);
         this.showUpdate= true;
         this.idQuoter=id;
-       
     
-    
+      }else {
+        
       }
+      
     })
-    
-
 
     this.datosrecibidosHotel = null
     this.datosrecibidosService = null
@@ -186,7 +191,6 @@ export class QuoterFormComponent implements  OnInit{
       }
     }
   
-    console.log('Destinos seleccionados:', this.newQuoter.destinations);
   }
   onInputChange(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
@@ -197,17 +201,18 @@ export class QuoterFormComponent implements  OnInit{
   
 async loadContacts() {
   try {
-    this.contacts = await this.contactService.getAllContacts();
-    this.filteredOptions = this.contacts;  // Inicializa las opciones filtradas
+    const result = await this.contactService.getAllContacts();
+    this.filteredOptions = result.contacts
+    
   } catch (error) {
     console.log('Error al cargar los Master Quoters', error);
   }
 }
  // Filtrar opciones en Master Quoter
- filterOptions(): void {
-  this.filteredOptions = this.contacts.filter(option =>
-    option.name.toLowerCase().includes(this.newQuoter.guest.toLowerCase())
-  );
+ async filterOptions(){
+  const result = await this.contactService.getAllContacts(this.newQuoter.guest);
+  this.filteredOptions = result.contacts
+ 
 }
 // Seleccionar opción de Contacts
 selectOption(option: any): void {
@@ -215,12 +220,14 @@ selectOption(option: any): void {
   this.showOptions= false
 }
 
+
    async getQuoterbyId(Id: string): Promise<void>{
     try {
       this.newQuoter = await this.quoterService.getQuoterById(Id);
-      
+   
       console.log('quoter cargado',this.newQuoter) 
-    
+      toast.success('Quoter loaded successfully'
+      );
       this.prueba.set(this.newQuoter.total_prices.total_hoteles)
       this.prueba2.set(this.newQuoter.total_prices.total_services)
       this.prueba3.set(this.newQuoter.total_prices.total_ext_operator)
@@ -230,6 +237,7 @@ selectOption(option: any): void {
 
     } catch (error) {
       console.error('Error get operator by iddd ');
+      toast.error( 'Error get operator by ID');
     }
   }
   addNumberPaxs() {
@@ -411,34 +419,34 @@ selectOption(option: any): void {
 
 
   onSubmit(){
- 
-
-    this.create.createQuoter(this.newQuoter).subscribe({
-      next: response => {
+    this.quoterService.createQuoter(this.newQuoter).subscribe({
+      next: (response) => {
         console.log('Quoter added', response);
-        console.log('Quoter added', this.newQuoter);
-      },
-      error: error => {
-        console.error('Error adding Quoter', error);
-        console.log('Quoter error', this.newQuoter);
+        toast.success('Quoter added');
+        this.closeModalVersion(); 
       }
     });
-    this.closeModalVersion()
-
   }
-  onUpdate(){
-    this.quoterService.updateQuoter(this.idQuoter,this.newQuoter).then(
-      response => {
-        console.log('Quoter update',response)
-        this.newQuoter=this.emptyQuoter
-      },
-      error => {
-        console.error('Error editing Quoter', error)
-      }
-    )
+ async onUpdate(){
+    // this.quoterService.updateQuoter(this.idQuoter,this.newQuoter).then(
+    //   response => {
+    //     console.log('Quoter update',response)
+    //     this.newQuoter=this.emptyQuoter
+    //   },
+    //   error => {
+    //     console.error('Error editing Quoter', error)
+    //   }
+    // )
+    try {
+      const response = await this.quoterService.updateQuoter(this.idQuoter, this.newQuoter);
+      console.log('Quoter updated:', response);
+      this.newQuoter = this.emptyQuoter;
+      toast.success('Quoter updated');
+    } catch (error) {
+      console.error('Error editing Quoter:', error);
+      toast.error('Error editing Quoter');
+    }
   }
-
-  
 
 
   getTotalCosts = computed(() => { 
@@ -595,18 +603,31 @@ selectOption(option: any): void {
     }
 
     async generatePDF() {
+      try {
       const dataURL = await this.pdfExportService.convertImageToDataURL('/images/image.png');
-
       const docDefinition = this.pdfExportService.generatePdf(this.newQuoter,dataURL);
       this.pdfExportService.exportPdf(docDefinition);
-      console.log('exportar ',this.newQuoter)
+      toast.success('PDF exported successfully');
+    } catch (error) {
+      console.error('Error al exportar el PDF:', error);
+      toast.error('Error exporting PDF');
+    }
     }   
 
     generateExcel() {
-      this.excelService.downloadQuotationAsExcel(this.newQuoter, `${this.newQuoter.guest}`);
-
+      try {
+        // Validar si hay datos para exportar
+        if (!this.newQuoter) {
+          toast.warning('There is no data to export');
+          return;
+        }
+        this.excelService.downloadQuotationAsExcel(this.newQuoter, `${this.newQuoter.guest}`);
+        toast.success('Excel exported successfully');
+      } catch (error) {
+        console.error('Error exporting Excel:', error);
+        toast.error('A problem occurred while exporting Excel');
+      }
     }   
-  // Detectar clics fuera del input y la lista de opciones
 @HostListener('document:click', ['$event'])
 onClick(event: MouseEvent) {
   const target = event.target as HTMLElement;
@@ -617,5 +638,18 @@ onClick(event: MouseEvent) {
   if (inputElement && !inputElement.contains(target) && dropdownElement && !dropdownElement.contains(target)) {
     this.showOptions= false;
   }
+}
+onInputFocus(): void {
+  clearTimeout(this.blurTimeout); // Cancelar el timeout que oculta las opciones
+  if (this.filteredOptions.length) {
+    this.showOptions = true; // Mostrar opciones solo si hay resultados filtrados
+  }
+}
+
+onInputBlur(): void {
+  // Retrasar el cierre del menú para permitir seleccionar opciones
+  this.blurTimeout = setTimeout(() => {
+    this.showOptions = false;
+  }, 200);
 }
   }

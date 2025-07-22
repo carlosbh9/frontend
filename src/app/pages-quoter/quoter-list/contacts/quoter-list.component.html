@@ -1,0 +1,257 @@
+<div class="grid grid-cols-1 gap-2 mb-2 overflow-y-auto ">
+    <div class="bg-white rounded-md border border-gray-100 p-3 shadow-md shadow-black/5">
+        <div class="flex flex-wrap items-center px-4 py-2">
+            <div class="relative w-full max-w-full flex-grow flex-1 text-right">
+              <input
+                type="text"
+                [(ngModel)]="filterText"
+                (input)="filterContacts()"
+                placeholder="Filter Contacts..."
+                class="p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <td>
+           <!-- Botón para abrir el modal -->
+              <button (click)="openmodaladdcontact()" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Add Quoter</button>
+            </td>
+          </div>
+          <div class="p-2 min-h-[500px] overflow-y-auto w-full space-y-4">
+
+            <h1 class="font-semibold text-base text-gray-900 dark:text-gray-50">List of Contacts</h1>
+            <table class="items-center w-full bg-transparent border border-collapse">
+            <thead>
+                <tr>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-left"></th>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-left">Guest</th>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-4 font-semibold text-left">Quoter</th>
+                <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-20 font-semibold text-left min-w-140-px">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (contact of filteredContacts; track $index) {
+                <tr class="text-gray-700 dark:text-gray-1000 border-b">
+                  <td class="relative border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4">
+                    <button
+                      class="group flex items-center justify-center p-2 rounded-full border border-gray-300 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                      (click)="toggleDropdown(contact._id)">
+                      <span
+                        class="transition transform"
+                        [ngClass]="{ '-rotate-90': dropdownOpen === contact._id }"
+                      >
+                        <svg
+                          fill="none"
+                          height="24"
+                          shape-rendering="geometricPrecision"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          viewBox="0 0 24 24"
+                          width="24"
+                        >
+                          <path d="M6 9l6 6 6-6"></path>
+                        </svg>
+                      </span>
+                    </button>
+                  </td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 "><a role="button" (click)="openModal(contact)" class=" font-semibold hover:underline">{{contact.name}}</a></td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-s whitespace-nowrap p-4 ">{{contact.cotizations.length}} Quotes</td>
+                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (confirm)="deleteContact(contact._id)" [swal]="{title:'Confirmation', text:'Are you sure you want to delete this Contact?' , showCancelButton: true}" ></i>
+                      </td>
+                </tr>
+
+                <tr *ngIf="dropdownOpen === contact._id" >
+                  <td colspan="5" class=" p-4 px-8 ">
+                    <h4 class="font-semibold mb-2">Cotizations:</h4>
+                    <table class="table-auto w-full border-collapse divide-y divide-gray-300">
+                      <thead class="bg-gray-300">
+                        <tr>
+                          <th class="p-2 text-left">Name Version</th>
+                          <th class="p-2 text-left">Quoter ID</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let cotization of contact.cotizations" class="border-b bg-white hover:bg-gray-50">
+                          <td class="p-2">{{ cotization.name_version }}</td>
+                          <td class="space-x-5 p-2">
+                            <select [(ngModel)]="cotization.status" [ngClass] ="getStatusClass(cotization.status)"  (change)="updateCotizationStatus(contact._id, cotization)" class="ml-4 p-2 border border-gray-300 rounded-md">
+                              @for (status of statuses; track $index) {
+                              <option  [value]="status">
+                                {{ status }}
+                              </option>
+                              }
+                          </select>
+                          <button (click)="generateExcel(cotization.quoter_id)" >
+                            <img class="w-6 h-6" src="https://img.icons8.com/color/48/microsoft-excel-2019--v1.png" alt="microsoft-excel-2019--v1"/>
+                          </button>
+                          <button (click)="generatePDF(cotization.quoter_id)" >
+                            <img class="w-6 h-6" src="https://img.icons8.com/color/48/pdf.png" alt="pdf"/>
+                          </button>
+                          <i class="bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2" (click)="editQuoter(cotization.quoter_id)"></i>
+                          <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (confirm)="deleteQuoter(cotization.quoter_id)" [swal]="{title:'Confirmation', text:'Are you sure you want to delete this quoter?' , showCancelButton: true}"></i>
+                          </td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              }
+            </tbody>
+            </table>
+
+            <div class="flex flex-col items-center">
+              <!-- Pagination Component -->
+              <div class="flex items-center gap-1">
+                <button
+                  class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed focus:shadow-none text-sm rounded-md py-2 px-4 bg-transparent border-transparent text-stone-800 hover:bg-stone-800/5 hover:border-stone-800/5 shadow-none hover:shadow-none"
+                  [disabled]="currentPage() === 1"
+                  (click)="onPageChange(currentPage() - 1)"
+                  >
+                  <svg
+                    width="1.5em"
+                    height="1.5em"
+                    stroke-width="1.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    color="currentColor"
+                    class="mr-1.5 h-4 w-4 stroke-2"
+                  >
+                    <path
+                      d="M15 6L9 12L15 18"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </svg>
+                  Previous
+                </button>
+                @for (page  of getPagesNumbers(); track $index) {
+                <button
+                  class="inline-grid place-items-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-sm min-w-[38px] min-h-[38px] rounded-md bg-transparent border-transparent text-stone-800 hover:bg-stone-800/5 hover:border-stone-800/5 shadow-none hover:shadow-none"
+                  [ngClass]="{
+                    'bg-stone-800 text-stone-50 border-stone-800': currentPage() === page,
+                    'bg-transparent text-stone-800': currentPage() !== page
+                  }"
+                  (click)="onPageChange(page)"
+                  >
+                  {{ page }}
+                </button>
+              }
+                <button
+                  class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed focus:shadow-none text-sm rounded-md py-2 px-4 bg-transparent border-transparent text-stone-800 hover:bg-stone-800/5 hover:border-stone-800/5 shadow-none hover:shadow-none"
+                  [disabled]="currentPage() === totalPages"
+                  (click)="onPageChange(currentPage() + 1)"
+                  >
+                  Next
+                  <svg
+                    width="1.5em"
+                    height="1.5em"
+                    stroke-width="1.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    color="currentColor"
+                    class="ml-1.5 h-4 w-4 stroke-2"
+                  >
+                    <path
+                      d="M9 6L15 12L9 18"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@if (isModalAddContact()) {
+  <!-- Modal de Contactos -->
+<div  id="modalContact" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-start animated fadeIn faster" style="background: rgba(0,0,0,.7);">
+  <div class="border border-gray-200 shadow-lg modal-container bg-gray-50 dark:bg-gray-800 w-1/3 md:max-w-11/12 mx-auto rounded-xl z-50 overflow-y-auto">
+    <div class="modal-content py-4 text-left px-6">
+      <!-- Título -->
+      <div class="flex justify-between items-center pb-3">
+        <p class="text-lg font-bold text-gray-900 dark:text-gray-50">Información de Contacto</p>
+        <div class="modal-close cursor-pointer z-50" (click)="closeModal()" >
+          <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+          </svg>
+        </div>
+      </div>
+      <!-- Formulario -->
+      <form (submit)="saveContact()" [formGroup]="contactFormGroup">
+        <!-- Campo: Nombre -->
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-1">Nombre</label>
+          <input type="text" formControlName="name" class="border border-gray-300 rounded w-full px-2 py-1" />
+        </div>
+        <!-- Campo: TD Designed -->
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-1">TD Designed</label>
+          <input type="text" formControlName="td_designed" class="border border-gray-300 rounded w-full px-2 py-1" />
+        </div>
+        <!-- Campo: Email -->
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-1">Email</label>
+          <input type="email" formControlName="email" class="border border-gray-300 rounded w-full px-2 py-1" />
+        </div>
+        <!-- Campo: Teléfono -->
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-1">Teléfono</label>
+          <input type="text" formControlName="phone" class="border border-gray-300 rounded w-full px-2 py-1" />
+        </div>
+        <!-- Campo: Fuente -->
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-1">Fuente</label>
+          <input type="text" formControlName="source" class="border border-gray-300 rounded w-full px-2 py-1" />
+        </div>
+        <!-- Sección: Cotizaciones (FormArray) -->
+        <div class="mb-4" formArrayName="cotizations">
+          <label class="block text-gray-700 font-semibold mb-1">Cotizaciones</label>
+          <div class="border p-4 rounded">
+            @for (quoter of cotizations.controls; track $index) {
+            <div [formGroupName]="$index" class="mb-2">
+              <!-- Campo: Versión -->
+                <div>
+                  <label class="block text-gray-700 text-sm">Versión</label>
+                  <input type="text" formControlName="name_version" class="border border-gray-300 rounded w-full px-2 py-1 text-sm" />
+                </div>
+                <!-- Campo: Estado -->
+                <div class="ml-2">
+                  <label class="block text-gray-700 text-sm">Estado</label>
+                  <select formControlName="status" class="border border-gray-300 rounded w-full px-2 py-1 text-sm">
+                    <option value="WIP">WIP</option>
+                    <option value="HOLD">HOLD</option>
+                    <option value="SOLD">SOLD</option>
+                    <option value="LOST">LOST</option>
+                  </select>
+                </div>
+                <!-- Botón para eliminar cotización -->
+                <div class="ml-2 flex items-end">
+                  <button type="button" (click)="deleteQuoter(quoter.value)" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-sm">X</button>
+                </div>
+              </div>
+            }
+            </div>
+             <!-- <button type="button" (click)="addQuoter()" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">Agregar Cotización</button> -->
+        </div>
+        <!-- Botones de acción -->
+        <div class="flex justify-end">
+          <!-- <button type="button" (click)="closeModalContact()" class="mr-2 bg-gray-300 text-gray-800 px-4 py-2 rounded">Cancelar</button> -->
+          <button type="button" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+}

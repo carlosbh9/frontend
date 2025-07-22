@@ -12,20 +12,24 @@ export const authGuard: CanActivateFn = (route, state) => {
       return false;
     }
     const userRole = authService.getRole(); // Método para obtener el rol del usuario
-
+    const userPermissions = authService.getPermisions(); 
     //const requiredRole = route.data?.['role'];
     if (userRole === 'admin' ) {
       return true;
     }
+  
+    const requiredPermission = route.data['permission'] as string;
 
-    const requiredRole :string[]= route.data?.['role'] || [];
-    if (requiredRole) {
-     
-    
-        if (userRole && !requiredRole.includes(userRole)) {
-        router.navigate(['/dashboard']); // Redirige si no tiene el rol adecuado
-        return false;
-      }
+    // const requiredRole :string[]= route.data?.['role'] || [];
+    // if (requiredRole) {
+    //     if (userRole && !requiredRole.includes(userRole)) {
+    //     router.navigate(['/dashboard']); // Redirige si no tiene el rol adecuado
+    //     return false;
+    //   }
+    // }
+    if (userRole &&  !userPermissions.includes(requiredPermission)) {
+      router.navigate(['/dashboard']);
+      return false;
     }
 
   return true;
