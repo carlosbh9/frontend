@@ -18,8 +18,7 @@ import { errorInterceptor } from './interceptors/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(),
-    provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes,withComponentInputBinding()),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
@@ -27,5 +26,5 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authInterceptor,spinnerInterceptor,errorInterceptor])),
     provideAnimationsAsync()
   ]
- 
+
 };

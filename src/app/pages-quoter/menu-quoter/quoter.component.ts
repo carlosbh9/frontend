@@ -2,6 +2,19 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+interface QuoterSubMenuItem {
+  label: string;
+  router: string;
+}
+
+interface QuoterMenuItem {
+  label: string;
+  icon: string;
+  hasChildren: boolean;
+  router?: string;
+  children?: QuoterSubMenuItem[];
+}
+
 @Component({
   selector: 'app-quoter',
   standalone: true,
@@ -12,8 +25,8 @@ import { RouterModule } from '@angular/router';
 export class QuoterComponent {
   activeMenu: number | null = null;
 
-  menuItems = [
-   
+  menuItems: QuoterMenuItem[] = [
+
     {
       label: 'Quoter',
       icon: 'bx bx-cart-add',
@@ -31,12 +44,25 @@ export class QuoterComponent {
         { label: 'Master Quoter of List', router: 'master-quoter-list' },
         { label: 'Add Master Quoter', router: 'master-quoter' }
       ]
+    },
+    {
+      label: 'Booking form',
+      icon: 'bx bx-store-alt',
+      hasChildren: true,
+      children: [
+        { label: 'Booking Form', router: 'booking-form' },
+        { label: 'Booking List', router: 'booking-list' }
+
+      ]
     }
   ];
 
   toggleMenu(index: number, hasChildren: boolean) {
     if (hasChildren) {
       this.activeMenu = this.activeMenu === index ? null : index;
+    }
+    else{
+      this.activeMenu = null;
     }
   }
   closeMenu() {

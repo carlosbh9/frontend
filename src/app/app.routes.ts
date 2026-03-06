@@ -19,28 +19,28 @@ export const routes: Routes = [
               {
                 path: 'quoter-form',
                 loadComponent: () =>
-                  import('./pages-quoter/quoter-form/quoter-form.component').then(
+                  import('./pages-quoter/quoter/quoter-form/quoter-form.component').then(
                     (m) => m.QuoterFormComponent
                   ),
               },
               {
                 path: 'quoter-list',
                 loadComponent: () =>
-                  import('./pages-quoter/quoter-list/contacts/quoter-list.component').then(
+                  import('./pages-quoter/quoter/quoter-list/contacts/quoter-list.component').then(
                     (m) => m.QuoterListComponent
                   ),
               },
               {
                 path: 'quoter-edit/:id',
                 loadComponent: () =>
-                  import('./pages-quoter/quoter-form/quoter-form.component').then(
+                  import('./pages-quoter/quoter/quoter-form/quoter-form.component').then(
                     (m) => m.QuoterFormComponent
                   ),
               },
               {
                 path: 'master-quoter',
                 loadComponent: () =>
-                  import('./pages-quoter/master-quoter/master-quoter.component').then(
+                  import('./pages-quoter/master-quoter-list/master-quoter/master-quoter.component').then(
                     (m) => m.MasterQuoterComponent
                   ),
               },
@@ -54,10 +54,26 @@ export const routes: Routes = [
               {
                 path: 'master-quoter-edit/:id',
                 loadComponent: () =>
-                  import('./pages-quoter/master-quoter/master-quoter.component').then(
+                  import('./pages-quoter/master-quoter-list/master-quoter/master-quoter.component').then(
                     (m) => m.MasterQuoterComponent
                   ),
               },
+              {
+                path: 'booking-form',
+                loadComponent: () =>
+                  import('./pages-quoter/booking-form/booking-form.component').then(
+                    (m) => m.BookingFormComponent
+                  ),
+              },
+              // {
+              //   path: 'booking-list',
+              //   loadComponent: () =>
+              //     import('./pages-quoter/booking-form/booking-list/booking-list.component').then(
+              //       (m) => m.BookingListComponent
+              //     ),
+              // },
+
+
             ],
           },
           {
@@ -176,6 +192,22 @@ export const routes: Routes = [
             ],
         },
       ]
+    },
+
+    {
+      path: 'booking-form-public/:token',
+      loadComponent: () =>
+        import('./pages-quoter/booking-form/public-form/booking-form-public.component').then(
+          (m) => m.BookingFormPublicComponent
+        ),
+    },
+
+    {
+      path: 'booking-form-public',
+      loadComponent: () =>
+        import('./pages-quoter/booking-form/public-form/booking-form-public.component').then(
+          (m) => m.BookingFormPublicComponent
+        ),
     },
 
     {   path:'login',component: LoginComponent},

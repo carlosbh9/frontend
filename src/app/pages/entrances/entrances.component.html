@@ -1,71 +1,174 @@
-<div class="p-6 relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 dark:bg-gray-800 w-full shadow-lg rounded">
-  <div class="rounded-t mb-0 px-0 border-0">
-    <div class="flex flex-wrap items-center px-4 py-2">
-      <div class="relative w-full max-w-full flex-grow flex-1">
-        <h3 class="font-semibold text-base text-gray-900 dark:text-gray-50">Entrances</h3>
+<!-- CARD: Entrances (nuevo look como el “FORM CARD” que te di) -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 shadow-sm">
+  <!-- Header / Toolbar -->
+  <div class="p-4 sm:p-5 border-b border-gray-100 dark:border-slate-800">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+      <div class="min-w-0">
+        <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-slate-100">Entrances</h3>
+        <p class="text-xs sm:text-sm text-gray-500 dark:text-slate-400">Manage tariffs, filter by year and search.</p>
       </div>
-      
-      <div class="relative w-full max-w-full flex-grow flex-1 text-right">
-        <select name="filterYear" id="filterYear" class="p-2 me-4 border border-gray-300 rounded" [(ngModel)]="filterYear" (change)="onYearChange($event)">
-          <option value="2024">2024</option>
-          <option value="2025">2025</option>
-          <option value="2026">2026</option>
-          <option value="">All</option>
-        </select>
-        <input
-         
-          type="text"
-          [(ngModel)]="filterText"
-          (input)="filterEntrances()"
-          placeholder="Filter entrances..."
-          class="p-2 border border-gray-300 rounded"
-        />
+
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+        <!-- Year select -->
+        <div class="relative w-full sm:w-40">
+          <label for="filterYear" class="sr-only">Year</label>
+          <select
+            name="filterYear"
+            id="filterYear"
+            [(ngModel)]="filterYear"
+            (change)="onYearChange($event)"
+            class="block w-full rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-sm
+                   text-gray-900 dark:text-slate-100
+                   ring-1 ring-inset ring-gray-300 dark:ring-slate-700
+                   focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+          >
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="">All</option>
+          </select>
+        </div>
+
+        <!-- Search -->
+        <div class="relative w-full sm:w-80">
+          <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-gray-400 dark:text-slate-500">
+            <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35m1.85-5.15a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+            </svg>
+          </span>
+
+          <input
+            type="text"
+            [(ngModel)]="filterText"
+            (input)="filterEntrances()"
+            placeholder="Filter entrances..."
+            class="block w-full rounded-lg bg-white dark:bg-slate-900 pl-10 pr-3 py-2 text-sm
+                   text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500
+                   ring-1 ring-inset ring-gray-300 dark:ring-slate-700
+                   focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+          />
+        </div>
+
+        <!-- Add button (permission) -->
+        <div *hasPermission="['create_tariff']">
+          <button
+            type="button"
+            (click)="openModal()"
+            class="inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold
+                   text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800
+                   shadow-sm shadow-indigo-600/10"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14"></path>
+            </svg>
+            Add Entrance
+          </button>
+        </div>
       </div>
-      <td  *hasPermission="['create_tariff']">
-     <!-- Botón para abrir el modal -->
-        <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Add Entrance</button>
-      </td>
     </div>
-    <div class="block w-full overflow-x-auto">
-      <table class="items-center w-full bg-transparent border-collapse">
-        <thead>
+  </div>
+
+  <!-- Table -->
+  <div class="p-4 sm:p-5">
+    <div class="overflow-x-auto rounded-xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <table class="min-w-full">
+        <thead class="bg-gray-50 dark:bg-slate-800/60">
           <tr>
-            <th rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Description</th>
-            <th rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Year</th>
-            <th rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Price per person</th>
-            <th colspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-center">Child Rate</th>
-            <th rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Take Note</th>
-            <th *hasPermission="['actions_tariff']" rowspan="2" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Actions</th>
+            <th rowspan="2" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-slate-200">
+              Description
+            </th>
+            <th rowspan="2" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-slate-200">
+              Year
+            </th>
+            <th rowspan="2" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-slate-200">
+              Price per person
+            </th>
+            <th colspan="2" class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-slate-200">
+              Child Rate
+            </th>
+            <th rowspan="2" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-slate-200">
+              Take Note
+            </th>
+            <th *hasPermission="['actions_tariff']" rowspan="2" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-slate-200 w-40">
+              Actions
+            </th>
           </tr>
           <tr>
-            <th  class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Price per Person</th>
-            <th  class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">up to age</th>
+            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-slate-200">
+              Price per Person
+            </th>
+            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-slate-200">
+              up to age
+            </th>
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let entrance of filteredEntrances" class="text-gray-700 dark:text-gray-100 border-b" >
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">{{ entrance.description }}</td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">{{ entrance.year }}</td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2 font-bold text-emerald-700">{{ entrance.price_pp | currency}}</td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2 font-bold text-emerald-700">
-              @if (entrance.childRate.pp) {
-                {{ entrance.childRate.pp | currency }}
-              }
-       
+
+        <tbody class="divide-y divide-gray-100 dark:divide-slate-800">
+          <tr *ngFor="let entrance of filteredEntrances" class="text-sm text-gray-700 dark:text-slate-100 hover:bg-gray-50/70 dark:hover:bg-slate-800/40">
+            <td class="px-4 py-3 align-top whitespace-nowrap text-gray-900 dark:text-slate-100">
+              {{ entrance.description }}
             </td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-              <div>
-                <span class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-1 text-xxs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left block" *ngIf="entrance.childRate.upTo">{{ entrance.childRate.upTo }}</span>
+
+            <td class="px-4 py-3 align-top whitespace-nowrap">
+              <span class="inline-flex items-center rounded-full bg-gray-50 dark:bg-slate-800 px-2 py-1 text-xs font-semibold text-gray-700 dark:text-slate-200 ring-1 ring-inset ring-gray-200 dark:ring-slate-700">
+                {{ entrance.year }}
+              </span>
+            </td>
+
+            <td class="px-4 py-3 align-top whitespace-nowrap">
+              <span class="font-semibold text-emerald-700 dark:text-emerald-400">
+                {{ entrance.price_pp | currency}}
+              </span>
+            </td>
+
+            <td class="px-4 py-3 align-top whitespace-nowrap">
+              <span class="font-semibold text-emerald-700 dark:text-emerald-400">
+                @if (entrance.childRate.pp) { {{ entrance.childRate.pp | currency }} }
+              </span>
+            </td>
+
+            <td class="px-4 py-3 align-top whitespace-nowrap">
+              <span
+                *ngIf="entrance.childRate.upTo"
+                class="inline-flex items-center rounded-full bg-indigo-50 dark:bg-indigo-500/10 px-2 py-1 text-xs font-semibold
+                       text-indigo-700 dark:text-indigo-300 ring-1 ring-inset ring-indigo-100 dark:ring-indigo-500/20"
+              >
+                {{ entrance.childRate.upTo }}
+              </span>
+            </td>
+
+            <td class="px-4 py-3 align-top">
+              <div class="max-w-[520px] text-xs leading-5 text-gray-600 dark:text-slate-300 line-clamp-3">
+                {{ entrance.take_note }}
               </div>
             </td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-2 max-h-24 overflow-y-auto block">{{ entrance.take_note }}</td>
-            <td *hasPermission="['actions_tariff']" class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-              <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2'  
-              (click)="openEditModal(entrance)" ></i>
-             
-           
-              <!-- <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' [swal]="{title:'Confirmation', text:'Are you sure you want to delete this record?' , showCancelButton: true}" (confirm)="deleteEntrance(entrance._id)" ></i> -->
-              <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2'  (click)="confirmDelete(entrance._id)" ></i>
+
+            <td *hasPermission="['actions_tariff']" class="px-4 py-3 align-top whitespace-nowrap">
+              <div class="flex items-center gap-2">
+                <button
+                  type="button"
+                  class="inline-flex h-9 w-9 items-center justify-center rounded-lg
+                         ring-1 ring-inset ring-indigo-200 dark:ring-indigo-500/30
+                         text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-500/10"
+                  (click)="openEditModal(entrance)"
+                  aria-label="Edit"
+                  title="Edit"
+                >
+                  <i class="bx bx-edit-alt text-xl"></i>
+                </button>
+
+                <button
+                  type="button"
+                  class="inline-flex h-9 w-9 items-center justify-center rounded-lg
+                         ring-1 ring-inset ring-red-200 dark:ring-red-500/30
+                         text-red-600 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10"
+                  (click)="confirmDelete(entrance._id)"
+                  aria-label="Delete"
+                  title="Delete"
+                >
+                  <i class="bx bx-trash text-xl"></i>
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -74,118 +177,316 @@
   </div>
 </div>
 
-<!-- add Modal -->
-<div *ngIf="showAddModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
-  <div class="border border-gray-200 modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
-    <div class="modal-content py-4 text-left px-6">
-      <!-- Title -->
-      <div class="flex justify-between items-center pb-3">
-        <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Add Entrance</p>
-        <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
-          <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
-          </svg>
+<!-- ADD MODAL -->
+<div
+  *ngIf="showAddModal"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4"
+  aria-modal="true"
+  role="dialog"
+>
+  <!-- overlay -->
+  <div class="absolute inset-0 bg-black/70"></div>
+
+  <!-- panel -->
+  <div class="relative w-full max-w-xl rounded-2xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 shadow-xl">
+    <div class="p-4 sm:p-5 border-b border-gray-100 dark:border-slate-800 flex items-start justify-between gap-3">
+      <div class="min-w-0">
+        <p class="text-base sm:text-lg font-semibold text-gray-900 dark:text-slate-100">Add Entrance</p>
+        <p class="text-xs sm:text-sm text-gray-500 dark:text-slate-400">Create a new entrance tariff.</p>
+      </div>
+
+      <button
+        type="button"
+        (click)="closeModal()"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-lg
+               ring-1 ring-inset ring-gray-200 dark:ring-slate-700
+               text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800/60"
+        aria-label="Close"
+        title="Close"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+          <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="p-4 sm:p-5">
+      <form (submit)="onSubmit()" id="add_entrance_form" class="space-y-4">
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Description</label>
+          <input
+            type="text"
+            id="description"
+            name="description"
+            [(ngModel)]="newEntrance.description"
+            required
+            placeholder="Description"
+            class="mt-1 block w-full rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-sm
+                   text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500
+                   ring-1 ring-inset ring-gray-300 dark:ring-slate-700
+                   focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+          />
         </div>
-      </div>
-      <!-- Body -->
-      <div class="my-5 mr-5 ml-5 flex justify-center">
-        <form (submit)="onSubmit()" id="add_entrance_form" class="w-full">
-          <div class="">
-            <div class="mb-4">
-              <label for="description" class="block text-md text-gray-600 dark:text-gray-50">Description</label>
-              <input type="text" id="description" name="description" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Description" [(ngModel)]="newEntrance.description" required>
-            </div>
-            <div class="mb-4">
-              <label for="year" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
-              <select [(ngModel)]="newEntrance.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-                <option value="2026">2026</option>
-            </select>
-            </div>
-            <div class="mb-4">
-              <label for="price_pp" class="block text-md text-gray-600 dark:text-gray-50">Price per person</label>
-              <input type="number" id="price_pp" name="price_pp" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Price per person" [(ngModel)]="newEntrance.price_pp" required>
-            </div>
-            <div class="mb-4">
-              <label for="child_pp" class="block text-md text-gray-600 dark:text-gray-50">Child Rate Price per person</label>
-              <input type="number" id="child_pp" name="child_pp" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Child Rate Price per person" [(ngModel)]="newEntrance.childRate.pp">
-            </div>
-            <div class="mb-4">
-              <label for="child_upTo" class="block text-md text-gray-600 dark:text-gray-50">Child Rate Up to age</label>
-              <input type="number" id="child_upTo" name="child_upTo" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Child Rate Up to age" [(ngModel)]="newEntrance.childRate.upTo">
-            </div>
-            <div class="mb-4">
-              <label for="take_note" class="block text-md text-gray-600 dark:text-gray-50">Take Note</label>
-              <textarea type="text" id="take_note" name="take_note" class="h-15 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take Note" [(ngModel)]="newEntrance.take_note"></textarea>
-            </div>
+
+        <div>
+          <label for="year" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Year</label>
+          <select
+            [(ngModel)]="newEntrance.year"
+            name="year"
+            required
+            class="mt-1 block w-full rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-sm
+                   text-gray-900 dark:text-slate-100
+                   ring-1 ring-inset ring-gray-300 dark:ring-slate-700
+                   focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+          >
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="price_pp" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Price per person</label>
+            <input
+              type="number"
+              id="price_pp"
+              name="price_pp"
+              [(ngModel)]="newEntrance.price_pp"
+              required
+              placeholder="Price per person"
+              class="mt-1 block w-full rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-sm
+                     text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500
+                     ring-1 ring-inset ring-gray-300 dark:ring-slate-700
+                     focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+            />
           </div>
-        </form>
-      </div>
-      <!-- Footer -->
-      <div class="flex justify-end pt-2 space-x-14">
-        <button class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" (click)="closeModal()">Cancel</button>
-        <button type="submit" form="add_entrance_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
-      </div>
+
+          <div>
+            <label for="child_pp" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Child rate (pp)</label>
+            <input
+              type="number"
+              id="child_pp"
+              name="child_pp"
+              [(ngModel)]="newEntrance.childRate.pp"
+              placeholder="Child Rate Price per person"
+              class="mt-1 block w-full rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-sm
+                     text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500
+                     ring-1 ring-inset ring-gray-300 dark:ring-slate-700
+                     focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="child_upTo" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Child rate (up to age)</label>
+          <input
+            type="number"
+            id="child_upTo"
+            name="child_upTo"
+            [(ngModel)]="newEntrance.childRate.upTo"
+            placeholder="Child Rate Up to age"
+            class="mt-1 block w-full rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-sm
+                   text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500
+                   ring-1 ring-inset ring-gray-300 dark:ring-slate-700
+                   focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+          />
+        </div>
+
+        <div>
+          <label for="take_note" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Take Note</label>
+          <textarea
+            id="take_note"
+            name="take_note"
+            [(ngModel)]="newEntrance.take_note"
+            placeholder="Take Note"
+            rows="4"
+            class="mt-1 block w-full rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-sm
+                   text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500
+                   ring-1 ring-inset ring-gray-300 dark:ring-slate-700
+                   focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+          ></textarea>
+        </div>
+      </form>
+    </div>
+
+    <div class="p-4 sm:p-5 border-t border-gray-100 dark:border-slate-800 flex items-center justify-end gap-3">
+      <button
+        type="button"
+        (click)="closeModal()"
+        class="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold
+               text-gray-700 dark:text-slate-200
+               ring-1 ring-inset ring-gray-200 dark:ring-slate-700
+               hover:bg-gray-50 dark:hover:bg-slate-800/60"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="submit"
+        form="add_entrance_form"
+        class="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold
+               text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800"
+      >
+        Confirm
+      </button>
     </div>
   </div>
 </div>
 
-<!-- edit Modal -->
-<div *ngIf="showEditModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
-  <div class="border border-gray-200 modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
-    <div class="modal-content py-4 text-left px-6">
-      <!-- Title -->
-      <div class="flex justify-between items-center pb-3">
-        <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Edit Entrance</p>
-        <div class="modal-close cursor-pointer z-50" (click)="closeEditModal()">
-          <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
-          </svg>
+<!-- EDIT MODAL -->
+<div
+  *ngIf="showEditModal"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4"
+  aria-modal="true"
+  role="dialog"
+>
+  <!-- overlay -->
+  <div class="absolute inset-0 bg-black/70"></div>
+
+  <!-- panel -->
+  <div class="relative w-full max-w-xl rounded-2xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 shadow-xl">
+    <div class="p-4 sm:p-5 border-b border-gray-100 dark:border-slate-800 flex items-start justify-between gap-3">
+      <div class="min-w-0">
+        <p class="text-base sm:text-lg font-semibold text-gray-900 dark:text-slate-100">Edit Entrance</p>
+        <p class="text-xs sm:text-sm text-gray-500 dark:text-slate-400">Update entrance tariff information.</p>
+      </div>
+
+      <button
+        type="button"
+        (click)="closeEditModal()"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-lg
+               ring-1 ring-inset ring-gray-200 dark:ring-slate-700
+               text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800/60"
+        aria-label="Close"
+        title="Close"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+          <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="p-4 sm:p-5">
+      <form (submit)="onEditSubmit()" id="edit_entrance_form" class="space-y-4">
+        <div>
+          <label for="description_edit" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Description</label>
+          <input
+            type="text"
+            id="description_edit"
+            name="description"
+            [(ngModel)]="selectedEntrance.description"
+            required
+            placeholder="Description"
+            class="mt-1 block w-full rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-sm
+                   text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500
+                   ring-1 ring-inset ring-gray-300 dark:ring-slate-700
+                   focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+          />
         </div>
-      </div>
-      <!-- Body -->
-      <div class="my-5 mr-5 ml-5 flex justify-center">
-        <form (submit)="onEditSubmit()" id="edit_entrance_form" class="w-full">
-          <div class="">
-            <div class="mb-4">
-              <label for="description" class="block text-md text-gray-600 dark:text-gray-50">Description</label>
-              <input type="text" id="description" name="description" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Description" [(ngModel)]="selectedEntrance.description" required>
-            </div>
-            <div class="mb-4">
-              <label for="year" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
-              <select [(ngModel)]="selectedEntrance.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-                <option value="2026">2026</option>
-            </select>
-            </div>
-            <div class="mb-4">
-              <label for="price_pp" class="block text-md text-gray-600 dark:text-gray-50">Price per person</label>
-              <input type="number" id="price_pp" name="price_pp" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Price per person" [(ngModel)]="selectedEntrance.price_pp" required>
-            </div>
-            <div class="mb-4">
-              <label for="child_pp" class="block text-md text-gray-600 dark:text-gray-50">Child Rate Price per person</label>
-              <input type="number" id="child_pp" name="child_pp" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Child Rate Price per person" [(ngModel)]="selectedEntrance.childRate.pp">
-            </div>
-            <div class="mb-4">
-              <label for="child_upTo" class="block text-md text-gray-600 dark:text-gray-50">Child Rate Up to age</label>
-              <input type="number" id="child_upTo" name="child_upTo" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Child Rate Up to age" [(ngModel)]="selectedEntrance.childRate.upTo">
-            </div>
-            <div class="mb-4">
-              <label for="take_note" class="block text-md text-gray-600 dark:text-gray-50">Take Note</label>
-              <textarea type="text" id="take_note" name="take_note" class="h-15 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Take Note" [(ngModel)]="selectedEntrance.take_note"></textarea>
-            </div>
+
+        <div>
+          <label for="year_edit" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Year</label>
+          <select
+            [(ngModel)]="selectedEntrance.year"
+            name="year"
+            required
+            class="mt-1 block w-full rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-sm
+                   text-gray-900 dark:text-slate-100
+                   ring-1 ring-inset ring-gray-300 dark:ring-slate-700
+                   focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+          >
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="price_pp_edit" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Price per person</label>
+            <input
+              type="number"
+              id="price_pp_edit"
+              name="price_pp"
+              [(ngModel)]="selectedEntrance.price_pp"
+              required
+              placeholder="Price per person"
+              class="mt-1 block w-full rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-sm
+                     text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500
+                     ring-1 ring-inset ring-gray-300 dark:ring-slate-700
+                     focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+            />
           </div>
-        </form>
-      </div>
-      <!-- Footer -->
-      <div class="flex justify-end pt-2 space-x-14">
-        <button class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" (click)="closeEditModal()">Cancel</button>
-        <button type="submit" form="edit_entrance_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
-      </div>
+
+          <div>
+            <label for="child_pp_edit" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Child rate (pp)</label>
+            <input
+              type="number"
+              id="child_pp_edit"
+              name="child_pp"
+              [(ngModel)]="selectedEntrance.childRate.pp"
+              placeholder="Child Rate Price per person"
+              class="mt-1 block w-full rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-sm
+                     text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500
+                     ring-1 ring-inset ring-gray-300 dark:ring-slate-700
+                     focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="child_upTo_edit" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Child rate (up to age)</label>
+          <input
+            type="number"
+            id="child_upTo_edit"
+            name="child_upTo"
+            [(ngModel)]="selectedEntrance.childRate.upTo"
+            placeholder="Child Rate Up to age"
+            class="mt-1 block w-full rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-sm
+                   text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500
+                   ring-1 ring-inset ring-gray-300 dark:ring-slate-700
+                   focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+          />
+        </div>
+
+        <div>
+          <label for="take_note_edit" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Take Note</label>
+          <textarea
+            id="take_note_edit"
+            name="take_note"
+            [(ngModel)]="selectedEntrance.take_note"
+            placeholder="Take Note"
+            rows="4"
+            class="mt-1 block w-full rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-sm
+                   text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500
+                   ring-1 ring-inset ring-gray-300 dark:ring-slate-700
+                   focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+          ></textarea>
+        </div>
+      </form>
+    </div>
+
+    <div class="p-4 sm:p-5 border-t border-gray-100 dark:border-slate-800 flex items-center justify-end gap-3">
+      <button
+        type="button"
+        (click)="closeEditModal()"
+        class="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold
+               text-gray-700 dark:text-slate-200
+               ring-1 ring-inset ring-gray-200 dark:ring-slate-700
+               hover:bg-gray-50 dark:hover:bg-slate-800/60"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="submit"
+        form="edit_entrance_form"
+        class="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold
+               text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800"
+      >
+        Confirm
+      </button>
     </div>
   </div>
 </div>
-
-

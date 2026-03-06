@@ -1,0 +1,351 @@
+@if (open()) {
+  <div
+    class="fixed inset-0 z-50 flex items-start justify-center bg-black/60 p-4 sm:p-6"
+    (click)="onBackdropClick($event)"
+  >
+    <div
+      class="w-full max-w-5xl overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5
+             dark:bg-slate-900 dark:ring-white/10"
+    >
+      <div class="flex items-start justify-between gap-4 border-b border-gray-100 px-5 py-4 dark:border-white/10">
+        <div class="min-w-0">
+          <h2 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
+            Submission Detail
+          </h2>
+          <p class="mt-0.5 text-xs sm:text-sm text-gray-500 dark:text-slate-300">
+            Full booking submission and attached passports.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          (click)="close.emit()"
+          class="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold
+                 text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-gray-50
+                 dark:text-slate-200 dark:ring-white/10 dark:hover:bg-white/5"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+          </svg>
+          Close
+        </button>
+      </div>
+
+      <div class="max-h-[78vh] overflow-y-auto p-5 sm:p-6">
+        @if (loading()) {
+          <div class="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-200">
+            Loading submission...
+          </div>
+        }
+
+        @if (!loading() && error()) {
+          <div class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-200">
+            {{ error() }}
+          </div>
+        }
+
+        @if (!loading() && booking()) {
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-4">
+            <div class="rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-slate-950/40">
+              <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-slate-400">Client ID</p>
+              <p class="mt-1 font-semibold text-gray-900 dark:text-white">{{ display(booking()?.clientId) }}</p>
+            </div>
+
+            <div class="rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-slate-950/40">
+              <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-slate-400">Token</p>
+              <p class="mt-1 truncate font-mono text-xs text-gray-900 dark:text-white">{{ display(booking()?.token) }}</p>
+            </div>
+
+            <div class="rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-slate-950/40">
+              <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-slate-400">Status</p>
+              <span class="mt-1 inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset" [ngClass]="statusClasses(booking()?.status || '')">
+                {{ (booking()?.status || 'unknown') | titlecase }}
+              </span>
+            </div>
+
+            <div class="rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-slate-950/40">
+              <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-slate-400">Guests</p>
+              <p class="mt-1 font-semibold text-gray-900 dark:text-white">{{ guests().length }}</p>
+            </div>
+          </div>
+
+          <div class="mt-5 rounded-2xl border border-gray-200 bg-white dark:border-white/10 dark:bg-slate-950/40">
+            <div class="flex items-center justify-between gap-3 border-b border-gray-100 px-4 py-3 dark:border-white/10">
+              <div>
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Guests</h3>
+                <p class="text-xs text-gray-500 dark:text-slate-400">Personal, passports, dietary/medical and physical info</p>
+              </div>
+              <span class="text-xs font-semibold text-gray-600 dark:text-slate-300">{{ guests().length }} total</span>
+            </div>
+
+            <div class="p-4 sm:p-5 space-y-3">
+              @if (guests().length === 0) {
+                <div class="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
+                  No guests data.
+                </div>
+              }
+
+              @for (guest of guests(); track $index) {
+                <details class="group rounded-2xl border border-gray-200 bg-white overflow-hidden dark:border-white/10 dark:bg-slate-950/20">
+                  <summary class="cursor-pointer list-none px-4 py-3 hover:bg-gray-50/70 dark:hover:bg-white/5">
+                    <div class="flex items-start justify-between gap-3">
+                      <div class="min-w-0">
+                        <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                          Guest {{ $index + 1 }} - {{ display(guest.firstName) }} {{ display(guest.lastName) }}
+                        </p>
+                        <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 dark:text-slate-400">
+                          <span class="font-mono">Passport: {{ display(guest.passportNumber) }}</span>
+                          <span>Nationality: {{ display(guest.nationality) }}</span>
+                          <span>Birth: {{ display(guest.birthDate) }}</span>
+                          <span>Expiry: {{ display(guest.expiryDate) }}</span>
+                        </div>
+                      </div>
+
+                      <div class="flex items-center gap-2 shrink-0">
+                        @if (guest.passportKey) {
+                          <button
+                            type="button"
+                            class="inline-flex items-center justify-center rounded-lg p-2 ring-1 ring-inset ring-gray-200 hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-white/5"
+                            title="View passport"
+                            (click)="onPassportView(guest.passportKey)"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-700 dark:text-slate-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7Z"/>
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                            </svg>
+                          </button>
+
+                          <button
+                            type="button"
+                            class="inline-flex items-center justify-center rounded-lg p-2 ring-1 ring-inset ring-gray-200 hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-white/5"
+                            title="Download passport"
+                            (click)="onPassportDownload(guest.passportKey, guest.passportFileName)"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-700 dark:text-slate-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v10m0 0 4-4m-4 4-4-4"/>
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
+                            </svg>
+                          </button>
+                        }
+
+                        <svg class="h-4 w-4 text-gray-400 transition-transform group-open:rotate-180 dark:text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.24 4.5a.75.75 0 0 1-1.08 0l-4.24-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </summary>
+
+                  <div class="border-t border-gray-100 p-4 sm:p-5 space-y-4 dark:border-white/10">
+                    <div class="rounded-xl border border-gray-200 bg-gray-50 p-3 dark:border-white/10 dark:bg-white/5">
+                      <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-slate-400">Passport file</p>
+                      <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ display(guest.passportFileName) }}</p>
+                    </div>
+
+                    <div class="rounded-xl border border-gray-200 bg-white p-3 dark:border-white/10 dark:bg-slate-950/20">
+                      <p class="text-sm font-semibold text-gray-900 dark:text-white">Dietary and Medical</p>
+                      <div class="mt-3 grid grid-cols-1 gap-2 text-sm sm:grid-cols-3">
+                        <div class="rounded-lg bg-gray-50 p-3 dark:bg-white/5"><p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-slate-400">Dietary</p><p class="mt-1 font-medium text-gray-900 dark:text-white">{{ display(guest.dietary?.dietary) }}</p></div>
+                        <div class="rounded-lg bg-gray-50 p-3 dark:bg-white/5 sm:col-span-2"><p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-slate-400">Medical</p><p class="mt-1 font-medium text-gray-900 dark:text-white">{{ display(guest.dietary?.medical) }}</p></div>
+                        <div class="rounded-lg bg-gray-50 p-3 dark:bg-white/5 sm:col-span-3"><p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-slate-400">Allergies</p><p class="mt-1 font-medium text-gray-900 dark:text-white">{{ display(guest.dietary?.allergies) }}</p></div>
+                      </div>
+                    </div>
+
+                    <div class="rounded-xl border border-gray-200 bg-white p-3 dark:border-white/10 dark:bg-slate-950/20">
+                      <p class="text-sm font-semibold text-gray-900 dark:text-white">Physical Information</p>
+                      <div class="mt-3 grid grid-cols-1 gap-2 text-sm sm:grid-cols-3">
+                        <div class="rounded-lg bg-gray-50 p-3 dark:bg-white/5"><p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-slate-400">Height</p><p class="mt-1 font-medium text-gray-900 dark:text-white">{{ display(guest.physical?.height) }}</p></div>
+                        <div class="rounded-lg bg-gray-50 p-3 dark:bg-white/5"><p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-slate-400">Weight</p><p class="mt-1 font-medium text-gray-900 dark:text-white">{{ display(guest.physical?.weight) }}</p></div>
+                        <div class="rounded-lg bg-gray-50 p-3 dark:bg-white/5"><p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-slate-400">Shoe size</p><p class="mt-1 font-medium text-gray-900 dark:text-white">{{ display(guest.physical?.shoeSize) }}</p></div>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              }
+            </div>
+          </div>
+
+          <div class="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-white/10 dark:bg-slate-950/40">
+              <div class="flex items-center justify-between gap-3 border-b border-gray-100 px-4 py-3 dark:border-white/10">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">International Flights</h3>
+                <span class="text-xs font-semibold text-gray-600 dark:text-slate-300">{{ internationalFlights().length }} total</span>
+              </div>
+              <div class="p-4 space-y-2">
+                @if (internationalFlights().length === 0) {
+                  <p class="text-sm text-gray-500 dark:text-slate-400">No international flights data.</p>
+                }
+                @for (f of internationalFlights(); track $index) {
+                  <details class="group rounded-xl border border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-white/5" [attr.open]="$index === 0 ? '' : null">
+                    <summary class="cursor-pointer list-none px-3 py-2 hover:bg-gray-100/70 dark:hover:bg-white/10">
+                      <div class="flex items-center justify-between gap-2">
+                        <p class="text-xs font-semibold text-gray-900 dark:text-white">Flight {{ $index + 1 }} - {{ display(f.flightNumber) }}</p>
+                        <svg class="h-4 w-4 text-gray-400 transition-transform group-open:rotate-180 dark:text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.24 4.5a.75.75 0 0 1-1.08 0l-4.24-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd"/></svg>
+                      </div>
+                    </summary>
+                    <div class="border-t border-gray-200 px-3 py-2 text-xs space-y-1 dark:border-white/10">
+                      <p>From: <span class="font-medium">{{ display(f.departureAirport) }}</span></p>
+                      <p>To: <span class="font-medium">{{ display(f.arrivalAirport) }}</span></p>
+                      <p>Dep: <span class="font-medium">{{ display(f.departureDate) }} {{ display(f.departureTime) }}</span></p>
+                      <p>Arr: <span class="font-medium">{{ display(f.arrivalDate) }} {{ display(f.arrivalTime) }}</span></p>
+                      <p>Code: <span class="font-mono">{{ display(f.bookingCode) }}</span></p>
+                    </div>
+                  </details>
+                }
+              </div>
+            </div>
+
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-white/10 dark:bg-slate-950/40">
+              <div class="flex items-center justify-between gap-3 border-b border-gray-100 px-4 py-3 dark:border-white/10">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Domestic Flights</h3>
+                <span class="text-xs font-semibold text-gray-600 dark:text-slate-300">{{ domesticFlights().length }} total</span>
+              </div>
+              <div class="p-4 space-y-2">
+                @if (domesticFlights().length === 0) {
+                  <p class="text-sm text-gray-500 dark:text-slate-400">No domestic flights data.</p>
+                }
+                @for (f of domesticFlights(); track $index) {
+                  <details class="group rounded-xl border border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-white/5" [attr.open]="$index === 0 ? '' : null">
+                    <summary class="cursor-pointer list-none px-3 py-2 hover:bg-gray-100/70 dark:hover:bg-white/10">
+                      <div class="flex items-center justify-between gap-2">
+                        <p class="text-xs font-semibold text-gray-900 dark:text-white">Flight {{ $index + 1 }} - {{ display(f.flightNumber) }}</p>
+                        <svg class="h-4 w-4 text-gray-400 transition-transform group-open:rotate-180 dark:text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.24 4.5a.75.75 0 0 1-1.08 0l-4.24-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd"/></svg>
+                      </div>
+                    </summary>
+                    <div class="border-t border-gray-200 px-3 py-2 text-xs space-y-1 dark:border-white/10">
+                      <p>From: <span class="font-medium">{{ display(f.departureAirport) }}</span></p>
+                      <p>To: <span class="font-medium">{{ display(f.arrivalAirport) }}</span></p>
+                      <p>Dep: <span class="font-medium">{{ display(f.departureDate) }} {{ display(f.departureTime) }}</span></p>
+                      <p>Arr: <span class="font-medium">{{ display(f.arrivalDate) }} {{ display(f.arrivalTime) }}</span></p>
+                      <p>Code: <span class="font-mono">{{ display(f.bookingCode) }}</span></p>
+                    </div>
+                  </details>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <div class="rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-slate-950/40">
+              <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Travel Insurance</h3>
+              <div class="mt-2 space-y-1 text-xs text-gray-700 dark:text-slate-200">
+                <p>Company: <span class="font-medium">{{ display(booking()?.submission?.travelInsurance?.companyName) }}</span></p>
+                <p>Policy #: <span class="font-mono">{{ display(booking()?.submission?.travelInsurance?.policyNumber) }}</span></p>
+              </div>
+            </div>
+
+            <div class="rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-slate-950/40">
+              <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Emergency Contact</h3>
+              <div class="mt-2 space-y-1 text-xs text-gray-700 dark:text-slate-200">
+                <p>Name: <span class="font-medium">{{ display(booking()?.submission?.emergencyContact?.name) }}</span></p>
+                <p>Relationship: <span class="font-medium">{{ display(booking()?.submission?.emergencyContact?.relationship) }}</span></p>
+                <p>Home: <span class="font-mono">{{ display(booking()?.submission?.emergencyContact?.homePhone) }}</span></p>
+                <p>Cell: <span class="font-mono">{{ display(booking()?.submission?.emergencyContact?.cellPhone) }}</span></p>
+              </div>
+            </div>
+
+            <div class="rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-slate-950/40">
+              <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Your Contact</h3>
+              <div class="mt-2 space-y-1 text-xs text-gray-700 dark:text-slate-200">
+                <p>Street: <span class="font-medium">{{ display(booking()?.submission?.yourContact?.street) }}</span></p>
+                <p>City/State: <span class="font-medium">{{ display(booking()?.submission?.yourContact?.city) }} / {{ display(booking()?.submission?.yourContact?.state) }}</span></p>
+                <p>ZIP: <span class="font-mono">{{ display(booking()?.submission?.yourContact?.zip) }}</span></p>
+                <p>Email: <span class="font-mono">{{ display(booking()?.submission?.yourContact?.email) }}</span></p>
+                <p>Home: <span class="font-mono">{{ display(booking()?.submission?.yourContact?.homePhone) }}</span></p>
+                <p>Cell: <span class="font-mono">{{ display(booking()?.submission?.yourContact?.cellPhone) }}</span></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-white/10 dark:bg-slate-950/40">
+              <div class="flex items-center justify-between gap-3 border-b border-gray-100 px-4 py-3 dark:border-white/10">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Rooms</h3>
+                <span class="text-xs font-semibold text-gray-600 dark:text-slate-300">{{ rooms().length }} total</span>
+              </div>
+              <div class="p-4 space-y-2">
+                @if (rooms().length === 0) {
+                  <p class="text-sm text-gray-500 dark:text-slate-400">No rooms data.</p>
+                }
+                @for (r of rooms(); track $index) {
+                  <details class="group rounded-xl border border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-white/5">
+                    <summary class="cursor-pointer list-none px-3 py-2 hover:bg-gray-100/70 dark:hover:bg-white/10">
+                      <div class="flex items-center justify-between gap-2">
+                        <p class="text-xs font-semibold text-gray-900 dark:text-white">Room {{ $index + 1 }} - {{ display(r.roomType) }}</p>
+                        <svg class="h-4 w-4 text-gray-400 transition-transform group-open:rotate-180 dark:text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.24 4.5a.75.75 0 0 1-1.08 0l-4.24-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd"/></svg>
+                      </div>
+                    </summary>
+                    <div class="border-t border-gray-200 px-3 py-2 text-xs space-y-1 dark:border-white/10">
+                      <p>Guests: <span class="font-medium">{{ display(r.guestNames) }}</span></p>
+                      <p>Type: <span class="font-medium">{{ display(r.roomType) }}</span></p>
+                      <p>Notes: <span class="font-medium">{{ display(r.notes) }}</span></p>
+                    </div>
+                  </details>
+                }
+              </div>
+            </div>
+
+            <div class="rounded-2xl border border-gray-200 bg-white dark:border-white/10 dark:bg-slate-950/40">
+              <div class="flex items-center justify-between gap-3 border-b border-gray-100 px-4 py-3 dark:border-white/10">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Restaurants</h3>
+                <span class="text-xs font-semibold text-gray-600 dark:text-slate-300">{{ restaurants().length }} total</span>
+              </div>
+              <div class="p-4 space-y-2">
+                @if (restaurants().length === 0) {
+                  <p class="text-sm text-gray-500 dark:text-slate-400">No restaurants data.</p>
+                }
+                @for (rest of restaurants(); track $index) {
+                  <details class="group rounded-xl border border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-white/5">
+                    <summary class="cursor-pointer list-none px-3 py-2 hover:bg-gray-100/70 dark:hover:bg-white/10">
+                      <div class="flex items-center justify-between gap-2">
+                        <p class="text-xs font-semibold text-gray-900 dark:text-white">Restaurant {{ $index + 1 }} - {{ display(rest.name) }}</p>
+                        <svg class="h-4 w-4 text-gray-400 transition-transform group-open:rotate-180 dark:text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.24 4.5a.75.75 0 0 1-1.08 0l-4.24-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd"/></svg>
+                      </div>
+                    </summary>
+                    <div class="border-t border-gray-200 px-3 py-2 text-xs space-y-1 dark:border-white/10">
+                      <p>Destination: <span class="font-medium">{{ display(rest.destination) }}</span></p>
+                      <p>Date/Time: <span class="font-medium">{{ display(rest.date) }} {{ display(rest.time) }}</span></p>
+                    </div>
+                  </details>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 rounded-2xl border border-gray-200 bg-white dark:border-white/10 dark:bg-slate-950/40">
+            <div class="flex items-center justify-between gap-3 border-b border-gray-100 px-4 py-3 dark:border-white/10">
+              <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Your Contact Details</h3>
+              <span class="text-xs font-semibold text-gray-600 dark:text-slate-300">{{ yourContactPeople().length }} total</span>
+            </div>
+            <div class="p-4 space-y-2">
+              @if (yourContactPeople().length === 0) {
+                <p class="text-sm text-gray-500 dark:text-slate-400">No extra contact persons data.</p>
+              }
+              @for (contact of yourContactPeople(); track $index) {
+                <details class="group rounded-xl border border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-white/5">
+                  <summary class="cursor-pointer list-none px-3 py-2 hover:bg-gray-100/70 dark:hover:bg-white/10">
+                    <div class="flex items-center justify-between gap-2">
+                      <p class="text-xs font-semibold text-gray-900 dark:text-white">Contact {{ $index + 1 }} - {{ display(contact.guest) }}</p>
+                      <svg class="h-4 w-4 text-gray-400 transition-transform group-open:rotate-180 dark:text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.24 4.5a.75.75 0 0 1-1.08 0l-4.24-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd"/></svg>
+                    </div>
+                  </summary>
+                  <div class="border-t border-gray-200 px-3 py-2 text-xs space-y-1 dark:border-white/10">
+                    <p>Occupation: <span class="font-medium">{{ display(contact.occupation) }}</span></p>
+                    <p>Phone: <span class="font-mono">{{ display(contact.phone) }}</span></p>
+                    <p>Email: <span class="font-mono">{{ display(contact.email) }}</span></p>
+                  </div>
+                </details>
+              }
+            </div>
+          </div>
+
+          @if (hasValue(booking()?.submission?.additionalInfo)) {
+            <div class="mt-5 rounded-2xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-slate-950/40">
+              <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Additional Info</h3>
+              <p class="mt-2 text-sm text-gray-700 dark:text-slate-200">{{ display(booking()?.submission?.additionalInfo) }}</p>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+}

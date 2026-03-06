@@ -1,1 +1,4 @@
-
+/* If you are not using Tailwind's build process, replace the directives below with the compiled Tailwind CSS output. Otherwise, make sure your build tool (like Tailwind CLI or PostCSS) is set up to process this file. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

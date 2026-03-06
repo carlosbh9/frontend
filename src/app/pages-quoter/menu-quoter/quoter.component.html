@@ -4,9 +4,10 @@
       <ul class="flex w-full flex-wrap items-center h-10">
         <!-- Elemento con Submenú -->
         <li class="block relative" *ngFor="let item of menuItems; let i = index">
-          <a 
+          <a
              class="flex items-center h-10 leading-10 px-4 rounded cursor-pointer no-underline hover:no-underline transition-colors duration-100 mx-1 text-gray-900 hover:bg-gray-950 hover:text-gray-100"
-             (click)="toggleMenu(i, item.hasChildren)">
+             (click)="toggleMenu(i, item.hasChildren)"
+              [routerLink]="!item.hasChildren ? item.router : null">
             <span class="mr-1 text-xl">
               <i [class]="item.icon"></i>
             </span>
@@ -15,7 +16,7 @@
               <i class="bx bx-chevron-down" [ngClass]="{'rotate-180': activeMenu === i}"></i>
             </span>
           </a>
-  
+
           <!-- Submenú -->
           <div *ngIf="activeMenu === i && item.hasChildren"
                class="bg-white shadow-md rounded border border-gray-300 text-sm absolute top-auto left-0 min-w-full w-56 z-30 mt-1 transition-all ease-in-out duration-300">

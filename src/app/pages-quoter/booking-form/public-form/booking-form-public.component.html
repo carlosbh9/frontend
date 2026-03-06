@@ -1,0 +1,694 @@
+<div class="grid grid-cols-1 gap-2 mb-2">
+    <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+      <div class="public-form-bg min-h-screen bg-slate-50 text-slate-900">
+  <header class="border-b bg-white">
+    <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6">
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 class="text-xl font-semibold tracking-tight sm:text-2xl">Guest Information Form</h1>
+          <p class="text-sm text-slate-600">
+            Please fill out the information below. Fields marked with
+            <span class="font-medium text-rose-600">*</span> are required.
+          </p>
+        </div>
+        <div class="text-xs text-slate-500">Mobile-friendly • Easy to complete</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+      <section class="rounded-2xl border border-emerald-200 bg-emerald-50 shadow-sm">
+        <div class="px-4 py-4 sm:px-6 text-sm text-emerald-900 space-y-1">
+          <p class="font-semibold">Tracked response enabled</p>
+          <p *ngIf="publicClientId">Client ID: <span class="font-medium">{{ publicClientId }}</span></p>
+          <p *ngIf="publicToken">Token: <span class="font-medium break-all">{{ publicToken }}</span></p>
+          <p *ngIf="linkError" class="font-medium text-rose-700">{{ linkError }}</p>
+        </div>
+      </section>
+
+      <!-- PERSONAL & PASSPORT (MULTI-GUEST) -->
+      <section class="rounded-2xl border bg-white shadow-sm" formArrayName="guests">
+        <div class="border-b px-4 py-4 sm:px-6">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h2 class="text-base font-semibold">Personal and Passport Information</h2>
+              <p class="mt-1 text-sm text-slate-600">Enter exactly as shown on the passport.</p>
+            </div>
+
+            <button
+              type="button"
+              (click)="addGuest()"
+              class="inline-flex items-center justify-center rounded-xl bg-black px-3 py-2 text-sm text-white shadow-sm hover:opacity-90"
+            >
+              + Add guest
+            </button>
+          </div>
+        </div>
+
+        <div class="px-4 py-5 sm:px-6 space-y-6">
+          <div
+            *ngFor="let guest of guests.controls; let i = index"
+            [formGroupName]="i"
+            class="rounded-2xl border border-slate-200 p-4 sm:p-5"
+          >
+            <!-- Guest header -->
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="text-sm font-semibold text-slate-900">Guest {{ i + 1 }}</p>
+                <p class="text-xs text-slate-600">Required fields must match the passport.</p>
+              </div>
+
+              <button
+                type="button"
+                (click)="removeGuest(i)"
+                [disabled]="guests.length <= 1"
+                class="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700 shadow-sm hover:bg-rose-100 disabled:opacity-50"
+              >
+                Remove
+              </button>
+            </div>
+
+            <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div>
+                <label class="text-sm font-medium" [for]="'firstName_' + i">First Name <span class="text-rose-600">*</span></label>
+                <input [id]="'firstName_' + i" formControlName="firstName" placeholder="e.g., Maria"
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+                <p *ngIf="isGuestInvalid(i,'firstName')" class="mt-1 text-xs text-rose-600">Required.</p>
+              </div>
+
+              <div>
+                <label class="text-sm font-medium" [for]="'lastName_' + i">Last Name <span class="text-rose-600">*</span></label>
+                <input [id]="'lastName_' + i" formControlName="lastName" placeholder="e.g., González"
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+                <p *ngIf="isGuestInvalid(i,'lastName')" class="mt-1 text-xs text-rose-600">Required.</p>
+              </div>
+
+              <div>
+                <label class="text-sm font-medium" [for]="'passportNumber_' + i">Passport Number <span class="text-rose-600">*</span></label>
+                <input [id]="'passportNumber_' + i" formControlName="passportNumber" placeholder="e.g., X1234567"
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+                <p *ngIf="isGuestInvalid(i,'passportNumber')" class="mt-1 text-xs text-rose-600">Required.</p>
+              </div>
+
+              <div class="sm:col-span-2 lg:col-span-2">
+                <label class="text-sm font-medium" [for]="'passportFile_' + i">Passport File <span class="text-rose-600">*</span></label>
+                <input
+                  [id]="'passportFile_' + i"
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  (change)="onGuestPassportSelected($event, i)"
+                  class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"
+                />
+                <p *ngIf="guest.get('passportFileName')?.value" class="mt-1 text-xs text-slate-600">
+                  Selected file: {{ guest.get('passportFileName')?.value }}
+                </p>
+                <p *ngIf="isGuestInvalid(i,'passportFile')" class="mt-1 text-xs text-rose-600">Passport file is required.</p>
+              </div>
+
+              <div>
+                <label class="text-sm font-medium" [for]="'nationality_' + i">Nationality (on passport) <span class="text-rose-600">*</span></label>
+                <input [id]="'nationality_' + i" formControlName="nationality" placeholder="e.g., Mexican"
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+                <p *ngIf="isGuestInvalid(i,'nationality')" class="mt-1 text-xs text-rose-600">Required.</p>
+              </div>
+
+              <div>
+                <label class="text-sm font-medium" [for]="'birthDate_' + i">Birth Date <span class="text-rose-600">*</span></label>
+                <input [id]="'birthDate_' + i" type="date" formControlName="birthDate"
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+                <p *ngIf="isGuestInvalid(i,'birthDate')" class="mt-1 text-xs text-rose-600">Required.</p>
+              </div>
+
+              <div>
+                <label class="text-sm font-medium" [for]="'expiryDate_' + i">Passport Expiry Date <span class="text-rose-600">*</span></label>
+                <input [id]="'expiryDate_' + i" type="date" formControlName="expiryDate"
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+                <p *ngIf="isGuestInvalid(i,'expiryDate')" class="mt-1 text-xs text-rose-600">Required.</p>
+              </div>
+
+              <div class="sm:col-span-2 lg:col-span-1">
+                <label class="text-sm font-medium" [for]="'gender_' + i">Gender</label>
+                <select [id]="'gender_' + i" formControlName="gender"
+                  class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200">
+                  <option value="">Select…</option>
+                  <option value="Female">Female</option>
+                  <option value="Male">Male</option>
+                  <option value="Non-binary">Non-binary</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mt-6 rounded-xl bg-slate-50 p-4">
+              <label class="text-sm font-medium" [for]="'notes_' + i">Notes (optional)</label>
+              <textarea [id]="'notes_' + i" rows="3" formControlName="notes"
+                class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"
+                placeholder="Any extra details you want to share…"></textarea>
+            </div>
+
+            <!-- ✅ Physical (inside guest) -->
+            <details class="mt-3 rounded-xl border border-slate-200 bg-white" formGroupName="physical">
+              <summary class="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50 rounded-xl">
+                Physical Information
+                <span class="ml-2 text-xs font-normal text-slate-500">(only if applicable)</span>
+              </summary>
+
+              <div class="px-4 pb-4 pt-2">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div>
+                    <label class="text-sm font-medium">Height</label>
+                    <input
+                      formControlName="height"
+                      placeholder="cm / ft"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium">Weight</label>
+                    <input
+                      formControlName="weight"
+                      placeholder="kg / lb"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium">Shoe size</label>
+                    <input
+                      formControlName="shoeSize"
+                      placeholder="e.g., 40 / 9"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"
+                    />
+                  </div>
+                </div>
+              </div>
+            </details>
+            <!-- ✅ Dietary & Medical (inside guest) -->
+            <details class="mt-4 rounded-xl border border-slate-200 bg-white" formGroupName="dietary">
+              <summary class="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50 rounded-xl">
+                Dietary & Medical
+                <span class="ml-2 text-xs font-normal text-slate-500">(for this guest)</span>
+              </summary>
+
+              <div class="px-4 pb-4 pt-2">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div>
+                    <label class="text-sm font-medium">Dietary requirements</label>
+                    <input
+                      formControlName="dietary"
+                      placeholder="e.g., Vegetarian / Halal / None"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"
+                    />
+                  </div>
+
+                  <div class="sm:col-span-2 lg:col-span-2">
+                    <label class="text-sm font-medium">Medical conditions & medicines</label>
+                    <input
+                      formControlName="medical"
+                      placeholder="Condition + medication (or None)"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"
+                    />
+                  </div>
+
+                  <div class="lg:col-span-3">
+                    <label class="text-sm font-medium">Allergies</label>
+                    <input
+                      formControlName="allergies"
+                      placeholder="e.g., Nuts / None"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"
+                    />
+                  </div>
+                </div>
+
+                <p class="mt-2 text-xs text-slate-500">
+                  If none, please write <span class="font-medium">None</span>.
+                </p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- INTERNATIONAL FLIGHTS (dynamic flights) -->
+      <section class="rounded-2xl border bg-white shadow-sm" formGroupName="internationalFlights">
+        <div class="border-b px-4 py-4 sm:px-6">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+               <h2 class="text-base font-semibold">International Flight Information</h2>
+                <p class="mt-1 text-sm text-slate-600">
+              <span class="font-medium text-rose-600">*</span> Booking code / Record locator is very important.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            (click)="addflight()"
+            class="inline-flex items-center justify-center rounded-xl bg-black px-3 py-2 text-sm text-white shadow-sm hover:opacity-90"
+          >
+            + Add flight
+          </button>
+        </div>
+        </div>
+
+        <div class="px-4 py-5 sm:px-6 space-y-6">
+          <!-- ✅ FormArray wrapper -->
+          <div formArrayName="flights">
+            @for (flight of flights.controls; track $index) {
+              <div class="rounded-2xl border border-slate-200 p-4" [formGroupName]="$index">
+                <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                  <h3 class="text-sm font-semibold">International ARRIVAL to South America</h3>
+
+                  <button
+                    type="button"
+                    (click)="removeflight($index)"
+                    [disabled]="flights.length <= 1"
+                    class="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700 shadow-sm hover:bg-rose-100 disabled:opacity-50"
+                  >
+                    Remove
+                  </button>
+                </div>
+
+                <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
+                  <div class="lg:col-span-2">
+                    <label class="text-sm font-medium">Flight Number</label>
+                    <input formControlName="flightNumber" placeholder="e.g., AA 1234"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium">Departure Date</label>
+                    <input type="date" formControlName="departureDate"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium">Departure Time</label>
+                    <input type="time" formControlName="departureTime"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium">Arrival Date</label>
+                    <input type="date" formControlName="arrivalDate"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium">Arrival Time</label>
+                    <input type="time" formControlName="arrivalTime"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+                  </div>
+
+                  <div class="lg:col-span-2">
+                    <label class="text-sm font-medium">Booking Code / Record Locator <span class="text-rose-600">*</span></label>
+                    <input formControlName="bookingCode" placeholder="e.g., 1A2B3C"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+                  </div>
+
+                  <div class="lg:col-span-3">
+                    <label class="text-sm font-medium">Departure Airport</label>
+                    <input formControlName="departureAirport" placeholder="City / Airport (IATA code)"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+                  </div>
+
+                  <div class="lg:col-span-3">
+                    <label class="text-sm font-medium">Arrival Airport</label>
+                    <input formControlName="arrivalAirport" placeholder="City / Airport (IATA code)"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Airline / Alliance -->
+          <div class="rounded-2xl bg-slate-50 p-4" formGroupName="frequentFlyer">
+            <p class="text-sm text-slate-700">Let us know if you are a member or part of any airline alliance.</p>
+            <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div>
+                <label class="text-sm font-medium">Airline</label>
+                <input formControlName="airline" placeholder="e.g., American Airlines"
+                  class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+              </div>
+              <div>
+                <label class="text-sm font-medium">Status Level</label>
+                <input formControlName="statusLevel" placeholder="e.g., Gold / Platinum / None"
+                  class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+              </div>
+              <div>
+                <label class="text-sm font-medium">Membership (Frequent Flyer) Number</label>
+                <input formControlName="membershipNumber" placeholder="Optional"
+                  class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRAVEL INSURANCE -->
+      <section class="rounded-2xl border bg-white shadow-sm" formGroupName="travelInsurance">
+        <div class="border-b px-4 py-4 sm:px-6">
+          <h2 class="text-base font-semibold">Travel Insurance Details</h2>
+          <p class="mt-1 text-sm text-slate-600">If you don’t have travel insurance, write “None”.</p>
+        </div>
+
+        <div class="px-4 py-5 sm:px-6">
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label class="text-sm font-medium">Company Name</label>
+              <input formControlName="companyName" placeholder="e.g., Allianz (or None)"
+                class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+            </div>
+            <div>
+              <label class="text-sm font-medium">Policy Number</label>
+              <input formControlName="policyNumber" placeholder="e.g., ABC-123456 (or None)"
+                class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EMERGENCY CONTACT -->
+      <section class="rounded-2xl border bg-white shadow-sm" formGroupName="emergencyContact">
+        <div class="border-b px-4 py-4 sm:px-6">
+          <h2 class="text-base font-semibold">Emergency Contact Details</h2>
+          <p class="mt-1 text-sm text-slate-600">Someone we can reach if needed.</p>
+        </div>
+
+        <div class="px-4 py-5 sm:px-6">
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+              <label class="text-sm font-medium">Name</label>
+              <input formControlName="name" placeholder="Full name"
+                class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+            </div>
+            <div>
+              <label class="text-sm font-medium">Relationship</label>
+              <input formControlName="relationship" placeholder="e.g., Spouse / Parent"
+                class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+            </div>
+            <div>
+              <label class="text-sm font-medium">Home Phone</label>
+              <input formControlName="homePhone" placeholder="+1 555..."
+                class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+            </div>
+            <div>
+              <label class="text-sm font-medium">Cellphone</label>
+              <input formControlName="cellPhone" placeholder="+1 555..."
+                class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- YOUR CONTACT DETAILS -->
+      <section class="rounded-2xl border bg-white shadow-sm" formGroupName="yourContact">
+       <!-- Contact Person(s) (dynamic contacts) -->
+        <div class="border-b px-4 py-4 sm:px-6">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <h3 class="text-sm font-semibold">Contact Person(s)</h3>
+          <button
+            type="button"
+            (click)="addYourContactPerson()"
+            class="inline-flex items-center justify-center rounded-xl bg-black px-3 py-2 text-sm text-white shadow-sm hover:opacity-90"
+          >
+            + Add contact
+          </button>
+        </div>
+        </div>
+        <div class="px-4 py-5 sm:px-6 space-y-6">
+        <div class="mt-4 space-y-4" formArrayName="contacts">
+          <div *ngFor="let c of yourContactContacts.controls; let i = index" [formGroupName]="i"
+              class="rounded-2xl border border-slate-200 p-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold text-sm">Contact {{ i + 1 }}</h3>
+
+              <button
+                type="button"
+                (click)="removeYourContactPerson(i)"
+                [disabled]="yourContactContacts.length <= 1"
+                class="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700 shadow-sm hover:bg-rose-100 disabled:opacity-50"
+              >
+                Remove
+              </button>
+            </div>
+
+            <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div>
+                <label class="text-sm font-medium">Guest</label>
+                <input formControlName="guest" placeholder="e.g., Guest 1 / John Doe"
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"/>
+              </div>
+
+              <div>
+                <label class="text-sm font-medium">Occupation</label>
+                <input formControlName="occupation" placeholder="Optional"
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"/>
+              </div>
+
+              <div>
+                <label class="text-sm font-medium">Phone</label>
+                <input formControlName="phone" placeholder="+1..."
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"/>
+              </div>
+
+              <div>
+                <label class="text-sm font-medium">Email</label>
+                <input type="email" formControlName="email" placeholder="you@example.com"
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </section>
+
+      <!-- ROOMING LIST (dynamic rooms) -->
+      <section class="rounded-2xl border bg-white shadow-sm">
+        <div class="border-b px-4 py-4 sm:px-6">
+          <h2 class="text-base font-semibold">Rooming List</h2>
+          <p class="mt-1 text-sm text-slate-600">Please enter the rooming list if there is more than one room.</p>
+        </div>
+
+        <div class="px-4 py-5 sm:px-6">
+          <div class="space-y-4" formArrayName="rooms">
+            <div *ngFor="let r of rooms.controls; let i = index" [formGroupName]="i"
+                 class="rounded-2xl border border-slate-200 p-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-semibold text-sm">Room {{ i + 1 }}</h3>
+                <button type="button" (click)="removeRoom(i)" [class.hidden]="rooms.length === 1"
+                        class="text-sm text-rose-600 hover:underline">
+                  Remove
+                </button>
+              </div>
+
+              <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="lg:col-span-2">
+                  <label class="text-sm font-medium">Guest Names</label>
+                  <textarea formControlName="guestNames" rows="2" placeholder="List guests staying in this room"
+                    class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"></textarea>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium">Type of Room</label>
+                  <input formControlName="roomType" placeholder="01 Dbl bed / 02 Sg beds"
+                    class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"/>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium">Notes</label>
+                  <input formControlName="notes" placeholder="Add bed, crib, etc."
+                    class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-slate-200"/>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" (click)="addRoom()"
+            class="mt-4 rounded-xl bg-slate-900 px-4 py-2 text-white text-sm hover:bg-slate-800">
+            + Add another room
+          </button>
+        </div>
+      </section>
+
+      <!-- OWN-MADE RESERVATIONS -->
+      <section class="rounded-2xl border bg-white shadow-sm" formGroupName="ownMadeReservations">
+        <div class="border-b px-4 py-4 sm:px-6">
+          <h2 class="text-base font-semibold">Own-made Reservations</h2>
+        </div>
+
+        <div class="px-4 py-5 sm:px-6 space-y-8">
+          <!-- Domestic Flights (dynamic domesticFlights) -->
+          <div>
+            <div class="p-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <h3 class="font-semibold text-sm mb-3">Domestic Flights</h3>
+              <button
+                type="button"
+                (click)="addDomesticFlight()"
+                class="inline-flex items-center justify-center rounded-xl bg-black px-3 py-2 text-sm text-white shadow-sm hover:opacity-90"
+              >
+                + Add flight
+              </button>
+            </div>
+
+            <div class="space-y-4" formArrayName="domesticFlights">
+              <div *ngFor="let df of domesticFlights.controls; let i = index" [formGroupName]="i"
+                  class="rounded-2xl border border-slate-200 p-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="font-semibold text-sm">Domestic Flight {{ i + 1 }}</h3>
+
+                  <button
+                    type="button"
+                    (click)="removeDomesticFlight(i)"
+                    [disabled]="domesticFlights.length <= 1"
+                    class="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700 shadow-sm hover:bg-rose-100 disabled:opacity-50"
+                  >
+                    Remove
+                  </button>
+                </div>
+
+                <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+                  <div class="lg:col-span-2">
+                    <label class="text-sm font-medium">Flight Number</label>
+                    <input formControlName="flightNumber"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium">Departure Date</label>
+                    <input type="date" formControlName="departureDate"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium">Departure Time</label>
+                    <input type="time" formControlName="departureTime"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium">Arrival Date</label>
+                    <input type="date" formControlName="arrivalDate"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium">Arrival Time</label>
+                    <input type="time" formControlName="arrivalTime"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+                  </div>
+
+                  <div class="lg:col-span-2">
+                    <label class="text-sm font-medium">Booking Code / Record Locator</label>
+                    <input formControlName="bookingCode"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+                  </div>
+
+                  <div class="lg:col-span-3">
+                    <label class="text-sm font-medium">Departure Airport</label>
+                    <input formControlName="departureAirport"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+                  </div>
+
+                  <div class="lg:col-span-3">
+                    <label class="text-sm font-medium">Arrival Airport</label>
+                    <input formControlName="arrivalAirport"
+                      class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+                  </div>
+                </div>
+
+                <p class="text-xs text-slate-500 mt-2">
+                  If you prefer window, aisle, or emergency-row seats, please let us know and we will do our best to accommodate!
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- Restaurants (dynamic list) -->
+          <div>
+            <h3 class="font-semibold text-sm mb-3">Restaurants</h3>
+
+            <div class="space-y-4" formArrayName="restaurants">
+              <div *ngFor="let rr of restaurants.controls; let i = index" [formGroupName]="i"
+                   class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 border rounded-xl p-4">
+                <div>
+                  <label class="text-xs font-medium text-slate-600">Restaurant Name</label>
+                  <input formControlName="name" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+                </div>
+                <div>
+                  <label class="text-xs font-medium text-slate-600">Destination</label>
+                  <input formControlName="destination" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+                </div>
+                <div>
+                  <label class="text-xs font-medium text-slate-600">Date</label>
+                  <input type="date" formControlName="date" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-xs font-medium text-slate-600">Reservation Time</label>
+                  <input type="time" formControlName="time" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+                  <button type="button" (click)="removeRestaurant(i)" [class.hidden]="restaurants.length === 1"
+                          class="mt-2 self-end text-sm text-rose-600 hover:underline">
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" (click)="addRestaurant()"
+              class="mt-4 rounded-xl bg-slate-900 px-4 py-2 text-white text-sm hover:bg-slate-800">
+              + Add restaurant
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ADDITIONAL INFORMATION -->
+      <section class="rounded-2xl border bg-white shadow-sm">
+        <div class="border-b px-4 py-4 sm:px-6">
+          <h2 class="text-base font-semibold">Additional Information</h2>
+          <p class="text-sm text-slate-600">
+            Include any extra information such as interests or special requirements.
+          </p>
+        </div>
+
+        <div class="px-4 py-5 sm:px-6">
+          <textarea rows="5" formControlName="additionalInfo"
+            class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+            placeholder="Write anything that will help us personalize your experience..."></textarea>
+        </div>
+      </section>
+
+
+      <!-- SUBMIT -->
+      <section class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="text-xs text-slate-500">
+          By submitting, you confirm the information is accurate.
+        </div>
+
+        <div class="flex gap-3">
+          <button type="button" (click)="resetForm()"
+            class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50">
+            Clear
+          </button>
+          <button type="submit"
+            [disabled]="isSubmitting || !isValidPublicLink"
+            class="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200 disabled:cursor-not-allowed disabled:opacity-60">
+            {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+          </button>
+        </div>
+      </section>
+
+      <section *ngIf="submitMessage || submitError" class="rounded-2xl border bg-white shadow-sm">
+        <div class="px-4 py-3 sm:px-6 text-sm">
+          <p *ngIf="submitMessage" class="font-medium text-emerald-700">{{ submitMessage }}</p>
+          <p *ngIf="submitError" class="font-medium text-rose-700">{{ submitError }}</p>
+        </div>
+      </section>
+
+    </form>
+  </main>
+</div>
+
+    </div>
+</div>

@@ -6,7 +6,11 @@ module.exports = {
   theme: {
     extend: {
       transform: ['responsive', 'hover', 'focus'],
-      transitionProperty: ['responsive', 'motion-safe', 'motion-reduce']},
+      transitionProperty: ['responsive', 'motion-safe', 'motion-reduce'],
+      colors:{
+        brand: '#44313a'
+      },
+    },
   },
   plugins: [
     require('tailwindcss'),

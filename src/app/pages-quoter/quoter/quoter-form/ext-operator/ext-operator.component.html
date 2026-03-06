@@ -1,0 +1,311 @@
+<details class="group rounded-xl border border-gray-200 bg-white shadow-sm">
+  <!-- Header -->
+  <summary
+    class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 cursor-pointer list-none hover:bg-gray-50 rounded-xl group-open:rounded-b-none"
+  >
+    <div class="flex items-center gap-3 min-w-0">
+      <span class="transition-transform duration-200 group-open:rotate-180 text-gray-600">
+        <svg fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24" width="22">
+          <path d="M6 9l6 6 6-6"></path>
+        </svg>
+      </span>
+
+      <div class="min-w-0">
+        <p class="text-sm sm:text-base font-semibold text-gray-900">External Operator</p>
+        <p class="text-xs text-gray-500">Add operator costs and external calculations.</p>
+      </div>
+    </div>
+
+    <span class="hidden sm:inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700">
+      External
+    </span>
+  </summary>
+
+  <div class="px-4 sm:px-5 pb-4 pt-3 space-y-4">
+    <!-- FORM -->
+    <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h3 class="text-sm font-semibold text-gray-900">Add Operator</h3>
+          <p class="text-xs text-gray-500">Select country, operator, prices and notes.</p>
+        </div>
+
+        <button
+          type="button"
+          class="inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-semibold
+                 bg-indigo-600 text-white hover:bg-indigo-700"
+          (click)="onSubmitOperator()"
+        >
+          Add Operator
+        </button>
+      </div>
+
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-3">
+        <!-- Country -->
+        <div class="xl:col-span-1">
+          <label for="route" class="block text-sm font-medium text-gray-700">Country</label>
+          <select
+            [(ngModel)]="newExternalOpe.country"
+            name="route"
+            id="route"
+            class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm text-gray-900
+                   ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          >
+            @for (country of countries; track $index) {
+              <option [value]="country">{{country}}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Name Operator -->
+        <div class="xl:col-span-2">
+          <label for="name_operator" class="block text-sm font-medium text-gray-700">Name Operator</label>
+          <select
+            [(ngModel)]="newExternalOpe.name_operator"
+            name="name_operator"
+            id="name_operator"
+            class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm text-gray-900
+                   ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          >
+            @for (operator of operatorsList; track $index) {
+              <option [value]="operator">{{operator}}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Prices -->
+        <div class="xl:col-span-2">
+          <label class="block text-sm font-medium text-gray-700">Prices</label>
+          <div class="mt-1 flex flex-wrap gap-2">
+            @for (item of [].constructor(priceLength()); track $index) {
+              <input
+                type="number"
+                name="quoterItem.price_prueba-{{$index}}"
+                [(ngModel)]="newExternalOpe.prices[$index]"
+                id="quoterItem.price_prueba-{{$index}}"
+                class="w-24 rounded-lg bg-white px-3 py-2 text-sm text-gray-900
+                       ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                placeholder="0"
+              />
+            }
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="xl:col-span-1">
+          <label for="notes" class="block text-sm font-medium text-gray-700">Notes</label>
+          <input
+            type="text"
+            name="notes"
+            [(ngModel)]="newExternalOpe.notes"
+            id="notes"
+            class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm text-gray-900
+                   ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            placeholder="Optional"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="rounded-xl border border-gray-200 overflow-hidden">
+      <div class="px-4 py-3 bg-white flex items-center justify-between">
+        <h3 class="text-sm font-semibold text-gray-900">External Operator</h3>
+        <span class="text-xs text-gray-500">Editable rows + totals</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-max w-full text-sm text-left text-gray-600">
+          <thead class="bg-gray-50">
+            <tr class="text-xs uppercase tracking-wide text-gray-600">
+              <th class="px-4 py-3 font-semibold whitespace-nowrap">Country</th>
+              <th class="px-4 py-3 font-semibold whitespace-nowrap">Operator</th>
+              @for (item of [].constructor(priceLength()); track $index) {
+                <th class="px-4 py-3 font-semibold whitespace-nowrap">Price {{$index+1}}</th>
+              }
+              <th class="px-4 py-3 font-semibold whitespace-nowrap">Notes</th>
+              <th class="px-4 py-3 font-semibold whitespace-nowrap">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody class="bg-white divide-y divide-gray-100">
+            @for (item of operators; track $index) {
+              <tr class="hover:bg-gray-50">
+                <!-- Country -->
+                <td class="px-4 py-3 whitespace-nowrap">
+                  @if (item.editOperator) {
+                    <select
+                      name="item.country"
+                      id="item.country"
+                      [(ngModel)]="item.country"
+                      class="rounded-lg bg-white px-3 py-2 text-sm text-gray-900
+                             ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    >
+                      @for (country of countries; track $index) {
+                        <option [value]="country">{{country}}</option>
+                      }
+                    </select>
+                  }@else{
+                    <div class="font-medium text-gray-900">{{item.country}}</div>
+                  }
+                </td>
+
+                <!-- Operator -->
+                <td class="px-4 py-3 whitespace-nowrap">
+                  @if (item.editOperator) {
+                    <input
+                      type="text"
+                      class="w-56 rounded-lg bg-white px-3 py-2 text-sm text-gray-900
+                             ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      [(ngModel)]="item.name_operator"
+                    />
+                  }@else{
+                    <div>{{item.name_operator}}</div>
+                  }
+                </td>
+
+                <!-- Prices -->
+                @for (price of item.prices; track $index) {
+                  <td class="px-4 py-3 whitespace-nowrap font-semibold text-indigo-700">
+                    @if (item.editOperator) {
+                      <input
+                        type="number"
+                        class="w-24 rounded-lg bg-white px-3 py-2 text-sm text-gray-900
+                               ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                        [(ngModel)]="item.prices[$index]"
+                      />
+                    }@else{
+                      <div>{{price | currency}}</div>
+                    }
+                  </td>
+                }
+
+                <!-- Notes -->
+                <td class="px-4 py-3 whitespace-nowrap">
+                  @if (item.editOperator) {
+                    <input
+                      type="text"
+                      class="w-72 rounded-lg bg-white px-3 py-2 text-sm text-gray-900
+                             ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      [(ngModel)]="item.notes"
+                    />
+                  }@else{
+                    <div class="truncate max-w-[18rem]" title="{{item.notes}}">{{item.notes}}</div>
+                  }
+                </td>
+
+                <!-- Actions -->
+                <td class="px-4 py-3 whitespace-nowrap">
+                  <div class="flex items-center gap-2">
+                    @if (item.editOperator) {
+                      <button
+                        type="button"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-lg
+                               ring-1 ring-inset ring-green-200 text-green-600 hover:bg-green-50"
+                        (click)="onSave(item)"
+                        title="Save"
+                        aria-label="Save"
+                      >
+                        <i class="bx bx-check text-2xl"></i>
+                      </button>
+
+                      <button
+                        type="button"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-lg
+                               ring-1 ring-inset ring-red-200 text-red-600 hover:bg-red-50"
+                        (click)="onClose(item,$index)"
+                        title="Cancel"
+                        aria-label="Cancel"
+                      >
+                        <i class="bx bxs-x-circle text-2xl"></i>
+                      </button>
+                    }@else{
+                      <button
+                        type="button"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-lg
+                               ring-1 ring-inset ring-gray-200 text-gray-700 hover:bg-gray-50"
+                        (click)="onEdit(item,$index)"
+                        title="Edit"
+                        aria-label="Edit"
+                      >
+                        <i class="bx bx-edit-alt text-2xl text-indigo-600"></i>
+                      </button>
+                    }
+
+                    <button
+                      type="button"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-lg
+                             ring-1 ring-inset ring-red-200 text-red-600 hover:bg-red-50"
+                      (click)="onDelete($index)"
+                      title="Delete"
+                      aria-label="Delete"
+                    >
+                      <i class="bx bx-trash text-2xl"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+
+          <!-- FOOTER TOTALS -->
+          <tfoot class="bg-gray-50">
+            <tr>
+              <td class="px-4 py-3 font-semibold text-gray-900 border-t border-gray-200 whitespace-nowrap">
+                External Utility
+              </td>
+
+              <!-- Input porcentaje (mejor alineado) -->
+              <td class="px-4 py-3 border-t border-gray-200">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-gray-500 whitespace-nowrap">% TD</span>
+                  <input
+                    type="number"
+                    class="w-28 rounded-lg bg-white px-3 py-2 text-sm text-gray-900
+                           ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    (input)="onInputPorcentaje($event)"
+                    [value]="porcentajeTd()"
+                  />
+                </div>
+              </td>
+
+              @for (price of externalUtilityPrices(); track $index) {
+                <td class="px-4 py-3 font-semibold text-indigo-700 border-t border-gray-200 whitespace-nowrap">
+                  {{price | currency}}
+                </td>
+              }
+              <td class="px-4 py-3 border-t border-gray-200"></td>
+              <td class="px-4 py-3 border-t border-gray-200"></td>
+            </tr>
+
+            <tr>
+              <td colspan="2" class="px-4 py-3 font-semibold text-gray-900 border-t border-gray-200 whitespace-nowrap">
+                External Taxes
+              </td>
+              @for (price of externalTaxesPrices(); track $index) {
+                <td class="px-4 py-3 font-semibold text-indigo-700 border-t border-gray-200 whitespace-nowrap">
+                  {{price | currency}}
+                </td>
+              }
+              <td class="px-4 py-3 border-t border-gray-200"></td>
+              <td class="px-4 py-3 border-t border-gray-200"></td>
+            </tr>
+
+            <tr>
+              <td colspan="2" class="px-4 py-3 font-semibold text-gray-900 border-t border-gray-200 whitespace-nowrap">
+                Total Cost External
+              </td>
+              @for (price of totalCostExternal(); track $index) {
+                <td class="px-4 py-3 font-semibold text-indigo-700 border-t border-gray-200 whitespace-nowrap">
+                  {{price | currency}}
+                </td>
+              }
+              <td class="px-4 py-3 border-t border-gray-200"></td>
+              <td class="px-4 py-3 border-t border-gray-200"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</details>
