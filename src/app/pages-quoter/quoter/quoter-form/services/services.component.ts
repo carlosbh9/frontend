@@ -77,8 +77,7 @@ export class ServicesComponent  {
         // return [...filteredServices, lastElement];
         if (filteredServices.length > 0) {
           const maxDay = filteredServices[filteredServices.length - 1].day;  // Asegura que no accedemos a un elemento undefined
-          lastElement.day = maxDay + 1;
-          return [...filteredServices, lastElement];
+          return [...filteredServices, { ...lastElement, day: maxDay + 1 }];
         } else {
           // Si no hay servicios filtrados, devuelve solo el elemento fijo
           return [lastElement];
@@ -114,12 +113,63 @@ export class ServicesComponent  {
     return totalPrices;
   }
 
-  private emitServices() {
+  private getMutableServices(): any[] {
+    return [...this.services()];
+  }
+
+  private findServiceIndex(dayService: any): number {
+    return this.services().findIndex(service =>
+      service === dayService ||
+      (
+        service.day === dayService.day &&
+        service.date === dayService.date &&
+        service.isFixedLast === dayService.isFixedLast
+      )
+    );
+  }
+
+  private getTotalPricesServicesFrom(services: any[]): number[] {
+    const totalPrices: number[] = [];
+
+    services.forEach((day: { services: { prices: number[] }[] }) => {
+      day.services.forEach((service: { prices: number[] }) => {
+        service.prices.forEach((price: number, index: number) => {
+          totalPrices[index] = (totalPrices[index] || 0) + price;
+        });
+      });
+    });
+
+    return totalPrices;
+  }
+
+  private emitServices(nextServices: any[] = this.getMutableServices()) {
     this.isEmitting = true;
-    this.servicesChange.emit(this.sortedServices());
-    //this.servicesChange.emit(this.services);
-    this.totalPricesChange.emit(this.getTotalPricesServices())
+    const sortedServices = this.sortServicesForEmission(nextServices);
+    this.servicesChange.emit(sortedServices);
+    this.totalPricesChange.emit(this.getTotalPricesServicesFrom(sortedServices))
     this.isEmitting = false;
+  }
+
+  private sortServicesForEmission(services: any[]): any[] {
+    const servicesCopy = [...services];
+    if (!servicesCopy.length) return [];
+
+    const lastElement = servicesCopy.find(service => service.isFixedLast);
+    const filteredServices = lastElement
+      ? servicesCopy.filter(service => !service.isFixedLast)
+      : servicesCopy;
+
+    filteredServices.sort((a, b) => a.day - b.day);
+
+    if (lastElement) {
+      if (filteredServices.length > 0) {
+        const maxDay = filteredServices[filteredServices.length - 1].day;
+        return [...filteredServices, { ...lastElement, day: maxDay + 1 }];
+      }
+      return [lastElement];
+    }
+
+    return filteredServices;
   }
   openModal() {
     if (!this.startDateQuoter()) {
@@ -140,7 +190,8 @@ export class ServicesComponent  {
   }
 
   openModalEdit(dayService:any) {
-    this.selectserviceEdit=dayService
+    const serviceIndex = this.findServiceIndex(dayService);
+    this.selectserviceEdit = serviceIndex >= 0 ? this.services()[serviceIndex] : dayService
     this.modalOpenEditService.set(true);
     console.log('dia seleccionado', this.selectserviceEdit)
   }
@@ -151,12 +202,9 @@ export class ServicesComponent  {
   }
 
   deleteService(index: number){
-    // const updatedServices = [...this.sortedServices()];
-    // updatedServices.splice(index, 1);
-    // this.servicesChange.emit(updatedServices); // Emite los cambios al padre
-
-    this.sortedServices().splice(index,1)
-    this.emitServices()
+    const nextServices = this.getMutableServices();
+    nextServices.splice(index,1)
+    this.emitServices(nextServices)
   }
   isLastElement(index: number): boolean {
     return index === this.sortedServices().length - 1;
@@ -166,11 +214,12 @@ export class ServicesComponent  {
     console.log('recibido de mq:', temp)
     const startDate = new Date(temp.date);
     let currentDay: number = 0;
+    const nextServices = this.getMutableServices();
     let newService = { day: 0, date: '',number_paxs: temp.number_paxs,
       children_ages: temp.children_ages ,isFixedLast: false, services: [] as any[] };
     // Esructura de servicio por día
     if(temp.day >= 1 ){
-        this.sortedServices().push(temp);
+        nextServices.push(temp);
         console.log('pushh a la tabla ', temp)
     }else {
     temp.services.forEach((service: any, index: number) => {
@@ -180,7 +229,7 @@ export class ServicesComponent  {
               if (index === temp.services.length - 1) {
                   newService.isFixedLast = true;
               }
-              this.sortedServices().push(newService);
+              nextServices.push(newService);
           }
 
           newService = {
@@ -202,12 +251,12 @@ export class ServicesComponent  {
       // Verifica si este es el último servicio en la lista y aún no se hizo push
       if (index === temp.services.length - 1 && newService.day !== 0) {
           newService.isFixedLast = true;
-          this.sortedServices().push(newService);
+          nextServices.push(newService);
       }
   });
     }
     this.emtyService();
-    this.emitServices()
+    this.emitServices(nextServices)
   }
 
 

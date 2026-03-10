@@ -108,6 +108,7 @@
                     <input
                       type="number"
                       [(ngModel)]="newQuoter.number_paxs[$index]"
+                      (ngModelChange)="onNumberPaxsChange()"
                       name="newQuoter.number_paxs_{{$index}}"
                       id="number_paxs_{{$index}}"
                       placeholder="0"

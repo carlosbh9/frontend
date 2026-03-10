@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit,inject,signal ,HostListener, computed} from '@angular/core';
+import { Component, OnInit,inject,signal ,HostListener, computed, effect} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QuoterService } from '../../../Services/quoter.service';
 import { FlightsComponent } from './flights/flights.component';
@@ -38,7 +38,18 @@ export class QuoterFormComponent implements  OnInit{
   pdfExportService = inject(PdfexportService)
   excelService = inject(ExportExcelService)
 
-  constructor() {}
+  constructor() {
+    effect(() => {
+      this.numberPaxsVersion();
+      this.prueba();
+      this.prueba2();
+      this.prueba3();
+      this.prueba4();
+      this.prueba5();
+      this.prueba6();
+      this.syncDerivedTotals();
+    });
+  }
   private blurTimeout: any;
   dataDefault: any;
   modalOpen = signal(false);
@@ -65,6 +76,7 @@ export class QuoterFormComponent implements  OnInit{
   prueba4 = signal<number[]>([]);
   prueba5 = signal<number[]>([]);
   prueba6 = signal<number[]>([]);
+  numberPaxsVersion = signal(0);
 
   destinations: string[] =['PERU','BOLIVIA','ECUADOR','COLOMBIA','ARGENTINA','CHILE']
 
@@ -171,7 +183,6 @@ export class QuoterFormComponent implements  OnInit{
     this.datosrecibidosHotel = null
     this.datosrecibidosService = null
 
-
   }
   onCheckboxChange(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
@@ -197,6 +208,10 @@ export class QuoterFormComponent implements  OnInit{
     const updatedValues = [...this.prueba6()]; // Copiar el array actual
     updatedValues[index] = parseFloat(input.value); // Actualizar el valor en el índice correspondiente
     this.prueba6.set(updatedValues); // Actualizar la señal
+  }
+
+  onNumberPaxsChange() {
+    this.numberPaxsVersion.update(value => value + 1);
   }
 
 async loadContacts() {
@@ -233,6 +248,7 @@ selectOption(option: any): void {
       this.prueba3.set(this.newQuoter.total_prices.total_ext_operator)
       this.prueba4.set(this.newQuoter.total_prices.total_flights)
       this.prueba6.set(this.newQuoter.total_prices.external_utility)
+      this.numberPaxsVersion.update(value => value + 1);
 
 
     } catch (error) {
@@ -242,6 +258,7 @@ selectOption(option: any): void {
   }
   addNumberPaxs() {
     this.newQuoter.number_paxs.push(0);
+    this.onNumberPaxsChange();
 
     }
   addChildrenAges() {
@@ -292,6 +309,7 @@ selectOption(option: any): void {
       if (this.newQuoter.total_prices.total_services.length > indexToRemove) {
       this.newQuoter.total_prices.total_services.splice(indexToRemove, 1);
       }
+      this.onNumberPaxsChange();
       }
 
     }
@@ -417,8 +435,71 @@ selectOption(option: any): void {
      this.newQuoter.total_prices.total_flights= prices
    }
 
+  private sumPricesByIndex(...priceGroups: number[][]): number[] {
+    const totals: number[] = [];
+    const maxLength = this.newQuoter.number_paxs.length;
+
+    for (let i = 0; i < maxLength; i++) {
+      totals[i] = priceGroups.reduce((sum, prices) => sum + (prices[i] || 0), 0);
+    }
+
+    return totals;
+  }
+
+  private mapPricesByIndex(source: number[], mapper: (value: number, index: number) => number): number[] {
+    const totals: number[] = [];
+    const maxLength = this.newQuoter.number_paxs.length;
+
+    for (let i = 0; i < maxLength; i++) {
+      totals[i] = mapper(source[i] || 0, i);
+    }
+
+    return totals;
+  }
+
+  private buildDerivedTotals() {
+    const total_cost = this.sumPricesByIndex(this.prueba(), this.prueba2());
+    const external_utility = [...this.prueba6()];
+    const cost_external_taxes = this.mapPricesByIndex(total_cost, (value, index) => {
+      const utility = external_utility[index] || 0;
+      return (value + utility) * 0.15;
+    });
+    const total_cost_external = this.sumPricesByIndex(total_cost, cost_external_taxes);
+    const subtotal = this.sumPricesByIndex(total_cost_external, this.prueba3(), this.prueba4(), this.prueba5());
+    const cost_transfers = this.mapPricesByIndex(subtotal, value => value * 0.04);
+    const final_cost = this.sumPricesByIndex(subtotal, cost_transfers);
+    const price_pp = this.mapPricesByIndex(final_cost, (value, index) => {
+      const paxCount = this.newQuoter.number_paxs[index] || 0;
+      return paxCount > 0 ? value / paxCount : 0;
+    });
+
+    return {
+      total_cost,
+      external_utility,
+      cost_external_taxes,
+      total_cost_external,
+      subtotal,
+      cost_transfers,
+      final_cost,
+      price_pp,
+    };
+  }
+
+  private syncDerivedTotals() {
+    const derivedTotals = this.buildDerivedTotals();
+    this.newQuoter.total_prices.total_cost = derivedTotals.total_cost;
+    this.newQuoter.total_prices.external_utility = derivedTotals.external_utility;
+    this.newQuoter.total_prices.cost_external_taxes = derivedTotals.cost_external_taxes;
+    this.newQuoter.total_prices.total_cost_external = derivedTotals.total_cost_external;
+    this.newQuoter.total_prices.subtotal = derivedTotals.subtotal;
+    this.newQuoter.total_prices.cost_transfers = derivedTotals.cost_transfers;
+    this.newQuoter.total_prices.final_cost = derivedTotals.final_cost;
+    this.newQuoter.total_prices.price_pp = derivedTotals.price_pp;
+  }
+
 
   onSubmit(){
+    this.syncDerivedTotals();
     this.quoterService.createQuoter(this.newQuoter).subscribe({
       next: (response) => {
         console.log('Quoter added', response);
@@ -428,6 +509,7 @@ selectOption(option: any): void {
     });
   }
  async onUpdate(){
+    this.syncDerivedTotals();
     // this.quoterService.updateQuoter(this.idQuoter,this.newQuoter).then(
     //   response => {
     //     console.log('Quoter update',response)
@@ -450,56 +532,24 @@ selectOption(option: any): void {
 
 
   getTotalCosts = computed(() => {
-    const totalSum: number[] = [];
-    const totalPricesHotels = this.prueba()
-    //const totalPricesServices = this.totalPriceServices;
-    const totalPricesServices = this.prueba2()
-    // Determinar el mayor largo entre los dos arreglos
-    const maxLength = Math.max(this.newQuoter.number_paxs.length);
-
-    // Recorrer ambos arreglos hasta el mayor largo
-    for (let i = 0; i < maxLength; i++) {
-      const precioHotel = totalPricesHotels[i] || 0; // Si no existe valor, toma 0
-      const precioServicio = totalPricesServices[i] || 0; // Si no existe valor, toma 0
-      totalSum[i] = precioHotel + precioServicio;
-    }
-    this.newQuoter.total_prices.total_cost= totalSum
-    return totalSum
+    this.numberPaxsVersion();
+    return this.buildDerivedTotals().total_cost
   });
 
   getExternalTaxes = computed(() => {
-    const totalExternal: number[]=[];
-      const totalCost = this.getTotalCosts();
-      const external_utility = this.prueba6()
-      const maxLength = Math.max(this.newQuoter.number_paxs.length);
-      for (let i = 0; i < maxLength; i++) {
-        const temp = totalCost[i] || 0; // Si no existe valor, toma 0
-        const temp1 = external_utility[i] || 0
-        totalExternal[i] = (temp+temp1) * 0.15;
-      }
-      this.newQuoter.total_prices.cost_external_taxes=totalExternal
-      this.newQuoter.total_prices.external_utility=  this.prueba6()
-
-      console.log('prueba 6', this.prueba6(), this.newQuoter.total_prices.external_utility)
-      return totalExternal
+      this.numberPaxsVersion();
+      return this.buildDerivedTotals().cost_external_taxes
   });
 
     getTotalCostExternal= computed(() => {
-      const totalCostExternal: number[]=[]
-      const totalCost = this.getTotalCosts();
-      const totalExternal = this.getExternalTaxes();
-      const maxLength = Math.max(this.newQuoter.number_paxs.length);
-      for (let i = 0; i < maxLength; i++) {
-        const temp1 = totalCost[i] || 0;
-        const temp2 = totalExternal[i] || 0;// Si no existe valor, toma 0
-        totalCostExternal[i] = temp1 + temp2;
-      }
-      this.newQuoter.total_prices.total_cost_external=totalCostExternal
-      return totalCostExternal
+      this.numberPaxsVersion();
+      return this.buildDerivedTotals().total_cost_external
     }
   )
 
   subTotal = computed(() => {
+    this.numberPaxsVersion();
+    return this.buildDerivedTotals().subtotal;
 
     const subtotal: number[] = [];
 
@@ -526,6 +576,8 @@ selectOption(option: any): void {
   })
 
   costOfTransfers = computed(() => {
+    this.numberPaxsVersion();
+    return this.buildDerivedTotals().cost_transfers
     const cost_transfers: number[]=[]
     const maxLength = Math.max(this.newQuoter.number_paxs.length);
     const subtotal = this.subTotal()
@@ -538,6 +590,8 @@ selectOption(option: any): void {
     return cost_transfers
   })
   final_cost = computed(() => {
+    this.numberPaxsVersion();
+    return this.buildDerivedTotals().final_cost
     const final_cost: number[]=[]
 
     const subTotalValues = this.subTotal();
@@ -554,6 +608,8 @@ selectOption(option: any): void {
     return final_cost
   })
   price_per_person = computed(() => {
+    this.numberPaxsVersion();
+    return this.buildDerivedTotals().price_pp
     const price_pp: number[]=[]
     const maxLength = Math.max(this.newQuoter.number_paxs.length);
     const finalCostValues = this.final_cost();
@@ -572,6 +628,7 @@ selectOption(option: any): void {
   })
 
     updateTotalPrices() {
+      this.syncDerivedTotals();
       // Actualizar los cálculos
       const totalCosts = this.getTotalCosts();
       const externalTaxes = this.getExternalTaxes();

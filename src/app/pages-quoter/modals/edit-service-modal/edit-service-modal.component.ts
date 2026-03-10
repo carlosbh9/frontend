@@ -119,6 +119,51 @@ export class EditServiceModalComponent implements OnInit{
     console.log('data recuperdad',this.dayData,this.tempPreviuw)
     this.closeModalEvent.emit();
   }
+
+  private getSelectedChildrenAges(): number[] {
+    return this.children_ages()?.filter((_: any, i: number) => this.childrenAgesChecks[i]) || [];
+  }
+
+  private getSelectedNumberPaxs(): number[] {
+    return this.dayData.number_paxs.map((_: any, groupIndex: number) => this.getSelectedCountForGroup(groupIndex));
+  }
+
+  private buildPricingPayload(services: ServiceCalc[]) {
+    const number_paxs = this.getSelectedNumberPaxs();
+    const children_ages = this.getSelectedChildrenAges();
+
+    this.dayData.number_paxs = number_paxs;
+    this.dayData.children_ages = children_ages;
+
+    return {
+      services,
+      date: this.dayData.date,
+      number_paxs,
+      children_ages,
+      city: this.city,
+    };
+  }
+
+  private appendPricedServices(services: any[]) {
+    services.forEach((service: any) => {
+      if (!service.city && this.filteredDaysOptions[0]?.city) {
+        service.city = this.filteredDaysOptions[0].city;
+      }
+
+      this.dayData.services.push(service);
+    });
+  }
+
+  private resetSelectionState() {
+    this.item = {
+      ...this.item,
+      services: [],
+      city: '',
+    };
+    this.selectedService = {};
+    this.selectedSubService = {};
+  }
+
   async onCategoriaChange(event: any){
     console.log('categoria: ',this.selectCategoria)
 
@@ -238,45 +283,41 @@ onDelete(index: number){
   console.log('data recuperdad delete',this.dayData,this.tempPreviuw)
 
 }
-   addItem(){
-    this.item.services.push(this.selectedService);
-    this.selectedService.city = this.city
+   async addItem(){
+    const serviceToPrice = {
+      ...this.selectedService,
+      city: this.city,
+    };
+
+    this.item.services.push(serviceToPrice);
     console.log('capturar los seleccionados',this.item,this.selectedService)
-    this.pushPrices()
-    this.emptyItem()
+    await this.pushPrices()
+    this.resetSelectionState()
   }
 
- async pushPrices(){
-    let item2 : any = {}
-    this.item.date = this.dayData.date
-  //  this.item.number_paxs = this.number_paxs() || [];
-    this.item.number_paxs = this.dayData.number_paxs.map((_ : any, groupIndex : any) => this.getSelectedCountForGroup(groupIndex));
-    this.item.children_ages = this.children_ages()?.filter((_: any, i: any) => this.childrenAgesChecks[i]) || [];
-    this.dayData.number_paxs = this.item.number_paxs
-    this.dayData.children_ages = this.item.children_ages
-    item2  = await this.priceService.calculatePrice(this.item)
-    console.log('add a daydata',this.item)
-    item2.services.forEach( (service: any) => {
-      if (!service.city) {
-        service.city = this.filteredDaysOptions[0].city
-      }
-
-      this.dayData.services.push(service)
-    })
+  async pushPrices(){
+    const payload = this.buildPricingPayload([...this.item.services]);
+    const pricedItems: any = await this.priceService.calculatePrice(payload)
+    console.log('add a daydata',payload)
+    this.appendPricedServices(pricedItems.services)
   }
-  addItembyMq(){
+  async addItembyMq(){
 
   this.filteredDaysOptions.forEach(option => {
-    const selectedDayServices = option.services.filter((service : any, index: number) => service.selected);
+    const selectedDayServices = option.services
+      .filter((service : any) => service.selected)
+      .map((service: any) => ({
+        ...service,
+        city: service.city || option.city,
+      }));
     this.item.services.push(...selectedDayServices);
   });
 
   console.log('capturar los seleccionados',this.item.services)
   console.log('capturar los seleccionados2',this.selectedService)
-  let item2 : any = {}
-  this.pushPrices()
+  await this.pushPrices()
   this.resetFileterOptions();
-  this.emptyItem();
+  this.resetSelectionState();
 }
 
 resetFileterOptions() {
@@ -288,11 +329,7 @@ resetFileterOptions() {
 
 }
 emptyItem(){
-  this.item = {
-    ...this.item,
-    services: [],
-    city: '',
-  };
+  this.resetSelectionState();
 }
 onEdit(item: any, index: number) {
   this.originalItem[index] = { ...item };

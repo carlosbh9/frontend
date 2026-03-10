@@ -148,25 +148,39 @@ toggleAllServices(option: any): void {
 isLastElement(index: number): boolean {
   return this.selectedMasterQuoter?.type === 'Templates' && index === this.filteredDaysOptions.length - 1;
 }
-async onAddMQuoter(){
 
-  if (this.selectedMasterQuoter?.type === 'Templates') { 
-    this.selectedServices.date = this.startDateQuoter()
-  }
-  this.selectedServices.number_paxs =  this.numberpaxs().map((_, groupIndex) => this.getSelectedCountForGroup(groupIndex));
-  this.selectedServices.children_ages = this.childrenAges()?.filter((age, i) => this.childrenAgesChecks[i]);
-  let dayCounter = 1; 
+private buildSelectedServicesPayload() {
+  const payload = {
+    services: [] as any[],
+    number_paxs: this.numberpaxs().map((_, groupIndex) => this.getSelectedCountForGroup(groupIndex)),
+    children_ages: this.childrenAges()?.filter((age, i) => this.childrenAgesChecks[i]) ?? [],
+    date: this.selectedMasterQuoter?.type === 'Templates' ? this.startDateQuoter() : '',
+    city: '',
+    day: 0,
+  };
+
+  let dayCounter = 1;
   this.filteredDaysOptions.forEach(option => {
-    const selectedDayServices = option.services.filter((service : any) => service.selected);
-    selectedDayServices.forEach((service: any) => {
-    service.city = option.city; 
-    service.day = dayCounter;
-  });
-    this.selectedServices.services.push(...selectedDayServices);
+    const selectedDayServices = option.services
+      .filter((service: any) => service.selected)
+      .map((service: any) => ({
+        ...service,
+        city: option.city,
+        day: dayCounter,
+      }));
+
+    payload.services.push(...selectedDayServices);
     dayCounter++;
   });
-  console.log('se envio', this.selectedServices)
-  this.preciosCalculados = await this.priceService.calculatePrice(this.selectedServices)
+
+  return payload;
+}
+
+async onAddMQuoter(){
+  const selectedServices = this.buildSelectedServicesPayload();
+  this.selectedServices = selectedServices;
+  console.log('se envio', selectedServices)
+  this.preciosCalculados = await this.priceService.calculatePrice(selectedServices)
 
   if(this.preciosCalculados.alerts.length>0){
     this.preciosCalculados.alerts.forEach( (message: string , index: number)=> {
@@ -175,10 +189,10 @@ async onAddMQuoter(){
       }, index * 500);
     })
   }
-  this.preciosCalculados.date = this.selectedServices.date
-  this.preciosCalculados.day = this.selectedServices.day 
-  this.preciosCalculados.number_paxs = this.selectedServices.number_paxs
-  this.preciosCalculados.children_ages = this.selectedServices.children_ages
+  this.preciosCalculados.date = selectedServices.date
+  this.preciosCalculados.day = selectedServices.day 
+  this.preciosCalculados.number_paxs = selectedServices.number_paxs
+  this.preciosCalculados.children_ages = selectedServices.children_ages
   
   console.log('se emitio a services', this.preciosCalculados)
   this.servicesChange.emit(this.preciosCalculados)
