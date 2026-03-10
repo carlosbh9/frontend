@@ -65,6 +65,29 @@ export const routes: Routes = [
                     (m) => m.BookingFormComponent
                   ),
               },
+              {
+                path: 'service-orders',
+                loadComponent: () =>
+                  import('./features/service-orders/pages/service-orders-page.component').then(
+                    (m) => m.ServiceOrdersPageComponent
+                  ),
+              },
+              {
+                path: 'service-orders/contact/:contactId',
+                loadComponent: () =>
+                  import('./features/service-orders/pages/service-orders-by-contact-page.component').then(
+                    (m) => m.ServiceOrdersByContactPageComponent
+                  ),
+              },
+              {
+                path: 'service-order-templates',
+                canActivate: [authGuard],
+                data: { permission: 'view_users' },
+                loadComponent: () =>
+                  import('./features/service-orders/pages/service-order-templates-page.component').then(
+                    (m) => m.ServiceOrderTemplatesPageComponent
+                  ),
+              },
               // {
               //   path: 'booking-list',
               //   loadComponent: () =>

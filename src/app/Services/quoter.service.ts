@@ -72,7 +72,7 @@ async deleteQuoter(id: string): Promise<any> {
       catchError((error) => {
         console.error('Error en createQuoter:', error);
         return throwError(() => error);
-    
+
     }));
   }
 }

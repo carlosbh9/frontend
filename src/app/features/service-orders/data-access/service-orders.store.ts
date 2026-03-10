@@ -1,0 +1,147 @@
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { ServiceOrdersApi } from './service-orders.api';
+import { ServiceOrder, ServiceOrderFilters } from './service-orders.types';
+
+@Injectable({ providedIn: 'root' })
+export class ServiceOrdersStore {
+  private readonly api = inject(ServiceOrdersApi);
+
+  readonly orders = signal<ServiceOrder[]>([]);
+  readonly loading = signal(false);
+  readonly error = signal<string | null>(null);
+  readonly selectedOrder = signal<ServiceOrder | null>(null);
+  readonly total = signal(0);
+  readonly page = signal(1);
+  readonly pageSize = signal(20);
+  readonly kpis = signal({ pending: 0, inProgress: 0, overdue: 0, done: 0 });
+
+  readonly filters = signal<Omit<ServiceOrderFilters, 'page' | 'pageSize'>>({
+    area: '',
+    status: '',
+    type: '',
+    contactId: ''
+  });
+
+  readonly filteredOrders = computed(() => {
+    const activeFilters = this.filters();
+    return this.orders().filter((order) => {
+      const areaOk = !activeFilters.area || order.area === activeFilters.area;
+      const statusOk = !activeFilters.status || order.status === activeFilters.status;
+      const typeOk = !activeFilters.type || order.type === activeFilters.type;
+      return areaOk && statusOk && typeOk;
+    });
+  });
+
+  readonly overdueOrders = computed(() => {
+    const now = Date.now();
+    return this.filteredOrders().filter((order) => {
+      if (!order.dueDate) return false;
+      if (order.status === 'DONE' || order.status === 'CANCELLED') return false;
+      return new Date(order.dueDate).getTime() < now;
+    });
+  });
+
+  readonly statusCount = computed(() => ({
+    pending: this.filteredOrders().filter((x) => x.status === 'PENDING').length,
+    inProgress: this.filteredOrders().filter((x) => x.status === 'IN_PROGRESS').length,
+    waitingInfo: this.filteredOrders().filter((x) => x.status === 'WAITING_INFO').length,
+    done: this.filteredOrders().filter((x) => x.status === 'DONE').length,
+    cancelled: this.filteredOrders().filter((x) => x.status === 'CANCELLED').length
+  }));
+
+  async load(): Promise<void> {
+    this.loading.set(true);
+    this.error.set(null);
+    try {
+      const response = await this.api.list({
+        page: this.page(),
+        pageSize: this.pageSize(),
+        ...this.filters()
+      });
+      this.orders.set(response.items || []);
+      this.total.set(response.total || 0);
+      if (response.kpis) this.kpis.set(response.kpis);
+    } catch (error: any) {
+      this.error.set(error?.error?.message || 'Could not load service orders');
+      this.orders.set([]);
+      this.total.set(0);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async selectById(id: string): Promise<void> {
+    this.loading.set(true);
+    this.error.set(null);
+    try {
+      const order = await this.api.getById(id);
+      this.selectedOrder.set(order);
+    } catch (error: any) {
+      this.error.set(error?.error?.message || 'Could not load service order detail');
+      this.selectedOrder.set(null);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  setFilter<K extends keyof ServiceOrderFilters>(key: K, value: ServiceOrderFilters[K]): void {
+    this.filters.update((prev) => ({ ...prev, [key]: value || '' }));
+    this.page.set(1);
+    void this.load();
+  }
+
+  setPage(page: number): void {
+    if (page < 1 || page === this.page()) return;
+    this.page.set(page);
+    void this.load();
+  }
+
+  setPageSize(pageSize: number): void {
+    this.pageSize.set(pageSize);
+    this.page.set(1);
+    void this.load();
+  }
+
+  async updateStatus(orderId: string, status: ServiceOrder['status'], reason = ''): Promise<void> {
+    this.error.set(null);
+    try {
+      await this.api.updateStatus(orderId, status, reason);
+      await this.load();
+      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
+    } catch (error: any) {
+      this.error.set(error?.error?.error || error?.error?.message || 'Could not update status');
+    }
+  }
+
+  async assign(orderId: string, assigneeId: string | null): Promise<void> {
+    this.error.set(null);
+    try {
+      await this.api.assign(orderId, assigneeId);
+      await this.load();
+      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
+    } catch (error: any) {
+      this.error.set(error?.error?.error || error?.error?.message || 'Could not assign order');
+    }
+  }
+
+  async toggleChecklist(orderId: string, itemId: string, done: boolean): Promise<void> {
+    this.error.set(null);
+    try {
+      await this.api.updateChecklistItem(orderId, itemId, done);
+      await this.load();
+      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
+    } catch (error: any) {
+      this.error.set(error?.error?.error || error?.error?.message || 'Could not update checklist');
+    }
+  }
+
+  async syncByContact(contactId: string): Promise<void> {
+    this.error.set(null);
+    try {
+      await this.api.syncByContact(contactId);
+      await this.load();
+    } catch (error: any) {
+      this.error.set(error?.error?.error || error?.error?.message || 'Could not sync service orders');
+    }
+  }
+}

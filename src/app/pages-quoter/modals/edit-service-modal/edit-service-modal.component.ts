@@ -45,15 +45,15 @@ export class EditServiceModalComponent implements OnInit{
   priceService = inject(CalculatepricesService);
   @Output() closeModalEvent = new EventEmitter<void>();
 
-  
+
   number_paxs = input<number[]>();
   children_ages = input<number[]>()
-  @Input() dayData: any; 
+  @Input() dayData: any;
   selectedYear: string =  '2025'
   searchTerm: string = ''; //mquoter
   filteredOptions: any[] = [];  //mquoter
   mqQuoters: any[] = []; //mquoter
-  showOptions: boolean = false;  
+  showOptions: boolean = false;
   city: string = ''
   servicesOptions: any[]=[]
   editService: boolean= false
@@ -105,15 +105,15 @@ export class EditServiceModalComponent implements OnInit{
   ngOnInit(): void {
    // this.tempPreviuw = this.dayData
     this.checkboxes = this.dayData.number_paxs.map((groupSize: any) => Array(groupSize).fill(true));
-    this.childrenAgesChecks = this.children_ages()?.map((age: number) => 
+    this.childrenAgesChecks = this.children_ages()?.map((age: number) =>
       this.dayData.children_ages?.includes(age) || false
-    ) || []; 
+    ) || [];
     // const uniqueSelectedAges = Array.from(new Set(this.dayData.children_ages));
     // this.childrenAgesChecks = this.children_ages()?.map(age => uniqueSelectedAges.includes(age)) ?? [];
 
 
     this.loadmqServicesMQuoter();
-    
+
   }
   closeModal() {
     console.log('data recuperdad',this.dayData,this.tempPreviuw)
@@ -123,7 +123,7 @@ export class EditServiceModalComponent implements OnInit{
     console.log('categoria: ',this.selectCategoria)
 
       switch(this.selectCategoria){
-        case 'entrance': const entrances  = await this.entranceService.getAllEntrances();  
+        case 'entrance': const entrances  = await this.entranceService.getAllEntrances();
         this.servicesOptions = entrances.filter(item => item.year === this.selectedYear);
         break;
         case 'expeditions': const expeditions = await this.expeditionsService.getAllExpeditions();
@@ -136,7 +136,7 @@ export class EditServiceModalComponent implements OnInit{
         this.servicesOptions = restaurants.filter(item => item.year === this.selectedYear); break;
 
         case 'transport': const transport = await this.transportService.getalltransport();
-        this.servicesOptions = transport.filter(item => item.year === this.selectedYear); 
+        this.servicesOptions = transport.filter(item => item.year === this.selectedYear);
         break;
 
         case 'experience': const experience = await this.activitiesService.getAllExperiences();
@@ -154,7 +154,7 @@ export class EditServiceModalComponent implements OnInit{
 
         case 'extra': const extra = await this.extraService.getAllExtras();
         this.servicesOptions =  extra.filter(item => item.year === this.selectedYear);
-                
+
         break;
       }
 
@@ -170,7 +170,7 @@ async onServiceChange(event: any){
 
 getServiceValue(service: any) {
   if (this.selectCategoria === 'operator') {
-    return {operator_service_id:service._id,name_service:service.descripcion} 
+    return {operator_service_id:service._id,name_service:service.descripcion}
   } else if (this.selectCategoria === 'train') {
     return { train_service_id: service._id, name_service:  service.serviceName };
   }else {
@@ -184,8 +184,8 @@ onSubServiceChange(event: any){
   }else if(this.selectCategoria === 'train'){
      this.selectedService.train_service_id = this.selectedSubService.train_service_id
   }
-  
- 
+
+
  // this.selectedService.service_type= this.selectCategoria
 
   console.log('services seleccionado',this.selectedSubService,this.selectedService)
@@ -193,7 +193,7 @@ onSubServiceChange(event: any){
 
 filterOptions(): void {
   if (this.searchTerm.trim()) {
-    this.filteredOptions = this.mqQuoters.filter(option => 
+    this.filteredOptions = this.mqQuoters.filter(option =>
       option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   } else {
@@ -218,8 +218,8 @@ toggleAllServices(option: any): void {
 async loadmqServicesMQuoter() {
   try {
     this.mqQuoters = await this.mqService.getAllMasterQuoter();
-    this.filteredOptions = this.mqQuoters; 
-    
+    this.filteredOptions = this.mqQuoters;
+
   } catch (error) {
     console.log('Error al cargar los Master Quoters', error);
   }
@@ -228,13 +228,13 @@ selectOptionMquoter(option: any): void {
   this.resetFileterOptions();
   this.showOptions = false;
   this.searchTerm = option.name;
-  this.filteredDaysOptions = option.day; 
+  this.filteredDaysOptions = option.day;
   console.log('el mas seleccionado',this.filteredDaysOptions)
 }
 
 onDelete(index: number){
   Swal.fire('Success','Record deleted','success')
-  this.dayData.services.splice(index, 1); 
+  this.dayData.services.splice(index, 1);
   console.log('data recuperdad delete',this.dayData,this.tempPreviuw)
 
 }
@@ -253,14 +253,14 @@ onDelete(index: number){
     this.item.number_paxs = this.dayData.number_paxs.map((_ : any, groupIndex : any) => this.getSelectedCountForGroup(groupIndex));
     this.item.children_ages = this.children_ages()?.filter((_: any, i: any) => this.childrenAgesChecks[i]) || [];
     this.dayData.number_paxs = this.item.number_paxs
-    this.dayData.children_ages = this.item.children_ages 
+    this.dayData.children_ages = this.item.children_ages
     item2  = await this.priceService.calculatePrice(this.item)
     console.log('add a daydata',this.item)
     item2.services.forEach( (service: any) => {
       if (!service.city) {
-        service.city = this.filteredDaysOptions[0].city 
+        service.city = this.filteredDaysOptions[0].city
       }
-      
+
       this.dayData.services.push(service)
     })
   }
@@ -289,9 +289,9 @@ resetFileterOptions() {
 }
 emptyItem(){
   this.item = {
-    ...this.item, 
-    services: [], 
-    city: '',    
+    ...this.item,
+    services: [],
+    city: '',
   };
 }
 onEdit(item: any, index: number) {
@@ -320,10 +320,10 @@ toggleCheckbox(groupIndex: number, checkboxIndex: number) {
 toggleCheckboxChild(index: number): void {
   // Cambiar el valor del checkbox
   this.childrenAgesChecks[index] = !this.childrenAgesChecks[index];
-  
-  
+
+
    this.dayData.children_ages = this.children_ages()?.filter((age, i) => this.childrenAgesChecks[i]);
- 
+
   console.log(this.dayData.children_ages); // Verifica los datos actualizados
 }
 
@@ -347,23 +347,23 @@ toggleDropdown() {
 onClick(event: MouseEvent) {
   const target = event.target as HTMLElement;
 
-  const modalElement = document.getElementById('modalMq'); 
+  const modalElement = document.getElementById('modalMq');
   const inputElement = document.getElementById('searchInput');
   const dropdownElement = document.getElementById('optionsDropdown');
 
-  if (modalElement && !modalElement.contains(target) && 
-      inputElement && !inputElement.contains(target) && 
+  if (modalElement && !modalElement.contains(target) &&
+      inputElement && !inputElement.contains(target) &&
       dropdownElement && !dropdownElement.contains(target)) {
     this.hideOptions();
   }
 }
 hideOptions() {
-  this.showOptions = false;   
+  this.showOptions = false;
 }
 onBlur() {
   setTimeout(() => {
     this.showOptions = false;
-  }, 200);  
+  }, 200);
 }
 
 }
