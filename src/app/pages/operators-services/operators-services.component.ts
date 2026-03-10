@@ -46,6 +46,10 @@ export class OperatorsServicesComponent implements OnInit{
 
   constructor (private operatorsService: OperatorsService,private route: ActivatedRoute){}
 
+  private cloneService<T>(value: T): T {
+    return structuredClone(value);
+  }
+
   assignPricesRangeToNewService() {
     this.newService.prices = this.selectedOperator.pricesRange.map((range: any) => {
       return {
@@ -159,7 +163,7 @@ export class OperatorsServicesComponent implements OnInit{
   }
 
   openEditModal(operator: any) {
-    this.selectService = { ...operator };
+    this.selectService = this.cloneService(operator);
     this.showEditModal = true;
     //this.assignPricesRangeToSelService()
     console.log(this.selectService)

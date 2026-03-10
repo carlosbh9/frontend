@@ -59,6 +59,10 @@ export class ExperiencesComponent implements OnInit {
 
   constructor(private experienceService: ExperiencesService) { }
 
+  private cloneExperience<T>(value: T): T {
+    return structuredClone(value);
+  }
+
   ngOnInit(): void {
     this.fetchExperiences();
   }
@@ -114,7 +118,7 @@ export class ExperiencesComponent implements OnInit {
   }
 
   openEditModal(experience: any) {
-    this.selectedExperience = { ...experience };
+    this.selectedExperience = this.cloneExperience(experience);
     this.showEditModal = true;
   }
 

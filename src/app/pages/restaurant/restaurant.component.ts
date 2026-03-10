@@ -59,6 +59,10 @@ export class RestaurantComponent implements OnInit{
 
   constructor(private restaurantService: RestaurantService) { }
 
+  private cloneRestaurant<T>(value: T): T {
+    return structuredClone(value);
+  }
+
   ngOnInit(): void {
     this.fetchRestaurants();
   }
@@ -175,7 +179,7 @@ export class RestaurantComponent implements OnInit{
   }
 
   openEditModal(restaurant: any) {
-    this.selectedRestaurant = { ...restaurant };
+    this.selectedRestaurant = this.cloneRestaurant(restaurant);
     this.showEditModal = true;
     console.log(this.selectedRestaurant)
   }

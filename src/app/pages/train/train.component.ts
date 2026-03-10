@@ -26,32 +26,15 @@ export class TrainComponent implements OnInit {
   filterYear : string = '2025'
  newTrain: any = {
    company: '',
-   services: [{
-     serviceName: '',
-     prices: [{
-       season: 'Regular',
-       adultPrice: 0,
-       childPrice: 0,
-       guidePrice: 0
-     }],
-     observations: '',
-     year:''
-   }]
+   observations: '',
+   year:''
  };
 
  selectedTrain: any = {
+   _id: '',
    company: '',
-   services: [{
-     serviceName: '',
-     prices: [{
-       season: 'Regular',
-       adultPrice: 0,
-       childPrice: 0,
-       guidePrice: 0
-     }],
-     observations: '',
-     year:''
-   }]
+   observations: '',
+   year:''
  };
 
 
@@ -106,17 +89,8 @@ export class TrainComponent implements OnInit {
   emptyTrain(): void {
     this.newTrain = {
       company: '',
-      services: [{
-        serviceName: '',
-        prices: {
-          season: 'Regular',
-          adultPrice: 0,
-          childPrice: 0,
-          guidePrice: 0
-        },
-        observations: '',
-        year:''
-      }]
+      observations: '',
+      year:''
     };
   }
 

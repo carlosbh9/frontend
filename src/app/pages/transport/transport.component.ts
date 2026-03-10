@@ -49,6 +49,10 @@ export class TransportComponent {
 
   constructor(private transportService: TransportService) {}
 
+  private cloneTransport<T>(value: T): T {
+    return structuredClone(value);
+  }
+
 ngOnInit(): void {
   this.fetchTransports();
 }
@@ -103,8 +107,8 @@ async deleteTransport(id: string) {
   }
 }
 
-openEditModal(transport: any) {
- this.selectedTransport = {...transport};
+ openEditModal(transport: any) {
+ this.selectedTransport = this.cloneTransport(transport);
  this.showEditModal = true;
 }
 

@@ -40,6 +40,7 @@ export class OperatorsComponent implements OnInit {
     ciudad: '',
     name_service: '',
     servicios: [],
+    pricesRange:[],
     observaciones: '',
     year:''
   };
@@ -127,6 +128,7 @@ export class OperatorsComponent implements OnInit {
       ciudad: '',
       name_service: '',
       servicios: [],
+      pricesRange:[],
       observaciones: '',
       year:''
     };

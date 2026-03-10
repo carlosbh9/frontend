@@ -29,14 +29,6 @@ export class HotelComponent implements OnInit {
   newHotel: any = {
     name: '',
     location: '',
-    services: [{
-      name_service: '',
-      tipo_habitaciones: [{
-        tipo_servicio: '',
-        tipo_habitacion: '',
-        price: 0
-      }]
-    }],
     special_dates: [{
       date: '',
       price: 0
@@ -46,16 +38,10 @@ export class HotelComponent implements OnInit {
   };
   
   selectedHotel: any = {
+    _id: '',
     name: '',
     location: '',
-    services: [{
-      name_service: '',
-      tipo_habitaciones: [{
-        tipo_servicio: '',
-        tipo_habitacion: '',
-        price: 0
-      }]
-    }],
+    services: [],
     special_dates: [],
     informacion_general: [],
     year:''
@@ -117,14 +103,6 @@ export class HotelComponent implements OnInit {
     this.newHotel = {
     name: '',
     location: '',
-    services: [{
-      name_service: '',
-      tipo_habitaciones: [{
-        tipo_servicio: '',
-        tipo_habitacion: '',
-        price: 0
-      }]
-    }],
     special_dates: [{
       date: '',
       price: 0
@@ -152,6 +130,7 @@ export class HotelComponent implements OnInit {
       // Crear una copia del newHotel con la informacion_general actualizada
       const hotelToSubmit = {
         ...this.newHotel,
+        services: [],
         informacion_general: infoGeneral
       };
   
