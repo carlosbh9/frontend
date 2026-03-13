@@ -1,34 +1,254 @@
-<div class="block w-full overflow-x-auto">
-      <table class="items-center w-full bg-transparent border-collapse">
-        <thead>
-          <tr>
-            <th class="px-2 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/6 truncate font-semibold text-left">Name</th>
-            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Year</th>
-            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Category</th>
-            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Prices</th>
-            <th  class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-center">childRate</th>
+<div class="min-h-full bg-slate-50">
+  <div class="mx-auto max-w space-y-6 p-4 sm:p-6">
+    <section class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div class="flex flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
+        <div class="min-w-0">
+          <div class="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-100">
+            Reservations Control
+          </div>
+          <h1 class="mt-3 text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
+            Estado de reservas
+          </h1>
+          <p class="mt-1 max-w-2xl text-sm text-slate-600">
+            Focused board for reservation workload, pending confirmations, and reservation-related orders generated after a sale.
+          </p>
+        </div>
 
-            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Approximate Duration</th>
-            <th  class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Take notes</th>
-            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Actions</th>
-          </tr>
+        <button
+          type="button"
+          class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
+          (click)="load()"
+        >
+          Refresh
+        </button>
+      </div>
+    </section>
 
-        </thead>
-        <tbody>
-          <tr class="text-gray-700 dark:text-gray-600 border-b">
-            <td class="border-t-0 px-4 align-top border-l-0 border-r-0 text-xs p-2 text-left">columna1</td>
-            <td class="border-t-0 px-4 align-top border-l-0 border-r-0 text-xs whitespace-nowrap p-2 text-left">columna2</td>
-            <td class="border-t-0 px-4 align-top border-l-0 border-r-0 text-xs whitespace-nowrap p-2 text-left">columna3</td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-           columna4
-            </td>
-            <td class="border-t-0 px-4 align-top border-l-0 border-r-0 text-xs whitespace-nowrap p-2 text-left">columna5</td>
-            <td class="border-t-0 px-4 align-top border-l-0 border-r-0 text-xs whitespace-nowrap p-2 text-left">columna6</td>
-            <td class="border-t-0 px-4 align-top border-l-0 border-r-0 text-xs whitespace-nowrap p-2 text-left">columna7</td>
+    <section class="grid grid-cols-1 gap-6 xl:grid-cols-12">
+      <div class="space-y-6 xl:col-span-4">
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div class="border-b border-slate-100 p-5">
+            <h2 class="text-sm font-semibold text-slate-900">Filters</h2>
+            <p class="mt-1 text-sm text-slate-600">Filter the reservation queue by execution date, order status, and service type.</p>
+          </div>
 
-            <td class="border-t-0 px-4 align-top border-l-0 border-r-0 text-xs whitespace-nowrap p-2 text-left">columna8</td>
+          <div class="space-y-4 p-5">
+            <div>
+              <label class="block text-sm font-medium text-slate-700">Execution date</label>
+              <input
+                type="date"
+                class="mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                [ngModel]="dateFilter()"
+                (ngModelChange)="dateFilter.set($event)"
+              />
+            </div>
 
-          </tr>
-        </tbody>
-      </table>
-    </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700">Status</label>
+              <select
+                class="mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                [ngModel]="statusFilter()"
+                (ngModelChange)="statusFilter.set($event)"
+              >
+                <option value="">All statuses</option>
+                <option value="PENDING">Pending</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="WAITING_INFO">Waiting Info</option>
+                <option value="DONE">Done</option>
+                <option value="CANCELLED">Cancelled</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700">Service type</label>
+              <select
+                class="mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                [ngModel]="typeFilter()"
+                (ngModelChange)="typeFilter.set($event)"
+              >
+                <option value="">All types</option>
+                <option value="HOTEL">Hotel</option>
+                <option value="TICKETS">Tickets</option>
+                <option value="TOUR">Tour</option>
+                <option value="TRANSPORT">Transport</option>
+              </select>
+            </div>
+
+            <button
+              type="button"
+              class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
+              (click)="clearFilters()"
+            >
+              Clear filters
+            </button>
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div class="border-b border-slate-100 p-5">
+            <h2 class="text-sm font-semibold text-slate-900">Visible Summary</h2>
+            <p class="mt-1 text-sm text-slate-600">Current reservation workload for the selected filters.</p>
+          </div>
+          <div class="grid grid-cols-2 gap-3 p-5">
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Total</p>
+              <p class="mt-2 text-2xl font-semibold text-slate-900">{{ kpis().total }}</p>
+            </div>
+            <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+              <p class="text-xs font-medium uppercase tracking-wide text-amber-700">Pending</p>
+              <p class="mt-2 text-2xl font-semibold text-amber-900">{{ kpis().pending }}</p>
+            </div>
+            <div class="rounded-2xl border border-slate-300 bg-slate-100 p-4">
+              <p class="text-xs font-medium uppercase tracking-wide text-slate-700">Waiting Info</p>
+              <p class="mt-2 text-2xl font-semibold text-slate-900">{{ kpis().waiting }}</p>
+            </div>
+            <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
+              <p class="text-xs font-medium uppercase tracking-wide text-emerald-700">Done</p>
+              <p class="mt-2 text-2xl font-semibold text-emerald-900">{{ kpis().done }}</p>
+            </div>
+          </div>
+        </div>
+
+        @if (loading()) {
+          <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div class="flex items-center gap-3 text-sm text-slate-600">
+              <svg class="h-4 w-4 animate-spin text-slate-400" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4A4 4 0 0 0 8 12H4Z"></path>
+              </svg>
+              Loading reservation queue...
+            </div>
+          </div>
+        }
+
+        @if (error()) {
+          <div class="rounded-2xl border border-rose-200 bg-rose-50 p-4 shadow-sm">
+            <p class="text-sm font-medium text-rose-700">{{ error() }}</p>
+          </div>
+        }
+      </div>
+
+      <div class="xl:col-span-8">
+        <section class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div class="border-b border-slate-100 p-5">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 class="text-sm font-semibold text-slate-900">Reservation Queue</h2>
+                <p class="mt-1 text-sm text-slate-600">Orders owned by the reservations area and related post-sale tasks.</p>
+              </div>
+              <div class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                {{ filteredRows().length }} items
+              </div>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto p-5">
+            <table class="min-w-full divide-y divide-slate-200 text-sm">
+              <thead class="bg-slate-50">
+                <tr>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Guest</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Service</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Type</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">City</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Execution</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Status</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Finance</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Docs</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 bg-white">
+                @for (row of filteredRows(); track row.order._id) {
+                  <tr class="hover:bg-slate-50/80">
+                    <td class="px-4 py-3">
+                      <div class="font-medium text-slate-900">{{ row.guest }}</div>
+                      <div class="text-xs text-slate-500">{{ row.notes || row.supplier }}</div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <div class="font-medium text-slate-900">{{ row.serviceName }}</div>
+                      <div class="text-xs text-slate-500">Order: {{ row.order._id }}</div>
+                    </td>
+                    <td class="px-4 py-3 text-slate-600">{{ row.order.type }}</td>
+                    <td class="px-4 py-3 text-slate-600">{{ row.city }}</td>
+                    <td class="px-4 py-3 text-slate-600">{{ row.executionLabel }}</td>
+                    <td class="px-4 py-3">
+                      <div class="flex flex-col gap-2">
+                        <span class="inline-flex w-fit items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
+                          [ngClass]="{
+                            'bg-amber-50 text-amber-700 ring-amber-200': row.order.status === 'PENDING',
+                            'bg-blue-50 text-blue-700 ring-blue-200': row.order.status === 'IN_PROGRESS',
+                            'bg-emerald-50 text-emerald-700 ring-emerald-200': row.order.status === 'DONE',
+                            'bg-rose-50 text-rose-700 ring-rose-200': row.order.status === 'CANCELLED',
+                            'bg-slate-100 text-slate-700 ring-slate-200': row.order.status === 'WAITING_INFO'
+                          }"
+                        >
+                          {{ row.order.status }}
+                        </span>
+                        <select
+                          class="rounded-lg bg-white px-2.5 py-2 text-xs text-slate-700 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                          [ngModel]="row.order.status"
+                          (ngModelChange)="updateOrderStatus(row.order, $event)"
+                        >
+                          <option value="PENDING">Pending</option>
+                          <option value="IN_PROGRESS">In Progress</option>
+                          <option value="WAITING_INFO">Waiting Info</option>
+                          <option value="DONE">Done</option>
+                          <option value="CANCELLED">Cancelled</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <div class="flex flex-col gap-2">
+                        <span class="inline-flex w-fit items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
+                          {{ prettify(getPaymentStatus(row.order)) }}
+                        </span>
+                        <span class="text-xs text-slate-500">
+                          {{ row.order.financials?.currency || 'USD' }} {{ row.order.financials?.paidAmount ?? 0 }} / {{ row.order.financials?.expectedCost ?? 0 }}
+                        </span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <div class="flex flex-wrap items-center gap-2">
+                        <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
+                          {{ getAttachmentCount(row.order) }} docs
+                        </span>
+                        <span *ngIf="hasAttachmentType(row.order, 'RESERVATION_CONFIRMATION')" class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-100">Confirmation</span>
+                        <span *ngIf="hasAttachmentType(row.order, 'VOUCHER')" class="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100">Voucher</span>
+                        <span *ngIf="hasAttachmentType(row.order, 'INVOICE')" class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-100">Invoice</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <div class="flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          class="inline-flex items-center rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
+                          (click)="openContactOrders(row)"
+                        >
+                          Orders
+                        </button>
+                        <button
+                          type="button"
+                          class="inline-flex items-center rounded-lg px-3 py-2 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-indigo-50"
+                          (click)="openBookingFile(row)"
+                        >
+                          File
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+                @if (!loading() && !error() && !filteredRows().length) {
+                  <tr>
+                    <td colspan="9" class="px-4 py-8 text-center text-sm text-slate-500">
+                      No reservation orders match the selected filters.
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </section>
+  </div>
+</div>

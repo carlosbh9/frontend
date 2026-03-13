@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ServiceOrder } from '../data-access/service-orders.types';
 import { ServiceOrderChecklistComponent } from './service-order-checklist.component';
@@ -216,6 +216,112 @@ import { ServiceOrderTimelineComponent } from './service-order-timeline.componen
           </div>
         </div>
 
+        <!-- FINANCIALS + ATTACHMENTS -->
+        <div class="grid grid-cols-1 gap-5 xl:grid-cols-2">
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-100 p-5">
+              <h3 class="text-sm font-semibold text-slate-900">Financial Control</h3>
+              <p class="mt-1 text-sm text-slate-600">
+                Track supplier, invoice, expected cost, and payment progress for this order.
+              </p>
+            </div>
+            <div class="space-y-4 p-5">
+              <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <input class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600" [(ngModel)]="financialsForm.supplierName" placeholder="Supplier name" />
+                <input class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600" [(ngModel)]="financialsForm.supplierReference" placeholder="Supplier reference" />
+                <input class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600" [(ngModel)]="financialsForm.invoiceNumber" placeholder="Invoice number" />
+                <input class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600" [(ngModel)]="financialsForm.currency" placeholder="Currency" />
+                <input class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600" type="number" [(ngModel)]="financialsForm.expectedCost" placeholder="Expected cost" />
+                <input class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600" type="number" [(ngModel)]="financialsForm.paidAmount" placeholder="Paid amount" />
+                <select class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600" [(ngModel)]="financialsForm.paymentStatus">
+                  <option value="NOT_REQUIRED">Not required</option>
+                  <option value="PENDING">Pending</option>
+                  <option value="PARTIAL">Partial</option>
+                  <option value="PAID">Paid</option>
+                  <option value="REFUNDED">Refunded</option>
+                </select>
+                <select class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600" [(ngModel)]="financialsForm.paymentMethod">
+                  <option value="OTHER">Other</option>
+                  <option value="TRANSFER">Transfer</option>
+                  <option value="CASH">Cash</option>
+                  <option value="CARD">Card</option>
+                  <option value="CHECK">Check</option>
+                </select>
+                <input class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600" type="date" [(ngModel)]="financialsForm.paymentDueDate" />
+                <input class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600" type="date" [(ngModel)]="financialsForm.paymentDate" />
+                <input class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 md:col-span-2" type="date" [(ngModel)]="financialsForm.invoiceDate" />
+              </div>
+
+              <div class="flex justify-end">
+                <button class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700" type="button" (click)="financialsSave.emit(financialsForm)">
+                  Save Financials
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-100 p-5">
+              <h3 class="text-sm font-semibold text-slate-900">Attachments</h3>
+              <p class="mt-1 text-sm text-slate-600">
+                Register vouchers, invoices, payment proofs, and reservation confirmations.
+              </p>
+            </div>
+            <div class="space-y-4 p-5">
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <select class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600" [(ngModel)]="attachmentForm.type">
+                    <option value="VOUCHER">Voucher</option>
+                    <option value="INVOICE">Invoice</option>
+                    <option value="PAYMENT_PROOF">Payment proof</option>
+                  <option value="RESERVATION_CONFIRMATION">Reservation confirmation</option>
+                  <option value="TICKET">Ticket</option>
+                  <option value="PASSPORT_COPY">Passport copy</option>
+                  <option value="OTHER">Other</option>
+                  </select>
+                  <input class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600" [(ngModel)]="attachmentForm.fileName" placeholder="File name" />
+                  <input class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 md:col-span-2" type="file" accept=".jpg,.jpeg,.png,.webp,.pdf" (change)="onAttachmentFileSelected($event)" />
+                  <input class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 md:col-span-2" [(ngModel)]="attachmentForm.url" placeholder="File URL" />
+                  <input class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 md:col-span-2" [(ngModel)]="attachmentForm.notes" placeholder="Notes" />
+                </div>
+
+                <div class="flex justify-end">
+                  <button class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50" type="button" (click)="addAttachment()">
+                    {{ selectedAttachmentFile ? 'Upload Attachment' : 'Add Attachment' }}
+                  </button>
+                </div>
+
+              <div class="space-y-2">
+                @for (attachment of order.attachments || []; track attachment.attachmentId) {
+                  <div class="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="min-w-0">
+                      <div class="flex flex-wrap items-center gap-2">
+                        <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
+                          {{ prettify(attachment.type) }}
+                        </span>
+                        <span class="text-sm font-semibold text-slate-900">{{ attachment.fileName }}</span>
+                      </div>
+                      <p class="mt-1 text-xs text-slate-500">{{ attachment.notes || attachment.url || '-' }}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button class="inline-flex items-center justify-center rounded-lg px-3 py-2 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-indigo-50" type="button" (click)="attachmentOpen.emit(attachment.attachmentId)">
+                        Open
+                      </button>
+                      <button class="inline-flex items-center justify-center rounded-lg px-3 py-2 text-xs font-semibold text-rose-700 ring-1 ring-inset ring-rose-200 hover:bg-rose-50" type="button" (click)="attachmentRemove.emit(attachment.attachmentId)">
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                }
+                @if (!(order.attachments?.length)) {
+                  <div class="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">
+                    No attachments registered yet.
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- CHECKLIST + TIMELINE -->
         <div class="grid grid-cols-1 gap-5 xl:grid-cols-2">
           <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -254,6 +360,92 @@ export class ServiceOrderDetailComponent {
   @Output() statusChange = new EventEmitter<ServiceOrder['status']>();
   @Output() assigneeChange = new EventEmitter<string | null>();
   @Output() checklistToggle = new EventEmitter<{ itemId: string; done: boolean }>();
+  @Output() financialsSave = new EventEmitter<any>();
+  @Output() attachmentAdd = new EventEmitter<any>();
+  @Output() attachmentUpload = new EventEmitter<{ file: File; attachment: any }>();
+  @Output() attachmentOpen = new EventEmitter<string>();
+  @Output() attachmentRemove = new EventEmitter<string>();
+
+  financialsForm: any = {};
+  attachmentForm: any = {
+    type: 'VOUCHER',
+    fileName: '',
+    url: '',
+    notes: ''
+  };
+  selectedAttachmentFile: File | null = null;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['order']?.currentValue) {
+      const order = changes['order'].currentValue as ServiceOrder;
+      this.financialsForm = {
+        supplierName: order.financials?.supplierName || '',
+        supplierReference: order.financials?.supplierReference || '',
+        currency: order.financials?.currency || 'USD',
+        expectedCost: order.financials?.expectedCost ?? 0,
+        paidAmount: order.financials?.paidAmount ?? 0,
+        paymentStatus: order.financials?.paymentStatus || 'NOT_REQUIRED',
+        paymentMethod: order.financials?.paymentMethod || 'OTHER',
+        paymentDueDate: this.toDateInput(order.financials?.paymentDueDate),
+        paymentDate: this.toDateInput(order.financials?.paymentDate),
+        invoiceNumber: order.financials?.invoiceNumber || '',
+        invoiceDate: this.toDateInput(order.financials?.invoiceDate)
+      };
+      this.attachmentForm = {
+        type: 'VOUCHER',
+        fileName: '',
+        url: '',
+        notes: ''
+      };
+      this.selectedAttachmentFile = null;
+    }
+  }
+
+  addAttachment(): void {
+    const cleanedPayload = {
+      ...this.attachmentForm,
+      fileName: this.attachmentForm.fileName?.trim(),
+      url: (this.attachmentForm.url || '').trim(),
+      notes: (this.attachmentForm.notes || '').trim()
+    };
+
+    if (this.selectedAttachmentFile) {
+      this.attachmentUpload.emit({
+        file: this.selectedAttachmentFile,
+        attachment: {
+          ...cleanedPayload,
+          fileName: cleanedPayload.fileName || this.selectedAttachmentFile.name
+        }
+      });
+      this.resetAttachmentForm();
+      return;
+    }
+
+    if (!cleanedPayload.fileName) return;
+    this.attachmentAdd.emit({
+      ...cleanedPayload
+    });
+    this.resetAttachmentForm();
+  }
+
+  onAttachmentFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement | null;
+    const file = input?.files?.[0] || null;
+    this.selectedAttachmentFile = file;
+    if (file && !this.attachmentForm.fileName?.trim()) {
+      this.attachmentForm.fileName = file.name;
+    }
+  }
+
+  private resetAttachmentForm(): void {
+    this.attachmentForm = {
+      type: 'VOUCHER',
+      fileName: '',
+      url: '',
+      notes: ''
+    };
+    this.selectedAttachmentFile = null;
+  }
 
   getNumber(value: any): number {
     const parsed = Number(value ?? 0);
@@ -325,5 +517,12 @@ export class ServiceOrderDetailComponent {
       default:
         return 'bg-slate-100 text-slate-700 ring-slate-200';
     }
+  }
+
+  private toDateInput(value?: string | Date | null): string {
+    if (!value) return '';
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return '';
+    return parsed.toISOString().slice(0, 10);
   }
 }

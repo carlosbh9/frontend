@@ -97,7 +97,7 @@ import { ServiceOrder } from '../data-access/service-orders.types';
           </div>
 
           <div class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-            {{ orders?.length || 0 }} results
+            {{ total || 0 }} total
           </div>
         </div>
 
@@ -111,6 +111,8 @@ import { ServiceOrder } from '../data-access/service-orders.types';
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Status</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Priority</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Amount</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Finance</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Docs</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Due</th>
                 <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide">Actions</th>
               </tr>
@@ -119,7 +121,7 @@ import { ServiceOrder } from '../data-access/service-orders.types';
             <tbody class="divide-y divide-slate-100">
               @if (!orders?.length) {
                 <tr>
-                  <td colspan="8" class="px-4 py-10 text-center">
+                  <td colspan="10" class="px-4 py-10 text-center">
                     <div class="mx-auto max-w-sm">
                       <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -187,6 +189,47 @@ import { ServiceOrder } from '../data-access/service-orders.types';
                     </td>
 
                     <td class="px-4 py-3">
+                      <div class="min-w-[140px]">
+                        <span
+                          class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
+                          [ngClass]="paymentStatusClass(order.financials?.paymentStatus)"
+                        >
+                          {{ prettify(order.financials?.paymentStatus || 'NOT_REQUIRED') }}
+                        </span>
+                        <p class="mt-1 text-xs text-slate-500">
+                          {{ order.financials?.currency || 'USD' }} {{ getPaidAmount(order) | number:'1.2-2' }}
+                          / {{ getExpectedCost(order) | number:'1.2-2' }}
+                        </p>
+                        @if (order.financials?.invoiceNumber) {
+                          <p class="mt-1 text-xs text-slate-500">Inv: {{ order.financials?.invoiceNumber }}</p>
+                        }
+                      </div>
+                    </td>
+
+                    <td class="px-4 py-3">
+                      <div class="flex min-w-[140px] flex-wrap items-center gap-1.5">
+                        <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
+                          {{ getAttachmentCount(order) }} docs
+                        </span>
+                        <span *ngIf="hasAttachmentType(order, 'VOUCHER')" class="inline-flex items-center rounded-full bg-indigo-50 px-2 py-1 text-[11px] font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100">
+                          V
+                        </span>
+                        <span *ngIf="hasAttachmentType(order, 'INVOICE')" class="inline-flex items-center rounded-full bg-emerald-50 px-2 py-1 text-[11px] font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-100">
+                          I
+                        </span>
+                        <span *ngIf="hasAttachmentType(order, 'PAYMENT_PROOF')" class="inline-flex items-center rounded-full bg-amber-50 px-2 py-1 text-[11px] font-semibold text-amber-700 ring-1 ring-inset ring-amber-100">
+                          P
+                        </span>
+                        <span *ngIf="hasAttachmentType(order, 'RESERVATION_CONFIRMATION')" class="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-[11px] font-semibold text-blue-700 ring-1 ring-inset ring-blue-100">
+                          C
+                        </span>
+                        <span *ngIf="hasAttachmentType(order, 'TICKET')" class="inline-flex items-center rounded-full bg-sky-50 px-2 py-1 text-[11px] font-semibold text-sky-700 ring-1 ring-inset ring-sky-100">
+                          T
+                        </span>
+                      </div>
+                    </td>
+
+                    <td class="px-4 py-3">
                       <div class="text-sm">
                         <p class="font-medium text-slate-900">
                           {{ order.dueDate ? (order.dueDate | date:'dd/MM/yyyy') : '-' }}
@@ -216,6 +259,56 @@ import { ServiceOrder } from '../data-access/service-orders.types';
             </tbody>
           </table>
         </div>
+
+        <div class="flex flex-col gap-3 border-t border-slate-100 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <div class="text-xs text-slate-500">
+            Showing
+            <span class="font-semibold text-slate-700">{{ pageStart }}</span>
+            to
+            <span class="font-semibold text-slate-700">{{ pageEnd }}</span>
+            of
+            <span class="font-semibold text-slate-700">{{ total }}</span>
+            orders
+          </div>
+
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Page size</label>
+              <select
+                class="rounded-xl bg-white px-3 py-2 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                [ngModel]="pageSize"
+                (ngModelChange)="changePageSize($event)"
+              >
+                <option [ngValue]="10">10</option>
+                <option [ngValue]="20">20</option>
+                <option [ngValue]="50">50</option>
+                <option [ngValue]="100">100</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                class="inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                [disabled]="page <= 1"
+                (click)="changePage(page - 1)"
+              >
+                Prev
+              </button>
+              <div class="rounded-xl bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700">
+                Page {{ page }} / {{ totalPages }}
+              </div>
+              <button
+                type="button"
+                class="inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                [disabled]="page >= totalPages"
+                (click)="changePage(page + 1)"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   `
@@ -225,12 +318,42 @@ export class ServiceOrdersListComponent {
   @Input() area = '';
   @Input() status = '';
   @Input() type = '';
+  @Input() page = 1;
+  @Input() pageSize = 20;
+  @Input() total = 0;
 
   @Output() areaChange = new EventEmitter<string>();
   @Output() statusChange = new EventEmitter<string>();
   @Output() typeChange = new EventEmitter<string>();
+  @Output() pageChange = new EventEmitter<number>();
+  @Output() pageSizeChange = new EventEmitter<number>();
   @Output() reload = new EventEmitter<void>();
   @Output() openDetail = new EventEmitter<string>();
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil((this.total || 0) / (this.pageSize || 1)));
+  }
+
+  get pageStart(): number {
+    if (!this.total) return 0;
+    return (this.page - 1) * this.pageSize + 1;
+  }
+
+  get pageEnd(): number {
+    if (!this.total) return 0;
+    return Math.min(this.page * this.pageSize, this.total);
+  }
+
+  changePage(nextPage: number): void {
+    if (nextPage < 1 || nextPage > this.totalPages || nextPage === this.page) return;
+    this.pageChange.emit(nextPage);
+  }
+
+  changePageSize(value: string | number): void {
+    const next = Number(value);
+    if (!Number.isFinite(next) || next <= 0 || next === this.pageSize) return;
+    this.pageSizeChange.emit(next);
+  }
 
   getServiceLabel(order: ServiceOrder): string {
     return order?.sourceSnapshot?.name
@@ -242,6 +365,24 @@ export class ServiceOrdersListComponent {
   getAmount(order: ServiceOrder): number {
     const amount = Number(order?.sourceSnapshot?.estimatedTotal ?? 0);
     return Number.isFinite(amount) ? amount : 0;
+  }
+
+  getExpectedCost(order: ServiceOrder): number {
+    const amount = Number(order?.financials?.expectedCost ?? 0);
+    return Number.isFinite(amount) ? amount : 0;
+  }
+
+  getPaidAmount(order: ServiceOrder): number {
+    const amount = Number(order?.financials?.paidAmount ?? 0);
+    return Number.isFinite(amount) ? amount : 0;
+  }
+
+  getAttachmentCount(order: ServiceOrder): number {
+    return order?.attachments?.length || 0;
+  }
+
+  hasAttachmentType(order: ServiceOrder, type: string): boolean {
+    return !!order?.attachments?.some((attachment) => attachment.type === type);
   }
 
   prettify(value: string | null | undefined): string {
@@ -267,6 +408,21 @@ export class ServiceOrdersListComponent {
         return 'bg-emerald-50 text-emerald-700 ring-emerald-200';
       case 'CANCELLED':
         return 'bg-rose-50 text-rose-700 ring-rose-200';
+      default:
+        return 'bg-slate-100 text-slate-700 ring-slate-200';
+    }
+  }
+
+  paymentStatusClass(status: string | null | undefined): string {
+    switch (status) {
+      case 'PAID':
+        return 'bg-emerald-50 text-emerald-700 ring-emerald-200';
+      case 'PARTIAL':
+        return 'bg-amber-50 text-amber-700 ring-amber-200';
+      case 'PENDING':
+        return 'bg-rose-50 text-rose-700 ring-rose-200';
+      case 'REFUNDED':
+        return 'bg-sky-50 text-sky-700 ring-sky-200';
       default:
         return 'bg-slate-100 text-slate-700 ring-slate-200';
     }

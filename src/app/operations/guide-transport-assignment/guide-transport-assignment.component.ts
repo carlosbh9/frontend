@@ -6,52 +6,75 @@ import { toast } from 'ngx-sonner';
 import { ServiceOrdersApi } from '../../features/service-orders/data-access/service-orders.api';
 import { ServiceOrder } from '../../features/service-orders/data-access/service-orders.types';
 
-type ReservationRow = {
+type AssignmentRow = {
   order: ServiceOrder;
   executionDate: string;
   executionLabel: string;
   serviceName: string;
   guest: string;
   city: string;
-  supplier: string;
+  assignmentHint: string;
   notes: string;
 };
 
 @Component({
-  selector: 'app-reservas-status',
+  selector: 'app-guide-transport-assignment',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './reservas-status.component.html',
-  styleUrl: './reservas-status.component.css'
+  templateUrl: './guide-transport-assignment.component.html'
+
 })
-export class ReservasStatusComponent implements OnInit {
+export class GuideTransportAssignmentComponent implements OnInit {
   private readonly api = inject(ServiceOrdersApi);
   private readonly router = inject(Router);
 
   readonly loading = signal(false);
   readonly error = signal('');
+  readonly dateFilter = signal(this.todayString());
   readonly statusFilter = signal('');
   readonly typeFilter = signal('');
-  readonly dateFilter = signal('');
   readonly orders = signal<ServiceOrder[]>([]);
 
   readonly rows = computed(() =>
     this.orders()
-      .filter((order) => order.area === 'RESERVAS')
+      .filter((order) => order.area === 'OPERACIONES')
       .map((order) => this.toRow(order))
   );
 
   readonly filteredRows = computed(() => {
+    const date = this.dateFilter();
     const status = this.statusFilter();
     const type = this.typeFilter();
-    const date = this.dateFilter();
 
     return this.rows().filter((row) => {
+      const matchesDate = !date || row.executionDate === date;
       const matchesStatus = !status || row.order.status === status;
       const matchesType = !type || row.order.type === type;
-      const matchesDate = !date || row.executionDate === date;
-      return matchesStatus && matchesType && matchesDate;
+      return matchesDate && matchesStatus && matchesType;
     });
+  });
+
+  readonly groupedRows = computed(() => {
+    const groups = new Map<string, AssignmentRow[]>();
+
+    for (const row of this.filteredRows()) {
+      const key = row.executionDate || 'NO_DATE';
+      const bucket = groups.get(key) || [];
+      bucket.push(row);
+      groups.set(key, bucket);
+    }
+
+    return Array.from(groups.entries())
+      .sort(([a], [b]) => {
+        if (a === 'NO_DATE') return 1;
+        if (b === 'NO_DATE') return -1;
+        return a.localeCompare(b);
+      })
+      .map(([key, rows]) => ({
+        key,
+        label: key === 'NO_DATE' ? 'Without execution date' : this.formatDateLabel(key),
+        rows
+      }));
   });
 
   readonly kpis = computed(() => {
@@ -59,8 +82,8 @@ export class ReservasStatusComponent implements OnInit {
     return {
       total: rows.length,
       pending: rows.filter((row) => row.order.status === 'PENDING').length,
-      waiting: rows.filter((row) => row.order.status === 'WAITING_INFO').length,
-      done: rows.filter((row) => row.order.status === 'DONE').length
+      inProgress: rows.filter((row) => row.order.status === 'IN_PROGRESS').length,
+      waiting: rows.filter((row) => row.order.status === 'WAITING_INFO').length
     };
   });
 
@@ -73,28 +96,28 @@ export class ReservasStatusComponent implements OnInit {
     this.error.set('');
 
     try {
-      const response = await this.api.list({ page: 1, pageSize: 500, area: 'RESERVAS' });
+      const response = await this.api.list({ page: 1, pageSize: 500, area: 'OPERACIONES' });
       this.orders.set(response.items || []);
     } catch (error: any) {
       this.orders.set([]);
-      this.error.set(error?.error?.message || 'Could not load reservation statuses');
+      this.error.set(error?.error?.message || 'Could not load assignment queue');
     } finally {
       this.loading.set(false);
     }
   }
 
   clearFilters(): void {
+    this.dateFilter.set('');
     this.statusFilter.set('');
     this.typeFilter.set('');
-    this.dateFilter.set('');
   }
 
-  openBookingFile(row: ReservationRow): void {
+  openBookingFile(row: AssignmentRow): void {
     if (!row.order.soldQuoterId) return;
     void this.router.navigate(['/dashboard/quoter-main/booking-files/by-quoter', row.order.soldQuoterId]);
   }
 
-  openContactOrders(row: ReservationRow): void {
+  openContactOrders(row: AssignmentRow): void {
     if (!row.order.contactId) return;
     void this.router.navigate(['/dashboard/quoter-main/service-orders/contact', row.order.contactId]);
   }
@@ -130,13 +153,13 @@ export class ReservasStatusComponent implements OnInit {
     try {
       const updated = await this.api.updateStatus(order._id, nextStatus, reason);
       this.orders.set(this.orders().map((item) => item._id === updated._id ? updated : item));
-      toast.success('Reservation status updated');
+      toast.success('Assignment status updated');
     } catch (error: any) {
-      toast.error(error?.error?.error || error?.error?.message || 'Could not update reservation status');
+      toast.error(error?.error?.error || error?.error?.message || 'Could not update assignment status');
     }
   }
 
-  private toRow(order: ServiceOrder): ReservationRow {
+  private toRow(order: ServiceOrder): AssignmentRow {
     const snapshot = order.sourceSnapshot || {};
     const executionDate = this.normalizeDate(
       snapshot.date
@@ -152,9 +175,22 @@ export class ReservasStatusComponent implements OnInit {
       serviceName: snapshot.name || snapshot.route || `${order.type} service`,
       guest: snapshot.guest || '-',
       city: snapshot.city || snapshot.country || '-',
-      supplier: snapshot.operator || snapshot.name || '-',
+      assignmentHint: this.getAssignmentHint(order, snapshot),
       notes: snapshot.notes || ''
     };
+  }
+
+  private getAssignmentHint(order: ServiceOrder, snapshot: any): string {
+    if (order.type === 'TRANSPORT') {
+      return snapshot.route || 'Assign vehicle and driver';
+    }
+    if (order.type === 'TOUR') {
+      return snapshot.category === 'operator' ? 'Coordinate operator dispatch' : 'Assign guide / operation lead';
+    }
+    if (order.type === 'TICKETS') {
+      return 'Coordinate ticket execution';
+    }
+    return 'Assign operational owner';
   }
 
   private normalizeDate(value: string): string {
@@ -176,5 +212,9 @@ export class ReservasStatusComponent implements OnInit {
       month: 'short',
       year: 'numeric'
     });
+  }
+
+  private todayString(): string {
+    return new Date().toISOString().slice(0, 10);
   }
 }

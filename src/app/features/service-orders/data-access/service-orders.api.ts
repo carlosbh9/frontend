@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../enviroments/environment';
-import { ServiceOrder, ServiceOrderFilters, ServiceOrderListResponse, ServiceOrderTemplate } from './service-orders.types';
+import { ServiceOrder, ServiceOrderAttachment, ServiceOrderFilters, ServiceOrderFinancials, ServiceOrderListResponse, ServiceOrderTemplate } from './service-orders.types';
 
 @Injectable({ providedIn: 'root' })
 export class ServiceOrdersApi {
@@ -41,6 +41,33 @@ export class ServiceOrdersApi {
 
   async updateChecklistItem(id: string, itemId: string, done: boolean): Promise<ServiceOrder> {
     return firstValueFrom(this.http.patch<ServiceOrder>(`${this.baseUrl}/${id}/checklist/${itemId}`, { done }));
+  }
+
+  async updateFinancials(id: string, payload: Partial<ServiceOrderFinancials>): Promise<ServiceOrder> {
+    return firstValueFrom(this.http.patch<ServiceOrder>(`${this.baseUrl}/${id}/financials`, payload));
+  }
+
+  async addAttachment(id: string, payload: Partial<ServiceOrderAttachment>): Promise<ServiceOrder> {
+    return firstValueFrom(this.http.post<ServiceOrder>(`${this.baseUrl}/${id}/attachments`, payload));
+  }
+
+  async presignAttachmentUpload(id: string, body: { fileName: string; contentType: string; type: string }): Promise<{ ok: boolean; key: string; fileUrl: string; uploadUrl: string; expiresIn: number; bucket: string }> {
+    return firstValueFrom(this.http.post<{ ok: boolean; key: string; fileUrl: string; uploadUrl: string; expiresIn: number; bucket: string }>(`${this.baseUrl}/${id}/attachments/presign`, body));
+  }
+
+  async uploadToS3(uploadUrl: string, file: File): Promise<any> {
+    return firstValueFrom(this.http.put(uploadUrl, file, {
+      headers: { 'Content-Type': file.type },
+      responseType: 'text'
+    }));
+  }
+
+  async openAttachment(id: string, attachmentId: string): Promise<{ ok: boolean; url: string; expiresIn: number }> {
+    return firstValueFrom(this.http.get<{ ok: boolean; url: string; expiresIn: number }>(`${this.baseUrl}/${id}/attachments/${attachmentId}/open`));
+  }
+
+  async removeAttachment(id: string, attachmentId: string): Promise<ServiceOrder> {
+    return firstValueFrom(this.http.delete<ServiceOrder>(`${this.baseUrl}/${id}/attachments/${attachmentId}`));
   }
 
   async syncByContact(contactId: string): Promise<any> {

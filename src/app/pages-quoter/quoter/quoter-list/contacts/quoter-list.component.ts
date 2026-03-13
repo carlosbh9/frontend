@@ -34,7 +34,7 @@ export class QuoterListComponent implements OnInit{
   currentPage = signal(1);
   totalContacts = signal(0);
 
-  view: 'list' | 'kanban' = 'kanban';
+  view: 'list' | 'kanban' = 'list';
 
   isModalAddContact = signal(false);
   isEdit = signal(false);
@@ -166,6 +166,9 @@ export class QuoterListComponent implements OnInit{
 
   async updateCotizationStatus(contactId: string, updatedCotization: any): Promise<void> {
     try {
+      if (updatedCotization.status === 'SOLD') {
+        return;
+      }
       const contact = this.contacts.find((c) => c._id === contactId);
 
       const updatedCotizations = contact?.cotizations?.map((cotization: Quoter) =>
@@ -196,10 +199,60 @@ export class QuoterListComponent implements OnInit{
 
   isStatusOptionDisabled(contact: Contact, cotization: Quoter, status: string): boolean {
     if (status !== 'SOLD') return false;
-    const soldQuoterId = contact.soldQuoterId
-      || contact.cotizations?.find((item) => item.status === 'SOLD')?.quoter_id;
-    if (!soldQuoterId) return false;
-    return String(soldQuoterId) !== String(cotization.quoter_id);
+    return cotization.status !== 'SOLD';
+  }
+
+  async confirmSale(contact: Contact, cotization: Quoter): Promise<void> {
+    const quoterId = cotization.quoter_id;
+    if (!quoterId) return;
+
+    const result = await Swal.fire({
+      title: 'Confirm sale',
+      text: 'This will create or update the booking file and generate service orders for operations.',
+      icon: 'question',
+      input: 'text',
+      inputLabel: 'File code',
+      inputPlaceholder: 'Example: AKT2025-6',
+      inputValue: '',
+      inputValidator: (value) => {
+        const fileCode = String(value || '').trim().toUpperCase();
+        if (!fileCode) return 'File code is required';
+        if (!/^[A-Z0-9-]+$/.test(fileCode)) {
+          return 'Use only letters, numbers, and hyphen';
+        }
+        return null;
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Confirm sale',
+      cancelButtonText: 'Cancel'
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      const fileCode = String(result.value || '').trim().toUpperCase();
+      const response = await this.quoterService.confirmSale(quoterId, fileCode);
+      await this.fetchContacts(this.currentPage(), this.itemsPerPage());
+      toast.success('Sale confirmed successfully');
+
+      const bookingFileId = response?.bookingFile?._id;
+      if (bookingFileId) {
+        void this.router.navigate(['/dashboard/quoter-main/booking-files', bookingFileId]);
+        return;
+      }
+
+      this.openBookingFileByQuoter(quoterId);
+    } catch (error) {
+      console.error('Error confirming sale', error);
+      toast.error('Error confirming sale');
+    }
+  }
+
+  openBookingFileByQuoter(quoterId?: string): void {
+    if (!quoterId) return;
+    void this.router.navigate(['/dashboard/quoter-main/booking-files/by-quoter', quoterId]);
   }
 
   toggleDropdown(contactId: string) {

@@ -3,14 +3,14 @@
     <section class="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div class="flex flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
         <div class="min-w-0">
-          <div class="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100">
-            Daily Execution Board
+          <div class="inline-flex items-center gap-2 rounded-full bg-violet-50 px-3 py-1 text-xs font-semibold text-violet-700 ring-1 ring-inset ring-violet-100">
+            Dispatch Queue
           </div>
           <h1 class="mt-3 text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
-            Biblia
+            Asignación de guías & transporte
           </h1>
           <p class="mt-1 max-w-2xl text-sm text-slate-600">
-            Operational view of scheduled services, grouped by execution date and connected to booking files and service orders.
+            Operational dispatch board for guides, transport, and same-day execution assignments owned by the operations team.
           </p>
         </div>
 
@@ -29,7 +29,7 @@
         <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div class="border-b border-slate-100 p-5">
             <h2 class="text-sm font-semibold text-slate-900">Filters</h2>
-            <p class="mt-1 text-sm text-slate-600">Focus the board by execution date, area, or operational status.</p>
+            <p class="mt-1 text-sm text-slate-600">Review the dispatch queue by date, order type, and progress.</p>
           </div>
 
           <div class="space-y-4 p-5">
@@ -37,38 +37,16 @@
               <label class="block text-sm font-medium text-slate-700">Execution date</label>
               <input
                 type="date"
-                class="mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                class="mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-violet-600"
                 [ngModel]="dateFilter()"
                 (ngModelChange)="dateFilter.set($event)"
               />
-              <button
-                type="button"
-                class="mt-2 text-xs font-semibold text-slate-500 hover:text-slate-700"
-                (click)="clearDateFilter()"
-              >
-                Clear date filter
-              </button>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-slate-700">Area</label>
-              <select
-                class="mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                [ngModel]="areaFilter()"
-                (ngModelChange)="areaFilter.set($event)"
-              >
-                <option value="">All areas</option>
-                <option value="RESERVAS">Reservas</option>
-                <option value="OPERACIONES">Operaciones</option>
-                <option value="CONTABILIDAD">Contabilidad</option>
-                <option value="PAGOS">Pagos</option>
-              </select>
             </div>
 
             <div>
               <label class="block text-sm font-medium text-slate-700">Status</label>
               <select
-                class="mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                class="mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-violet-600"
                 [ngModel]="statusFilter()"
                 (ngModelChange)="statusFilter.set($event)"
               >
@@ -80,14 +58,37 @@
                 <option value="CANCELLED">Cancelled</option>
               </select>
             </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700">Type</label>
+              <select
+                class="mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-violet-600"
+                [ngModel]="typeFilter()"
+                (ngModelChange)="typeFilter.set($event)"
+              >
+                <option value="">All types</option>
+                <option value="TRANSPORT">Transport</option>
+                <option value="TOUR">Tour</option>
+                <option value="TICKETS">Tickets</option>
+              </select>
+            </div>
+
+            <button
+              type="button"
+              class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
+              (click)="clearFilters()"
+            >
+              Clear filters
+            </button>
           </div>
         </div>
 
         <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div class="border-b border-slate-100 p-5">
             <h2 class="text-sm font-semibold text-slate-900">Visible Summary</h2>
-            <p class="mt-1 text-sm text-slate-600">Live counters for the current filter set.</p>
+            <p class="mt-1 text-sm text-slate-600">Dispatch workload for the current filter set.</p>
           </div>
+
           <div class="grid grid-cols-2 gap-3 p-5">
             <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Total</p>
@@ -101,9 +102,9 @@
               <p class="text-xs font-medium uppercase tracking-wide text-blue-700">In Progress</p>
               <p class="mt-2 text-2xl font-semibold text-blue-900">{{ kpis().inProgress }}</p>
             </div>
-            <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
-              <p class="text-xs font-medium uppercase tracking-wide text-emerald-700">Done</p>
-              <p class="mt-2 text-2xl font-semibold text-emerald-900">{{ kpis().done }}</p>
+            <div class="rounded-2xl border border-slate-300 bg-slate-100 p-4">
+              <p class="text-xs font-medium uppercase tracking-wide text-slate-700">Waiting Info</p>
+              <p class="mt-2 text-2xl font-semibold text-slate-900">{{ kpis().waiting }}</p>
             </div>
           </div>
         </div>
@@ -115,7 +116,7 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4A4 4 0 0 0 8 12H4Z"></path>
               </svg>
-              Loading Biblia...
+              Loading assignment queue...
             </div>
           </div>
         }
@@ -134,7 +135,7 @@
               <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h2 class="text-sm font-semibold text-slate-900">{{ group.label }}</h2>
-                  <p class="mt-1 text-sm text-slate-600">Services currently visible for this execution date.</p>
+                  <p class="mt-1 text-sm text-slate-600">Services that need dispatch or operational assignment on this date.</p>
                 </div>
                 <div class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
                   {{ group.rows.length }} items
@@ -149,7 +150,7 @@
                     <th class="px-4 py-3 text-left font-semibold text-slate-600">Guest</th>
                     <th class="px-4 py-3 text-left font-semibold text-slate-600">Service</th>
                     <th class="px-4 py-3 text-left font-semibold text-slate-600">City</th>
-                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Area</th>
+                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Assignment</th>
                     <th class="px-4 py-3 text-left font-semibold text-slate-600">Status</th>
                     <th class="px-4 py-3 text-left font-semibold text-slate-600">Finance</th>
                     <th class="px-4 py-3 text-left font-semibold text-slate-600">Docs</th>
@@ -164,11 +165,11 @@
                         <div class="text-xs text-slate-500">{{ row.executionLabel }}</div>
                       </td>
                       <td class="px-4 py-3">
-                        <div class="font-medium text-slate-900">{{ row.title }}</div>
-                        <div class="text-xs text-slate-500">{{ row.detail || row.order.type }}</div>
+                        <div class="font-medium text-slate-900">{{ row.serviceName }}</div>
+                        <div class="text-xs text-slate-500">{{ row.notes || row.order.type }}</div>
                       </td>
                       <td class="px-4 py-3 text-slate-600">{{ row.city }}</td>
-                      <td class="px-4 py-3 text-slate-600">{{ row.order.area }}</td>
+                      <td class="px-4 py-3 text-slate-600">{{ row.assignmentHint }}</td>
                       <td class="px-4 py-3">
                         <div class="flex flex-col gap-2">
                           <span class="inline-flex w-fit items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
@@ -183,7 +184,7 @@
                             {{ row.order.status }}
                           </span>
                           <select
-                            class="rounded-lg bg-white px-2.5 py-2 text-xs text-slate-700 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                            class="rounded-lg bg-white px-2.5 py-2 text-xs text-slate-700 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-violet-600"
                             [ngModel]="row.order.status"
                             (ngModelChange)="updateOrderStatus(row.order, $event)"
                           >
@@ -210,9 +211,9 @@
                           <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
                             {{ getAttachmentCount(row.order) }} docs
                           </span>
-                          <span *ngIf="hasAttachmentType(row.order, 'VOUCHER')" class="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100">Voucher</span>
-                          <span *ngIf="hasAttachmentType(row.order, 'INVOICE')" class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-100">Invoice</span>
+                          <span *ngIf="hasAttachmentType(row.order, 'VOUCHER')" class="inline-flex items-center rounded-full bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-700 ring-1 ring-inset ring-violet-100">Voucher</span>
                           <span *ngIf="hasAttachmentType(row.order, 'PAYMENT_PROOF')" class="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 ring-1 ring-inset ring-amber-100">Proof</span>
+                          <span *ngIf="hasAttachmentType(row.order, 'TICKET')" class="inline-flex items-center rounded-full bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-700 ring-1 ring-inset ring-sky-100">Ticket</span>
                         </div>
                       </td>
                       <td class="px-4 py-3">
@@ -226,7 +227,7 @@
                           </button>
                           <button
                             type="button"
-                            class="inline-flex items-center rounded-lg px-3 py-2 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-indigo-50"
+                            class="inline-flex items-center rounded-lg px-3 py-2 text-xs font-semibold text-violet-700 ring-1 ring-inset ring-violet-200 hover:bg-violet-50"
                             (click)="openBookingFile(row)"
                           >
                             File
@@ -243,9 +244,9 @@
 
         @if (!loading() && !error() && !groupedRows().length) {
           <section class="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-            <h2 class="text-base font-semibold text-slate-900">No scheduled services found</h2>
+            <h2 class="text-base font-semibold text-slate-900">No dispatch items found</h2>
             <p class="mt-2 text-sm text-slate-600">
-              Adjust the filters or clear the execution date to review all service orders.
+              Clear the filters or select another date to review operational assignments.
             </p>
           </section>
         }

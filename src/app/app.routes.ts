@@ -80,6 +80,27 @@ export const routes: Routes = [
                   ),
               },
               {
+                path: 'booking-files',
+                loadComponent: () =>
+                  import('./features/booking-files/pages/booking-files-list-page.component').then(
+                    (m) => m.BookingFilesListPageComponent
+                  ),
+              },
+              {
+                path: 'booking-files/:id',
+                loadComponent: () =>
+                  import('./features/booking-files/pages/booking-file-page.component').then(
+                    (m) => m.BookingFilePageComponent
+                  ),
+              },
+              {
+                path: 'booking-files/by-quoter/:quoterId',
+                loadComponent: () =>
+                  import('./features/booking-files/pages/booking-file-page.component').then(
+                    (m) => m.BookingFilePageComponent
+                  ),
+              },
+              {
                 path: 'service-order-templates',
                 canActivate: [authGuard],
                 data: { permission: 'view_users' },
@@ -211,6 +232,10 @@ export const routes: Routes = [
               {
                 path:'reservations',
                 loadComponent: () => import('./operations/reservas-status/reservas-status.component').then((m) => m.ReservasStatusComponent)
+              },
+              {
+                path:'assignments',
+                loadComponent: () => import('./operations/guide-transport-assignment/guide-transport-assignment.component').then((m) => m.GuideTransportAssignmentComponent)
               }
             ],
         },

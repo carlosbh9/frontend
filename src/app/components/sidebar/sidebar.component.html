@@ -15,7 +15,7 @@
         </li>
         <!-- *hasRole="['admin','ventas','TD']" -->
         <li *hasPermission="['view_quoter']" class="mb-1 group">
-            <a  routerLink="quoter-main/quoter-form" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+            <a  routerLink="quoter-main/quoter-list" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                 <i class='bx bx-task mr-3 text-lg'></i>
                 <span class="text-sm">Ventas</span>
             </a>
@@ -33,17 +33,17 @@
             </a>
         </li>
          <li class="mb-1 group">
-            <a  routerLink="operations" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+            <a  routerLink="operations/biblia" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                 <i class='bx bx-smile mr-3 text-lg'></i>
                 <span class="text-sm">Operaciones</span>
             </a>
         </li>
-        <li class="mb-1 group">
+        <!-- <li class="mb-1 group">
             <a  routerLink="" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                 <i class='bx bx-money mr-3 text-lg'></i>
                 <span class="text-sm">Tesoreria</span>
             </a>
-        </li>
+        </li> -->
         <!-- *hasRole="['admin']" -->
           <li *hasPermission="['view_users']" class="mb-1 group">
             <a  routerLink="manageUsers" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">

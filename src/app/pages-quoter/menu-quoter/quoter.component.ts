@@ -51,8 +51,16 @@ export class QuoterComponent {
       hasChildren: true,
       children: [
         { label: 'Booking Form', router: 'booking-form' },
-        { label: 'Booking List', router: 'booking-list' }
-
+        { label: 'Booking Files', router: 'booking-files' }
+      ]
+    },
+    {
+      label: 'Post Sale',
+      icon: 'bx bx-briefcase-alt-2',
+      hasChildren: true,
+      children: [
+        { label: 'Service Orders', router: 'service-orders' },
+        { label: 'Booking Files', router: 'booking-files' }
       ]
     }
   ];

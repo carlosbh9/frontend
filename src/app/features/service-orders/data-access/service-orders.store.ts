@@ -135,6 +135,73 @@ export class ServiceOrdersStore {
     }
   }
 
+  async updateFinancials(orderId: string, payload: any): Promise<void> {
+    this.error.set(null);
+    try {
+      await this.api.updateFinancials(orderId, payload);
+      await this.load();
+      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
+    } catch (error: any) {
+      this.error.set(error?.error?.error || error?.error?.message || 'Could not update financials');
+    }
+  }
+
+  async addAttachment(orderId: string, payload: any): Promise<void> {
+    this.error.set(null);
+    try {
+      await this.api.addAttachment(orderId, payload);
+      await this.load();
+      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
+    } catch (error: any) {
+      this.error.set(error?.error?.error || error?.error?.message || 'Could not add attachment');
+    }
+  }
+
+  async uploadAttachment(orderId: string, file: File, payload: any): Promise<void> {
+    this.error.set(null);
+    try {
+      const presign = await this.api.presignAttachmentUpload(orderId, {
+        fileName: file.name,
+        contentType: file.type,
+        type: payload.type || 'OTHER'
+      });
+      await this.api.uploadToS3(presign.uploadUrl, file);
+      await this.api.addAttachment(orderId, {
+        ...payload,
+        fileName: payload.fileName || file.name,
+        contentType: file.type,
+        storageKey: presign.key,
+        url: presign.fileUrl
+      });
+      await this.load();
+      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
+    } catch (error: any) {
+      this.error.set(error?.error?.error || error?.error?.message || 'Could not upload attachment');
+    }
+  }
+
+  async openAttachment(orderId: string, attachmentId: string): Promise<string | null> {
+    this.error.set(null);
+    try {
+      const response = await this.api.openAttachment(orderId, attachmentId);
+      return response.url || null;
+    } catch (error: any) {
+      this.error.set(error?.error?.error || error?.error?.message || 'Could not open attachment');
+      return null;
+    }
+  }
+
+  async removeAttachment(orderId: string, attachmentId: string): Promise<void> {
+    this.error.set(null);
+    try {
+      await this.api.removeAttachment(orderId, attachmentId);
+      await this.load();
+      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
+    } catch (error: any) {
+      this.error.set(error?.error?.error || error?.error?.message || 'Could not remove attachment');
+    }
+  }
+
   async syncByContact(contactId: string): Promise<void> {
     this.error.set(null);
     try {

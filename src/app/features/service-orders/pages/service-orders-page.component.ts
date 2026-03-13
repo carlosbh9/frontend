@@ -239,20 +239,25 @@ import { ServiceOrdersListComponent } from '../ui/service-orders-list.component'
                 </div>
 
                 <div class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-                  {{ store.filteredOrders().length }} visible
+                  {{ store.total() }} total
                 </div>
               </div>
             </div>
 
             <div class="p-5">
               <app-service-orders-list
-                [orders]="store.filteredOrders()"
+                [orders]="store.orders()"
                 [area]="store.filters().area || ''"
                 [status]="store.filters().status || ''"
                 [type]="store.filters().type || ''"
+                [page]="store.page()"
+                [pageSize]="store.pageSize()"
+                [total]="store.total()"
                 (areaChange)="store.setFilter('area', $event)"
                 (statusChange)="store.setFilter('status', $event)"
                 (typeChange)="store.setFilter('type', $event)"
+                (pageChange)="store.setPage($event)"
+                (pageSizeChange)="store.setPageSize($event)"
                 (reload)="reload()"
                 (openDetail)="openDetail($event)"
               />
@@ -287,6 +292,11 @@ import { ServiceOrdersListComponent } from '../ui/service-orders-list.component'
                 (statusChange)="changeStatus($event)"
                 (assigneeChange)="changeAssignee($event)"
                 (checklistToggle)="toggleChecklist($event.itemId, $event.done)"
+                (financialsSave)="saveFinancials($event)"
+                (attachmentAdd)="addAttachment($event)"
+                (attachmentUpload)="uploadAttachment($event)"
+                (attachmentOpen)="openAttachment($event)"
+                (attachmentRemove)="removeAttachment($event)"
               />
             </div>
           </div>
@@ -370,5 +380,37 @@ export class ServiceOrdersPageComponent implements OnInit {
     const orderId = this.selectedId();
     if (!orderId) return;
     void this.store.toggleChecklist(orderId, itemId, done);
+  }
+
+  saveFinancials(payload: any): void {
+    const orderId = this.selectedId();
+    if (!orderId) return;
+    void this.store.updateFinancials(orderId, payload);
+  }
+
+  addAttachment(payload: any): void {
+    const orderId = this.selectedId();
+    if (!orderId) return;
+    void this.store.addAttachment(orderId, payload);
+  }
+
+  uploadAttachment(payload: { file: File; attachment: any }): void {
+    const orderId = this.selectedId();
+    if (!orderId) return;
+    void this.store.uploadAttachment(orderId, payload.file, payload.attachment);
+  }
+
+  removeAttachment(attachmentId: string): void {
+    const orderId = this.selectedId();
+    if (!orderId) return;
+    void this.store.removeAttachment(orderId, attachmentId);
+  }
+
+  async openAttachment(attachmentId: string): Promise<void> {
+    const orderId = this.selectedId();
+    if (!orderId) return;
+    const url = await this.store.openAttachment(orderId, attachmentId);
+    if (!url) return;
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 }

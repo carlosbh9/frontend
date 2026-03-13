@@ -19,6 +19,32 @@ export interface ServiceOrderAuditLog {
   payload?: any;
 }
 
+export interface ServiceOrderAttachment {
+  attachmentId: string;
+  type: 'VOUCHER' | 'INVOICE' | 'PAYMENT_PROOF' | 'RESERVATION_CONFIRMATION' | 'TICKET' | 'PASSPORT_COPY' | 'OTHER';
+  fileName: string;
+  url?: string;
+  storageKey?: string;
+  contentType?: string;
+  notes?: string;
+  uploadedAt?: string;
+  uploadedBy?: string | null;
+}
+
+export interface ServiceOrderFinancials {
+  supplierName?: string;
+  supplierReference?: string;
+  currency?: string;
+  expectedCost?: number;
+  paidAmount?: number;
+  paymentStatus?: 'NOT_REQUIRED' | 'PENDING' | 'PARTIAL' | 'PAID' | 'REFUNDED';
+  paymentMethod?: 'TRANSFER' | 'CASH' | 'CARD' | 'CHECK' | 'OTHER';
+  paymentDueDate?: string | null;
+  paymentDate?: string | null;
+  invoiceNumber?: string;
+  invoiceDate?: string | null;
+}
+
 export interface ServiceOrder {
   _id: string;
   contactId: string;
@@ -36,6 +62,8 @@ export interface ServiceOrder {
   checklist: ServiceOrderChecklistItem[];
   sourceSnapshot: any;
   accountingStatus?: 'NOT_REQUIRED' | 'PENDING_INVOICE' | 'INVOICED' | 'PARTIALLY_PAID' | 'PAID';
+  financials?: ServiceOrderFinancials;
+  attachments?: ServiceOrderAttachment[];
   auditLogs: ServiceOrderAuditLog[];
   createdBy?: string | null;
   updatedBy?: string | null;
