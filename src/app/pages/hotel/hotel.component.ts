@@ -2,22 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { HotelService } from '../../Services/hotel.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
-
 import { toast } from 'ngx-sonner';
 import { HasPermissionsDirective } from '../../Services/AuthService/has-permissions.directive';
 
 @Component({
   selector: 'app-hotel',
   standalone: true,
-  imports: [CommonModule, FormsModule,RouterModule,HasPermissionsDirective],
+  imports: [CommonModule, FormsModule,HasPermissionsDirective],
   templateUrl: './hotel.component.html',
   styleUrl: './hotel.component.css'
 })
 export class HotelComponent implements OnInit {
 
-  constructor(private hotelService: HotelService,private router:Router) {}
+  constructor(private hotelService: HotelService) {}
   hotels: any[] = [];
   filteredHotels: any[] = [];
   destinations: string[] = ['HOTELES CUSCO','HOTELES VALLE SAGRADO','HOTELES MACHU PICCHU','HOTELES LIMA','HOTELES PUNO','HOTELES AREQUIPA','HOTELES COLCA','LODGES TAMBOPATA','IQUITOS','HOTELES ICA & PARACAS','HOTELES NORTE DE PERU']
@@ -29,6 +26,7 @@ export class HotelComponent implements OnInit {
   newHotel: any = {
     name: '',
     location: '',
+    services: [],
     special_dates: [{
       date: '',
       price: 0
@@ -51,6 +49,21 @@ export class HotelComponent implements OnInit {
   ngOnInit(): void {
     this.fetchHotels();
   
+  }
+
+  private createHotelRoomPrices() {
+    return [
+      { type: 'SWB', confidential: 0, rack: 0 },
+      { type: 'DWB', confidential: 0, rack: 0 },
+      { type: 'TRP', confidential: 0, rack: 0 }
+    ];
+  }
+
+  private createHotelService() {
+    return {
+      name_service: '',
+      roomPrices: this.createHotelRoomPrices()
+    };
   }
 
   async fetchHotels() {
@@ -88,6 +101,9 @@ export class HotelComponent implements OnInit {
   }
   openEditModal(hotel: any) {
     this.selectedHotel = {...hotel};
+    this.selectedHotel.services = Array.isArray(hotel.services)
+      ? structuredClone(hotel.services)
+      : [];
     this.selectedHotel.informacion_general = hotel.informacion_general instanceof Map
       ? Array.from(hotel.informacion_general as Map<string, any>).map(([key, value]) => ({ key, value }))
       : Object.entries(hotel.informacion_general || {}).map(([key, value]) => ({ key, value }));
@@ -103,6 +119,7 @@ export class HotelComponent implements OnInit {
     this.newHotel = {
     name: '',
     location: '',
+    services: [this.createHotelService()],
     special_dates: [{
       date: '',
       price: 0
@@ -130,7 +147,7 @@ export class HotelComponent implements OnInit {
       // Crear una copia del newHotel con la informacion_general actualizada
       const hotelToSubmit = {
         ...this.newHotel,
-        services: [],
+        services: this.newHotel.services,
         informacion_general: infoGeneral
       };
   
@@ -256,6 +273,32 @@ export class HotelComponent implements OnInit {
     this.newHotel.informacion_general.push({ key: '', value: '' });
   }
 
+  addHotelService() {
+    this.newHotel.services.push(this.createHotelService());
+  }
+
+  removeHotelService(index: number) {
+    if (this.newHotel.services.length > 1) {
+      this.newHotel.services.splice(index, 1);
+      return;
+    }
+
+    toast.warning('Cannot remove the only service.');
+  }
+
+  addEditHotelService() {
+    this.selectedHotel.services.push(this.createHotelService());
+  }
+
+  removeEditHotelService(index: number) {
+    if (this.selectedHotel.services.length > 1) {
+      this.selectedHotel.services.splice(index, 1);
+      return;
+    }
+
+    toast.warning('Cannot remove the only service.');
+  }
+
   removeInfoField(index: number) {
     if (this.newHotel.informacion_general.length >= 1) { 
       this.newHotel.informacion_general.splice(index, 1);
@@ -275,10 +318,5 @@ export class HotelComponent implements OnInit {
       // Handle the case of removing the only price field (optional: clear values or display a message)
       toast.warning('Cannot remove the only price field.');
     }
-  }
-
-
-  viewServices(hotel: any) {
-    this.router.navigate([`dashboard/tariff/services-hotel`, hotel._id])
   }
 }

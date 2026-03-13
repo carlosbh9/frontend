@@ -120,16 +120,32 @@ export class HotelsComponent implements OnInit{
      }
      }
 
-  onHotelChange(event: any): void {
-      const selectedHotel = this.hotelsOption.find(hotel => hotel._id === this.selectedHotel)
-      if(selectedHotel){
-        this.hotelServices= selectedHotel.services
-        this.newHotel.name_hotel= selectedHotel.name
+  async onHotelChange(): Promise<void> {
+      this.selectedService = '';
+      this.selectedRoomType = '';
+      this.selectedPrice = 0;
+      this.roomTypes = [];
+      this.hotelServices = [];
+
+      if (!this.selectedHotel) {
+        this.newHotel.name_hotel = '';
+        return;
       }
 
+      const selectedHotel = this.hotelsOption.find(hotel => hotel._id === this.selectedHotel);
+
+      if (selectedHotel) {
+        this.newHotel.name_hotel = selectedHotel.name;
+      }
+
+      try {
+        this.hotelServices = await this.hotelService.getServicesByHotelId(this.selectedHotel);
+      } catch (error) {
+        console.error('Error fetching hotel services:', error);
+      }
   }
 
-  onServiceChange(event: any): void {
+  onServiceChange(): void {
     const selectedService = this.hotelServices.find(service => service._id === this.selectedService);
 
       if (selectedService) {

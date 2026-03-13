@@ -3,7 +3,6 @@ import { TrainService } from '../../Services/train.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { HasPermissionsDirective } from '../../Services/AuthService/has-permissions.directive';
 
@@ -17,7 +16,7 @@ import { HasPermissionsDirective } from '../../Services/AuthService/has-permissi
 })
 export class TrainComponent implements OnInit {
 
-  constructor(private trainService: TrainService,private cdr: ChangeDetectorRef,private router: Router) {}
+  constructor(private trainService: TrainService,private cdr: ChangeDetectorRef) {}
   trains: any[] = [];
   filteredTrains: any[] = [];
   filterText: string = '';
@@ -26,6 +25,7 @@ export class TrainComponent implements OnInit {
   filterYear : string = '2025'
  newTrain: any = {
    company: '',
+   services: [],
    observations: '',
    year:''
  };
@@ -33,6 +33,7 @@ export class TrainComponent implements OnInit {
  selectedTrain: any = {
    _id: '',
    company: '',
+   services: [],
    observations: '',
    year:''
  };
@@ -40,6 +41,19 @@ export class TrainComponent implements OnInit {
 
  ngOnInit(): void {
     this.fetchTrains();
+  }
+
+  private createTrainService() {
+    return {
+      serviceName: '',
+      prices: {
+        season: 'Regular',
+        adultPrice: 0,
+        childPrice: 0,
+        guidePrice: 0
+      },
+      observations: ''
+    };
   }
 
   async fetchTrains() {
@@ -66,6 +80,9 @@ export class TrainComponent implements OnInit {
 
   openEditModal(train: any) {
     this.selectedTrain = { ...train };
+    this.selectedTrain.services = Array.isArray(train.services)
+      ? structuredClone(train.services)
+      : [this.createTrainService()];
     this.showEditModal = true;
     this.cdr.detectChanges();
     console.log(this.selectedTrain);
@@ -89,6 +106,7 @@ export class TrainComponent implements OnInit {
   emptyTrain(): void {
     this.newTrain = {
       company: '',
+      services: [this.createTrainService()],
       observations: '',
       year:''
     };
@@ -156,8 +174,29 @@ export class TrainComponent implements OnInit {
     }
   }
 
+  addTrainService() {
+    this.newTrain.services.push(this.createTrainService());
+  }
 
-  viewServices(operator: any) {
-    this.router.navigate([`dashboard/tariff/services-train`, operator._id]);
+  removeTrainService(index: number) {
+    if (this.newTrain.services.length > 1) {
+      this.newTrain.services.splice(index, 1);
+      return;
+    }
+
+    toast.warning('Cannot remove the only service.');
+  }
+
+  addEditTrainService() {
+    this.selectedTrain.services.push(this.createTrainService());
+  }
+
+  removeEditTrainService(index: number) {
+    if (this.selectedTrain.services.length > 1) {
+      this.selectedTrain.services.splice(index, 1);
+      return;
+    }
+
+    toast.warning('Cannot remove the only service.');
   }
 }

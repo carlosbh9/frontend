@@ -9,21 +9,35 @@ import { HttpClient,  } from '@angular/common/http';
 export class HotelService {
 
   private baseUrl = `${environment.apiUrl}/hotels`;
+  private tariffsUrl = `${environment.apiUrl}/tariffs`;
 
   constructor(private http: HttpClient) { }
+
+  private normalizeHotel(hotel: any) {
+    if (!hotel) {
+      return hotel;
+    }
+
+    const normalizedHotel = { ...hotel };
+
+    if (
+      normalizedHotel.informacion_general &&
+      typeof normalizedHotel.informacion_general === 'object' &&
+      !Array.isArray(normalizedHotel.informacion_general) &&
+      !(normalizedHotel.informacion_general instanceof Map)
+    ) {
+      normalizedHotel.informacion_general = new Map(Object.entries(normalizedHotel.informacion_general));
+    }
+
+    return normalizedHotel;
+  }
 
 
 // Get all hotels
   async getAllHotels() {
     try {
-      const res = await firstValueFrom(this.http.get<any[]>(this.baseUrl));
-      return res.map((hotel: any) => {
-        if (hotel.informacion_general && typeof hotel.informacion_general === 'object') {
-          hotel.informacion_general = new Map(Object.entries(hotel.informacion_general));
-        }
-        return hotel;
-      });
- //     return res;
+      const res = await firstValueFrom(this.http.get<any[]>(`${this.tariffsUrl}?type=hotel`));
+      return res.map((hotel: any) => this.normalizeHotel(hotel));
     } catch (error) {
       console.error('Error fetching hotels:', error);
       throw error;
@@ -72,12 +86,8 @@ export class HotelService {
   //get a hotel by id
   async getHotelById(id: string) {
     try {
-      const res = await firstValueFrom(this.http.get<any>(`${this.baseUrl}/${id}`));
-      // Convert `informacion_general` Map to an object (if it's a Map)
-      if (res.informacion_general instanceof Map) {
-        res.informacion_general = Object.fromEntries(res.informacion_general);
-      }
-      return res;
+      const res = await firstValueFrom(this.http.get<any>(`${this.tariffsUrl}/${id}`));
+      return this.normalizeHotel(res);
     } catch (error) {
       console.error('Error fetching hotel:', error);
       throw error;
@@ -87,8 +97,8 @@ export class HotelService {
   //obtener todos los servicios de un hotel
   async getServicesByHotelId(hotelId: string) {
     try {
-      const res = await firstValueFrom(this.http.get<any[]>(`${this.baseUrl}/${hotelId}/services`));
-      return res;
+      const hotel = await this.getHotelById(hotelId);
+      return Array.isArray(hotel?.services) ? hotel.services : [];
     } catch (error) {
       console.error('Error fetching services:', error);
       throw error;

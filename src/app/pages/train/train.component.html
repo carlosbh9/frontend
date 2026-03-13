@@ -1,151 +1,184 @@
-
-<div class="p-6 relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 dark:bg-gray-800 w-full shadow-lg rounded">
-  <div class="rounded-t mb-0 px-0 border-0">
-    <div class="flex flex-wrap items-center px-4 py-2">
-      <div class="relative w-full max-w-full flex-grow flex-1">
-        <h3 class="font-semibold text-base text-gray-900 dark:text-gray-50">Trains</h3>
+<div class="rounded-2xl border border-gray-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+  <div class="border-b border-gray-100 p-4 sm:p-5 dark:border-slate-800">
+    <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+      <div>
+        <div class="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100 dark:bg-indigo-500/10 dark:text-indigo-300 dark:ring-indigo-500/20">
+          Tariffs Management
+        </div>
+        <h3 class="mt-3 text-base font-semibold text-gray-900 sm:text-lg dark:text-slate-100">Trains</h3>
+        <p class="mt-1 text-xs text-gray-500 sm:text-sm dark:text-slate-400">Manage train companies and their services in the same modal.</p>
       </div>
-      <div class="relative w-full max-w-full flex-grow flex-1 text-right">
-        <select name="filterYear" id="filterYear" class="p-2 me-4 border border-gray-300 rounded" [(ngModel)]="filterYear" (change)="onYearChange($event)">
+      <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+        <select [(ngModel)]="filterYear" (change)="onYearChange($event)" class="block w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700 sm:w-40">
           <option value="2024">2024</option>
           <option value="2025">2025</option>
           <option value="2026">2026</option>
           <option value="">All</option>
         </select>
-        <input
-          type="text"
-          [(ngModel)]="filterText"
-          (input)="filterTrains()"
-          placeholder="Filter trains..."
-          class="p-2 border border-gray-300 rounded"
-        />
+        <input type="text" [(ngModel)]="filterText" (input)="filterTrains()" placeholder="Filter trains..." class="block w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700 sm:w-80" />
+        <div *hasPermission="['create_tariff']">
+          <button type="button" (click)="openModal()" class="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700">
+            <i class="bx bx-plus text-lg"></i>
+            Add Train
+          </button>
+        </div>
       </div>
-      <td *hasPermission="['create_tariff']">
-        <!-- Botón para abrir el modal -->
-        <button class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="openModal()">Add Train</button>
-      </td>
     </div>
-    <div class="block w-full overflow-x-auto">
-      <table class="items-center w-full bg-transparent border-collapse">
-        <thead>
-          <tr>
-            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Company</th>
-            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Year</th>
-            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Services</th>
-            <th class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 w-1/6 font-semibold text-left">observations</th>
-            <th *hasPermission="['actions_tariff']" class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (train of filteredTrains; track $index) {
-          <tr  class="text-gray-700 dark:text-gray-100 border-b">
-             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2 ">{{ train.company}}</td>
-             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2 ">{{ train.year}}</td>
-             <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-              <button class="px-4 bg-blue-500 dark:bg-blue-700 p-2 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800" (click)="viewServices(train)" >View Services</button>
-            </td>
-            <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs p-2">{{ train.observations }}</td>
-            <td *hasPermission="['actions_tariff']" class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
-              <i class='bx bx-edit-alt text-2xl text-blue-500 dark:text-blue-700 mr-2' (click)="openEditModal(train)"></i>
-              <i class='bx bx-trash text-2xl text-red-500 dark:text-red-700 mr-2' (click)="confirmDelete(train._id)"></i>
-            </td>
-          </tr>}
-        </tbody>
-      </table>
+  </div>
+
+  <div class="p-4 sm:p-5">
+    <div class="overflow-hidden rounded-2xl border border-gray-100 bg-white dark:border-slate-800 dark:bg-slate-900">
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead class="bg-gray-50 dark:bg-slate-800/60">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-slate-200">Company</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-slate-200">Year</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-slate-200">Services</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-slate-200">Observations</th>
+              <th *hasPermission="['actions_tariff']" class="w-40 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-slate-200">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-slate-800">
+            <tr *ngFor="let train of filteredTrains" class="text-sm text-gray-700 transition-colors hover:bg-gray-50/70 dark:text-slate-100 dark:hover:bg-slate-800/40">
+              <td class="px-4 py-4 align-top font-medium text-gray-900 dark:text-slate-100">{{ train.company }}</td>
+              <td class="px-4 py-4 align-top">
+                <span class="inline-flex items-center rounded-full bg-gray-50 px-2.5 py-1 text-xs font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 dark:bg-slate-800 dark:text-slate-200 dark:ring-slate-700">{{ train.year }}</span>
+              </td>
+              <td class="px-4 py-4 align-top text-xs leading-5 text-gray-600 dark:text-slate-300">{{ train.services?.length || 0 }} configured</td>
+              <td class="px-4 py-4 align-top text-xs leading-5 text-gray-600 dark:text-slate-300">{{ train.observations || '-' }}</td>
+              <td *hasPermission="['actions_tariff']" class="px-4 py-4 align-top whitespace-nowrap">
+                <div class="flex items-center gap-2">
+                  <button type="button" (click)="openEditModal(train)" class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-indigo-50 dark:text-indigo-300 dark:ring-indigo-500/30">
+                    <i class="bx bx-edit-alt text-xl"></i>
+                  </button>
+                  <button type="button" (click)="confirmDelete(train._id)" class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-red-600 ring-1 ring-inset ring-red-200 hover:bg-red-50 dark:text-red-300 dark:ring-red-500/30">
+                    <i class="bx bx-trash text-xl"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
 
-
-
-  <!-- add Modal -->
-  <div *ngIf="showAddModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
-    <div class="border border-gray-200 modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
-      <div class="modal-content py-4 text-left px-6">
-        <!-- Title -->
-        <div class="flex justify-between items-center pb-3">
-          <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Add Train</p>
-          <div class="modal-close cursor-pointer z-50" (click)="closeModal()">
-            <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-              <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
-            </svg>
-          </div>
+@if (showAddModal) {
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/70"></div>
+  <div class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-900">
+    <div class="flex items-start justify-between gap-3 border-b border-gray-100 p-4 sm:p-5 dark:border-slate-800">
+      <p class="text-base font-semibold text-gray-900 sm:text-lg dark:text-slate-100">Add Train</p>
+      <button type="button" (click)="closeModal()" class="inline-flex h-9 w-9 items-center justify-center rounded-xl ring-1 ring-inset ring-gray-200 hover:bg-gray-50 dark:ring-slate-700">
+        <i class="bx bx-x text-xl"></i>
+      </button>
+    </div>
+    <div class="overflow-y-auto p-4 sm:p-5">
+      <form id="add_train_form" (submit)="onSubmit()" class="space-y-5">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <input type="text" name="company" [(ngModel)]="newTrain.company" placeholder="Company" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700" />
+          <select name="year" [(ngModel)]="newTrain.year" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+          </select>
         </div>
-        <!-- Body -->
-        <div class="my-5 mr-5 ml-5 flex justify-center">
-          <form (submit)="onSubmit()" id="add_train_form" class="w-full">
-            <div class="">
-              <div class="mb-4">
-                <label for="company" class="block text-md text-gray-600 dark:text-gray-50">Company</label>
-                <input type="text" id="company" name="company" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Company" [(ngModel)]="newTrain.company" required>
+        <textarea name="observations" [(ngModel)]="newTrain.observations" rows="4" placeholder="Observations" class="block w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700"></textarea>
+
+        <div class="rounded-2xl border border-gray-200 bg-gray-50/70 p-4 dark:border-slate-800 dark:bg-slate-800/30">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-sm font-semibold text-gray-900 dark:text-slate-100">Services</p>
+              <p class="text-xs text-gray-500 dark:text-slate-400">These rows are sent inside the train document to backend.</p>
+            </div>
+            <button type="button" (click)="addTrainService()" class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700">Add Service</button>
+          </div>
+          <div class="mt-4 space-y-4">
+            <div *ngFor="let service of newTrain.services; let i = index" class="rounded-xl border border-gray-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
+              <div class="mb-3 flex items-center justify-between gap-3">
+                <p class="text-sm font-semibold text-gray-900 dark:text-slate-100">Service {{ i + 1 }}</p>
+                <button type="button" (click)="removeTrainService(i)" class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-red-600 ring-1 ring-inset ring-red-200 hover:bg-red-50">
+                  <i class="bx bx-trash text-xl"></i>
+                </button>
               </div>
-              <div class="mb-4">
-                <label for="year" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
-                <select [(ngModel)]="newTrain.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
-                  <option value="2024">2024</option>
-                  <option value="2025">2025</option>
-                  <option value="2026">2026</option>
-              </select>
-              </div>
-              <div class="mb-4">
-                <label for="observations" class="block text-md text-gray-600 dark:text-gray-50">Observations</label>
-          
-                <input type="text" id="observations" name="observations" class="h-15 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Observations" [(ngModel)]="newTrain.observations" required>
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <input type="text" name="serviceName{{i}}" [(ngModel)]="service.serviceName" placeholder="Service Name" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700 sm:col-span-2" />
+                <input type="text" name="season{{i}}" [(ngModel)]="service.prices.season" placeholder="Season" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700" />
+                <input type="number" name="adultPrice{{i}}" [(ngModel)]="service.prices.adultPrice" placeholder="Adult Price" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700" />
+                <input type="number" name="childPrice{{i}}" [(ngModel)]="service.prices.childPrice" placeholder="Child Price" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700" />
+                <input type="number" name="guidePrice{{i}}" [(ngModel)]="service.prices.guidePrice" placeholder="Guide Price" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700" />
+                <textarea name="serviceObservations{{i}}" [(ngModel)]="service.observations" rows="3" placeholder="Service observations" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700 sm:col-span-2"></textarea>
               </div>
             </div>
-          </form>
-        </div>
-        <!-- Footer -->
-        <div class="flex justify-end pt-2 space-x-14">
-          <button class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" (click)="closeModal()">Cancel</button>
-          <button type="submit" form="add_train_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- edit Modal -->
-  <div *ngIf="showEditModal" class="main-modal fixed w-full inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster" style="background: rgba(0,0,0,.7);">
-    <div class="border border-gray-200 modal-container bg-gray-50 dark:bg-gray-800 w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
-      <div class="modal-content py-4 text-left px-6">
-        <!-- Title -->
-        <div class="flex justify-between items-center pb-3">
-          <p class="text-2xl font-bold text-gray-900 dark:text-gray-50">Edit Train</p>
-          <div class="modal-close cursor-pointer z-50" (click)="closeEditModal()">
-            <svg class="fill-current text-gray-900 dark:text-gray-50" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-              <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
-            </svg>
           </div>
         </div>
-        <!-- Body -->
-        <div class="my-5 mr-5 ml-5 flex justify-center">
-          <form (submit)="onEditSubmit()" id="edit_train_form" class="w-full">
-            <div class="">
-              <div class="mb-4">
-                <label for="company" class="block text-md text-gray-600 dark:text-gray-50">Company</label>
-                <input type="text" id="company" name="company" class="h-10 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Company" [(ngModel)]="selectedTrain.company" required>
-              </div>
-              <div class="mb-4">
-                <label for="year" class="block text-md text-gray-600 dark:text-gray-50">Year</label>
-                <select [(ngModel)]="selectedTrain.year" name="year" class="h-10 p-2 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Year" required>
-                  <option value="2024">2024</option>
-                  <option value="2025">2025</option>
-                  <option value="2026">2026</option>
-              </select>
-              </div>
-              <div class="mb-4">
-                <label for="observations" class="block text-md text-gray-600 dark:text-gray-50">Observations</label>
-          
-                <input type="text" id="observations" name="observations" class="h-15 p-6 w-full border-2 border-gray-300 dark:border-gray-700 rounded-md" placeholder="Observations" [(ngModel)]="selectedTrain.observations" required>
-              </div>
-            </div>
-          </form>
-        </div>
-        <!-- Footer -->
-        <div class="flex justify-end pt-2 space-x-14">
-          <button class="px-4 bg-gray-200 dark:bg-gray-600 p-3 rounded text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold" (click)="closeEditModal()">Cancel</button>
-          <button type="submit" form="edit_train_form" class="px-4 bg-blue-500 dark:bg-blue-700 p-3 ml-3 rounded-lg text-white hover:bg-blue-600 dark:hover:bg-blue-800">Confirm</button>
-        </div>
-      </div>
+      </form>
+    </div>
+    <div class="flex items-center justify-end gap-3 border-t border-gray-100 p-4 sm:p-5 dark:border-slate-800">
+      <button type="button" (click)="closeModal()" class="rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-gray-50 dark:text-slate-200 dark:ring-slate-700">Cancel</button>
+      <button type="submit" form="add_train_form" class="rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700">Confirm</button>
     </div>
   </div>
+</div>
+}
+
+@if (showEditModal) {
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/70"></div>
+  <div class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-900">
+    <div class="flex items-start justify-between gap-3 border-b border-gray-100 p-4 sm:p-5 dark:border-slate-800">
+      <p class="text-base font-semibold text-gray-900 sm:text-lg dark:text-slate-100">Edit Train</p>
+      <button type="button" (click)="closeEditModal()" class="inline-flex h-9 w-9 items-center justify-center rounded-xl ring-1 ring-inset ring-gray-200 hover:bg-gray-50 dark:ring-slate-700">
+        <i class="bx bx-x text-xl"></i>
+      </button>
+    </div>
+    <div class="overflow-y-auto p-4 sm:p-5">
+      <form id="edit_train_form" (submit)="onEditSubmit()" class="space-y-5">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <input type="text" name="company" [(ngModel)]="selectedTrain.company" placeholder="Company" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700" />
+          <select name="year" [(ngModel)]="selectedTrain.year" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+          </select>
+        </div>
+        <textarea name="observations" [(ngModel)]="selectedTrain.observations" rows="4" placeholder="Observations" class="block w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700"></textarea>
+
+        <div class="rounded-2xl border border-gray-200 bg-gray-50/70 p-4 dark:border-slate-800 dark:bg-slate-800/30">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-sm font-semibold text-gray-900 dark:text-slate-100">Services</p>
+              <p class="text-xs text-gray-500 dark:text-slate-400">These rows are sent inside the train document to backend.</p>
+            </div>
+            <button type="button" (click)="addEditTrainService()" class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700">Add Service</button>
+          </div>
+          <div class="mt-4 space-y-4">
+            <div *ngFor="let service of selectedTrain.services; let i = index" class="rounded-xl border border-gray-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
+              <div class="mb-3 flex items-center justify-between gap-3">
+                <p class="text-sm font-semibold text-gray-900 dark:text-slate-100">Service {{ i + 1 }}</p>
+                <button type="button" (click)="removeEditTrainService(i)" class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-red-600 ring-1 ring-inset ring-red-200 hover:bg-red-50">
+                  <i class="bx bx-trash text-xl"></i>
+                </button>
+              </div>
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <input type="text" name="editServiceName{{i}}" [(ngModel)]="service.serviceName" placeholder="Service Name" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700 sm:col-span-2" />
+                <input type="text" name="editSeason{{i}}" [(ngModel)]="service.prices.season" placeholder="Season" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700" />
+                <input type="number" name="editAdultPrice{{i}}" [(ngModel)]="service.prices.adultPrice" placeholder="Adult Price" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700" />
+                <input type="number" name="editChildPrice{{i}}" [(ngModel)]="service.prices.childPrice" placeholder="Child Price" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700" />
+                <input type="number" name="editGuidePrice{{i}}" [(ngModel)]="service.prices.guidePrice" placeholder="Guide Price" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700" />
+                <textarea name="editServiceObservations{{i}}" [(ngModel)]="service.observations" rows="3" placeholder="Service observations" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 dark:bg-slate-900 dark:ring-slate-700 sm:col-span-2"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="flex items-center justify-end gap-3 border-t border-gray-100 p-4 sm:p-5 dark:border-slate-800">
+      <button type="button" (click)="closeEditModal()" class="rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-gray-50 dark:text-slate-200 dark:ring-slate-700">Cancel</button>
+      <button type="submit" form="edit_train_form" class="rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700">Confirm</button>
+    </div>
+  </div>
+</div>
+}

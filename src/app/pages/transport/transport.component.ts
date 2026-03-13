@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { TransportService } from '../../Services/transport.service';
 import { HasRoleDirective } from '../../Services/AuthService/has-role.directive';
 import { toast } from 'ngx-sonner';
+import { HasPermissionsDirective } from '../../Services/AuthService/has-permissions.directive';
 
 @Component({
   selector: 'app-transport',
   standalone: true,
-  imports: [CommonModule, FormsModule,HasRoleDirective],
+  imports: [CommonModule, FormsModule,HasPermissionsDirective],
   templateUrl: './transport.component.html',
   styleUrl: './transport.component.css'
 })
@@ -27,7 +28,7 @@ export class TransportComponent {
     info: '',
     year:''
   };
-  
+
   selectedTransport: any = {
     nombre: '',
     type_service: '',
@@ -79,7 +80,7 @@ onYearChange(event: Event) {
 
 confirmDelete(id: string) {
   toast('Are you sure you want to delete this record?', {
-   
+
     action: {
       label: 'Confirm',
       onClick: async () => {
@@ -93,7 +94,7 @@ confirmDelete(id: string) {
       },
     },
     position: 'top-center',
- 
+
   });
 }
 async deleteTransport(id: string) {

@@ -78,7 +78,7 @@
           <label for="selectedHotel" class="block text-sm font-medium text-gray-700">Hotels</label>
           <select
             [(ngModel)]="selectedHotel"
-            (change)="onHotelChange($event)"
+            (change)="onHotelChange()"
             name="selectedHotel"
             class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm text-gray-900
                    ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
@@ -95,7 +95,7 @@
           <label for="selectedService" class="block text-sm font-medium text-gray-700">Services</label>
           <select
             [(ngModel)]="selectedService"
-            (change)="onServiceChange($event)"
+            (change)="onServiceChange()"
             name="selectedService"
             class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm text-gray-900
                    ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
