@@ -194,16 +194,12 @@ import { ServiceOrderTimelineComponent } from './service-order-timeline.componen
               </div>
             </div>
 
-            @if (order.sourceSnapshot?.prices?.length) {
+            @if (order.sourceSnapshot?.price !== undefined && order.sourceSnapshot?.price !== null) {
               <div class="mt-4 rounded-2xl border border-slate-200 bg-white p-4">
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Prices breakdown</p>
-                <div class="mt-3 flex flex-wrap gap-2">
-                  @for (price of order.sourceSnapshot.prices; track $index) {
-                    <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
-                      {{ getNumber(price) | number:'1.2-2' }}
-                    </span>
-                  }
-                </div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Current Price</p>
+                <p class="mt-2 text-sm font-semibold text-slate-900">
+                  {{ getNumber(order.sourceSnapshot.price) | number:'1.2-2' }}
+                </p>
               </div>
             }
 

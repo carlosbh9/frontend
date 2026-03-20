@@ -1,0 +1,27 @@
+{
+  "tariff": {
+    "language": "Idioma",
+    "lang_en": "Inglés",
+    "lang_es": "Español",
+    "header_badge": "Tarifario Unificado",
+    "header_title": "Tariff V2",
+    "header_description": "Catálogo tarifario centralizado para el nuevo flujo de master-quoter y quoter.",
+    "add_item": "Agregar tarifa",
+    "help_title": "Guía de campos generales",
+    "warnings_title": "Puntos a revisar antes de guardar",
+    "soft_warning_type": "Primero selecciona un type para que el formulario habilite las reglas correctas.",
+    "soft_warning_mode": "Selecciona un pricing mode para que el sistema sepa cómo se calculará este ítem después.",
+    "soft_warning_ranges": "Está seleccionado PER_PAX_RANGE pero todavía no hay rangos de pax.",
+    "soft_warning_rooms": "Está seleccionado PER_ROOM pero todavía no hay tarifas de habitaciones configuradas.",
+    "soft_warning_seasons": "Está seleccionado PER_SEASON pero todavía no hay temporadas configuradas.",
+    "soft_warning_custom": "Está seleccionado CUSTOM pricing pero todavía no hay JSON custom.",
+    "soft_warning_children": "No hay child policies configuradas. Está bien si los niños pagan igual que los adultos.",
+    "soft_warning_year": "El año de vigencia está vacío. El motor de pricing espera un year.",
+    "hint_provider_required": "Este type requiere Provider porque la identidad del proveedor importa operativamente.",
+    "hint_provider": "Provider: proveedor comercial o marca que vende el servicio.",
+    "hint_subtype": "Subtype: clasificación interna como categoría de habitación, estilo de excursión, clase de servicio o variante de ruta.",
+    "hint_location": "Location: úsalo para un lugar más preciso que city, como estación, barrio, puerto o zona hotelera.",
+    "hint_tags": "Tags: etiquetas de búsqueda para tu equipo, separadas por comas.",
+    "hint_status_active": "Status y Active: DRAFT significa que todavía se está armando; ACTIVE significa que ya está listo para cotizar."
+  }
+}

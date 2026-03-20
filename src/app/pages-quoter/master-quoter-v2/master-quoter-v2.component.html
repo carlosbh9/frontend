@@ -1,0 +1,423 @@
+﻿<div class="rounded-2xl border border-gray-100 bg-white shadow-sm">
+  <div class="border-b border-gray-100 p-4 sm:p-5">
+    <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+      <div>
+        <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-100">
+          Template Engine
+        </div>
+        <h3 class="mt-3 text-base font-semibold text-gray-900 sm:text-lg">Master Quoter V2</h3>
+        <p class="mt-1 text-xs text-gray-500 sm:text-sm">Create reusable itinerary templates by day using tariff-v2 references.</p>
+      </div>
+      <div *hasPermission="['create_quoter']">
+        <button type="button" (click)="openCreateModal()" class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700">
+          <i class="bx bx-plus text-lg"></i>
+          Add Template
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="space-y-4 p-4 sm:p-5">
+    <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-5">
+      <input type="text" [ngModel]="query().q" (ngModelChange)="updateQuery('q', $event); onFilterChange()" placeholder="Search by name, destination..." class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 xl:col-span-2">
+
+      <select [ngModel]="query().type" (ngModelChange)="updateQuery('type', $event); onFilterChange()" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+        <option value="">All types</option>
+        @for (type of options()?.types || []; track type) {
+          <option [value]="type">{{ type }}</option>
+        }
+      </select>
+
+      <select [ngModel]="query().status" (ngModelChange)="updateQuery('status', $event); onFilterChange()" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+        <option value="">All status</option>
+        @for (status of options()?.statuses || []; track status) {
+          <option [value]="status">{{ status }}</option>
+        }
+      </select>
+
+      <select [ngModel]="query().active" (ngModelChange)="updateQuery('active', $event); onFilterChange()" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+        <option value="">All activity</option>
+        <option value="true">Active</option>
+        <option value="false">Inactive</option>
+      </select>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl border border-gray-100 bg-white">
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Name</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Type</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Destinations</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Days</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Status</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Updated</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            @if (loading()) {
+              <tr><td colspan="7" class="px-4 py-8 text-center text-sm text-gray-500">Loading templates...</td></tr>
+            } @else if (templates().length === 0) {
+              <tr><td colspan="7" class="px-4 py-8 text-center text-sm text-gray-500">No templates found.</td></tr>
+            } @else {
+              @for (template of templates(); track template._id) {
+                <tr class="text-sm text-gray-700 hover:bg-gray-50/70">
+                  <td class="px-4 py-4 font-medium text-gray-900">{{ template.name }}</td>
+                  <td class="px-4 py-4">{{ template.type }}</td>
+                  <td class="px-4 py-4">{{ template.destinations || '-' }}</td>
+                  <td class="px-4 py-4">{{ template.totalDays }}</td>
+                  <td class="px-4 py-4">
+                    <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset" [class]="statusBadgeClass(template.status)">
+                      {{ template.status }}
+                    </span>
+                  </td>
+                  <td class="px-4 py-4">{{ template.updatedAt ? (template.updatedAt | date:'yyyy-MM-dd HH:mm') : '-' }}</td>
+                  <td class="px-4 py-4">
+                    <div class="flex items-center gap-2">
+                      <button type="button" (click)="openDetailModal(template)" class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"><i class="bx bx-show text-xl"></i></button>
+                      <button type="button" (click)="openEditModal(template)" class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-indigo-50"><i class="bx bx-edit-alt text-xl"></i></button>
+                      <button type="button" (click)="confirmDelete(template)" class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-red-600 ring-1 ring-inset ring-red-200 hover:bg-red-50"><i class="bx bx-trash text-xl"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    @if (pagination().totalPages > 1) {
+      <div class="flex items-center justify-between gap-3">
+        <p class="text-sm text-gray-500">{{ pagination().total }} records</p>
+        <div class="flex items-center gap-2">
+          <button type="button" (click)="onPageChange(pagination().page - 1)" [disabled]="pagination().page === 1" class="rounded-xl px-3 py-2 text-sm font-medium ring-1 ring-inset ring-gray-200 disabled:opacity-50">Previous</button>
+          @for (page of pages(); track page) {
+            <button type="button" (click)="onPageChange(page)" class="rounded-xl px-3 py-2 text-sm font-medium ring-1 ring-inset" [class.bg-emerald-600]="page === pagination().page" [class.text-white]="page === pagination().page" [class.ring-emerald-600]="page === pagination().page" [class.ring-gray-200]="page !== pagination().page">{{ page }}</button>
+          }
+          <button type="button" (click)="onPageChange(pagination().page + 1)" [disabled]="pagination().page === pagination().totalPages" class="rounded-xl px-3 py-2 text-sm font-medium ring-1 ring-inset ring-gray-200 disabled:opacity-50">Next</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+@if (showModal()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+    <div class="max-h-[92vh] w-full max-w-7xl overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
+      <div class="flex items-start justify-between gap-3 border-b border-gray-100 p-4 sm:p-5">
+        <div>
+          <p class="text-base font-semibold text-gray-900 sm:text-lg">{{ editingId() ? 'Edit Master Quoter V2' : 'Add Master Quoter V2' }}</p>
+          <p class="text-xs text-gray-500">Use tariff-v2 references to build reusable day templates.</p>
+        </div>
+        <button type="button" (click)="closeModal()" class="inline-flex h-9 w-9 items-center justify-center rounded-xl ring-1 ring-inset ring-gray-200 hover:bg-gray-50"><i class="bx bx-x text-xl"></i></button>
+      </div>
+
+      <div class="max-h-[calc(92vh-84px)] overflow-y-auto p-4 sm:p-5">
+        <form [formGroup]="form" class="space-y-5">
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <div class="space-y-1">
+              <input type="text" formControlName="name" placeholder="Template name *" class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset" [class.ring-red-300]="isFieldInvalid('name')" [class.bg-red-50]="isFieldInvalid('name')" [class.ring-gray-300]="!isFieldInvalid('name')">
+            </div>
+            <select formControlName="type" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+              @for (type of options()?.types || []; track type) {
+                <option [value]="type">{{ type }}</option>
+              }
+            </select>
+            <input type="text" formControlName="destinations" placeholder="Destinations" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+            <input type="number" formControlName="totalDays" placeholder="Total days *" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+            <select formControlName="status" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+              @for (status of options()?.statuses || []; track status) {
+                <option [value]="status">{{ status }}</option>
+              }
+            </select>
+            <label class="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+              <input type="checkbox" formControlName="active"> Active
+            </label>
+            <textarea rows="3" formControlName="notes" placeholder="Notes" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 md:col-span-2"></textarea>
+            <textarea rows="3" formControlName="metadataText" placeholder='Metadata JSON' class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 md:col-span-2"></textarea>
+          </div>
+
+          <div class="rounded-2xl border border-gray-200 bg-gray-50/70 p-4">
+            <div class="mb-4 flex items-center justify-between">
+              <div>
+                <p class="text-sm font-semibold text-gray-900">Days</p>
+                <p class="text-xs text-gray-500">Each day contains services/options that point to tariff-v2 items.</p>
+              </div>
+              <button type="button" (click)="addDay()" class="rounded-xl bg-emerald-600 px-3 py-2 text-sm font-semibold text-white">Add day</button>
+            </div>
+
+            <div class="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-600">
+              <span class="font-semibold text-gray-800">Legend:</span>
+              <span class="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-1 font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200">Services</span>
+              <span class="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-1 font-semibold text-amber-700 ring-1 ring-inset ring-amber-200">Options</span>
+              <span class="text-gray-500">Days are collapsible to keep long templates manageable.</span>
+            </div>
+
+            <div formArrayName="days" class="space-y-4">
+              @for (dayGroup of daysArray.controls; track $index; let dayIndex = $index) {
+                <div [formGroupName]="dayIndex" class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                  <button
+                    type="button"
+                    (click)="toggleDay(dayIndex)"
+                    class="flex w-full items-center justify-between gap-4 bg-white px-4 py-4 text-left hover:bg-gray-50"
+                  >
+                    <div class="min-w-0">
+                      <div class="flex flex-wrap items-center gap-2">
+                        <span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-200">
+                          Day {{ dayGroup.get('dayNumber')?.value || (dayIndex + 1) }}
+                        </span>
+                        <span class="text-sm font-semibold text-gray-900">{{ dayGroup.get('title')?.value || 'Untitled day' }}</span>
+                      </div>
+                      <p class="mt-1 text-xs text-gray-500">{{ dayGroup.get('city')?.value || 'No city' }} · {{ dayItemsArray(dayIndex).length }} item(s)</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <div class="hidden rounded-xl bg-gray-50 px-3 py-2 text-xs font-semibold text-gray-600 ring-1 ring-inset ring-gray-200 sm:block">
+                        {{ getDayPlacementCount(dayIndex, 'services') }} services · {{ getDayPlacementCount(dayIndex, 'options') }} options
+                      </div>
+                      <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl ring-1 ring-inset ring-gray-200">
+                        <i class="bx text-xl text-gray-600" [class.bx-chevron-down]="!isDayExpanded(dayIndex)" [class.bx-chevron-up]="isDayExpanded(dayIndex)"></i>
+                      </span>
+                    </div>
+                  </button>
+
+                  @if (isDayExpanded(dayIndex)) {
+                    <div class="border-t border-gray-100 bg-gray-50/60 p-4">
+                      <div class="mb-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-5">
+                        <input type="number" formControlName="dayNumber" placeholder="Day #" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+                        <input type="text" formControlName="city" placeholder="City" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+                        <input type="text" formControlName="title" placeholder="Title" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 xl:col-span-2">
+                        <button type="button" (click)="removeDay(dayIndex)" [disabled]="daysArray.length === 1" class="rounded-xl px-3 py-2 text-sm font-semibold text-red-600 ring-1 ring-inset ring-red-200 disabled:opacity-50">Remove day</button>
+                      </div>
+
+                      <textarea rows="2" formControlName="notes" placeholder="Day notes" class="mb-4 w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300"></textarea>
+
+                      <div class="rounded-2xl border border-dashed border-gray-200 bg-white/80 p-4" formArrayName="items">
+                        <div class="rounded-2xl border border-gray-200 bg-gray-50 p-4">
+                          <div class="grid grid-cols-1 gap-3 xl:grid-cols-[220px_180px_1fr_auto]">
+                            <select
+                              [ngModel]="getDayFilter(dayIndex).category"
+                              (ngModelChange)="updateDayFilter(dayIndex, 'category', $event)"
+                              [ngModelOptions]="{ standalone: true }"
+                              class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300"
+                            >
+                              <option value="">All categories</option>
+                              @for (category of tariffCategories(); track category) {
+                                <option [value]="category">{{ category }}</option>
+                              }
+                            </select>
+
+                            <select
+                              [ngModel]="getDayFilter(dayIndex).year"
+                              (ngModelChange)="updateDayFilter(dayIndex, 'year', $event)"
+                              [ngModelOptions]="{ standalone: true }"
+                              class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300"
+                            >
+                              <option value="">All years</option>
+                              @for (year of tariffYears(); track year) {
+                                <option [value]="year">{{ year }}</option>
+                              }
+                            </select>
+
+                            <div class="relative">
+                              <input
+                                type="text"
+                                [ngModel]="getDayFilter(dayIndex).search"
+                                (ngModelChange)="updateDayFilter(dayIndex, 'search', $event)"
+                                [ngModelOptions]="{ standalone: true }"
+                                placeholder="Search tariff item..."
+                                class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300"
+                              >
+
+                              @if (hasActiveFilter(dayIndex)) {
+                                <div class="absolute left-0 right-0 top-[calc(100%+8px)] z-20 max-h-72 overflow-y-auto rounded-2xl border border-gray-200 bg-white p-2 shadow-xl">
+                                  @for (item of getFilteredTariffItems(dayIndex); track item._id) {
+                                    <button
+                                      type="button"
+                                      (click)="addItem(dayIndex, item)"
+                                      class="flex w-full items-start justify-between gap-3 rounded-xl px-3 py-3 text-left hover:bg-gray-50"
+                                    >
+                                      <div class="min-w-0">
+                                        <p class="truncate text-sm font-semibold text-gray-900">{{ item.name }}</p>
+                                        <p class="truncate text-xs text-gray-500">{{ item.city || 'No city' }}{{ item.provider ? ' · ' + item.provider : '' }}</p>
+                                      </div>
+                                      <div class="flex shrink-0 flex-wrap justify-end gap-2">
+                                        <span class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ring-inset" [class]="tariffTypeBadgeClass(item.type)">{{ item.type }}</span>
+                                        <span class="inline-flex items-center rounded-full bg-white px-2 py-0.5 text-[11px] font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">{{ item.validity.year || '-' }}</span>
+                                      </div>
+                                    </button>
+                                  } @empty {
+                                    <div class="rounded-xl px-3 py-4 text-center text-sm text-gray-500">No tariff items match these filters.</div>
+                                  }
+                                </div>
+                              }
+                            </div>
+
+                            <div class="flex items-center gap-2 rounded-2xl bg-white p-1 ring-1 ring-inset ring-gray-200">
+                              <button
+                                type="button"
+                                (click)="setDayPlacementTarget(dayIndex, 'services')"
+                                [class]="placementButtonClass(getDayPlacementTarget(dayIndex) === 'services', 'services')"
+                              >
+                                Services
+                              </button>
+                              <button
+                                type="button"
+                                (click)="setDayPlacementTarget(dayIndex, 'options')"
+                                [class]="placementButtonClass(getDayPlacementTarget(dayIndex) === 'options', 'options')"
+                              >
+                                Options
+                              </button>
+                            </div>
+                          </div>
+
+                          <div class="mt-3 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                            <span>Click a search result to add it as:</span>
+                            <span class="inline-flex items-center rounded-full px-2.5 py-1 font-semibold ring-1 ring-inset" [class]="placementBadgeClass(getDayPlacementTarget(dayIndex))">
+                              {{ getDayPlacementTarget(dayIndex) }}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div class="mt-5 grid grid-cols-1 gap-4 xl:grid-cols-2">
+                          <div class="rounded-2xl border border-indigo-200 bg-indigo-50/60 p-4">
+                            <div class="mb-3 flex items-center justify-between">
+                              <div>
+                                <p class="text-sm font-semibold text-indigo-900">Services</p>
+                                <p class="text-xs text-indigo-700/80">{{ getDayPlacementCount(dayIndex, 'services') }} selected</p>
+                              </div>
+                              <button
+                                type="button"
+                                (click)="setDayPlacementTarget(dayIndex, 'services')"
+                                class="rounded-xl bg-white px-3 py-2 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200"
+                              >
+                                Add here
+                              </button>
+                            </div>
+
+                            <div class="min-h-24 rounded-xl border border-dashed border-indigo-200 bg-white p-3">
+                              <div class="flex flex-wrap gap-2">
+                                @for (entry of getDayPlacementItems(dayIndex, 'services'); track entry.itemIndex) {
+                                  <div class="inline-flex max-w-full items-center gap-2 rounded-full bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm">
+                                    <span class="truncate">{{ entry.control.get('title')?.value || entry.tariffItem?.name || 'Untitled item' }}</span>
+                                    <button type="button" (click)="removePlacementItem(dayIndex, entry.itemIndex)" class="text-base leading-none text-white/90 hover:text-white">&times;</button>
+                                  </div>
+                                } @empty {
+                                  <p class="text-sm text-gray-500">No services selected for this day.</p>
+                                }
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="rounded-2xl border border-amber-200 bg-amber-50/60 p-4">
+                            <div class="mb-3 flex items-center justify-between">
+                              <div>
+                                <p class="text-sm font-semibold text-amber-900">Options</p>
+                                <p class="text-xs text-amber-700/80">{{ getDayPlacementCount(dayIndex, 'options') }} selected</p>
+                              </div>
+                              <button
+                                type="button"
+                                (click)="setDayPlacementTarget(dayIndex, 'options')"
+                                class="rounded-xl bg-white px-3 py-2 text-xs font-semibold text-amber-700 ring-1 ring-inset ring-amber-200"
+                              >
+                                Add here
+                              </button>
+                            </div>
+
+                            <div class="min-h-24 rounded-xl border border-dashed border-amber-200 bg-white p-3">
+                              <div class="flex flex-wrap gap-2">
+                                @for (entry of getDayPlacementItems(dayIndex, 'options'); track entry.itemIndex) {
+                                  <div class="inline-flex max-w-full items-center gap-2 rounded-full bg-amber-500 px-3 py-1.5 text-sm font-medium text-white shadow-sm">
+                                    <span class="truncate">{{ entry.control.get('title')?.value || entry.tariffItem?.name || 'Untitled item' }}</span>
+                                    <button type="button" (click)="removePlacementItem(dayIndex, entry.itemIndex)" class="text-base leading-none text-white/90 hover:text-white">&times;</button>
+                                  </div>
+                                } @empty {
+                                  <p class="text-sm text-gray-500">No options selected for this day.</p>
+                                }
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="flex justify-end gap-3">
+            <button type="button" (click)="closeModal()" class="rounded-xl px-4 py-2.5 text-sm font-semibold ring-1 ring-inset ring-gray-200">Cancel</button>
+            <button type="button" (click)="submit()" [disabled]="saving()" class="rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50">{{ saving() ? 'Saving...' : (editingId() ? 'Update' : 'Create') }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showDetailModal() && selectedResolved(); as template) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+    <div class="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-gray-200 bg-white shadow-xl">
+      <div class="flex items-start justify-between gap-3 border-b border-gray-100 p-4 sm:p-5">
+        <div>
+          <p class="text-lg font-semibold text-gray-900">{{ template.name }}</p>
+          <p class="text-sm text-gray-500">Resolved preview from tariff-v2 references</p>
+        </div>
+        <button type="button" (click)="closeDetailModal()" class="inline-flex h-9 w-9 items-center justify-center rounded-xl ring-1 ring-inset ring-gray-200 hover:bg-gray-50"><i class="bx bx-x text-xl"></i></button>
+      </div>
+
+      <div class="space-y-4 p-4 sm:p-5">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
+          <div class="rounded-xl bg-gray-50 p-4"><p class="text-xs text-gray-500">Type</p><p class="mt-1 font-semibold text-gray-900">{{ template.type }}</p></div>
+          <div class="rounded-xl bg-gray-50 p-4"><p class="text-xs text-gray-500">Destinations</p><p class="mt-1 font-semibold text-gray-900">{{ template.destinations || '-' }}</p></div>
+          <div class="rounded-xl bg-gray-50 p-4"><p class="text-xs text-gray-500">Total days</p><p class="mt-1 font-semibold text-gray-900">{{ template.totalDays }}</p></div>
+          <div class="rounded-xl bg-gray-50 p-4"><p class="text-xs text-gray-500">Status</p><p class="mt-1"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset" [class]="statusBadgeClass(template.status)">{{ template.status }}</span></p></div>
+        </div>
+
+        <div class="space-y-4">
+          @for (day of template.days; track day._id || day.dayNumber) {
+            <div class="rounded-2xl border border-gray-200 bg-white p-4">
+              <div class="mb-3 flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-semibold text-gray-900">Day {{ day.dayNumber }}{{ day.title ? ' · ' + day.title : '' }}</p>
+                  <p class="text-xs text-gray-500">{{ day.city || '-' }}</p>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                @for (item of day.items; track item._id || item.tariffItemId) {
+                  <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                    <div class="grid grid-cols-1 gap-3 md:grid-cols-5">
+                      <div>
+                        <p class="text-xs text-gray-500">Placement</p>
+                        <p class="mt-1"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset" [class]="placementBadgeClass(item.placement)">{{ item.placement }}</span></p>
+                      </div>
+                      <div class="md:col-span-2">
+                        <p class="text-xs text-gray-500">Tariff item</p>
+                        <p class="font-medium text-gray-900">{{ item.tariffItem?.name || item.tariffSnapshot?.name || item.title || '-' }}</p>
+                        <p class="text-xs text-gray-500">{{ item.tariffItem?.type || item.tariffSnapshot?.type || '-' }}{{ (item.tariffItem?.city || item.tariffSnapshot?.city) ? ' · ' + (item.tariffItem?.city || item.tariffSnapshot?.city) : '' }}</p>
+                      </div>
+                      <div>
+                        <p class="text-xs text-gray-500">Category</p>
+                        <p class="mt-1"><span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">{{ item.tariffItem?.category || item.tariffSnapshot?.category || '-' }}</span></p>
+                      </div>
+                      <div>
+                        <p class="text-xs text-gray-500">Provider</p>
+                        <p class="font-medium text-gray-900">{{ item.tariffItem?.provider || item.tariffSnapshot?.provider || '-' }}</p>
+                      </div>
+                    </div>
+                  </div>
+                } @empty {
+                  <div class="rounded-xl border border-dashed border-gray-200 px-4 py-6 text-center text-sm text-gray-500">No items on this day.</div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

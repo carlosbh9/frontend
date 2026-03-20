@@ -1,0 +1,311 @@
+<div id="modalMq" class="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-3 sm:p-6 bg-black/60">
+  <div class="w-[95vw] md:w-[92vw] xl:w-[88vw] max-h-[90vh] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-xl">
+    <div class="sticky top-0 z-20 bg-white/95 backdrop-blur border-b border-gray-100">
+      <div class="flex items-start sm:items-center justify-between gap-3 px-4 sm:px-6 py-4">
+        <div>
+          <p class="text-lg sm:text-xl font-semibold text-gray-900">Edit Day and Services V2</p>
+          <p class="text-xs sm:text-sm text-gray-500">Add individual services from `tariff-v2` or import several at once from `master-quoter-v2` using the pricing context of this day.</p>
+        </div>
+        <button type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-lg hover:bg-gray-100" (click)="closeModal()">
+          <svg class="text-gray-700" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="overflow-y-auto max-h-[calc(90vh-80px)] px-4 sm:px-6 py-5 space-y-4">
+      <div class="rounded-xl border border-gray-200 bg-gray-50/60 p-4">
+        <div class="mb-3">
+          <p class="text-sm font-semibold text-gray-900">Day Configuration</p>
+          <p class="text-xs text-gray-500">These selections affect every service added from this modal.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 items-end">
+          <div class="max-w-[9rem]">
+            <label class="block text-sm font-medium text-gray-700">Day</label>
+            <input [(ngModel)]="dayData.day" name="day" type="number" class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm ring-1 ring-inset ring-gray-300" />
+          </div>
+          <div class="max-w-[14rem]">
+            <label class="block text-sm font-medium text-gray-700">Date</label>
+            <input [(ngModel)]="dayData.date" name="date" type="date" class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm ring-1 ring-inset ring-gray-300" />
+          </div>
+          <div class="relative xl:max-w-[16rem]">
+            <label class="block text-sm font-medium text-gray-700">Paxs Options</label>
+            <button (click)="toggleDropdown()" type="button" class="mt-1 inline-flex w-full items-center justify-between rounded-lg bg-white px-3 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300">Select Paxs</button>
+            @if (isDropdownOpen) {
+              <div class="absolute right-0 mt-2 w-[22rem] max-w-[90vw] z-30 rounded-xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
+                <div class="max-h-72 overflow-auto p-3 space-y-4">
+                  <div *ngFor="let groupSize of number_paxs(); let groupIndex = index" class="rounded-lg border border-gray-100 p-3">
+                    <p class="text-sm font-semibold text-gray-900">For {{ groupSize }} Pax</p>
+                    <div class="mt-2 grid grid-cols-2 gap-2">
+                      <div *ngFor="let checkbox of [].constructor(groupSize); let checkboxIndex = index" class="flex items-center gap-2">
+                        <input type="checkbox" [checked]="checkboxes[groupIndex][checkboxIndex]" (change)="toggleCheckbox(groupIndex, checkboxIndex)" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" />
+                        <label class="text-sm text-gray-700">Pax - {{ checkboxIndex + 1 }}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+          <div class="relative xl:max-w-[18rem]">
+            <label class="block text-sm font-medium text-gray-700">Children Ages</label>
+            <button (click)="toggleDropdownChild()" type="button" class="mt-1 inline-flex w-full items-center justify-between rounded-lg bg-white px-3 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300">Select children ages</button>
+            @if (isDropdownOpenChild) {
+              <div class="absolute right-0 mt-2 w-72 max-w-[90vw] z-30 rounded-xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden">
+                <div class="max-h-72 overflow-auto p-3">
+                  <div class="space-y-2">
+                    @for (child of children_ages(); track $index; let i = $index) {
+                      <div class="flex items-center gap-2">
+                        <input type="checkbox" [value]="child" (change)="toggleCheckboxChild(i)" [checked]="childrenAgesChecks[i]" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" />
+                        <label class="text-sm text-gray-700">Edad: {{ child }}</label>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 items-start">
+        <div class="rounded-xl border border-indigo-200 bg-white p-4 space-y-3">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-sm font-semibold text-gray-900">Add Single Tariff Item</p>
+              <p class="text-xs text-gray-500">Useful when you need to insert one service manually.</p>
+            </div>
+            <span class="rounded-full bg-indigo-100 px-2.5 py-1 text-xs font-semibold text-indigo-700">Tariff V2</span>
+          </div>
+
+          <div class="rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-3">
+            <div class="flex flex-wrap gap-2">
+              @for (rule of getSingleItemRules(); track rule) {
+                <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-medium text-indigo-800 ring-1 ring-inset ring-indigo-200">
+                  {{ rule }}
+                </span>
+              }
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-[120px_minmax(0,1fr)] gap-3 items-end">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">City</label>
+              <input [(ngModel)]="city" name="city" type="text" class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm ring-1 ring-inset ring-gray-300" />
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Category</label>
+                <select [(ngModel)]="selectedCategory" (ngModelChange)="applyFilters()" name="selectedCategory" class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm ring-1 ring-inset ring-gray-300">
+                  <option value="">All</option>
+                  @for (category of availableCategories; track category) {
+                    <option [value]="category">{{ category }}</option>
+                  }
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Year</label>
+                <select [(ngModel)]="selectedYear" (ngModelChange)="applyFilters()" name="selectedYear" class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm ring-1 ring-inset ring-gray-300">
+                  <option value="">All</option>
+                  @for (year of availableYears; track year) {
+                    <option [value]="year">{{ year }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700">Search service</label>
+            <input id="tariffSearchInput" [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()" (focus)="onTariffSearchFocus()" (blur)="onTariffBlur()" name="searchTerm" type="text" placeholder="Name, city, provider..." class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm ring-1 ring-inset ring-gray-300" />
+
+            <div id="tariffOptionsDropdown" *ngIf="showTariffOptions && filteredTariffItems.length" class="absolute left-0 right-0 mt-2 z-30 rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden">
+              <div class="max-h-56 overflow-auto py-1">
+                <button *ngFor="let item of filteredTariffItems" type="button" (click)="selectTariffItem(item)" class="flex w-full items-start justify-between gap-3 px-3 py-2 text-left hover:bg-indigo-50">
+                  <div class="min-w-0">
+                    <p class="truncate text-sm font-medium text-gray-900">{{ item.name }}</p>
+                    <p class="truncate text-xs text-gray-500">{{ item.city || 'No city' }}{{ item.provider ? ' � ' + item.provider : '' }}</p>
+                  </div>
+                  <span class="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-semibold text-gray-700">{{ item.category }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          @if (selectedItem) {
+            <div class="rounded-xl border border-indigo-100 bg-indigo-50/70 p-3">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <p class="text-sm font-semibold text-gray-900">{{ selectedItem.name }}</p>
+                  <div class="mt-2 flex flex-wrap gap-2 text-xs">
+                    <span class="rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">{{ selectedItem.type }}</span>
+                    <span class="rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">{{ selectedItem.category }}</span>
+                    @if (selectedItem.validity.year) {
+                      <span class="rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">{{ selectedItem.validity.year }}</span>
+                    }
+                  </div>
+                </div>
+                <button type="button" (click)="clearSelectedTariffItem()" class="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-gray-600 ring-1 ring-inset ring-gray-300 hover:bg-white">Clear</button>
+              </div>
+            </div>
+          }
+
+          <button type="button" (click)="addItem()" class="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700">Add Single Item</button>
+        </div>
+
+        <div class="rounded-xl border border-emerald-200 bg-white p-4 space-y-3">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-sm font-semibold text-gray-900">Add From Master Quoter V2</p>
+              <p class="text-xs text-gray-500">Import one or many services from Tour Options or one-day templates.</p>
+            </div>
+            <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">Master Quoter V2</span>
+          </div>
+
+          <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
+            <div class="flex flex-wrap gap-2">
+              @for (rule of getMasterQuoterRules(); track rule) {
+                <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-medium text-emerald-800 ring-1 ring-inset ring-emerald-200">
+                  {{ rule }}
+                </span>
+              }
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-[140px_minmax(0,1fr)] gap-3 items-end">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">MQ Type</label>
+              <select [(ngModel)]="mqTypeFilter" (ngModelChange)="filterMqOptions()" name="mqTypeFilter" class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm ring-1 ring-inset ring-gray-300">
+                <option value="">All</option>
+                <option value="TOUR_OPTION">Tour Option</option>
+                <option value="TEMPLATE">Template</option>
+              </select>
+            </div>
+
+            <div class="relative">
+              <label class="block text-sm font-medium text-gray-700">Search Template</label>
+              <input id="mqSearchInput" type="text" autocomplete="off" [(ngModel)]="mqSearchTerm" (input)="filterMqOptions()" (focus)="onMqSearchFocus()" (blur)="onMqBlur()" name="mqSearchTerm" placeholder="Search Tour Option or template..." class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm ring-1 ring-inset ring-gray-300" />
+
+              <ul id="mqOptionsDropdown" *ngIf="showMqOptions && filteredMqOptions.length" class="absolute left-0 right-0 mt-2 z-30 rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden">
+              <div class="max-h-56 overflow-auto py-1">
+                <li *ngFor="let option of filteredMqOptions" (click)="selectMqTemplate(option)" class="px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 cursor-pointer">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="truncate">{{ option.name }}</span>
+                    <span class="rounded-full px-2 py-0.5 text-[10px] font-semibold" [class.bg-emerald-100]="option.type === 'TOUR_OPTION'" [class.text-emerald-700]="option.type === 'TOUR_OPTION'" [class.bg-sky-100]="option.type === 'TEMPLATE'" [class.text-sky-700]="option.type === 'TEMPLATE'">{{ option.type }}</span>
+                  </div>
+                </li>
+              </div>
+              </ul>
+            </div>
+          </div>
+
+          @if (selectedMqTemplate) {
+            <div class="rounded-xl border border-emerald-100 bg-emerald-50/70 p-3">
+              <div class="flex items-center justify-between gap-2">
+                <div>
+                  <p class="text-sm font-semibold text-gray-900">{{ selectedMqTemplate.name }}</p>
+                  <p class="text-xs text-gray-500">{{ selectedMqTemplate.type }} � {{ selectedMqTemplate.totalDays }} day(s)</p>
+                </div>
+                <button type="button" (click)="resetMqSelection()" class="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-gray-600 ring-1 ring-inset ring-gray-300 hover:bg-white">Clear</button>
+              </div>
+            </div>
+
+            <div class="max-h-[20rem] overflow-auto space-y-3 pr-1">
+              @for (option of filteredMqDaysOptions; track option._id || $index) {
+                <details class="group rounded-lg border border-gray-200 overflow-hidden">
+                  <summary class="flex items-center justify-between gap-2 px-3 py-2 cursor-pointer list-none hover:bg-gray-50">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <input type="checkbox" [name]="'selectAll-' + $index" [(ngModel)]="option.selected" (change)="toggleAllServices(option)" class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-600" />
+                      <span class="text-sm font-medium text-gray-900 truncate">Day {{ option.dayNumber }} � {{ option.city || 'No city' }}</span>
+                    </div>
+                    <span class="transition-transform duration-200 group-open:rotate-180 text-gray-500">
+                      <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24" width="18"><path d="M6 9l6 6 6-6"></path></svg>
+                    </span>
+                  </summary>
+
+                  <div class="bg-gray-50 px-3 py-2 space-y-2">
+                    @for (service of option.services; track service._id || service.service_id || $index) {
+                      <label class="flex items-center gap-2 text-sm" [class.text-indigo-700]="service.type_service === 'services'" [class.text-amber-700]="service.type_service === 'options'">
+                        <input type="checkbox" [name]="'service-' + (service.service_id || $index)" [(ngModel)]="service.selected" class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-600" />
+                        <span class="truncate">{{ service.name_service }}</span>
+                        <span class="ml-auto rounded-full px-2 py-0.5 text-[10px] font-semibold" [class.bg-indigo-100]="service.type_service === 'services'" [class.text-indigo-700]="service.type_service === 'services'" [class.bg-amber-100]="service.type_service === 'options'" [class.text-amber-700]="service.type_service === 'options'">{{ service.type_service }}</span>
+                      </label>
+                    }
+                  </div>
+                </details>
+              }
+            </div>
+
+            <button type="button" (click)="addItembyMq()" class="w-full rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700">
+              Add Selected MQ Items ({{ getMqSelectedCount() }})
+            </button>
+          } @else {
+            <div class="rounded-xl border border-dashed border-emerald-200 bg-emerald-50/40 p-4 text-sm text-gray-600">
+              This section is for adding 1 or more services at once from `master-quoter-v2`. Search a Tour Option or one-day template to start.
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 bg-white overflow-hidden">
+        <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-gray-900">Day Services</p>
+            <p class="text-xs text-gray-500">Current lines for this day</p>
+          </div>
+          <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-700">
+            {{ dayData.services?.length || 0 }} items
+          </span>
+        </div>
+
+        <div class="max-h-[46vh] overflow-auto">
+          <table class="min-w-full text-sm text-left text-gray-600">
+            <thead class="bg-gray-50 sticky top-0 z-10">
+              <tr class="text-xs uppercase tracking-wide text-gray-600">
+                <th class="px-4 py-3 font-semibold whitespace-nowrap">City</th>
+                <th class="px-4 py-3 font-semibold whitespace-nowrap min-w-[220px]">Service Name</th>
+                <th class="px-4 py-3 font-semibold whitespace-nowrap">Type</th>
+                <th class="px-4 py-3 font-semibold whitespace-nowrap">Base price</th>
+                <th class="px-4 py-3 font-semibold whitespace-nowrap">Price</th>
+                <th class="px-4 py-3 font-semibold whitespace-nowrap min-w-[220px]">Notes</th>
+                <th class="px-4 py-3 font-semibold whitespace-nowrap">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              @for (service of dayData.services; track $index) {
+                <tr class="hover:bg-gray-50 align-top">
+                  <td class="px-4 py-3 whitespace-nowrap">{{ service.city }}</td>
+                  <td class="px-4 py-3 font-medium text-gray-900">{{ service.name_service }}</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <div class="flex flex-col items-start gap-1">
+                      <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold" [ngClass]="getPlacementBadgeClass(service)">
+                        {{ getPlacementLabel(service) }}
+                      </span>
+                      @if (hasAutoVehicle(service)) {
+                        <span class="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
+                          Vehicle: {{ getAutoVehicleLabel(service) }}
+                        </span>
+                      }
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap font-semibold text-emerald-700">{{ service.price_base | currency }}</td>
+                  <td class="px-4 py-3 whitespace-nowrap font-semibold text-indigo-700">{{ service.price | currency }}</td>
+                  <td class="px-4 py-3">
+                    <input [(ngModel)]="service.notes" [name]="'notes-' + $index" class="max-w-[260px] w-full rounded-lg bg-white px-3 py-2 text-sm ring-1 ring-inset ring-gray-300" />
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <button type="button" (click)="onDelete($index)" class="rounded-lg px-3 py-2 text-sm font-semibold text-red-600 ring-1 ring-inset ring-red-200">Delete</button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="7" class="px-4 py-10 text-center text-sm text-gray-500">No services added to this day yet.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

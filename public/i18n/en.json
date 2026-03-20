@@ -1,0 +1,27 @@
+{
+  "tariff": {
+    "language": "Language",
+    "lang_en": "English",
+    "lang_es": "Spanish",
+    "header_badge": "Unified Tariff",
+    "header_title": "Tariff V2",
+    "header_description": "Centralized tariff catalog for the next master-quoter and quoter flow.",
+    "add_item": "Add Tariff Item",
+    "help_title": "General field guidance",
+    "warnings_title": "Things to review before saving",
+    "soft_warning_type": "Select a type first so the form can unlock the correct rules.",
+    "soft_warning_mode": "Select a pricing mode so the system knows how this item will be calculated later.",
+    "soft_warning_ranges": "PER_PAX_RANGE is selected but there are no pax ranges yet.",
+    "soft_warning_rooms": "PER_ROOM is selected but there are no room rates configured yet.",
+    "soft_warning_seasons": "PER_SEASON is selected but there are no seasons configured yet.",
+    "soft_warning_custom": "CUSTOM pricing is selected but there is no custom JSON yet.",
+    "soft_warning_children": "No child policies configured. This is fine if children pay the same as adults.",
+    "soft_warning_year": "Validity year is empty. The pricing engine expects a year.",
+    "hint_provider_required": "This type requires Provider because the supplier identity matters operationally.",
+    "hint_provider": "Provider: the commercial supplier or brand that sells the service.",
+    "hint_subtype": "Subtype: an internal classification like room category, excursion style, service class, or route variant.",
+    "hint_location": "Location: use it for a more precise place than city, such as station, neighborhood, port, or hotel zone.",
+    "hint_tags": "Tags: searchable labels for your team, separated by commas.",
+    "hint_status_active": "Status and Active: DRAFT is still being built; ACTIVE means it is ready to be used in quoting."
+  }
+}

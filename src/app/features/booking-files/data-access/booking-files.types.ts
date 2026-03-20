@@ -12,7 +12,7 @@ export interface BookingFileParty {
 }
 
 export interface BookingFilePaxSummary {
-  number_paxs: number[];
+  number_paxs: number;
   children_ages: number[];
 }
 

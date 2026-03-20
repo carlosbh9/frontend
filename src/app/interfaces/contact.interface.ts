@@ -2,6 +2,7 @@ export interface Quoter {
     name_version: string;
     status: 'WIP' | 'HOLD' | 'SOLD' | 'LOST';
     quoter_id?: string;
+    quoter_model?: 'v1' | 'v2';
     createQuoter?: Date; // Added to track the creator of the quoter
   }
 

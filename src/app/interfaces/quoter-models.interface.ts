@@ -7,8 +7,9 @@ export interface ServiceItem {
   _id?: string;
   city: string;
   name_service: string;
+  type?: string;
   price_base: number;
-  prices: number[];
+  price: number;
   notes: string;
   day?: number;
   service_id?: string;
@@ -24,7 +25,7 @@ export interface ServiceDay {
   _id?: string;
   day: number;
   date: string;
-  number_paxs: number[];
+  number_paxs: number;
   children_ages: number[];
   isFixedLast?: boolean;
   services: ServiceItem[];
@@ -36,7 +37,7 @@ export interface HotelItem {
   city: string;
   name_hotel: string;
   price_base: number;
-  prices: number[];
+  price: number;
   accomodatios_category: string;
   notes: string;
 }
@@ -45,15 +46,14 @@ export interface FlightItem {
   date: string;
   route: string;
   price_conf: number;
-  prices: number[];
-  total_prices: number[];
+  price: number;
   notes: string;
 }
 
 export interface OperatorItem {
   country: string;
   name_operator: string;
-  prices: number[];
+  price: number;
   notes: string;
 }
 
@@ -61,24 +61,24 @@ export interface CruiseItem {
   name: string;
   operator: string;
   price_conf: number;
-  prices: number[];
+  price: number;
   notes: string;
 }
 
 export interface TotalPrices {
-  total_cost: number[];
-  external_utility: number[];
-  cost_external_taxes: number[];
-  total_cost_external: number[];
-  total_hoteles: number[];
-  total_services: number[];
-  total_ext_operator: number[];
-  total_ext_cruises: number[];
-  total_flights: number[];
-  subtotal: number[];
-  cost_transfers: number[];
-  final_cost: number[];
-  price_pp: number[];
+  total_cost: number;
+  external_utility: number;
+  cost_external_taxes: number;
+  total_cost_external: number;
+  total_hoteles: number;
+  total_services: number;
+  total_ext_operator: number;
+  total_ext_cruises: number;
+  total_flights: number;
+  subtotal: number;
+  cost_transfers: number;
+  final_cost: number;
+  price_pp: number;
   porcentajeTD: number;
 }
 
@@ -93,7 +93,7 @@ export interface Quoter {
   travelDate: TravelDate;
   accomodations: string;
   totalNights: number | string;
-  number_paxs: number[];
+  number_paxs: number;
   travel_agent: string;
   exchange_rate: string;
   services: ServiceDay[];
@@ -110,7 +110,7 @@ export interface CalculatedServicesPayload {
   alerts?: string[];
   day?: number;
   date: string;
-  number_paxs: number[];
+  number_paxs: number;
   children_ages: number[];
   services: ServiceItem[];
   isFixedLast?: boolean;

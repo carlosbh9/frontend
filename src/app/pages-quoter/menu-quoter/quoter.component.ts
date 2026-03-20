@@ -32,7 +32,7 @@ export class QuoterComponent {
       icon: 'bx bx-cart-add',
       hasChildren: true,
       children: [
-        { label: 'Ingresar', router: 'quoter-form' },
+        { label: 'Ingresar', router: 'quoter-v2-form' },
         { label: 'Consultar Contacts', router: 'quoter-list' }
       ]
     },
@@ -41,8 +41,7 @@ export class QuoterComponent {
       icon: 'bx bx-store-alt',
       hasChildren: true,
       children: [
-        { label: 'Master Quoter of List', router: 'master-quoter-list' },
-        { label: 'Add Master Quoter', router: 'master-quoter' }
+        { label: 'Master Quoter V2', router: 'master-quoter-v2' }
       ]
     },
     {

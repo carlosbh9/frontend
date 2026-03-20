@@ -37,7 +37,12 @@ export class BookingFilePageComponent implements OnInit {
   readonly itineraryCards = computed(() => {
     const itinerary = this.itinerary();
     return [
-      { label: 'Services', count: Array.isArray(itinerary.services) ? itinerary.services.length : 0 },
+      {
+        label: 'Services',
+        count: Array.isArray(itinerary.services)
+          ? itinerary.services.reduce((sum: number, group: any) => sum + (Array.isArray(group?.services) ? group.services.length : 0), 0)
+          : 0
+      },
       { label: 'Hotels', count: Array.isArray(itinerary.hotels) ? itinerary.hotels.length : 0 },
       { label: 'Flights', count: Array.isArray(itinerary.flights) ? itinerary.flights.length : 0 },
       { label: 'Operators', count: Array.isArray(itinerary.operators) ? itinerary.operators.length : 0 },
@@ -133,7 +138,7 @@ export class BookingFilePageComponent implements OnInit {
   openQuote(): void {
     const quoterId = this.resolveId(this.quoter());
     if (!quoterId) return;
-    void this.router.navigate(['/dashboard/quoter-main/quoter-edit', quoterId]);
+    void this.router.navigate(['/dashboard/quoter-main/quoter-v2-edit', quoterId]);
   }
 
   private resolveId(value: any): string {

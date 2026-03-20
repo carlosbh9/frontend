@@ -6,310 +6,167 @@ import * as FileSaver from 'file-saver';
   providedIn: 'root'
 })
 export class ExportExcelService {
-
-  constructor() { }
   async downloadQuotationAsExcel(data: any, fileName: string): Promise<void> {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Quotation');
-
     let currentRow = 1;
-    const startColumn = 5;
-    const maxPrices =data.number_paxs.length + 1 // Calcula la cantidad máxima de precios
-    for (let i = 0; i < maxPrices; i++) {
-      const columnIndex = startColumn + i; // Calcula la columna dinámica (F, G, H, ...)
-      worksheet.getColumn(columnIndex).numFmt = '$#,##0.00'; // Aplica formato numérico de moneda
-    }
 
-    // **1. Información General**
-    worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
+    worksheet.mergeCells(`A${currentRow}:F${currentRow}`);
     worksheet.getCell(`A${currentRow}`).value = 'General Information';
     worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 14 };
     currentRow++;
 
     const generalInfo = [
-      { field: 'Guest', value: data.guest },
-      { field: 'File Code', value: data.FileCode },
-      { field: 'Accommodation', value: data.accomodations },
-      { field: 'Total Nights', value: data.totalNights },
-      { field: 'Travel Agent', value: data.travel_agent },
-      { field: 'Start Date', value: data.travelDate.start },
-      { field: 'End Date', value: data.travelDate.end },
-      { field: 'Number of Paxs', value: data.number_paxs.join(', ') },
+      ['Guest', data.guest],
+      ['File Code', data.FileCode],
+      ['Accommodation', data.accomodations],
+      ['Total Nights', data.totalNights],
+      ['Travel Agent', data.travel_agent],
+      ['Start Date', data.travelDate?.start],
+      ['End Date', data.travelDate?.end],
+      ['Number of Paxs', data.number_paxs],
+      ['Children Ages', Array.isArray(data.children_ages) ? data.children_ages.join(', ') : ''],
     ];
 
-    generalInfo.forEach((info) => {
-      worksheet.getCell(`A${currentRow}`).value = info.field;
-      worksheet.getCell(`B${currentRow}`).value = info.value;
+    generalInfo.forEach(([field, value]) => {
+      worksheet.addRow([field, value]);
       currentRow++;
     });
 
-    currentRow++; // Salto de línea
-
-    // **2. Tabla de Servicios**
-    worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
-    worksheet.getCell(`A${currentRow}`).value = 'Services';
-    worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 14 };
     currentRow++;
-
-    // Encabezados de la tabla
-    const serviceHeaders = ['Day', 'Date', 'City', 'Service Name', 'Price Base'];
-    for (let i = 0; i < maxPrices; i++) {
-      serviceHeaders.push(`Price ${i + 1}`);
-    }
-    serviceHeaders.push('Notes');
-
-    serviceHeaders.forEach((header, index) => {
-      worksheet.getCell(currentRow, index + 1).value = header;
-      worksheet.getCell(currentRow, index + 1).font = { bold: true };
-      worksheet.getCell(currentRow, index + 1).border = {
-        top: { style: 'thin' },
-        left: { style: 'thin' },
-        bottom: { style: 'thin' },
-        right: { style: 'thin' },
-      };
-    });
+    this.addSectionHeader(worksheet, currentRow, 'Services');
     currentRow++;
-
-    // Filas de servicios
-    data.services.forEach((serviceDay: any) => {
-      serviceDay.services.forEach((service: any) => {
-        const row = [
+    this.addTable(
+      worksheet,
+      ['Day', 'Date', 'City', 'Service Name', 'Price Base', 'Price', 'Notes'],
+      (data.services || []).flatMap((serviceDay: any) =>
+        (serviceDay.services || []).map((service: any) => [
           serviceDay.day,
           serviceDay.date,
           service.city,
           service.name_service,
           service.price_base,
-        ];
-        row.push(...service.prices);
-        while (row.length < serviceHeaders.length - 1) {
-          row.push('');
-        }
-        row.push(service.notes);
-        worksheet.addRow(row);
-        currentRow++;
-      });
-    });
+          service.price,
+          service.notes || '',
+        ])
+      ),
+      [['', '', '', 'TOTAL SERVICES', '', data.total_prices?.total_services || 0, '']],
+      currentRow
+    );
+    currentRow = worksheet.rowCount + 2;
 
-
-    // Totales de servicios
-    worksheet.addRow([]);
-    worksheet.addRow(['', '', '', 'TOTAL SERVICES', '', ...data.total_prices.total_services]);
-    currentRow += 2;
-
-    // **3. Tabla de Hoteles**
-    worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
-    worksheet.getCell(`A${currentRow}`).value = 'Hotels';
-    worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 14 };
+    this.addSectionHeader(worksheet, currentRow, 'Hotels');
     currentRow++;
-
-    // Encabezados de la tabla
-    const hotelHeaders = ['Day', 'Date', 'City', 'Hotel Name','Price Base'];
-    for (let i = 0; i < maxPrices; i++) {
-      hotelHeaders.push(`Price ${i + 1}`);
-    }
-    hotelHeaders.push( 'Accommodation Category','Notes');
-
-    hotelHeaders.forEach((header, index) => {
-      worksheet.getCell(currentRow, index + 1).value = header;
-      worksheet.getCell(currentRow, index + 1).font = { bold: true };
-      worksheet.getCell(currentRow, index + 1).border = {
-        top: { style: 'thin' },
-        left: { style: 'thin' },
-        bottom: { style: 'thin' },
-        right: { style: 'thin' },
-      };
-    });
-    currentRow++;
-
-    // Filas de hoteles
-    data.hotels.forEach((hotel: any) => {
-      const row = [
+    this.addTable(
+      worksheet,
+      ['Day', 'Date', 'City', 'Hotel Name', 'Price Base', 'Price', 'Accommodation Category', 'Notes'],
+      (data.hotels || []).map((hotel: any) => [
         hotel.day,
         hotel.date,
         hotel.city,
         hotel.name_hotel,
         hotel.price_base,
-      ];
-      row.push(...hotel.prices);
-      // while (row.length < hotelHeaders.length - 1) {
-      //   row.push('');
-      // }
-      row.push(hotel.accomodatios_category);
-      row.push(hotel.notes);
-      worksheet.addRow(row);
-      currentRow++;
+        hotel.price,
+        hotel.accomodatios_category || '',
+        hotel.notes || '',
+      ]),
+      [
+        ['', '', '', 'TOTAL HOTELS', '', data.total_prices?.total_hoteles || 0, '', ''],
+        ['', '', '', 'Total Cost', '', data.total_prices?.total_cost || 0, '', ''],
+        ['', '', '', 'External Utility', '', data.total_prices?.external_utility || 0, '', ''],
+        ['', '', '', 'Cost External Taxes', '', data.total_prices?.cost_external_taxes || 0, '', ''],
+        ['', '', '', 'Total Cost External', '', data.total_prices?.total_cost_external || 0, '', ''],
+      ],
+      currentRow
+    );
+    currentRow = worksheet.rowCount + 2;
+
+    this.addSectionHeader(worksheet, currentRow, 'Flights');
+    currentRow++;
+    this.addTable(
+      worksheet,
+      ['Date', 'Route', 'Price Conf.', 'Price', 'Notes'],
+      (data.flights || []).map((flight: any) => [
+        flight.date,
+        flight.route,
+        flight.price_conf,
+        flight.price,
+        flight.notes || '',
+      ]),
+      [['', 'Total Flights', '', data.total_prices?.total_flights || 0, '']],
+      currentRow
+    );
+    currentRow = worksheet.rowCount + 2;
+
+    this.addSectionHeader(worksheet, currentRow, 'Operators');
+    currentRow++;
+    this.addTable(
+      worksheet,
+      ['Country', 'Operator Name', 'Price', 'Notes'],
+      (data.operators || []).map((operator: any) => [
+        operator.country,
+        operator.name_operator,
+        operator.price,
+        operator.notes || '',
+      ]),
+      [['', 'Total Operators', data.total_prices?.total_ext_operator || 0, '']],
+      currentRow
+    );
+    currentRow = worksheet.rowCount + 2;
+
+    this.addSectionHeader(worksheet, currentRow, 'Cruises');
+    currentRow++;
+    this.addTable(
+      worksheet,
+      ['Cruise', 'Operator', 'Price Base', 'Price', 'Notes'],
+      (data.cruises || []).map((cruise: any) => [
+        cruise.name,
+        cruise.operator,
+        cruise.price_conf,
+        cruise.price,
+        cruise.notes || '',
+      ]),
+      [['', 'Total Cruises', '', data.total_prices?.total_ext_cruises || 0, '']],
+      currentRow
+    );
+    currentRow = worksheet.rowCount + 2;
+
+    this.addSectionHeader(worksheet, currentRow, 'Totals');
+    currentRow++;
+    [
+      ['Subtotal', data.total_prices?.subtotal || 0],
+      ['Cost Transfers', data.total_prices?.cost_transfers || 0],
+      ['Final Cost', data.total_prices?.final_cost || 0],
+      ['Price per Person', data.total_prices?.price_pp || 0],
+    ].forEach(row => worksheet.addRow(row));
+
+    worksheet.columns.forEach(column => {
+      column.width = 20;
+      column.numFmt = '$#,##0.00';
     });
 
-    // Totales de hoteles
-    worksheet.addRow([]);
-    worksheet.addRow(['', '', '', 'TOTAL HOTELS', '', ...data.total_prices.total_hoteles]);
-    worksheet.addRow(['', '', '', 'Total Cost', '', ...data.total_prices.total_cost]);
-    worksheet.addRow(['', '', '', 'External Utility', '', ...data.total_prices.external_utility]);
-    worksheet.addRow(['', '', '', 'Cost External Taxes', '', ...data.total_prices.cost_external_taxes]);
-    worksheet.addRow(['', '', '', 'Total Cost External', '', ...data.total_prices.total_cost_external]);
-    worksheet.addRow([]);
-    currentRow += 7;
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    FileSaver.saveAs(blob, `${fileName}.xlsx`);
+  }
 
-    worksheet.mergeCells(`A${currentRow}:G${currentRow}`);
-    worksheet.getCell(`A${currentRow}`).value = 'Flights';
-    worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 14 };
-    currentRow++;
-    
-    // Cabeceras y configuración en bucle
-    const headers = [
-      { cell: `A${currentRow}:B${currentRow}`, value: 'Date' },
-      { cell: `C${currentRow}:D${currentRow}`, value: 'Route' },
-      { cell: `E${currentRow}`, value: 'Price Conf.' },
-    ];
-    
-    headers.forEach(header => {
-      worksheet.mergeCells(header.cell);
-      const cell = worksheet.getCell(header.cell.split(':')[0]); // Obtener celda inicial
-      cell.value = header.value;
+  private addSectionHeader(worksheet: ExcelJS.Worksheet, row: number, title: string) {
+    worksheet.mergeCells(`A${row}:F${row}`);
+    worksheet.getCell(`A${row}`).value = title;
+    worksheet.getCell(`A${row}`).font = { bold: true, size: 14 };
+  }
+
+  private addTable(
+    worksheet: ExcelJS.Worksheet,
+    headers: string[],
+    rows: any[][],
+    totals: any[][],
+    startRow: number
+  ) {
+    headers.forEach((header, index) => {
+      const cell = worksheet.getCell(startRow, index + 1);
+      cell.value = header;
       cell.font = { bold: true };
-      cell.alignment = { horizontal: 'center', vertical: 'middle' };
-      cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
-    });
-    
-    // Cabeceras dinámicas para "Price" y "Notes"
-    for (let i = 0; i < maxPrices; i++) {
-      const column = worksheet.getCell(currentRow, 6 + i);
-      column.value = `Price ${i + 1}`;
-      column.font = { bold: true };
-      column.alignment = { horizontal: 'center', vertical: 'middle' };
-      column.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
-    }
-    
-    // Agregar "Notes" columna
-    const notesColumn = worksheet.getCell(currentRow, 6 + maxPrices);
-    notesColumn.value = 'Notes';
-    notesColumn.font = { bold: true };
-    notesColumn.alignment = { horizontal: 'center', vertical: 'middle' };
-    notesColumn.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
-    
-       currentRow++;
-   
-       // Filas de flights (si existen)
-      data.flights.forEach((flight: any) => {
-        worksheet.mergeCells(`A${currentRow}:B${currentRow}`); // Combina columnas para "Date"
-        worksheet.getCell(`A${currentRow}`).value = flight.date || '';
-      
-        worksheet.mergeCells(`C${currentRow}:D${currentRow}`); // Combina columnas para "Route"
-        worksheet.getCell(`C${currentRow}`).value = flight.route || '';
-      
-        worksheet.getCell(`E${currentRow}`).value = flight.price_conf || ''; // Price Conf.
-      
-        // Agregar precios dinámicos
-        flight.prices.forEach((price: any, index: number) => {
-          worksheet.getCell(currentRow, 6 + index).value = price; // Coloca cada precio en una columna dinámica
-        });
-      
-        worksheet.getCell(currentRow, 6 + flight.prices.length).value = flight.notes || ''; // Notes
-        currentRow++;
-      });
-       worksheet.addRow(['', '', '', 'Total Flights',  '', ...data.total_prices.total_flights]);
-       worksheet.addRow([]);
-      currentRow += 3;
-
-    // **5. Tabla de Operadores**
-    worksheet.mergeCells(`A${currentRow}:G${currentRow}`);
-    worksheet.getCell(`A${currentRow}`).value = 'Operators';
-    worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 14 };
-    
-    currentRow++;
-
-    // Cabeceras principales
-const operatorHeaders = [
-  { cell: `A${currentRow}:B${currentRow}`, value: 'Country' },
-  { cell: `C${currentRow}:D${currentRow}`, value: 'Operator Name' },
-  { cell: `E${currentRow}`, value: 'Price Base' },
-];
-
-operatorHeaders.forEach(header => {
-  worksheet.mergeCells(header.cell);
-  const cell = worksheet.getCell(header.cell.split(':')[0]); // Obtener la celda inicial
-  cell.value = header.value;
-  cell.font = { bold: true };
-  cell.alignment = { horizontal: 'center', vertical: 'middle' };
-  cell.border = {
-    top: { style: 'thin' },
-    left: { style: 'thin' },
-    bottom: { style: 'thin' },
-    right: { style: 'thin' },
-  };
-});
-
-
-
-// Cabeceras dinámicas para "Price" y "Notes"
-for (let i = 0; i < maxPrices; i++) {
-  const column = worksheet.getCell(currentRow, 6 + i);
-  column.value = `Price ${i + 1}`;
-  column.font = { bold: true };
-  column.alignment = { horizontal: 'center', vertical: 'middle' };
-  column.border = {
-    top: { style: 'thin' },
-    left: { style: 'thin' },
-    bottom: { style: 'thin' },
-    right: { style: 'thin' },
-  };
-}
-
-// Agregar "Notes" columna
-const notesColumn2 = worksheet.getCell(currentRow, 6 + maxPrices);
-notesColumn2.value = 'Notes';
-notesColumn2.font = { bold: true };
-notesColumn2.alignment = { horizontal: 'center', vertical: 'middle' };
-notesColumn2.border = {
-  top: { style: 'thin' },
-  left: { style: 'thin' },
-  bottom: { style: 'thin' },
-  right: { style: 'thin' },
-};
-
-currentRow++;
-    // Filas de operadores
-    data.operators.forEach((operator: any) => {
-      worksheet.mergeCells(`A${currentRow}:B${currentRow}`); // Combina columnas para "Country"
-      worksheet.getCell(`A${currentRow}`).value = operator.country || '';
-    
-      worksheet.mergeCells(`C${currentRow}:D${currentRow}`); // Combina columnas para "Operator Name"
-      worksheet.getCell(`C${currentRow}`).value = operator.name_operator || '';
-    
-      worksheet.getCell(`E${currentRow}`).value = operator.price_base || ''; // Price Base
-    
-      // Agregar precios dinámicos
-      operator.prices.forEach((price: any, index: number) => {
-        worksheet.getCell(currentRow, 6 + index).value = price;
-      });
-    
-      worksheet.getCell(currentRow, 6 + operator.prices.length).value = operator.notes || ''; // Notes
-      currentRow++;
-    });
-  
-    worksheet.addRow(['', '', '', 'Total Operators', '', ...data.total_prices.total_ext_operator]);
-    currentRow += 3;
-
-      // **6. Tabla de Cruises**
-    worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
-    worksheet.getCell(`A${currentRow}`).value = 'Cruises';
-    worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 14 };
-    currentRow++;
-
-    // Encabezados
-    const cruiseHeaders = [
-      { cell: `A${currentRow}:B${currentRow}`, value: 'Cruise' },
-      { cell: `C${currentRow}:D${currentRow}`, value: 'Operator' },
-      { cell: `E${currentRow}`, value: 'Price Confirmation' },
-    ];
-    
-    // Aplicar propiedades a las cabeceras principales
-    cruiseHeaders.forEach(header => {
-      worksheet.mergeCells(header.cell);
-      const cell = worksheet.getCell(header.cell.split(':')[0]); // Obtener la celda inicial
-      cell.value = header.value;
-      cell.font = { bold: true };
-      cell.alignment = { horizontal: 'center', vertical: 'middle' };
       cell.border = {
         top: { style: 'thin' },
         left: { style: 'thin' },
@@ -317,80 +174,8 @@ currentRow++;
         right: { style: 'thin' },
       };
     });
-    
-    // Obtener el número máximo de precios dinámicos
-    
-    // Agregar las cabeceras dinámicas ("Price 1", "Price 2", ..., "Notes")
-    for (let i = 0; i <= maxPrices; i++) {
-      const columnIndex = 6 + i; // Comenzar desde la columna G (índice 7)
-      const column = worksheet.getCell(currentRow, columnIndex);
-    
-      if (i < maxPrices) {
-        column.value = `Price ${i + 1}`;
-      } else {
-        column.value = 'Notes'; // Última columna es para Notes
-      }
-    
-      column.font = { bold: true };
-      column.alignment = { horizontal: 'center', vertical: 'middle' };
-      column.border = {
-        top: { style: 'thin' },
-        left: { style: 'thin' },
-        bottom: { style: 'thin' },
-        right: { style: 'thin' },
-      };
-    }
 
-    currentRow++;
-
-  
-    data.cruises.forEach((cruise: any) => {
-      worksheet.mergeCells(`A${currentRow}:B${currentRow}`); // Combina columnas para "Cruise"
-      worksheet.getCell(`A${currentRow}`).value = cruise.name || '';
-    
-      worksheet.mergeCells(`C${currentRow}:D${currentRow}`); // Combina columnas para "Operator"
-      worksheet.getCell(`C${currentRow}`).value = cruise.operator || '';
-    
-      worksheet.getCell(`E${currentRow}`).value = cruise.price_conf || ''; // Price Confirmation
-    
-      // Agregar precios dinámicos
-      cruise.prices.forEach((price: any, index: number) => {
-        worksheet.getCell(currentRow, 6 + index).value = price;
-      });
-    
-      worksheet.getCell(currentRow, 6 + cruise.prices.length).value = cruise.notes || ''; // Notes
-      currentRow++;
-    });
-    
-    worksheet.addRow(['', '', '','Total Cruises', '', ...data.total_prices.total_ext_cruises]);
-    currentRow += 3;
-
-    // **7. Totales Generales**
-    worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
-    worksheet.getCell(`A${currentRow}`).value = 'Total Prices';
-    worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 14 };
-    currentRow++;
-
-    const totals = [
-      { description: 'Subtotal', values: data.total_prices.subtotal },
-      { description: 'Cost Transfers', values: data.total_prices.cost_transfers },
-      { description: 'Final Cost', values: data.total_prices.final_cost },
-      { description: 'Price per Person', values: data.total_prices.price_pp },
-    ];
-
-    totals.forEach((total) => {
-      worksheet.addRow(['', '', '','',total.description, ...total.values]);
-      currentRow++;
-    });
-
-    // **8. Ajuste de columnas**
-    worksheet.columns.forEach((column) => {
-      column.width = 20;
-    });
-
-    // **9. Descargar Archivo**
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    FileSaver.saveAs(blob, `${fileName}.xlsx`);
+    rows.forEach(row => worksheet.addRow(row));
+    totals.forEach(row => worksheet.addRow(row));
   }
 }

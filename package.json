@@ -21,6 +21,8 @@
     "@angular/platform-browser": "^18.0.0",
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
+    "@ngx-translate/core": "^17.0.0",
+    "@ngx-translate/http-loader": "^17.0.0",
     "@sweetalert2/ngx-sweetalert2": "^12.4.0",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",

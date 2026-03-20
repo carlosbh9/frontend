@@ -17,45 +17,31 @@ export const routes: Routes = [
             data: { permission: 'view_quoter' },
             children: [
               {
-                path: 'quoter-form',
+                path: 'quoter-v2-form',
                 loadComponent: () =>
-                  import('./pages-quoter/quoter/quoter-form/quoter-form.component').then(
-                    (m) => m.QuoterFormComponent
+                  import('./pages-quoter/quoter-v2/quoter-v2-form/quoter-v2-form.component').then(
+                    (m) => m.QuoterV2FormComponent
                   ),
               },
               {
                 path: 'quoter-list',
                 loadComponent: () =>
-                  import('./pages-quoter/quoter/quoter-list/contacts/quoter-list.component').then(
+                  import('./pages-quoter/quoter-v2/quoter-list/contacts/quoter-list.component').then(
                     (m) => m.QuoterListComponent
                   ),
               },
               {
-                path: 'quoter-edit/:id',
+                path: 'quoter-v2-edit/:id',
                 loadComponent: () =>
-                  import('./pages-quoter/quoter/quoter-form/quoter-form.component').then(
-                    (m) => m.QuoterFormComponent
+                  import('./pages-quoter/quoter-v2/quoter-v2-form/quoter-v2-form.component').then(
+                    (m) => m.QuoterV2FormComponent
                   ),
               },
               {
-                path: 'master-quoter',
+                path: 'master-quoter-v2',
                 loadComponent: () =>
-                  import('./pages-quoter/master-quoter-list/master-quoter/master-quoter.component').then(
-                    (m) => m.MasterQuoterComponent
-                  ),
-              },
-              {
-                path: 'master-quoter-list',
-                loadComponent: () =>
-                  import('./pages-quoter/master-quoter-list/master-quoter-list.component').then(
-                    (m) => m.MasterQuoterListComponent
-                  ),
-              },
-              {
-                path: 'master-quoter-edit/:id',
-                loadComponent: () =>
-                  import('./pages-quoter/master-quoter-list/master-quoter/master-quoter.component').then(
-                    (m) => m.MasterQuoterComponent
+                  import('./pages-quoter/master-quoter-v2/master-quoter-v2.component').then(
+                    (m) => m.MasterQuoterV2Component
                   ),
               },
               {
@@ -120,98 +106,24 @@ export const routes: Routes = [
 
             ],
           },
-          {
-            path: 'tariff',
-            loadComponent: () => import('./pages/menu-tariff/menu-tariff.component').then((m) => m.MenuTariffComponent ),
+          // {
+          //   path: 'tariff',
+          //   loadComponent: () => import('./pages/menu-tariff/menu-tariff.component').then((m) => m.MenuTariffComponent ),
+          //   canActivate: [authGuard],
+          //   data: { permission: 'view_tariff'},
+          //   children:[
+          //     {
+          //       path: 'tariff-v2',
+          //       loadComponent: () =>
+          //         import('./pages/tariff-v2/tariff-v2.component').then((m) => m.TariffV2Component)
+          //     }
+          //   ]
+          // },
+           {
+            path: 'tariff-v2',
+            loadComponent: () => import('./pages/tariff-v2/tariff-v2.component').then((m) => m.TariffV2Component),
             canActivate: [authGuard],
             data: { permission: 'view_tariff'},
-            children:[
-              {
-                path: 'train',
-                loadComponent: () =>
-                  import('./pages/train/train.component').then((m) => m.TrainComponent)
-
-              },
-              {
-                path: 'extra',
-                loadComponent: () =>
-                  import('./pages/extra/extra.component').then((m) => m.ExtraComponent)
-              },
-              {
-                path: 'entrance',
-                loadComponent: () =>
-                  import('./pages/entrances/entrances.component').then((m) => m.EntrancesComponent)
-              },
-              {
-                path: 'expeditions',
-                loadComponent: () =>
-                  import('./pages/expeditions/expeditions.component').then(
-                    (m) => m.ExpeditionsComponent
-                  )
-              },
-              {
-                path: 'experiences',
-                loadComponent: () =>
-                  import('./pages/experiences/experiences.component').then(
-                    (m) => m.ExperiencesComponent
-                  )
-              },
-              {
-                path: 'restaurant',
-                loadComponent: () =>
-                  import('./pages/restaurant/restaurant.component').then(
-                    (m) => m.RestaurantComponent
-                  )
-              },
-              {
-                path: 'guides',
-                loadComponent: () =>
-                  import('./pages/guides/guides.component').then((m) => m.GuidesComponent)
-              },
-              {
-                path: 'operators',
-                loadComponent: () =>
-                  import('./pages/operators/operators.component').then((m) => m.OperatorsComponent)
-              },
-              {
-                path: 'services-operators/:id',
-                loadComponent: () =>
-                  import('./pages/operators-services/operators-services.component').then(
-                    (m) => m.OperatorsServicesComponent
-                  ),
-              },
-              {
-                path: 'services-train/:id',
-                loadComponent: () =>
-                  import('./pages/train-services/train-services.component').then(
-                    (m) => m.TrainServicesComponent
-                  )
-              },
-              {
-                path: 'transport',
-                loadComponent: () =>
-                  import('./pages/transport/transport.component').then((m) => m.TransportComponent)
-              },
-              {
-                path: 'hotel',
-                loadComponent: () =>
-                  import('./pages/hotel/hotel.component').then((m) => m.HotelComponent)
-              },
-              {
-                path: 'services-hotel/:id',
-                loadComponent: () =>
-                  import('./pages/hotel-services/hotel-services.component').then(
-                    (m) => m.HotelServicesComponent
-                  )
-              },
-              {
-                path: 'lima-gourmet',
-                loadComponent: () =>
-                  import('./pages/lima-gourmet/lima-gourmet.component').then(
-                    (m) => m.LimaGourmetComponent
-                  )
-              }
-            ]
           },
           {
             path:'manageUsers',

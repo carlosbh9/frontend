@@ -11,7 +11,7 @@ export interface Quoter {
     };
     accomodations: string;
     totalNights: number;
-    number_paxs: number[];
+    number_paxs: number;
     travel_agent: string;
     exchange_rate: string;
     services: any[];
@@ -23,18 +23,18 @@ export interface Quoter {
   }
 
   interface TotalPrices {
-    total_hoteles: number[];
-    total_services: number[];
-    total_cost: number[];
-    external_utility:number[];
-    cost_external_taxes:number[];
-    total_cost_external:number[];
-    total_ext_operator: number[];
-    total_ext_cruises: number[];
-    total_flights: number[];
-    subtotal: number[];
-    cost_transfers: number[];
-    final_cost: number[];
-    price_pp: number[];
+    total_hoteles: number;
+    total_services: number;
+    total_cost: number;
+    external_utility:number;
+    cost_external_taxes:number;
+    total_cost_external:number;
+    total_ext_operator: number;
+    total_ext_cruises: number;
+    total_flights: number;
+    subtotal: number;
+    cost_transfers: number;
+    final_cost: number;
+    price_pp: number;
     porcentajeTD: number;
   }
