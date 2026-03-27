@@ -135,6 +135,17 @@ export class ServiceOrdersStore {
     }
   }
 
+  async updateStage(orderId: string, stageCode: string, comment = ''): Promise<void> {
+    this.error.set(null);
+    try {
+      await this.api.updateStage(orderId, stageCode, comment);
+      await this.load();
+      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
+    } catch (error: any) {
+      this.error.set(error?.error?.error || error?.error?.message || 'Could not update stage');
+    }
+  }
+
   async updateFinancials(orderId: string, payload: any): Promise<void> {
     this.error.set(null);
     try {

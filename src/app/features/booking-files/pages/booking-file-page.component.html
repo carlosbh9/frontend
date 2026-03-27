@@ -25,6 +25,13 @@
           <button
             type="button"
             class="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
+            (click)="recalculateSummary()"
+          >
+            Recalculate Summary
+          </button>
+          <button
+            type="button"
+            class="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
             (click)="openQuote()"
           >
             Open Quote
@@ -35,6 +42,13 @@
             (click)="openServiceOrders()"
           >
             View Service Orders
+          </button>
+          <button
+            type="button"
+            class="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-indigo-50"
+            (click)="openBibliaForTravelDate()"
+          >
+            Open Biblia
           </button>
         </div>
       </div>
@@ -56,6 +70,34 @@
       </div>
     } @else {
       @if (bookingFile(); as file) {
+      <section class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="flex flex-col gap-3 border-b border-slate-100 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 class="text-sm font-semibold text-slate-900">File Workspace</h2>
+            <p class="mt-1 text-sm text-slate-600">The file leads. Switch between trip baseline, summary health, and related execution orders.</p>
+          </div>
+          <div class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+            {{ file.fileCode }}
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 p-5">
+          @for (tab of tabItems(); track tab.id) {
+            <button
+              type="button"
+              class="flex min-w-[170px] flex-col rounded-2xl px-4 py-3 text-left ring-1 ring-inset transition"
+              [ngClass]="activeTab() === tab.id
+                ? 'bg-slate-900 text-white ring-slate-900 shadow-sm'
+                : 'bg-white text-slate-700 ring-slate-200 hover:bg-slate-50'"
+              (click)="setTab(tab.id)"
+            >
+              <span class="text-sm font-semibold">{{ tab.label }}</span>
+              <span class="mt-1 text-xs" [ngClass]="activeTab() === tab.id ? 'text-slate-300' : 'text-slate-500'">{{ tab.meta }}</span>
+            </button>
+          }
+        </div>
+      </section>
+
+      @if (activeTab() === 'overview') {
       <section class="grid grid-cols-1 gap-6 xl:grid-cols-12">
         <div class="space-y-6 xl:col-span-4">
           <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -86,17 +128,18 @@
               </div>
 
               <div class="grid grid-cols-1 gap-3">
-                <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4">
-                  <p class="text-xs font-medium uppercase tracking-wide text-amber-700">Operation</p>
-                  <p class="mt-2 text-sm font-semibold text-amber-900">{{ file.operation_status }}</p>
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Risk Level</p>
+                  <p class="mt-2 text-sm font-semibold text-slate-900">{{ file.risk_level }}</p>
                 </div>
-                <div class="rounded-2xl border border-blue-200 bg-blue-50 p-4">
-                  <p class="text-xs font-medium uppercase tracking-wide text-blue-700">Reservations</p>
-                  <p class="mt-2 text-sm font-semibold text-blue-900">{{ file.reservation_status }}</p>
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Next Action</p>
+                  <p class="mt-2 text-sm font-semibold text-slate-900">{{ file.next_action || '-' }}</p>
+                  <p class="mt-1 text-xs text-slate-500">Due: {{ file.next_action_due_at ? (file.next_action_due_at | date:'dd/MM/yyyy HH:mm') : '-' }}</p>
                 </div>
-                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
-                  <p class="text-xs font-medium uppercase tracking-wide text-emerald-700">Payments</p>
-                  <p class="mt-2 text-sm font-semibold text-emerald-900">{{ file.payment_status }}</p>
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Last Activity</p>
+                  <p class="mt-2 text-sm font-semibold text-slate-900">{{ file.last_activity_at ? (file.last_activity_at | date:'dd/MM/yyyy HH:mm') : '-' }}</p>
                 </div>
               </div>
 
@@ -139,6 +182,28 @@
 
           <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div class="border-b border-slate-100 p-5">
+              <h2 class="text-sm font-semibold text-slate-900">Summary Statuses</h2>
+              <p class="mt-1 text-sm text-slate-600">File consolidates area-level health. Detailed execution stays inside service orders.</p>
+            </div>
+            <div class="grid grid-cols-1 gap-3 p-5 sm:grid-cols-2 xl:grid-cols-3">
+              @for (card of summaryCards(); track card.label) {
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <p class="text-xs font-medium uppercase tracking-wide text-slate-500">{{ card.label }}</p>
+                  <p class="mt-2 text-base font-semibold text-slate-900">{{ card.value }}</p>
+                </div>
+              }
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Passenger Completion</p>
+                <p class="mt-2 text-base font-semibold text-slate-900">{{ file.passenger_info_status?.completion_percentage || 0 }}%</p>
+                <p class="mt-1 text-xs text-slate-500">
+                  Missing: {{ file.passenger_info_status?.missing_required_fields?.length ? (file.passenger_info_status?.missing_required_fields || []).join(', ') : 'None' }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-100 p-5">
               <h2 class="text-sm font-semibold text-slate-900">Orders Snapshot</h2>
               <p class="mt-1 text-sm text-slate-600">Operational workload generated from the sold quote.</p>
             </div>
@@ -159,6 +224,30 @@
                 <p class="text-xs font-medium uppercase tracking-wide text-emerald-700">Done</p>
                 <p class="mt-2 text-2xl font-semibold text-emerald-900">{{ kpis().done }}</p>
               </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-100 p-5">
+              <h2 class="text-sm font-semibold text-slate-900">Attention Needed</h2>
+              <p class="mt-1 text-sm text-slate-600">Use this section to prioritize blocked, overdue, or due-today work inside the file.</p>
+            </div>
+            <div class="space-y-4 p-5">
+              @for (card of attentionCards(); track card.label) {
+                <div class="rounded-2xl border p-4"
+                  [ngClass]="{
+                    'border-rose-200 bg-rose-50': card.tone === 'rose',
+                    'border-amber-200 bg-amber-50': card.tone === 'amber',
+                    'border-blue-200 bg-blue-50': card.tone === 'blue'
+                  }"
+                >
+                  <div class="flex items-center justify-between gap-3">
+                    <p class="text-xs font-medium uppercase tracking-wide text-slate-600">{{ card.label }}</p>
+                    <p class="text-lg font-semibold text-slate-900">{{ card.value }}</p>
+                  </div>
+                  <p class="mt-2 text-sm text-slate-600">{{ card.helper }}</p>
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -281,8 +370,283 @@
               </table>
             </div>
           </div>
+
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-100 p-5">
+              <h2 class="text-sm font-semibold text-slate-900">Linked Orders by Area</h2>
+              <p class="mt-1 text-sm text-slate-600">The file summarizes work by team area while the detailed flow remains inside each service order.</p>
+            </div>
+            <div class="grid grid-cols-1 gap-3 p-5 sm:grid-cols-2">
+              @for (area of ordersByArea(); track area.key) {
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <div class="flex items-center justify-between gap-3">
+                    <div>
+                      <p class="text-xs font-medium uppercase tracking-wide text-slate-500">{{ area.label }}</p>
+                      <p class="mt-2 text-lg font-semibold text-slate-900">{{ area.total }} orders</p>
+                    </div>
+                    <span class="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
+                      {{ area.done }} done
+                    </span>
+                  </div>
+                  <div class="mt-4 grid grid-cols-4 gap-2 text-center">
+                    <div class="rounded-xl bg-white px-2 py-3 ring-1 ring-inset ring-slate-200">
+                      <div class="text-xs text-slate-500">Pending</div>
+                      <div class="mt-1 text-sm font-semibold text-slate-900">{{ area.pending }}</div>
+                    </div>
+                    <div class="rounded-xl bg-white px-2 py-3 ring-1 ring-inset ring-slate-200">
+                      <div class="text-xs text-slate-500">Progress</div>
+                      <div class="mt-1 text-sm font-semibold text-slate-900">{{ area.inProgress }}</div>
+                    </div>
+                    <div class="rounded-xl bg-white px-2 py-3 ring-1 ring-inset ring-slate-200">
+                      <div class="text-xs text-slate-500">Blocked</div>
+                      <div class="mt-1 text-sm font-semibold text-slate-900">{{ area.blocked }}</div>
+                    </div>
+                    <div class="rounded-xl bg-white px-2 py-3 ring-1 ring-inset ring-slate-200">
+                      <div class="text-xs text-slate-500">Done</div>
+                      <div class="mt-1 text-sm font-semibold text-slate-900">{{ area.done }}</div>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
         </div>
       </section>
+      }
+
+      @if (activeTab() === 'summary') {
+      <section class="grid grid-cols-1 gap-6 xl:grid-cols-12">
+        <div class="space-y-6 xl:col-span-4">
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-100 p-5">
+              <h2 class="text-sm font-semibold text-slate-900">Master Signals</h2>
+              <p class="mt-1 text-sm text-slate-600">These signals summarize post-sales execution without duplicating the order workflow.</p>
+            </div>
+            <div class="space-y-4 p-5">
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Overall Status</p>
+                <p class="mt-2 text-base font-semibold text-slate-900">{{ file.overall_status }}</p>
+              </div>
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Risk Level</p>
+                <p class="mt-2 text-base font-semibold text-slate-900">{{ file.risk_level }}</p>
+              </div>
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Next Action</p>
+                <p class="mt-2 text-sm font-semibold text-slate-900">{{ file.next_action || '-' }}</p>
+                <p class="mt-1 text-xs text-slate-500">Due: {{ file.next_action_due_at ? (file.next_action_due_at | date:'dd/MM/yyyy HH:mm') : '-' }}</p>
+              </div>
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Last Activity</p>
+                <p class="mt-2 text-sm font-semibold text-slate-900">{{ file.last_activity_at ? (file.last_activity_at | date:'dd/MM/yyyy HH:mm') : '-' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-100 p-5">
+              <h2 class="text-sm font-semibold text-slate-900">Passenger Info Status</h2>
+              <p class="mt-1 text-sm text-slate-600">This is a summary tracker only. Passenger data itself should remain outside the File summary object.</p>
+            </div>
+            <div class="space-y-4 p-5">
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Status</p>
+                <p class="mt-2 text-base font-semibold text-slate-900">{{ file.passenger_info_status?.status || 'NOT_SENT' }}</p>
+              </div>
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Completion</p>
+                <p class="mt-2 text-base font-semibold text-slate-900">{{ file.passenger_info_status?.completion_percentage || 0 }}%</p>
+              </div>
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Missing Required Fields</p>
+                <p class="mt-2 text-sm font-semibold text-slate-900">{{ file.passenger_info_status?.missing_required_fields?.length ? (file.passenger_info_status?.missing_required_fields || []).join(', ') : 'None' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-100 p-5">
+              <h2 class="text-sm font-semibold text-slate-900">Attention Needed</h2>
+              <p class="mt-1 text-sm text-slate-600">Use this section to prioritize blocked, overdue, or due-today work inside the file.</p>
+            </div>
+            <div class="space-y-4 p-5">
+              @for (card of attentionCards(); track card.label) {
+                <div class="rounded-2xl border p-4"
+                  [ngClass]="{
+                    'border-rose-200 bg-rose-50': card.tone === 'rose',
+                    'border-amber-200 bg-amber-50': card.tone === 'amber',
+                    'border-blue-200 bg-blue-50': card.tone === 'blue'
+                  }"
+                >
+                  <div class="flex items-center justify-between gap-3">
+                    <p class="text-xs font-medium uppercase tracking-wide text-slate-600">{{ card.label }}</p>
+                    <p class="text-lg font-semibold text-slate-900">{{ card.value }}</p>
+                  </div>
+                  <p class="mt-2 text-sm text-slate-600">{{ card.helper }}</p>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6 xl:col-span-8">
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-100 p-5">
+              <h2 class="text-sm font-semibold text-slate-900">Summary Statuses</h2>
+              <p class="mt-1 text-sm text-slate-600">Area-level health signals, recalculated from service orders and travel timing.</p>
+            </div>
+            <div class="grid grid-cols-1 gap-3 p-5 sm:grid-cols-2 xl:grid-cols-3">
+              @for (card of summaryCards(); track card.label) {
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <p class="text-xs font-medium uppercase tracking-wide text-slate-500">{{ card.label }}</p>
+                  <p class="mt-2 text-base font-semibold text-slate-900">{{ card.value }}</p>
+                </div>
+              }
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Passenger Completion</p>
+                <p class="mt-2 text-base font-semibold text-slate-900">{{ file.passenger_info_status?.completion_percentage || 0 }}%</p>
+                <p class="mt-1 text-xs text-slate-500">
+                  Missing: {{ file.passenger_info_status?.missing_required_fields?.length ? (file.passenger_info_status?.missing_required_fields || []).join(', ') : 'None' }}
+                </p>
+              </div>
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Owner</p>
+                <p class="mt-2 text-base font-semibold text-slate-900">{{ file.owner_user_id || '-' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-100 p-5">
+              <h2 class="text-sm font-semibold text-slate-900">Linked Orders by Area</h2>
+              <p class="mt-1 text-sm text-slate-600">The file summarizes work by team area while the detailed flow remains inside each service order.</p>
+            </div>
+            <div class="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2">
+              @for (area of ordersByArea(); track area.key) {
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <div class="flex items-center justify-between gap-3">
+                    <div>
+                      <p class="text-xs font-medium uppercase tracking-wide text-slate-500">{{ area.label }}</p>
+                      <p class="mt-2 text-lg font-semibold text-slate-900">{{ area.total }} orders</p>
+                    </div>
+                    <span class="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
+                      {{ area.donePct }}% complete
+                    </span>
+                  </div>
+
+                  <div class="mt-4 h-3 overflow-hidden rounded-full bg-slate-200">
+                    <div class="flex h-full w-full">
+                      <div class="bg-amber-400" [style.width.%]="area.pendingPct"></div>
+                      <div class="bg-blue-500" [style.width.%]="area.inProgressPct"></div>
+                      <div class="bg-rose-500" [style.width.%]="area.blockedPct"></div>
+                      <div class="bg-emerald-500" [style.width.%]="area.donePct"></div>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 space-y-2">
+                    <div class="flex items-center justify-between text-xs text-slate-600">
+                      <div class="flex items-center gap-2">
+                        <span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span>
+                        Pending
+                      </div>
+                      <span class="font-semibold text-slate-900">{{ area.pending }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-slate-600">
+                      <div class="flex items-center gap-2">
+                        <span class="h-2.5 w-2.5 rounded-full bg-blue-500"></span>
+                        In Progress
+                      </div>
+                      <span class="font-semibold text-slate-900">{{ area.inProgress }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-slate-600">
+                      <div class="flex items-center gap-2">
+                        <span class="h-2.5 w-2.5 rounded-full bg-rose-500"></span>
+                        Blocked
+                      </div>
+                      <span class="font-semibold text-slate-900">{{ area.blocked }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-slate-600">
+                      <div class="flex items-center gap-2">
+                        <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                        Done
+                      </div>
+                      <span class="font-semibold text-slate-900">{{ area.done }}</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+      }
+
+      @if (activeTab() === 'orders') {
+      <section class="space-y-6">
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div class="border-b border-slate-100 p-5">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 class="text-sm font-semibold text-slate-900">Generated Service Orders</h2>
+                <p class="mt-1 text-sm text-slate-600">Orders created automatically from the sold quote.</p>
+              </div>
+              <div class="text-xs text-slate-500">
+                Contact:
+                <span class="font-semibold text-slate-700">{{ contact()?.name || '-' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto p-5">
+            <table class="min-w-full divide-y divide-slate-200 text-sm">
+              <thead class="bg-slate-50">
+                <tr>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Type</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Area</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Stage</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Status</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Due</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Snapshot</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 bg-white">
+                @for (order of orders(); track order._id) {
+                  <tr class="hover:bg-slate-50/80">
+                    <td class="px-4 py-3 font-medium text-slate-900">{{ order.type }}</td>
+                    <td class="px-4 py-3 text-slate-600">{{ order.area }}</td>
+                    <td class="px-4 py-3 text-slate-600">{{ order.currentStageLabel || order.currentStageCode || '-' }}</td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
+                        [ngClass]="{
+                          'bg-amber-50 text-amber-700 ring-amber-200': order.status === 'PENDING',
+                          'bg-blue-50 text-blue-700 ring-blue-200': order.status === 'IN_PROGRESS',
+                          'bg-emerald-50 text-emerald-700 ring-emerald-200': order.status === 'DONE',
+                          'bg-rose-50 text-rose-700 ring-rose-200': order.status === 'CANCELLED',
+                          'bg-slate-100 text-slate-700 ring-slate-200': order.status === 'WAITING_INFO'
+                        }"
+                      >
+                        {{ order.status }}
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 text-slate-600">{{ order.dueDate ? (order.dueDate | date:'dd/MM/yyyy') : '-' }}</td>
+                    <td class="px-4 py-3 text-slate-600">
+                      {{ order.sourceSnapshot?.name || order.sourceSnapshot?.route || order.sourceSnapshot?.category || '-' }}
+                    </td>
+                  </tr>
+                }
+                @if (!orders().length) {
+                  <tr>
+                    <td colspan="6" class="px-4 py-8 text-center text-sm text-slate-500">
+                      No service orders are linked to this booking file yet.
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      }
       }
     }
   </div>

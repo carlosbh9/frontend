@@ -1,22 +1,15 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-interface TariffMenuItem {
-  label: string;
-  icon: string;
-  router: string;
-}
+import { NavigationShellComponent } from '../../components/navigation-shell/navigation-shell.component';
 
 @Component({
   selector: 'app-menu-tariff',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [NavigationShellComponent],
   templateUrl: './menu-tariff.component.html',
   styleUrl: './menu-tariff.component.css'
 })
 export class MenuTariffComponent {
-  readonly menuItems: TariffMenuItem[] = [
-    { label: 'Tariff V2', icon: 'bx bx-layer mr-3 text-lg', router: 'tariff-v2' },
-  ];
+  readonly title = 'Tarifas';
+  readonly description =
+    'Administra la estructura tarifaria actual desde un espacio limpio, con la navegación principal concentrada en el sidebar.';
 }

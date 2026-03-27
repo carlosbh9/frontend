@@ -10,7 +10,7 @@
             Biblia
           </h1>
           <p class="mt-1 max-w-2xl text-sm text-slate-600">
-            Operational view of scheduled services, grouped by execution date and connected to booking files and service orders.
+            Daily derived board built from Files, itinerary snapshots, and related service orders. Biblia is a view, not a master record.
           </p>
         </div>
 
@@ -29,7 +29,7 @@
         <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div class="border-b border-slate-100 p-5">
             <h2 class="text-sm font-semibold text-slate-900">Filters</h2>
-            <p class="mt-1 text-sm text-slate-600">Focus the board by execution date, area, or operational status.</p>
+            <p class="mt-1 text-sm text-slate-600">Focus the derived daily view by travel date, operational area, or execution status.</p>
           </div>
 
           <div class="space-y-4 p-5">
@@ -39,7 +39,7 @@
                 type="date"
                 class="mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                 [ngModel]="dateFilter()"
-                (ngModelChange)="dateFilter.set($event)"
+                (ngModelChange)="dateFilter.set($event); load()"
               />
               <button
                 type="button"
@@ -55,7 +55,7 @@
               <select
                 class="mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                 [ngModel]="areaFilter()"
-                (ngModelChange)="areaFilter.set($event)"
+                (ngModelChange)="areaFilter.set($event); load()"
               >
                 <option value="">All areas</option>
                 <option value="RESERVAS">Reservas</option>
@@ -70,7 +70,7 @@
               <select
                 class="mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                 [ngModel]="statusFilter()"
-                (ngModelChange)="statusFilter.set($event)"
+                (ngModelChange)="statusFilter.set($event); load()"
               >
                 <option value="">All statuses</option>
                 <option value="PENDING">Pending</option>
@@ -134,7 +134,7 @@
               <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h2 class="text-sm font-semibold text-slate-900">{{ group.label }}</h2>
-                  <p class="mt-1 text-sm text-slate-600">Services currently visible for this execution date.</p>
+              <p class="mt-1 text-sm text-slate-600">Daily rows derived from active travel files for this date.</p>
                 </div>
                 <div class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
                   {{ group.rows.length }} items
@@ -146,46 +146,48 @@
               <table class="min-w-full divide-y divide-slate-200 text-sm">
                 <thead class="bg-slate-50">
                   <tr>
-                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Guest</th>
-                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Service</th>
+                    <th class="px-4 py-3 text-left font-semibold text-slate-600">File / Guest</th>
+                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Daily Item</th>
                     <th class="px-4 py-3 text-left font-semibold text-slate-600">City</th>
                     <th class="px-4 py-3 text-left font-semibold text-slate-600">Area</th>
-                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Status</th>
-                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Finance</th>
-                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Docs</th>
+                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Execution</th>
+                    <th class="px-4 py-3 text-left font-semibold text-slate-600">File Status</th>
+                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Notes</th>
                     <th class="px-4 py-3 text-left font-semibold text-slate-600">Actions</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white">
-                  @for (row of group.rows; track row.order._id) {
+                  @for (row of group.rows; track row.file_id + '-' + row.title + '-' + row.execution_date) {
                     <tr class="hover:bg-slate-50/80">
                       <td class="px-4 py-3">
-                        <div class="font-medium text-slate-900">{{ row.guest }}</div>
-                        <div class="text-xs text-slate-500">{{ row.executionLabel }}</div>
+                        <div class="font-medium text-slate-900">{{ row.fileCode }}</div>
+                        <div class="text-xs text-slate-500">{{ row.guest }}</div>
+                        <div class="text-xs text-slate-500">{{ formatDateLabel(row.execution_date) }}</div>
                       </td>
                       <td class="px-4 py-3">
                         <div class="font-medium text-slate-900">{{ row.title }}</div>
-                        <div class="text-xs text-slate-500">{{ row.detail || row.order.type }}</div>
+                        <div class="text-xs text-slate-500">{{ row.detail || row.section }}</div>
                       </td>
                       <td class="px-4 py-3 text-slate-600">{{ row.city }}</td>
-                      <td class="px-4 py-3 text-slate-600">{{ row.order.area }}</td>
+                      <td class="px-4 py-3 text-slate-600">{{ row.area || '-' }}</td>
                       <td class="px-4 py-3">
                         <div class="flex flex-col gap-2">
                           <span class="inline-flex w-fit items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
                             [ngClass]="{
-                              'bg-amber-50 text-amber-700 ring-amber-200': row.order.status === 'PENDING',
-                              'bg-blue-50 text-blue-700 ring-blue-200': row.order.status === 'IN_PROGRESS',
-                              'bg-emerald-50 text-emerald-700 ring-emerald-200': row.order.status === 'DONE',
-                              'bg-rose-50 text-rose-700 ring-rose-200': row.order.status === 'CANCELLED',
-                              'bg-slate-100 text-slate-700 ring-slate-200': row.order.status === 'WAITING_INFO'
+                              'bg-amber-50 text-amber-700 ring-amber-200': row.execution_status === 'PENDING',
+                              'bg-blue-50 text-blue-700 ring-blue-200': row.execution_status === 'IN_PROGRESS',
+                              'bg-emerald-50 text-emerald-700 ring-emerald-200': row.execution_status === 'DONE',
+                              'bg-rose-50 text-rose-700 ring-rose-200': row.execution_status === 'CANCELLED',
+                              'bg-slate-100 text-slate-700 ring-slate-200': row.execution_status === 'WAITING_INFO'
                             }"
                           >
-                            {{ row.order.status }}
+                            {{ row.execution_status }}
                           </span>
+                          @if (row.service_order_ids.length) {
                           <select
                             class="rounded-lg bg-white px-2.5 py-2 text-xs text-slate-700 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                            [ngModel]="row.order.status"
-                            (ngModelChange)="updateOrderStatus(row.order, $event)"
+                            [ngModel]="row.execution_status"
+                            (ngModelChange)="updateOrderStatus(row, $event)"
                           >
                             <option value="PENDING">Pending</option>
                             <option value="IN_PROGRESS">In Progress</option>
@@ -193,37 +195,31 @@
                             <option value="DONE">Done</option>
                             <option value="CANCELLED">Cancelled</option>
                           </select>
+                          }
                         </div>
                       </td>
                       <td class="px-4 py-3">
                         <div class="flex flex-col gap-2">
                           <span class="inline-flex w-fit items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
-                            {{ prettify(getPaymentStatus(row.order)) }}
+                            {{ row.overall_status }}
                           </span>
                           <span class="text-xs text-slate-500">
-                            {{ row.order.financials?.currency || 'USD' }} {{ row.order.financials?.paidAmount ?? 0 }} / {{ row.order.financials?.expectedCost ?? 0 }}
+                            Risk: {{ row.risk_level }}{{ row.next_action ? ' | ' + row.next_action : '' }}
                           </span>
                         </div>
                       </td>
+                      <td class="px-4 py-3 text-slate-600">{{ row.observations || row.notes || '-' }}</td>
                       <td class="px-4 py-3">
                         <div class="flex flex-wrap items-center gap-2">
-                          <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
-                            {{ getAttachmentCount(row.order) }} docs
-                          </span>
-                          <span *ngIf="hasAttachmentType(row.order, 'VOUCHER')" class="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100">Voucher</span>
-                          <span *ngIf="hasAttachmentType(row.order, 'INVOICE')" class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-100">Invoice</span>
-                          <span *ngIf="hasAttachmentType(row.order, 'PAYMENT_PROOF')" class="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 ring-1 ring-inset ring-amber-100">Proof</span>
-                        </div>
-                      </td>
-                      <td class="px-4 py-3">
-                        <div class="flex flex-wrap items-center gap-2">
-                          <button
+                          @if (row.service_order_ids.length) {
+                            <button
                             type="button"
                             class="inline-flex items-center rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
                             (click)="openContactOrders(row)"
                           >
                             Orders
                           </button>
+                          }
                           <button
                             type="button"
                             class="inline-flex items-center rounded-lg px-3 py-2 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-indigo-50"
@@ -243,9 +239,9 @@
 
         @if (!loading() && !error() && !groupedRows().length) {
           <section class="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-            <h2 class="text-base font-semibold text-slate-900">No scheduled services found</h2>
+            <h2 class="text-base font-semibold text-slate-900">No daily file rows found</h2>
             <p class="mt-2 text-sm text-slate-600">
-              Adjust the filters or clear the execution date to review all service orders.
+              Adjust the filters or change the date to review the derived daily travel view.
             </p>
           </section>
         }

@@ -11,6 +11,7 @@ import Swal from 'sweetalert2'
 import { ExportExcelService } from '../../../../Services/exportExcel/export-excel.service';
 import { Contact ,Quoter} from '../../../../interfaces/contact.interface';
 import { toast } from 'ngx-sonner';
+import { LaunchAccessService } from '../../../../Services/launch-access.service';
 
 import {CdkDragDrop,transferArrayItem,moveItemInArray,DragDropModule} from '@angular/cdk/drag-drop';
 
@@ -27,6 +28,7 @@ export class QuoterListComponent implements OnInit{
   contactService = inject(ContactService)
   pdfExportService = inject(PdfexportService)
   excelService = inject(ExportExcelService)
+  launchAccessService = inject(LaunchAccessService)
   fb: FormBuilder = inject(FormBuilder)
   contactFormGroup!: FormGroup;
 
@@ -58,6 +60,7 @@ export class QuoterListComponent implements OnInit{
   dropdownOpen: string | null = null;
 
   statuses = ['WIP', 'HOLD', 'SOLD', 'LOST'];
+  launchInProgressQuoterId: string | null = null;
   statusColors: { [key: string]: string } = {
     WIP: 'bg-blue-100', // Azul
     HOLD: 'bg-yellow-100', // Amarillo
@@ -249,9 +252,20 @@ export class QuoterListComponent implements OnInit{
       }
 
       this.openBookingFileByQuoter(quoterId);
-    } catch (error) {
-      console.error('Error confirming sale', error);
-      toast.error('Error confirming sale');
+    } catch (error: any) {
+      const backendMessage =
+        error?.error?.error ||
+        error?.error?.message ||
+        error?.message ||
+        'Error confirming sale';
+
+      console.error('Error confirming sale', {
+        backendMessage,
+        status: error?.status,
+        response: error?.error,
+        raw: error
+      });
+      toast.error(backendMessage);
     }
   }
 
@@ -287,6 +301,23 @@ export class QuoterListComponent implements OnInit{
   async generateExcelVersion(cotization: Quoter) {
     if (!cotization.quoter_id) return;
     await this.generateExcel(cotization.quoter_id);
+  }
+
+  async openInItineraryBuilder(cotization: Quoter): Promise<void> {
+    const quoterId = String(cotization?.quoter_id || '').trim();
+    if (!quoterId || this.launchInProgressQuoterId === quoterId) {
+      return;
+    }
+
+    try {
+      this.launchInProgressQuoterId = quoterId;
+      await this.launchAccessService.openItineraryBuilder(quoterId);
+    } catch (error) {
+      console.error('Error opening itinerary builder with quoter:', error);
+      toast.error('Could not open Itinerary Builder for this quoter');
+    } finally {
+      this.launchInProgressQuoterId = null;
+    }
   }
   openModal(contact: Contact) {
     this.isEdit.set(true);

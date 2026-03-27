@@ -105,23 +105,25 @@ import { ServiceOrder } from '../data-access/service-orders.types';
           <table class="min-w-full text-sm">
             <thead class="bg-slate-50 text-slate-500">
               <tr>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Actions</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Type</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Service</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Stage</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Area</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Status</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Priority</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Amount</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Finance</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Docs</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Due</th>
-                <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide">Actions</th>
+                <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide">Due</th>
+                <!-- <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide">Actions</th> -->
               </tr>
             </thead>
 
             <tbody class="divide-y divide-slate-100">
               @if (!orders?.length) {
                 <tr>
-                  <td colspan="10" class="px-4 py-10 text-center">
+                  <td colspan="11" class="px-4 py-10 text-center">
                     <div class="mx-auto max-w-sm">
                       <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -138,6 +140,19 @@ import { ServiceOrder } from '../data-access/service-orders.types';
               } @else {
                 @for (order of orders; track order._id) {
                   <tr class="hover:bg-slate-50/70 transition-colors">
+                    <td class="px-4 py-3 text-left">
+                      <button
+                        class="inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold
+                               text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
+                        (click)="openDetail.emit(order._id)"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7Z"/>
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                        </svg>
+                        Detail
+                      </button>
+                    </td>
                     <td class="px-4 py-3">
                       <span
                         class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
@@ -155,6 +170,22 @@ import { ServiceOrder } from '../data-access/service-orders.types';
                         <p class="mt-0.5 text-xs text-slate-500">
                           {{ order._id }}
                         </p>
+                      </div>
+                    </td>
+
+                    <td class="px-4 py-3">
+                      <div class="min-w-[170px]">
+                        <span
+                          class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
+                          [ngClass]="stageClass(order)"
+                        >
+                          {{ order.currentStageLabel || order.currentStageCode || 'No stage' }}
+                        </span>
+                        @if (order.workflowTemplateName || order.workflowTemplateCode) {
+                          <p class="mt-1 text-xs text-slate-500">
+                            {{ order.workflowTemplateName || order.workflowTemplateCode }}
+                          </p>
+                        }
                       </div>
                     </td>
 
@@ -229,7 +260,7 @@ import { ServiceOrder } from '../data-access/service-orders.types';
                       </div>
                     </td>
 
-                    <td class="px-4 py-3">
+                    <td class="px-4 py-3 text-right">
                       <div class="text-sm">
                         <p class="font-medium text-slate-900">
                           {{ order.dueDate ? (order.dueDate | date:'dd/MM/yyyy') : '-' }}
@@ -240,19 +271,7 @@ import { ServiceOrder } from '../data-access/service-orders.types';
                       </div>
                     </td>
 
-                    <td class="px-4 py-3 text-right">
-                      <button
-                        class="inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold
-                               text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
-                        (click)="openDetail.emit(order._id)"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7Z"/>
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-                        </svg>
-                        Detail
-                      </button>
-                    </td>
+
                   </tr>
                 }
               }
@@ -458,5 +477,19 @@ export class ServiceOrdersListComponent {
       default:
         return 'bg-slate-100 text-slate-700 ring-slate-200';
     }
+  }
+
+  stageClass(order: ServiceOrder): string {
+    const activeStage = order?.stagesSnapshot?.find((stage) => stage.status === 'ACTIVE');
+    if (activeStage) {
+      return 'bg-indigo-50 text-indigo-700 ring-indigo-200';
+    }
+    if (order?.status === 'DONE') {
+      return 'bg-emerald-50 text-emerald-700 ring-emerald-200';
+    }
+    if (order?.status === 'WAITING_INFO') {
+      return 'bg-amber-50 text-amber-700 ring-amber-200';
+    }
+    return 'bg-slate-100 text-slate-700 ring-slate-200';
   }
 }

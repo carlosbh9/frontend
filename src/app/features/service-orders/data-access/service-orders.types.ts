@@ -2,13 +2,33 @@ export type ServiceOrderArea = 'RESERVAS' | 'OPERACIONES' | 'CONTABILIDAD' | 'PA
 export type ServiceOrderType = 'HOTEL' | 'TRANSPORT' | 'TOUR' | 'TICKETS' | 'PREPAYMENT' | 'INVOICE';
 export type ServiceOrderStatus = 'PENDING' | 'IN_PROGRESS' | 'WAITING_INFO' | 'DONE' | 'CANCELLED';
 export type ServiceOrderPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
+export type ServiceOrderChecklistStatus = 'PENDING' | 'DONE' | 'SKIPPED';
+export type ServiceOrderStageStatus = 'PENDING' | 'ACTIVE' | 'DONE' | 'SKIPPED';
 
 export interface ServiceOrderChecklistItem {
   itemId: string;
   label: string;
-  status: 'PENDING' | 'DONE' | 'SKIPPED';
+  required?: boolean;
+  helpText?: string;
+  status: ServiceOrderChecklistStatus;
   doneAt?: string | null;
   doneBy?: string | null;
+}
+
+export interface ServiceOrderStageSnapshot {
+  code: string;
+  label: string;
+  description?: string;
+  color?: string;
+  order: number;
+  isFinal?: boolean;
+  requireCommentOnEnter?: boolean;
+  requireCommentOnComplete?: boolean;
+  requiredAttachments?: string[];
+  status: ServiceOrderStageStatus;
+  startedAt?: string | null;
+  completedAt?: string | null;
+  checklist: ServiceOrderChecklistItem[];
 }
 
 export interface ServiceOrderAuditLog {
@@ -47,6 +67,7 @@ export interface ServiceOrderFinancials {
 
 export interface ServiceOrder {
   _id: string;
+  file_id?: string;
   contactId: string;
   soldQuoterId: string;
   sourceQuoterId: string;
@@ -58,6 +79,12 @@ export interface ServiceOrder {
   priority: ServiceOrderPriority;
   assigneeId?: string | null;
   dueDate?: string | null;
+  workflowTemplateId?: string | null;
+  workflowTemplateCode?: string;
+  workflowTemplateName?: string;
+  currentStageCode?: string;
+  currentStageLabel?: string;
+  stagesSnapshot?: ServiceOrderStageSnapshot[];
   dependencies: Array<{ dependsOnOrderId: string; relation: 'BLOCKING' | 'RELATED' }>;
   checklist: ServiceOrderChecklistItem[];
   sourceSnapshot: any;
@@ -93,12 +120,37 @@ export interface ServiceOrderFilters {
   contactId?: string;
 }
 
+export interface ServiceOrderTemplateChecklistItem {
+  itemId: string;
+  label: string;
+  required?: boolean;
+  helpText?: string;
+}
+
+export interface ServiceOrderTemplateStage {
+  code: string;
+  label: string;
+  description?: string;
+  color?: string;
+  order: number;
+  isFinal?: boolean;
+  requireCommentOnEnter?: boolean;
+  requireCommentOnComplete?: boolean;
+  requiredAttachments?: string[];
+  checklistTemplate: ServiceOrderTemplateChecklistItem[];
+}
+
 export interface ServiceOrderTemplate {
   _id?: string;
+  code?: string;
+  name: string;
+  active?: boolean;
+  isDefault?: boolean;
   type: ServiceOrderType;
   area: ServiceOrderArea;
   defaultPriority: ServiceOrderPriority;
   slaDays: number;
   blocking: boolean;
-  checklistTemplate: Array<{ itemId: string; label: string }>;
+  defaultStageCode: string;
+  stages: ServiceOrderTemplateStage[];
 }

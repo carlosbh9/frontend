@@ -95,30 +95,9 @@ export const routes: Routes = [
                     (m) => m.ServiceOrderTemplatesPageComponent
                   ),
               },
-              // {
-              //   path: 'booking-list',
-              //   loadComponent: () =>
-              //     import('./pages-quoter/booking-form/booking-list/booking-list.component').then(
-              //       (m) => m.BookingListComponent
-              //     ),
-              // },
-
-
             ],
           },
-          // {
-          //   path: 'tariff',
-          //   loadComponent: () => import('./pages/menu-tariff/menu-tariff.component').then((m) => m.MenuTariffComponent ),
-          //   canActivate: [authGuard],
-          //   data: { permission: 'view_tariff'},
-          //   children:[
-          //     {
-          //       path: 'tariff-v2',
-          //       loadComponent: () =>
-          //         import('./pages/tariff-v2/tariff-v2.component').then((m) => m.TariffV2Component)
-          //     }
-          //   ]
-          // },
+
            {
             path: 'tariff-v2',
             loadComponent: () => import('./pages/tariff-v2/tariff-v2.component').then((m) => m.TariffV2Component),

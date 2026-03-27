@@ -1,57 +1,77 @@
-<!--sidenav -->
-<div [ngClass]="{'translate-x-0': isOpen, '-translate-x-full': !isOpen}" class="fixed left-0 top-0 w-64 h-full bg-brand p-4 z-50 sidebar-menu transition-transform">
-  <!-- bg-[#f8f4f3] -->
-    <a href="#" class="grid grid-cols-1 items-center justify-center pb-4 border-b border-b-gray-800">
-        <img src="/images/image.png" class="h-10 mx-auto">
-        <h2 class="font-bold text-2xl mx-auto">Quoter</h2>
-    </a>
-    <ul class="mt-4">
-        <!-- *hasRole="['admin','ventas','TD','OPE']" -->
-        <li *hasPermission="['view_tariff']" class="mb-1 group">
-            <a  routerLink="tariff-v2" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
-                <i class='bx bx-money-withdraw mr-3 text-lg'></i>
-                <span class="text-sm">Tariff menu</span>
-            </a>
-        </li>
-        <!-- *hasRole="['admin','ventas','TD']" -->
-        <li *hasPermission="['view_quoter']" class="mb-1 group">
-            <a  routerLink="quoter-main/quoter-list" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
-                <i class='bx bx-task mr-3 text-lg'></i>
-                <span class="text-sm">Ventas</span>
-            </a>
-        </li>
-        <li *hasPermission="['view_quoter']" class="mb-1 group">
-            <a  routerLink="quoter-main/service-orders" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
-                <i class='bx bx-list-check mr-3 text-lg'></i>
-                <span class="text-sm">Service Orders</span>
-            </a>
-        </li>
-        <li *hasPermission="['view_users']" class="mb-1 group">
-            <a  routerLink="quoter-main/service-order-templates" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
-                <i class='bx bx-slider-alt mr-3 text-lg'></i>
-                <span class="text-sm">Order Templates</span>
-            </a>
-        </li>
-         <li class="mb-1 group">
-            <a  routerLink="operations/biblia" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
-                <i class='bx bx-smile mr-3 text-lg'></i>
-                <span class="text-sm">Operaciones</span>
-            </a>
-        </li>
-        <!-- <li class="mb-1 group">
-            <a  routerLink="" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
-                <i class='bx bx-money mr-3 text-lg'></i>
-                <span class="text-sm">Tesoreria</span>
-            </a>
-        </li> -->
-        <!-- *hasRole="['admin']" -->
-          <li *hasPermission="['view_users']" class="mb-1 group">
-            <a  routerLink="manageUsers" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
-                <i class='bx bxs-user-detail mr-3 text-lg'></i>
-                <span class="text-sm">Users</span>
-            </a>
-        </li>
-    </ul>
-</div>
-<div class="fixed top-0 left-0 w-full h-full bg-black/50 z-40 md:hidden sidebar-overlay"></div>
-<!-- end sidenav -->
+<aside
+  [ngClass]="isOpen ? 'translate-x-0 md:translate-x-0' : '-translate-x-full md:-translate-x-full'"
+  class="sidebar-shell fixed left-0 top-0 z-50 flex h-full w-64 flex-col bg-indigo-100 p-4"
+>
+  <div class="grid grid-cols-1 items-center justify-center border-b border-b-gray-800 pb-4">
+    <img src="/images/image.png" class="mx-auto h-10" alt="Quoter logo">
+    <h2 class="mx-auto text-2xl font-bold text-gray-900">Quoter</h2>
+  </div>
+
+  <div class="mt-4 flex-1 overflow-y-auto">
+    <nav class="space-y-2">
+      <section
+        *ngFor="let group of visibleGroups(); trackBy: trackByGroup"
+        class="group"
+      >
+        <button
+          type="button"
+          (click)="toggleGroup(group.id)"
+          class="flex w-full items-start gap-3 rounded-md px-4 py-2 text-left font-semibold text-gray-900 transition-colors duration-100 hover:bg-gray-950 hover:text-gray-100"
+          [ngClass]="isGroupActive(group) ? 'bg-white text-gray-800' : ''"
+        >
+          <i [class]="group.icon + ' mt-0.5 text-lg'"></i>
+          <div class="min-w-0 flex-1 pr-2">
+            <div class="flex items-center justify-between gap-3">
+              <h3 class="text-sm">{{ group.label }}</h3>
+              <i
+                class="bx bx-chevron-down text-lg transition-transform"
+                [class.rotate-180]="isGroupOpen(group.id)"
+              ></i>
+            </div>
+          </div>
+        </button>
+
+        <div *ngIf="isGroupOpen(group.id)" class="pb-1 pl-4 pr-1 pt-1">
+          <ul class="space-y-1">
+            <li *ngFor="let item of group.items; trackBy: trackByItem">
+              <a
+                *ngIf="item.route; else actionItem"
+                [routerLink]="item.route"
+                (click)="handleItem(item)"
+                class="flex items-start gap-3 rounded-md px-4 py-2 text-gray-900 transition-colors duration-100 hover:bg-gray-950 hover:text-gray-100"
+                [ngClass]="isItemActive(item) ? 'bg-white text-gray-800' : ''"
+              >
+                <i [class]="item.icon + ' mt-0.5 text-lg'"></i>
+                <span class="min-w-0 flex-1">
+                  <span class="block text-sm font-semibold">{{ item.label }}</span>
+                </span>
+              </a>
+
+              <ng-template #actionItem>
+                <button
+                  type="button"
+                  (click)="handleItem(item)"
+                  [disabled]="launchingItinerary() && item.action === 'openItineraryBuilder'"
+                  class="flex w-full items-start gap-3 rounded-md px-4 py-2 text-left text-gray-900 transition-colors duration-100 hover:bg-gray-950 hover:text-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <i [class]="item.icon + ' mt-0.5 text-lg'"></i>
+                  <span class="min-w-0 flex-1">
+                    <span class="block text-sm font-semibold">{{ item.label }}</span>
+                  </span>
+                </button>
+              </ng-template>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </nav>
+  </div>
+</aside>
+
+<button
+  *ngIf="isOpen"
+  type="button"
+  (click)="onCloseSidebar()"
+  class="sidebar-overlay fixed left-0 top-0 z-40 h-full w-full bg-black/50 md:hidden"
+  aria-label="Close sidebar"
+></button>

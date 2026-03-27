@@ -1,7 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { FooterComponent } from '../footer/footer.component';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -14,8 +13,8 @@ import { CommonModule } from '@angular/common';
   providers:[]
 })
 export class LayoutComponent {
- 
   isSidebarOpen = true;
+
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
   }

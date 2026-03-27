@@ -1,5 +1,5 @@
 import { HttpInterceptorFn,HttpErrorResponse } from '@angular/common/http';
-import { catchError, throwError , EMPTY} from 'rxjs';
+import { catchError, throwError } from 'rxjs';
 import { toast } from 'ngx-sonner';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
@@ -49,8 +49,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         });
       }
 
-      // Completar el observable sin propagar el error
-      return EMPTY;
+      return throwError(() => error);
     })
   );
 };

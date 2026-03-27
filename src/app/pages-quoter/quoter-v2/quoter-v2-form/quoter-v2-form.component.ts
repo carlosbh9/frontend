@@ -154,7 +154,7 @@ export class QuoterV2FormComponent implements OnInit {
   }
 
   private getErrorMessage(error: any, fallback: string): string {
-    return error?.error?.message || error?.message || fallback;
+    return error?.error?.error || error?.error?.message || error?.message || fallback;
   }
 
   denormalizeQuoterForForm(quoter: any) {
@@ -231,6 +231,29 @@ export class QuoterV2FormComponent implements OnInit {
         price_pp: this.toNumber(quoter.total_prices.price_pp),
         porcentajeTD: this.toNumber(quoter.total_prices.porcentajeTD),
       }
+    };
+  }
+
+  private buildCreatePayload(quoter: any) {
+    const normalized = this.normalizeQuoterForPersistence(quoter);
+    const {
+      _id,
+      id,
+      createdAt,
+      updatedAt,
+      soldAt,
+      soldBy,
+      booking_file_id,
+      status,
+      ...rest
+    } = normalized;
+
+    return {
+      ...rest,
+      status: 'DRAFT',
+      booking_file_id: null,
+      soldAt: null,
+      soldBy: null,
     };
   }
 
@@ -375,7 +398,7 @@ export class QuoterV2FormComponent implements OnInit {
       return;
     }
     try {
-      const payload = this.normalizeQuoterForPersistence(this.newQuoter);
+      const payload = this.buildCreatePayload(this.newQuoter);
       await this.quoterService.createQuoter(payload);
       toast.success('Quoter V2 added');
       this.closeModalVersion();

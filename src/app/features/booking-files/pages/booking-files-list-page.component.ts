@@ -16,13 +16,13 @@ import { BookingFile } from '../data-access/booking-files.types';
           <div class="flex flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
             <div class="min-w-0">
               <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-100">
-                Files Overview
+                Master Files
               </div>
               <h1 class="mt-3 text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
-                Booking Files
+                Travel Files
               </h1>
               <p class="mt-1 max-w-2xl text-sm text-slate-600">
-                Review all confirmed travel files, their operational state, and access each file detail quickly.
+                Each File is the master post-sales dossier: summary statuses, risk, next action, and linked execution orders.
               </p>
             </div>
 
@@ -41,10 +41,10 @@ import { BookingFile } from '../data-access/booking-files.types';
             <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <h2 class="text-sm font-semibold text-slate-900">Files List</h2>
-                <p class="mt-1 text-sm text-slate-600">Track booking files by operational, reservation, and payment status.</p>
+                <p class="mt-1 text-sm text-slate-600">The list leads. Use the summary signals to spot risky or blocked trips fast.</p>
               </div>
 
-              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
                 <input
                   class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-600"
                   [ngModel]="query()"
@@ -52,35 +52,41 @@ import { BookingFile } from '../data-access/booking-files.types';
                   (keyup.enter)="resetAndLoad()"
                   placeholder="Search file code or ID"
                 />
-                <select class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600" [ngModel]="operationStatus()" (ngModelChange)="operationStatus.set($event); resetAndLoad()">
-                  <option value="">All operations</option>
+                <select class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600" [ngModel]="overallStatus()" (ngModelChange)="overallStatus.set($event); resetAndLoad()">
+                  <option value="">All overall statuses</option>
                   <option value="PENDING">Pending</option>
                   <option value="ACTIVE">Active</option>
+                  <option value="AT_RISK">At Risk</option>
+                  <option value="READY">Ready</option>
                   <option value="COMPLETED">Completed</option>
                   <option value="CANCELLED">Cancelled</option>
                 </select>
-                <select class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600" [ngModel]="reservationStatus()" (ngModelChange)="reservationStatus.set($event); resetAndLoad()">
-                  <option value="">All reservations</option>
+                <select class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600" [ngModel]="operationsStatus()" (ngModelChange)="operationsStatus.set($event); resetAndLoad()">
+                  <option value="">All operations</option>
+                  <option value="NOT_STARTED">Not started</option>
                   <option value="PENDING">Pending</option>
+                  <option value="IN_PROGRESS">In Progress</option>
                   <option value="PARTIAL">Partial</option>
-                  <option value="CONFIRMED">Confirmed</option>
+                  <option value="COMPLETED">Completed</option>
+                  <option value="BLOCKED">Blocked</option>
                   <option value="CANCELLED">Cancelled</option>
                 </select>
-                <select class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600" [ngModel]="paymentStatus()" (ngModelChange)="paymentStatus.set($event); resetAndLoad()">
+                <select class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600" [ngModel]="paymentsStatus()" (ngModelChange)="paymentsStatus.set($event); resetAndLoad()">
                   <option value="">All payments</option>
-                  <option value="PENDING">Pending</option>
-                  <option value="PARTIAL">Partial</option>
-                  <option value="PAID">Paid</option>
-                  <option value="REFUNDED">Refunded</option>
                   <option value="NOT_REQUIRED">Not required</option>
+                  <option value="PENDING">Pending</option>
+                  <option value="IN_PROGRESS">In Progress</option>
+                  <option value="PARTIAL">Partial</option>
+                  <option value="COMPLETED">Completed</option>
+                  <option value="BLOCKED">Blocked</option>
                 </select>
-                <button
-                  type="button"
-                  class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
-                  (click)="resetAndLoad()"
-                >
-                  Search
-                </button>
+                <select class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600" [ngModel]="riskLevel()" (ngModelChange)="riskLevel.set($event); resetAndLoad()">
+                  <option value="">All risk levels</option>
+                  <option value="LOW">Low</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="HIGH">High</option>
+                  <option value="CRITICAL">Critical</option>
+                </select>
               </div>
             </div>
           </div>
@@ -89,12 +95,14 @@ import { BookingFile } from '../data-access/booking-files.types';
             <table class="min-w-full divide-y divide-slate-200 text-sm">
               <thead class="bg-slate-50">
                 <tr>
-                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Guest</th>
-                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Contact</th>
-                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Travel</th>
-                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Operation</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">File</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Contact / Travel</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Overall</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Operations</th>
                   <th class="px-4 py-3 text-left font-semibold text-slate-600">Reservations</th>
                   <th class="px-4 py-3 text-left font-semibold text-slate-600">Payments</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Passenger Info</th>
+                  <th class="px-4 py-3 text-left font-semibold text-slate-600">Risk / Next Action</th>
                   <th class="px-4 py-3 text-left font-semibold text-slate-600">Actions</th>
                 </tr>
               </thead>
@@ -107,12 +115,33 @@ import { BookingFile } from '../data-access/booking-files.types';
                     </td>
                     <td class="px-4 py-4">
                       <div class="font-medium text-slate-900">{{ resolveName(file.contact_id) || '-' }}</div>
-                      <div class="text-xs text-slate-500">{{ file._id }}</div>
+                      <div class="text-xs text-slate-500">{{ file.travel_date_start || '-' }} {{ file.travel_date_end ? 'to ' + file.travel_date_end : '' }}</div>
                     </td>
-                    <td class="px-4 py-4 text-slate-600">{{ file.travel_date_start || '-' }} {{ file.travel_date_end ? 'to ' + file.travel_date_end : '' }}</td>
-                    <td class="px-4 py-4"><span class="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 ring-1 ring-inset ring-amber-200">{{ file.operation_status }}</span></td>
-                    <td class="px-4 py-4"><span class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-200">{{ file.reservation_status }}</span></td>
-                    <td class="px-4 py-4"><span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-200">{{ file.payment_status }}</span></td>
+                    <td class="px-4 py-4"><span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">{{ file.overall_status }}</span></td>
+                    <td class="px-4 py-4"><span class="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 ring-1 ring-inset ring-amber-200">{{ file.operations_status }}</span></td>
+                    <td class="px-4 py-4"><span class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-200">{{ file.reservations_status }}</span></td>
+                    <td class="px-4 py-4"><span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-200">{{ file.payments_status }}</span></td>
+                    <td class="px-4 py-4">
+                      <div class="space-y-1">
+                        <span class="inline-flex items-center rounded-full bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-700 ring-1 ring-inset ring-violet-200">{{ file.passenger_info_status?.status || 'NOT_SENT' }}</span>
+                        <div class="text-xs text-slate-500">{{ file.passenger_info_status?.completion_percentage || 0 }}% complete</div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-4">
+                      <div class="space-y-1">
+                        <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
+                          [ngClass]="{
+                            'bg-emerald-50 text-emerald-700 ring-emerald-200': file.risk_level === 'LOW',
+                            'bg-amber-50 text-amber-700 ring-amber-200': file.risk_level === 'MEDIUM',
+                            'bg-orange-50 text-orange-700 ring-orange-200': file.risk_level === 'HIGH',
+                            'bg-rose-50 text-rose-700 ring-rose-200': file.risk_level === 'CRITICAL'
+                          }"
+                        >
+                          {{ file.risk_level }}
+                        </span>
+                        <div class="text-xs text-slate-500">{{ file.next_action || 'No next action defined' }}</div>
+                      </div>
+                    </td>
                     <td class="px-4 py-4">
                       <button class="inline-flex items-center justify-center rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50" (click)="openFile(file._id)">
                         Open File
@@ -122,7 +151,7 @@ import { BookingFile } from '../data-access/booking-files.types';
                 }
                 @if (!loading() && !error() && !files().length) {
                   <tr>
-                    <td colspan="7" class="px-4 py-10 text-center text-sm text-slate-500">No booking files found.</td>
+                    <td colspan="9" class="px-4 py-10 text-center text-sm text-slate-500">No booking files found.</td>
                   </tr>
                 }
               </tbody>
@@ -161,9 +190,10 @@ export class BookingFilesListPageComponent implements OnInit {
   readonly page = signal(1);
   readonly pageSize = signal(20);
   readonly total = signal(0);
-  readonly operationStatus = signal('');
-  readonly reservationStatus = signal('');
-  readonly paymentStatus = signal('');
+  readonly overallStatus = signal('');
+  readonly operationsStatus = signal('');
+  readonly paymentsStatus = signal('');
+  readonly riskLevel = signal('');
   readonly query = signal('');
 
   readonly totalPages = signal(1);
@@ -182,9 +212,10 @@ export class BookingFilesListPageComponent implements OnInit {
         page: this.page(),
         pageSize: this.pageSize(),
         q: this.query().trim(),
-        operation_status: this.operationStatus(),
-        reservation_status: this.reservationStatus(),
-        payment_status: this.paymentStatus()
+        overall_status: this.overallStatus(),
+        operations_status: this.operationsStatus(),
+        payments_status: this.paymentsStatus(),
+        risk_level: this.riskLevel()
       });
       this.files.set(response.items || []);
       this.total.set(response.total || 0);

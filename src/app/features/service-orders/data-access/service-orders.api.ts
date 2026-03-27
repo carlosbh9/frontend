@@ -43,6 +43,10 @@ export class ServiceOrdersApi {
     return firstValueFrom(this.http.patch<ServiceOrder>(`${this.baseUrl}/${id}/checklist/${itemId}`, { done }));
   }
 
+  async updateStage(id: string, stageCode: string, comment = ''): Promise<ServiceOrder> {
+    return firstValueFrom(this.http.patch<ServiceOrder>(`${this.baseUrl}/${id}/stage`, { stageCode, comment }));
+  }
+
   async updateFinancials(id: string, payload: Partial<ServiceOrderFinancials>): Promise<ServiceOrder> {
     return firstValueFrom(this.http.patch<ServiceOrder>(`${this.baseUrl}/${id}/financials`, payload));
   }

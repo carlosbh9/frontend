@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { toast } from 'ngx-sonner';
 import { BookingFilesApi } from '../data-access/booking-files.api';
 import { BookingFile } from '../data-access/booking-files.types';
 
@@ -18,11 +19,81 @@ export class BookingFilePageComponent implements OnInit {
   readonly bookingFile = signal<BookingFile | null>(null);
   readonly loading = signal(false);
   readonly error = signal('');
+  readonly activeTab = signal<'overview' | 'summary' | 'orders'>('overview');
 
   readonly contact = computed(() => this.bookingFile()?.contact_id as any);
   readonly quoter = computed(() => this.bookingFile()?.quoter_id as any);
   readonly orders = computed(() => this.bookingFile()?.service_order_ids || []);
   readonly itinerary = computed(() => this.bookingFile()?.itinerary_snapshot || {});
+  readonly summaryCards = computed(() => {
+    const file = this.bookingFile();
+    if (!file) return [];
+    return [
+      { label: 'Overall', value: file.overall_status, tone: 'slate' },
+      { label: 'Operations', value: file.operations_status, tone: 'amber' },
+      { label: 'Reservations', value: file.reservations_status, tone: 'blue' },
+      { label: 'Payments', value: file.payments_status, tone: 'emerald' },
+      { label: 'Deliverables', value: file.deliverables_status, tone: 'violet' },
+      { label: 'Passenger Info', value: file.passenger_info_status?.status || 'NOT_SENT', tone: 'indigo' }
+    ];
+  });
+  readonly attentionCards = computed(() => {
+    const orders = this.orders();
+    const now = new Date();
+    const overdue = orders.filter((order) => order.status !== 'DONE' && order.status !== 'CANCELLED' && order.dueDate && new Date(order.dueDate) < now);
+    const blocked = orders.filter((order) => order.status === 'WAITING_INFO');
+    const dueToday = orders.filter((order) => {
+      if (!order.dueDate || order.status === 'DONE' || order.status === 'CANCELLED') return false;
+      const due = new Date(order.dueDate).toISOString().slice(0, 10);
+      const today = new Date().toISOString().slice(0, 10);
+      return due === today;
+    });
+
+    return [
+      { label: 'Blocked Orders', value: blocked.length, tone: 'rose', helper: blocked.length ? 'These need input before moving forward.' : 'No blocked orders right now.' },
+      { label: 'Overdue Orders', value: overdue.length, tone: 'amber', helper: overdue.length ? 'These are past due and should be reviewed first.' : 'No overdue orders.' },
+      { label: 'Due Today', value: dueToday.length, tone: 'blue', helper: dueToday.length ? 'These orders need attention today.' : 'Nothing due today.' }
+    ];
+  });
+  readonly ordersByArea = computed(() => {
+    const source = this.orders();
+    const groups = [
+      { key: 'RESERVAS', label: 'Reservations' },
+      { key: 'OPERACIONES', label: 'Operations' },
+      { key: 'CONTABILIDAD', label: 'Accounting' },
+      { key: 'PAGOS', label: 'Payments' }
+    ];
+
+    return groups.map((group) => {
+      const items = source.filter((order) => order.area === group.key);
+      const total = items.length;
+      const pending = items.filter((order) => order.status === 'PENDING').length;
+      const inProgress = items.filter((order) => order.status === 'IN_PROGRESS').length;
+      const blocked = items.filter((order) => order.status === 'WAITING_INFO').length;
+      const done = items.filter((order) => order.status === 'DONE').length;
+      const safeTotal = total || 1;
+      return {
+        ...group,
+        total,
+        pending,
+        inProgress,
+        blocked,
+        done,
+        pendingPct: Math.round((pending / safeTotal) * 100),
+        inProgressPct: Math.round((inProgress / safeTotal) * 100),
+        blockedPct: Math.round((blocked / safeTotal) * 100),
+        donePct: Math.round((done / safeTotal) * 100)
+      };
+    });
+  });
+  readonly tabItems = computed(() => {
+    const orderCount = this.orders().length;
+    return [
+      { id: 'overview' as const, label: 'Overview', meta: this.itineraryLines().length ? `${this.itineraryLines().length} itinerary lines` : 'Trip baseline' },
+      { id: 'summary' as const, label: 'Summary', meta: this.summaryCards().length ? `${this.summaryCards().length} summary signals` : 'Master statuses' },
+      { id: 'orders' as const, label: 'Orders', meta: `${orderCount} related orders` }
+    ];
+  });
 
   readonly kpis = computed(() => {
     const orders = this.orders();
@@ -129,10 +200,33 @@ export class BookingFilePageComponent implements OnInit {
     }
   }
 
+  async recalculateSummary(): Promise<void> {
+    const fileId = this.bookingFile()?._id;
+    if (!fileId) return;
+
+    try {
+      const updated = await this.api.recalculateSummary(fileId);
+      this.bookingFile.set(updated);
+      toast.success('File summary recalculated');
+    } catch (error: any) {
+      toast.error(error?.error?.error || error?.error?.message || 'Could not recalculate file summary');
+    }
+  }
+
+  setTab(tab: 'overview' | 'summary' | 'orders'): void {
+    this.activeTab.set(tab);
+  }
+
   openServiceOrders(): void {
     const contactId = this.contact()?._id;
     if (!contactId) return;
     void this.router.navigate(['/dashboard/quoter-main/service-orders/contact', contactId]);
+  }
+
+  openBibliaForTravelDate(): void {
+    const targetDate = this.bookingFile()?.travel_date_start;
+    if (!targetDate) return;
+    void this.router.navigate(['/dashboard/operations/biblia'], { queryParams: { date: targetDate } });
   }
 
   openQuote(): void {
