@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Role } from '../../interfaces/user.interface';
+import { PermissionsCatalogResponse, Role } from '../../interfaces/user.interface';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../enviroments/environment';
@@ -49,6 +49,15 @@ async createRole(role: any): Promise<any> {
     return res;
   } catch (error) {
     console.log('Error while trying to create Role: ', error);
+    throw error;
+  }
+}
+
+async getPermissionsCatalog(): Promise<PermissionsCatalogResponse> {
+  try {
+    return await firstValueFrom(this.http.get<PermissionsCatalogResponse>(`${this.baseUrl}/permissions-catalog`));
+  } catch (error) {
+    console.log('Error while trying to get permissions catalog: ', error);
     throw error;
   }
 }

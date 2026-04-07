@@ -5,6 +5,7 @@ export interface NavigationItem {
   icon: string;
   route?: string;
   permissions?: string[];
+  permissionMode?: 'all' | 'any';
   matchRoutes?: string[];
   action?: 'openItineraryBuilder';
 }
@@ -15,6 +16,7 @@ export interface NavigationGroup {
   description: string;
   icon: string;
   permissions?: string[];
+  permissionMode?: 'all' | 'any';
   items: NavigationItem[];
 }
 
@@ -115,13 +117,14 @@ export const navigationConfig: NavigationGroup[] = [
         permissions: ['view_quoter'],
         matchRoutes: ['quoter-main/service-orders'],
       },
-       {
+      {
         id: 'service-order-templates',
         label: 'Order Templates',
         description: 'Plantillas para service orders.',
         icon: 'bx bx-slider-alt',
         route: 'quoter-main/service-order-templates',
-        permissions: ['view_users'],
+        permissions: ['view_users', 'service_order_templates.manage'],
+        permissionMode: 'any',
         matchRoutes: ['quoter-main/service-order-templates'],
       },
       {

@@ -36,7 +36,7 @@ export class SidebarComponent {
 
   readonly visibleGroups = computed(() =>
     this.groups
-      .filter((group) => this.canAccess(group.permissions))
+      .filter((group) => this.canAccess(group.permissions, group.permissionMode))
       .map((group) => ({
         ...group,
         items: this.getVisibleItems(group),
@@ -123,12 +123,16 @@ export class SidebarComponent {
   }
 
   private getVisibleItems(group: NavigationGroup): NavigationItem[] {
-    return group.items.filter((item) => this.canAccess(item.permissions));
+    return group.items.filter((item) => this.canAccess(item.permissions, item.permissionMode));
   }
 
-  private canAccess(requiredPermissions?: string[]): boolean {
+  private canAccess(requiredPermissions?: string[], permissionMode: 'all' | 'any' = 'all'): boolean {
     if (!requiredPermissions?.length) {
       return true;
+    }
+
+    if (permissionMode === 'any') {
+      return requiredPermissions.some((permission) => this.userPermissions.includes(permission));
     }
 
     return requiredPermissions.every((permission) => this.userPermissions.includes(permission));

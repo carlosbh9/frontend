@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../enviroments/environment';
-import { BibliaDailyItem, BookingFile } from './booking-files.types';
+import { BibliaDailyItem, BookingFile, OperationalItinerary, OperationalItineraryItemDetail } from './booking-files.types';
 
 @Injectable({ providedIn: 'root' })
 export class BookingFilesApi {
@@ -37,6 +37,18 @@ export class BookingFilesApi {
 
   async getSummary(id: string): Promise<Partial<BookingFile>> {
     return firstValueFrom(this.http.get<Partial<BookingFile>>(`${this.baseUrl}/${id}/summary`));
+  }
+
+  async getOperationalItinerary(id: string): Promise<OperationalItinerary> {
+    return firstValueFrom(this.http.get<OperationalItinerary>(`${this.baseUrl}/${id}/operational-itinerary`));
+  }
+
+  async rebuildOperationalItinerary(id: string): Promise<OperationalItinerary> {
+    return firstValueFrom(this.http.post<OperationalItinerary>(`${this.baseUrl}/${id}/operational-itinerary/rebuild`, {}));
+  }
+
+  async updateOperationalItineraryItem(id: string, itemId: string, payload: { detail?: Partial<OperationalItineraryItemDetail>; sort_time?: string; city?: string; title?: string; subtitle?: string }): Promise<OperationalItinerary> {
+    return firstValueFrom(this.http.patch<OperationalItinerary>(`${this.baseUrl}/${id}/operational-itinerary/items/${itemId}`, payload));
   }
 
   async getBibliaDaily(params: { date: string; area?: string; status?: string }): Promise<{ date: string; items: BibliaDailyItem[]; total: number }> {

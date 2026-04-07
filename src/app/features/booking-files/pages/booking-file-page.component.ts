@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { BookingFilesApi } from '../data-access/booking-files.api';
-import { BookingFile } from '../data-access/booking-files.types';
+import { BookingFile, OperationalItinerary, OperationalItineraryItem, OperationalItineraryItemDetail } from '../data-access/booking-files.types';
 
 @Component({
   selector: 'app-booking-file-page',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './booking-file-page.component.html'
 })
 export class BookingFilePageComponent implements OnInit {
@@ -19,12 +20,50 @@ export class BookingFilePageComponent implements OnInit {
   readonly bookingFile = signal<BookingFile | null>(null);
   readonly loading = signal(false);
   readonly error = signal('');
-  readonly activeTab = signal<'overview' | 'summary' | 'orders'>('overview');
+  readonly activeTab = signal<'overview' | 'summary' | 'orders' | 'detailed'>('overview');
+  readonly savingDetail = signal(false);
+  readonly rebuildingItinerary = signal(false);
+  readonly editingItemId = signal('');
+  readonly editingDayLabel = signal('');
+  readonly editingItemTitle = signal('');
+  readonly editingItemCity = signal('');
+  readonly detailDraft = signal<OperationalItineraryItemDetail>({
+    status: 'PENDING',
+    start_time: '',
+    end_time: '',
+    pickup_time: '',
+    meeting_point: '',
+    responsible_name: '',
+    supplier_name: '',
+    supplier_contact: '',
+    applies_to_mode: 'ALL_PAX',
+    applies_to_refs: [],
+    notes: ''
+  });
 
   readonly contact = computed(() => this.bookingFile()?.contact_id as any);
   readonly quoter = computed(() => this.bookingFile()?.quoter_id as any);
   readonly orders = computed(() => this.bookingFile()?.service_order_ids || []);
   readonly itinerary = computed(() => this.bookingFile()?.itinerary_snapshot || {});
+  readonly operationalItinerary = computed<OperationalItinerary>(() => this.bookingFile()?.operational_itinerary || {
+    generated_from_snapshot_at: null,
+    updated_at: null,
+    updated_by: null,
+    completion_percentage: 0,
+    days: []
+  });
+  readonly operationalDays = computed(() => this.operationalItinerary().days || []);
+  readonly operationalStats = computed(() => {
+    const days = this.operationalDays();
+    const items = days.flatMap((day) => day.items || []);
+    return {
+      completion: this.operationalItinerary().completion_percentage || 0,
+      total: items.length,
+      ready: items.filter((item) => item.detail?.status === 'READY').length,
+      inProgress: items.filter((item) => item.detail?.status === 'IN_PROGRESS').length,
+      pending: items.filter((item) => item.detail?.status === 'PENDING').length
+    };
+  });
   readonly summaryCards = computed(() => {
     const file = this.bookingFile();
     if (!file) return [];
@@ -88,10 +127,12 @@ export class BookingFilePageComponent implements OnInit {
   });
   readonly tabItems = computed(() => {
     const orderCount = this.orders().length;
+    const operational = this.operationalStats();
     return [
       { id: 'overview' as const, label: 'Overview', meta: this.itineraryLines().length ? `${this.itineraryLines().length} itinerary lines` : 'Trip baseline' },
       { id: 'summary' as const, label: 'Summary', meta: this.summaryCards().length ? `${this.summaryCards().length} summary signals` : 'Master statuses' },
-      { id: 'orders' as const, label: 'Orders', meta: `${orderCount} related orders` }
+      { id: 'orders' as const, label: 'Orders', meta: `${orderCount} related orders` },
+      { id: 'detailed' as const, label: 'Detailed Itinerary', meta: operational.total ? `${operational.ready}/${operational.total} ready` : 'Operational timeline' }
     ];
   });
 
@@ -213,8 +254,88 @@ export class BookingFilePageComponent implements OnInit {
     }
   }
 
-  setTab(tab: 'overview' | 'summary' | 'orders'): void {
+  setTab(tab: 'overview' | 'summary' | 'orders' | 'detailed'): void {
     this.activeTab.set(tab);
+  }
+
+  beginEditItem(dayLabel: string, item: OperationalItineraryItem): void {
+    this.editingDayLabel.set(dayLabel);
+    this.editingItemId.set(item.item_id);
+    this.detailDraft.set({
+      status: item.detail?.status || 'PENDING',
+      start_time: item.detail?.start_time || '',
+      end_time: item.detail?.end_time || '',
+      pickup_time: item.detail?.pickup_time || '',
+      meeting_point: item.detail?.meeting_point || '',
+      responsible_name: item.detail?.responsible_name || '',
+      supplier_name: item.detail?.supplier_name || '',
+      supplier_contact: item.detail?.supplier_contact || '',
+      applies_to_mode: item.detail?.applies_to_mode || 'ALL_PAX',
+      applies_to_refs: item.detail?.applies_to_refs || [],
+      notes: item.detail?.notes || ''
+    });
+    this.editingItemTitle.set(item.title || '');
+    this.editingItemCity.set(item.city || '');
+  }
+
+  cancelEditItem(): void {
+    this.editingDayLabel.set('');
+    this.editingItemId.set('');
+    this.editingItemTitle.set('');
+    this.editingItemCity.set('');
+  }
+
+  async saveDetailItem(): Promise<void> {
+    const fileId = this.bookingFile()?._id;
+    const itemId = this.editingItemId();
+    if (!fileId || !itemId) return;
+
+    this.savingDetail.set(true);
+    try {
+      const nextItinerary = await this.api.updateOperationalItineraryItem(fileId, itemId, {
+        city: this.editingItemCity(),
+        detail: this.detailDraft()
+      });
+      this.bookingFile.update((current) => current ? { ...current, operational_itinerary: nextItinerary } : current);
+      this.cancelEditItem();
+      toast.success('Detailed itinerary item updated');
+    } catch (error: any) {
+      toast.error(error?.error?.error || error?.error?.message || 'Could not update itinerary details');
+    } finally {
+      this.savingDetail.set(false);
+    }
+  }
+
+  updateDraft<K extends keyof OperationalItineraryItemDetail>(key: K, value: OperationalItineraryItemDetail[K]): void {
+    this.detailDraft.update((current) => ({
+      ...current,
+      [key]: value
+    }));
+  }
+
+  updateEditingCity(value: string): void {
+    this.editingItemCity.set(value);
+  }
+
+  async rebuildOperationalItinerary(): Promise<void> {
+    const fileId = this.bookingFile()?._id;
+    if (!fileId) return;
+
+    this.rebuildingItinerary.set(true);
+    try {
+      const nextItinerary = await this.api.rebuildOperationalItinerary(fileId);
+      this.bookingFile.update((current) => current ? { ...current, operational_itinerary: nextItinerary } : current);
+      this.cancelEditItem();
+      toast.success('Operational itinerary rebuilt from the sold snapshot');
+    } catch (error: any) {
+      toast.error(error?.error?.error || error?.error?.message || 'Could not rebuild operational itinerary');
+    } finally {
+      this.rebuildingItinerary.set(false);
+    }
+  }
+
+  isEditingItem(itemId: string): boolean {
+    return this.editingItemId() === itemId;
   }
 
   openServiceOrders(): void {

@@ -18,7 +18,8 @@ export const authGuard: CanActivateFn = (route, state) => {
       return true;
     }
   
-    const requiredPermission = route.data['permission'] as string;
+    const requiredPermission = route.data['permission'] as string | string[] | undefined;
+    const permissionMode = (route.data['permissionMode'] as 'all' | 'any' | undefined) || 'all';
 
     // const requiredRole :string[]= route.data?.['role'] || [];
     // if (requiredRole) {
@@ -27,9 +28,16 @@ export const authGuard: CanActivateFn = (route, state) => {
     //     return false;
     //   }
     // }
-    if (userRole &&  !userPermissions.includes(requiredPermission)) {
-      router.navigate(['/dashboard']);
-      return false;
+    if (requiredPermission) {
+      const permissions = Array.isArray(requiredPermission) ? requiredPermission : [requiredPermission];
+      const hasRequiredPermissions = permissionMode === 'any'
+        ? permissions.some((permission) => userPermissions.includes(permission))
+        : permissions.every((permission) => userPermissions.includes(permission));
+
+      if (userRole && !hasRequiredPermissions) {
+        router.navigate(['/dashboard']);
+        return false;
+      }
     }
 
   return true;

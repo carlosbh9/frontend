@@ -1,55 +1,115 @@
 <div class="min-h-full bg-slate-50">
   <div class="mx-auto max-w space-y-6 p-4 sm:p-6">
-    <section class="rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <div class="flex flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
-        <div class="min-w-0">
-          <div class="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100">
-            Daily Execution Board
+    <section class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+      <div class="border-b border-slate-100 px-5 py-5 sm:px-6">
+        <div class="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div class="min-w-0">
+            <div class="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100">
+              Daily Travel Board
+            </div>
+            <h1 class="mt-3 text-2xl font-semibold tracking-tight text-slate-900">
+              Biblia
+            </h1>
+            <p class="mt-1 max-w-3xl text-sm text-slate-600">
+              One day at a glance. Navigate the week and review every service in a compact operational board without losing the full picture.
+            </p>
           </div>
-          <h1 class="mt-3 text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
-            Biblia
-          </h1>
-          <p class="mt-1 max-w-2xl text-sm text-slate-600">
-            Daily derived board built from Files, itinerary snapshots, and related service orders. Biblia is a view, not a master record.
-          </p>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              class="inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
+              (click)="moveSelectedDay(-1)"
+            >
+              Prev Day
+            </button>
+            <button
+              type="button"
+              class="inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
+              (click)="jumpToToday()"
+            >
+              Today
+            </button>
+            <button
+              type="button"
+              class="inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
+              (click)="moveSelectedDay(1)"
+            >
+              Next Day
+            </button>
+            <button
+              type="button"
+              class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
+              (click)="load()"
+            >
+              Refresh
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-5 px-5 py-5 sm:px-6">
+        <div class="overflow-x-auto">
+          <div class="flex min-w-max items-stretch gap-3">
+            @for (day of weekDays(); track day.iso) {
+              <button
+                type="button"
+                class="min-w-[110px] rounded-2xl px-4 py-3 text-left transition ring-1 ring-inset"
+                [ngClass]="day.isSelected
+                  ? 'bg-slate-900 text-white ring-slate-900 shadow-sm'
+                  : day.isToday
+                    ? 'bg-indigo-50 text-indigo-900 ring-indigo-200'
+                    : 'bg-white text-slate-700 ring-slate-200 hover:bg-slate-50'"
+                (click)="selectDay(day.iso)"
+              >
+                <div class="text-xs font-semibold uppercase tracking-wide"
+                  [ngClass]="day.isSelected ? 'text-slate-300' : day.isToday ? 'text-indigo-600' : 'text-slate-500'">
+                  {{ day.dayName }}
+                </div>
+                <div class="mt-2 text-2xl font-semibold">{{ day.dayNumber }}</div>
+                <div class="mt-1 text-xs"
+                  [ngClass]="day.isSelected ? 'text-slate-300' : day.isToday ? 'text-indigo-600' : 'text-slate-500'">
+                  {{ day.monthLabel }}
+                </div>
+              </button>
+            }
+          </div>
         </div>
 
-        <button
-          type="button"
-          class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
-          (click)="load()"
-        >
-          Refresh
-        </button>
+        <div class="grid grid-cols-2 gap-3 lg:grid-cols-5">
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Selected Day</p>
+            <p class="mt-2 text-lg font-semibold text-slate-900">{{ formatDateLabel(dateFilter()) }}</p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Files</p>
+            <p class="mt-2 text-2xl font-semibold text-slate-900">{{ kpis().totalFiles }}</p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Services</p>
+            <p class="mt-2 text-2xl font-semibold text-slate-900">{{ kpis().totalItems }}</p>
+          </div>
+          <div class="rounded-2xl border border-indigo-200 bg-indigo-50 p-4">
+            <p class="text-xs font-medium uppercase tracking-wide text-indigo-700">With Time</p>
+            <p class="mt-2 text-2xl font-semibold text-indigo-900">{{ kpis().withTime }}</p>
+          </div>
+          <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+            <p class="text-xs font-medium uppercase tracking-wide text-amber-700">Pending Time</p>
+            <p class="mt-2 text-2xl font-semibold text-amber-900">{{ kpis().pendingTime }}</p>
+          </div>
+        </div>
       </div>
     </section>
 
     <section class="grid grid-cols-1 gap-6 xl:grid-cols-12">
-      <div class="space-y-6 xl:col-span-4">
-        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div class="space-y-6 xl:col-span-3">
+        <div class="rounded-3xl border border-slate-200 bg-white shadow-sm">
           <div class="border-b border-slate-100 p-5">
             <h2 class="text-sm font-semibold text-slate-900">Filters</h2>
-            <p class="mt-1 text-sm text-slate-600">Focus the derived daily view by travel date, operational area, or execution status.</p>
+            <p class="mt-1 text-sm text-slate-600">Trim the day view without leaving the board.</p>
           </div>
 
           <div class="space-y-4 p-5">
-            <div>
-              <label class="block text-sm font-medium text-slate-700">Execution date</label>
-              <input
-                type="date"
-                class="mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                [ngModel]="dateFilter()"
-                (ngModelChange)="dateFilter.set($event); load()"
-              />
-              <button
-                type="button"
-                class="mt-2 text-xs font-semibold text-slate-500 hover:text-slate-700"
-                (click)="clearDateFilter()"
-              >
-                Clear date filter
-              </button>
-            </div>
-
             <div>
               <label class="block text-sm font-medium text-slate-700">Area</label>
               <select
@@ -75,6 +135,7 @@
                 <option value="">All statuses</option>
                 <option value="PENDING">Pending</option>
                 <option value="IN_PROGRESS">In Progress</option>
+                <option value="READY">Ready</option>
                 <option value="WAITING_INFO">Waiting Info</option>
                 <option value="DONE">Done</option>
                 <option value="CANCELLED">Cancelled</option>
@@ -83,33 +144,45 @@
           </div>
         </div>
 
-        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="rounded-3xl border border-slate-200 bg-white shadow-sm">
           <div class="border-b border-slate-100 p-5">
-            <h2 class="text-sm font-semibold text-slate-900">Visible Summary</h2>
-            <p class="mt-1 text-sm text-slate-600">Live counters for the current filter set.</p>
+            <h2 class="text-sm font-semibold text-slate-900">Files In View</h2>
+            <p class="mt-1 text-sm text-slate-600">Compact summary per file for the selected day.</p>
           </div>
-          <div class="grid grid-cols-2 gap-3 p-5">
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Total</p>
-              <p class="mt-2 text-2xl font-semibold text-slate-900">{{ kpis().total }}</p>
-            </div>
-            <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4">
-              <p class="text-xs font-medium uppercase tracking-wide text-amber-700">Pending</p>
-              <p class="mt-2 text-2xl font-semibold text-amber-900">{{ kpis().pending }}</p>
-            </div>
-            <div class="rounded-2xl border border-blue-200 bg-blue-50 p-4">
-              <p class="text-xs font-medium uppercase tracking-wide text-blue-700">In Progress</p>
-              <p class="mt-2 text-2xl font-semibold text-blue-900">{{ kpis().inProgress }}</p>
-            </div>
-            <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
-              <p class="text-xs font-medium uppercase tracking-wide text-emerald-700">Done</p>
-              <p class="mt-2 text-2xl font-semibold text-emerald-900">{{ kpis().done }}</p>
-            </div>
+
+          <div class="max-h-[70vh] space-y-3 overflow-y-auto p-4">
+            @for (file of rowsByFile(); track file.key) {
+              <button
+                type="button"
+                class="w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left transition hover:bg-white"
+                (click)="openBookingFile(file)"
+              >
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0">
+                    <div class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ file.fileCode }}</div>
+                    <div class="mt-2 truncate text-sm font-semibold text-slate-900">{{ file.guest }}</div>
+                    <div class="mt-1 text-xs text-slate-500">{{ file.items.length }} items</div>
+                  </div>
+                  <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
+                    {{ file.risk_level }}
+                  </span>
+                </div>
+                @if (file.next_action) {
+                  <p class="mt-3 text-xs text-slate-600">{{ file.next_action }}</p>
+                }
+              </button>
+            }
+
+            @if (!rowsByFile().length && !loading() && !error()) {
+              <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 text-sm text-slate-500">
+                No files for this day and filter set.
+              </div>
+            }
           </div>
         </div>
 
         @if (loading()) {
-          <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
             <div class="flex items-center gap-3 text-sm text-slate-600">
               <svg class="h-4 w-4 animate-spin text-slate-400" viewBox="0 0 24 24" fill="none">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -121,71 +194,137 @@
         }
 
         @if (error()) {
-          <div class="rounded-2xl border border-rose-200 bg-rose-50 p-4 shadow-sm">
+          <div class="rounded-3xl border border-rose-200 bg-rose-50 p-4 shadow-sm">
             <p class="text-sm font-medium text-rose-700">{{ error() }}</p>
           </div>
         }
       </div>
 
-      <div class="space-y-6 xl:col-span-8">
-        @for (group of groupedRows(); track group.key) {
-          <section class="rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div class="border-b border-slate-100 p-5">
-              <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <h2 class="text-sm font-semibold text-slate-900">{{ group.label }}</h2>
-              <p class="mt-1 text-sm text-slate-600">Daily rows derived from active travel files for this date.</p>
-                </div>
-                <div class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-                  {{ group.rows.length }} items
-                </div>
+      <div class="xl:col-span-9">
+        <section class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+          <div class="border-b border-slate-100 px-5 py-5 sm:px-6">
+            <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <h2 class="text-base font-semibold text-slate-900">Daily Schedule Board</h2>
+                <p class="mt-1 text-sm text-slate-600">
+                  Compact schedule of all services for {{ formatDateLabel(dateFilter()) }}, ordered from earliest to latest using the start time.
+                </p>
+              </div>
+              <div class="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                {{ scheduleRows().length }} total rows
               </div>
             </div>
+          </div>
 
-            <div class="overflow-x-auto p-5">
-              <table class="min-w-full divide-y divide-slate-200 text-sm">
-                <thead class="bg-slate-50">
-                  <tr>
-                    <th class="px-4 py-3 text-left font-semibold text-slate-600">File / Guest</th>
-                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Daily Item</th>
-                    <th class="px-4 py-3 text-left font-semibold text-slate-600">City</th>
-                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Area</th>
-                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Execution</th>
-                    <th class="px-4 py-3 text-left font-semibold text-slate-600">File Status</th>
-                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Notes</th>
-                    <th class="px-4 py-3 text-left font-semibold text-slate-600">Actions</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 bg-white">
-                  @for (row of group.rows; track row.file_id + '-' + row.title + '-' + row.execution_date) {
-                    <tr class="hover:bg-slate-50/80">
-                      <td class="px-4 py-3">
-                        <div class="font-medium text-slate-900">{{ row.fileCode }}</div>
-                        <div class="text-xs text-slate-500">{{ row.guest }}</div>
-                        <div class="text-xs text-slate-500">{{ formatDateLabel(row.execution_date) }}</div>
-                      </td>
-                      <td class="px-4 py-3">
-                        <div class="font-medium text-slate-900">{{ row.title }}</div>
-                        <div class="text-xs text-slate-500">{{ row.detail || row.section }}</div>
-                      </td>
-                      <td class="px-4 py-3 text-slate-600">{{ row.city }}</td>
-                      <td class="px-4 py-3 text-slate-600">{{ row.area || '-' }}</td>
-                      <td class="px-4 py-3">
-                        <div class="flex flex-col gap-2">
-                          <span class="inline-flex w-fit items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
+          <div class="max-h-[78vh] overflow-auto">
+            <table class="min-w-full divide-y divide-slate-200 text-sm">
+              <thead class="sticky top-0 z-10 bg-white">
+                <tr class="border-b border-slate-200 bg-slate-50/90 backdrop-blur">
+                  <th class="whitespace-nowrap px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Time</th>
+                  <th class="whitespace-nowrap px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">File</th>
+                  <th class="whitespace-nowrap px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Guest</th>
+                  <th class="whitespace-nowrap px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Service</th>
+                  <th class="whitespace-nowrap px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">City</th>
+                  <th class="whitespace-nowrap px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Responsible</th>
+                  <th class="whitespace-nowrap px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Detail</th>
+                  <th class="whitespace-nowrap px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Order</th>
+                  <th class="whitespace-nowrap px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody class="divide-y divide-slate-100 bg-white">
+                @for (row of scheduleRows(); track row.file_id + '-' + row.item_id + '-' + row.title) {
+                  <tr class="align-top hover:bg-slate-50/70">
+                    <td class="px-3 py-3">
+                      <div class="min-w-[120px]">
+                        <div class="text-sm font-semibold text-slate-900">{{ formatTimeRange(row) }}</div>
+                        @if (row.pickup_time) {
+                          <div class="mt-1 text-[11px] text-slate-500">Pickup {{ row.pickup_time }}</div>
+                        }
+                      </div>
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <button
+                        type="button"
+                        class="rounded-lg px-2.5 py-1 text-xs font-semibold ring-1 ring-inset hover:brightness-95"
+                        [ngClass]="{
+                          'bg-slate-100 text-slate-700 ring-slate-200': fileTone(row.file_id || row.fileCode) === 'slate',
+                          'bg-blue-100 text-blue-800 ring-blue-200': fileTone(row.file_id || row.fileCode) === 'blue',
+                          'bg-emerald-100 text-emerald-800 ring-emerald-200': fileTone(row.file_id || row.fileCode) === 'emerald',
+                          'bg-amber-100 text-amber-800 ring-amber-200': fileTone(row.file_id || row.fileCode) === 'amber',
+                          'bg-rose-100 text-rose-800 ring-rose-200': fileTone(row.file_id || row.fileCode) === 'rose',
+                          'bg-violet-100 text-violet-800 ring-violet-200': fileTone(row.file_id || row.fileCode) === 'violet',
+                          'bg-cyan-100 text-cyan-800 ring-cyan-200': fileTone(row.file_id || row.fileCode) === 'cyan',
+                          'bg-orange-100 text-orange-800 ring-orange-200': fileTone(row.file_id || row.fileCode) === 'orange'
+                        }"
+                        (click)="openBookingFile(row)"
+                      >
+                        {{ row.fileCode }}
+                      </button>
+                      <div class="mt-2 text-[11px] text-slate-500">Day {{ row.day || 0 }}</div>
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <div class="min-w-[140px] text-sm font-medium text-slate-900">{{ row.guest }}</div>
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <div class="min-w-[260px]">
+                        <div class="flex flex-wrap items-center gap-2">
+                          <span class="inline-flex items-center rounded-full bg-white/80 px-2 py-0.5 text-[11px] font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
+                            {{ row.section }}
+                          </span>
+                          @if (row.meeting_point) {
+                            <span class="inline-flex items-center rounded-full bg-white/80 px-2 py-0.5 text-[11px] font-medium text-slate-600 ring-1 ring-inset ring-slate-200">
+                              {{ row.meeting_point }}
+                            </span>
+                          }
+                        </div>
+                        <div class="mt-2 text-sm font-semibold text-slate-900">{{ row.title }}</div>
+                        @if (row.detail) {
+                          <div class="mt-1 line-clamp-2 text-[11px] text-slate-500">{{ row.detail }}</div>
+                        }
+                      </div>
+                    </td>
+
+                    <td class="px-3 py-3 text-sm text-slate-600">{{ row.city || '-' }}</td>
+
+                    <td class="px-3 py-3">
+                      <div class="min-w-[140px] text-sm text-slate-700">{{ row.responsible || 'Pending' }}</div>
+                      @if (row.supplier_name) {
+                        <div class="mt-1 text-[11px] text-slate-500">{{ row.supplier_name }}</div>
+                      }
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <span class="inline-flex items-center rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-semibold ring-1 ring-inset"
+                        [ngClass]="{
+                          'text-amber-700 ring-amber-200': row.detail_status === 'PENDING',
+                          'text-blue-700 ring-blue-200': row.detail_status === 'IN_PROGRESS',
+                          'text-emerald-700 ring-emerald-200': row.detail_status === 'READY'
+                        }"
+                      >
+                        {{ row.detail_status }}
+                      </span>
+                    </td>
+
+                    <td class="px-3 py-3">
+                      @if (row.service_order_ids.length) {
+                        <div class="flex min-w-[120px] flex-col gap-2">
+                          <span class="inline-flex w-fit items-center rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-semibold ring-1 ring-inset"
                             [ngClass]="{
-                              'bg-amber-50 text-amber-700 ring-amber-200': row.execution_status === 'PENDING',
-                              'bg-blue-50 text-blue-700 ring-blue-200': row.execution_status === 'IN_PROGRESS',
-                              'bg-emerald-50 text-emerald-700 ring-emerald-200': row.execution_status === 'DONE',
-                              'bg-rose-50 text-rose-700 ring-rose-200': row.execution_status === 'CANCELLED',
-                              'bg-slate-100 text-slate-700 ring-slate-200': row.execution_status === 'WAITING_INFO'
+                              'text-amber-700 ring-amber-200': row.execution_status === 'PENDING',
+                              'text-blue-700 ring-blue-200': row.execution_status === 'IN_PROGRESS',
+                              'text-emerald-700 ring-emerald-200': row.execution_status === 'DONE' || row.execution_status === 'READY',
+                              'text-rose-700 ring-rose-200': row.execution_status === 'CANCELLED',
+                              'text-slate-700 ring-slate-200': row.execution_status === 'WAITING_INFO'
                             }"
                           >
                             {{ row.execution_status }}
                           </span>
-                          @if (row.service_order_ids.length) {
                           <select
-                            class="rounded-lg bg-white px-2.5 py-2 text-xs text-slate-700 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                            class="rounded-lg bg-white px-2 py-1.5 text-[11px] text-slate-700 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                             [ngModel]="row.execution_status"
                             (ngModelChange)="updateOrderStatus(row, $event)"
                           >
@@ -195,56 +334,51 @@
                             <option value="DONE">Done</option>
                             <option value="CANCELLED">Cancelled</option>
                           </select>
-                          }
                         </div>
-                      </td>
-                      <td class="px-4 py-3">
-                        <div class="flex flex-col gap-2">
-                          <span class="inline-flex w-fit items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
-                            {{ row.overall_status }}
-                          </span>
-                          <span class="text-xs text-slate-500">
-                            Risk: {{ row.risk_level }}{{ row.next_action ? ' | ' + row.next_action : '' }}
-                          </span>
-                        </div>
-                      </td>
-                      <td class="px-4 py-3 text-slate-600">{{ row.observations || row.notes || '-' }}</td>
-                      <td class="px-4 py-3">
-                        <div class="flex flex-wrap items-center gap-2">
-                          @if (row.service_order_ids.length) {
-                            <button
+                      } @else {
+                        <span class="inline-flex items-center rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-semibold text-slate-600 ring-1 ring-inset ring-slate-200">
+                          No order
+                        </span>
+                      }
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <div class="flex min-w-[110px] flex-col gap-2">
+                        <button
+                          type="button"
+                          class="inline-flex items-center justify-center rounded-lg bg-white/80 px-2.5 py-1.5 text-[11px] font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-white"
+                          (click)="openBookingFile(row)"
+                        >
+                          File
+                        </button>
+                        @if (row.contact_id) {
+                          <button
                             type="button"
-                            class="inline-flex items-center rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
+                            class="inline-flex items-center justify-center rounded-lg bg-white/80 px-2.5 py-1.5 text-[11px] font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-white"
                             (click)="openContactOrders(row)"
                           >
                             Orders
                           </button>
-                          }
-                          <button
-                            type="button"
-                            class="inline-flex items-center rounded-lg px-3 py-2 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-indigo-50"
-                            (click)="openBookingFile(row)"
-                          >
-                            File
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-          </section>
-        }
+                        }
+                      </div>
+                    </td>
+                  </tr>
+                }
 
-        @if (!loading() && !error() && !groupedRows().length) {
-          <section class="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-            <h2 class="text-base font-semibold text-slate-900">No daily file rows found</h2>
-            <p class="mt-2 text-sm text-slate-600">
-              Adjust the filters or change the date to review the derived daily travel view.
-            </p>
-          </section>
-        }
+                @if (!loading() && !error() && !scheduleRows().length) {
+                  <tr>
+                    <td colspan="9" class="px-4 py-12 text-center">
+                      <div class="text-base font-semibold text-slate-900">No operational items found for this day</div>
+                      <div class="mt-2 text-sm text-slate-600">
+                        Change the date or complete the Detailed Itinerary inside each File so Biblia has something meaningful to show.
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
       </div>
     </section>
   </div>

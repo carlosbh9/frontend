@@ -1,0 +1,29 @@
+:host {
+  display: block;
+}
+
+.manage-users-shell {
+  background:
+    radial-gradient(circle at top left, rgba(148, 163, 184, 0.12), transparent 22%),
+    radial-gradient(circle at top right, rgba(226, 232, 240, 0.68), transparent 28%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+}
+
+.permission-scroll {
+  max-height: 54vh;
+  overflow-y: auto;
+  padding-right: 0.15rem;
+}
+
+.permission-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.permission-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.permission-scroll::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.38);
+  border-radius: 999px;
+}

@@ -89,7 +89,7 @@ export const routes: Routes = [
               {
                 path: 'service-order-templates',
                 canActivate: [authGuard],
-                data: { permission: 'view_users' },
+                data: { permission: ['view_users', 'service_order_templates.manage'], permissionMode: 'any' },
                 loadComponent: () =>
                   import('./features/service-orders/pages/service-order-templates-page.component').then(
                     (m) => m.ServiceOrderTemplatesPageComponent
@@ -117,8 +117,7 @@ export const routes: Routes = [
             children:[
               {
                 path: 'biblia',
-                loadComponent: () =>
-                  import('./operations/biblia/biblia.component').then((m) => m.BibliaComponent)
+                loadComponent: () => import('./operations/biblia/biblia.component').then((m) => m.BibliaComponent)
               },
               {
                 path:'reservations',
