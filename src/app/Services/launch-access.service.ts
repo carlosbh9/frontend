@@ -18,25 +18,25 @@ interface LaunchTokenResponse {
 export class LaunchAccessService {
   private readonly baseUrl = `${environment.apiUrl}/itinerary-launch`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  async openItineraryBuilder(quoterId?: string): Promise<void> {
-    const payload = quoterId ? { quoterId } : {};
-    const response = await firstValueFrom(
-      this.http.post<LaunchTokenResponse>(`${this.baseUrl}/token`, payload)
-    );
+  // async openItineraryBuilder(quoterId?: string): Promise<void> {
+  //   const payload = quoterId ? { quoterId } : {};
+  //   const response = await firstValueFrom(
+  //     this.http.post<LaunchTokenResponse>(`${this.baseUrl}/token`, payload)
+  //   );
 
-    const launchToken = response?.data?.launchToken;
-    if (!launchToken) {
-      throw new Error('Launch token was not generated');
-    }
+  //   const launchToken = response?.data?.launchToken;
+  //   if (!launchToken) {
+  //     throw new Error('Launch token was not generated');
+  //   }
 
-    const targetBase = environment.itineraryBuilderUrl || 'http://localhost:65425/launch';
-    const launchUrl = new URL(targetBase);
-    const fragmentParams = new URLSearchParams();
-    fragmentParams.set('lt', launchToken);
-    launchUrl.hash = fragmentParams.toString();
+  //   const targetBase = environment.itineraryBuilderUrl || 'http://localhost:65425/launch';
+  //   const launchUrl = new URL(targetBase);
+  //   const fragmentParams = new URLSearchParams();
+  //   fragmentParams.set('lt', launchToken);
+  //   launchUrl.hash = fragmentParams.toString();
 
-    window.open(launchUrl.toString(), '_blank', 'noopener,noreferrer');
-  }
+  //   window.open(launchUrl.toString(), '_blank', 'noopener,noreferrer');
+  // }
 }

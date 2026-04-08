@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { toast } from 'ngx-sonner';
 import {
@@ -18,7 +18,8 @@ import { UsersService } from '../Services/Users/users.service';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './manage-users.component.html',
-  styleUrl: './manage-users.component.css'
+  styleUrl: './manage-users.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageUsersComponent implements OnInit {
   private readonly usersService = inject(UsersService);

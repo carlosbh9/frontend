@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../enviroments/environment';
+import { ConfirmSalePayload } from '../interfaces/sale-notification.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -41,8 +42,8 @@ export class QuoterV2Service {
     return firstValueFrom(this.http.delete<any>(`${this.baseUrl}/quoters/${id}`));
   }
 
-  async confirmSale(id: string, fileCode: string): Promise<any> {
-    return firstValueFrom(this.http.post<any>(`${this.baseUrl}/quoters/${id}/confirm-sale`, { fileCode }));
+  async confirmSale(id: string, payload: ConfirmSalePayload): Promise<any> {
+    return firstValueFrom(this.http.post<any>(`${this.baseUrl}/quoters/${id}/confirm-sale`, payload));
   }
 
   async calculatePrices(payload: any): Promise<any> {

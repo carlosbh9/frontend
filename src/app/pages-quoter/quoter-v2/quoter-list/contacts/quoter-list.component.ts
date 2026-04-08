@@ -1,5 +1,5 @@
-import { Component,effect,inject ,OnInit,signal} from '@angular/core';
-import { Router,ActivatedRoute } from '@angular/router';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Form, FormGroup, FormsModule, Validators, ReactiveFormsModule, FormBuilder, FormArray } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -9,21 +9,21 @@ import { PdfexportService } from '../../../../Services/pdfexport/pdfexport.servi
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2'
 import { ExportExcelService } from '../../../../Services/exportExcel/export-excel.service';
-import { Contact ,Quoter} from '../../../../interfaces/contact.interface';
+import { Contact, Quoter } from '../../../../interfaces/contact.interface';
 import { toast } from 'ngx-sonner';
 import { LaunchAccessService } from '../../../../Services/launch-access.service';
 
-import {CdkDragDrop,transferArrayItem,moveItemInArray,DragDropModule} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, transferArrayItem, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @Component({
   selector: 'app-quoter-list',
   standalone: true,
-  imports: [CommonModule,FormsModule,RouterModule,SweetAlert2Module, ReactiveFormsModule,DragDropModule],
+  imports: [CommonModule, FormsModule, RouterModule, SweetAlert2Module, ReactiveFormsModule, DragDropModule],
   templateUrl: './quoter-list.component.html',
   styleUrl: './quoter-list.component.css'
 })
-export class QuoterListComponent implements OnInit{
+export class QuoterListComponent implements OnInit {
   quoterV2Service = inject(QuoterV2Service)
   contactService = inject(ContactService)
   pdfExportService = inject(PdfexportService)
@@ -39,12 +39,19 @@ export class QuoterListComponent implements OnInit{
   view: 'list' | 'kanban' = 'list';
 
   isModalAddContact = signal(false);
+  isConfirmSaleModalOpen = signal(false);
   isEdit = signal(false);
-  currentContact: Contact  = {
+  confirmSaleLoading = signal(false);
+  currentContact: Contact = {
     name: '',
-    td_designed:'',
-    status:'',
+    td_designed: '',
+    status: '',
   };
+  saleModalContact: Contact | null = null;
+  saleModalCotization: Quoter | null = null;
+  saleFileCode = '';
+  saleNotifyEmails = '';
+  saleModalError = '';
   contacts: Contact[] = []
   //array kanban status
   wipContacts: Contact[] = [];
@@ -72,23 +79,23 @@ export class QuoterListComponent implements OnInit{
   getStatusClass(status: string): string {
     return this.statusColors[status] || 'bg-gray-100';
   }
-  constructor(private router: Router,private route: ActivatedRoute) {
-  effect(() => {
-    const page = this.currentPage()
-    const pageSize = this.itemsPerPage()
-    this.fetchContacts(page,pageSize)
-    console.log('Contacts fetched 4:', this.filteredContacts);
+  constructor(private router: Router, private route: ActivatedRoute) {
+    effect(() => {
+      const page = this.currentPage()
+      const pageSize = this.itemsPerPage()
+      this.fetchContacts(page, pageSize)
+      console.log('Contacts fetched 4:', this.filteredContacts);
 
-  },{allowSignalWrites: true});
-  effect(() => {
-    this.updatePaginatedContacts();
-  });
+    }, { allowSignalWrites: true });
+    effect(() => {
+      this.updatePaginatedContacts();
+    });
   }
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.initFormCotact();
   }
 
-  initFormCotact(){
+  initFormCotact() {
     this.contactFormGroup = this.fb.group({
       name: ['', Validators.required],
       td_designed: ['', Validators.required],
@@ -112,11 +119,11 @@ export class QuoterListComponent implements OnInit{
     }
   }
 
-  metodo(){
-     this.wipContacts   = this.filteredContacts.filter(c => c.status === 'WIP');
-      this.holdContacts = this.filteredContacts.filter(c => c.status === 'HOLD');
-      this.soldContacts  = this.filteredContacts.filter(c => c.status === 'SOLD');
-      this.lostContacts  = this.filteredContacts.filter(c => c.status === 'LOST');
+  metodo() {
+    this.wipContacts = this.filteredContacts.filter(c => c.status === 'WIP');
+    this.holdContacts = this.filteredContacts.filter(c => c.status === 'HOLD');
+    this.soldContacts = this.filteredContacts.filter(c => c.status === 'SOLD');
+    this.lostContacts = this.filteredContacts.filter(c => c.status === 'LOST');
   }
 
   // Método para filtrar los contactos según el nombre
@@ -146,15 +153,15 @@ export class QuoterListComponent implements OnInit{
   async deleteContact(id: string) {
     try {
       await this.contactService.deleteContact(id);
-      Swal.fire('Success','Record deleted','success')
-      this.fetchContacts(this.currentPage(),this.itemsPerPage());
+      Swal.fire('Success', 'Record deleted', 'success')
+      this.fetchContacts(this.currentPage(), this.itemsPerPage());
     } catch (error) {
       console.error('Error deleting contact', error);
     }
   }
-  editQuoter(id: string){
-    console.log('id',id)
-    this.router.navigate([`../quoter-v2-edit`,id],{ relativeTo: this.route });
+  editQuoter(id: string) {
+    console.log('id', id)
+    this.router.navigate([`../quoter-v2-edit`, id], { relativeTo: this.route });
   }
 
   editQuoterVersion(cotization: Quoter) {
@@ -162,11 +169,11 @@ export class QuoterListComponent implements OnInit{
     this.router.navigate([`../quoter-v2-edit`, cotization.quoter_id], { relativeTo: this.route });
   }
 
-  async deleteQuoter(id: string, quoterModel: 'v1' | 'v2' = 'v2'){
+  async deleteQuoter(id: string, quoterModel: 'v1' | 'v2' = 'v2') {
     try {
       await this.quoterV2Service.deleteQuoter(id);
-      Swal.fire('Success','Record deleted','success')
-      this.fetchContacts(this.currentPage(),this.itemsPerPage());
+      Swal.fire('Success', 'Record deleted', 'success')
+      this.fetchContacts(this.currentPage(), this.itemsPerPage());
     } catch (error) {
       console.error('Error deleting Quoter', error);
     }
@@ -182,7 +189,7 @@ export class QuoterListComponent implements OnInit{
       const updatedCotizations = contact?.cotizations?.map((cotization: Quoter) =>
         cotization.quoter_id === updatedCotization.quoter_id
           ? { ...cotization, status: updatedCotization.status }
-          : cotization );
+          : cotization);
       const soldQuoterId = updatedCotization.status === 'SOLD'
         ? updatedCotization.quoter_id
         : contact?.soldQuoterId;
@@ -210,40 +217,73 @@ export class QuoterListComponent implements OnInit{
     return cotization.status !== 'SOLD';
   }
 
-  async confirmSale(contact: Contact, cotization: Quoter): Promise<void> {
-    const quoterId = cotization.quoter_id;
-    if (!quoterId) return;
+  openConfirmSaleModal(contact: Contact, cotization: Quoter): void {
+    if (!cotization?.quoter_id) return;
 
-    const result = await Swal.fire({
-      title: 'Confirm sale',
-      text: 'This will create or update the booking file and generate service orders for operations.',
-      icon: 'question',
-      input: 'text',
-      inputLabel: 'File code',
-      inputPlaceholder: 'Example: AKT2025-6',
-      inputValue: '',
-      inputValidator: (value) => {
-        const fileCode = String(value || '').trim().toUpperCase();
-        if (!fileCode) return 'File code is required';
-        if (!/^[A-Z0-9-]+$/.test(fileCode)) {
-          return 'Use only letters, numbers, and hyphen';
-        }
-        return null;
-      },
-      showCancelButton: true,
-      confirmButtonText: 'Confirm sale',
-      cancelButtonText: 'Cancel'
-    });
+    this.saleModalContact = contact;
+    this.saleModalCotization = cotization;
+    this.saleFileCode = '';
+    this.saleNotifyEmails = '';
+    this.saleModalError = '';
+    this.confirmSaleLoading.set(false);
+    this.isConfirmSaleModalOpen.set(true);
+  }
 
-    if (!result.isConfirmed) {
+  closeConfirmSaleModal(): void {
+    if (this.confirmSaleLoading()) {
       return;
     }
 
+    this.isConfirmSaleModalOpen.set(false);
+    this.saleModalContact = null;
+    this.saleModalCotization = null;
+    this.saleFileCode = '';
+    this.saleNotifyEmails = '';
+    this.saleModalError = '';
+  }
+
+  private parseNotifyEmails(rawValue: string): string[] {
+    return String(rawValue || '')
+      .split(',')
+      .map((email) => email.trim().toLowerCase())
+      .filter(Boolean);
+  }
+
+  async submitConfirmSale(): Promise<void> {
+    const quoterId = this.saleModalCotization?.quoter_id;
+    if (!quoterId) return;
+
+    const fileCode = String(this.saleFileCode || '').trim().toUpperCase();
+    if (!fileCode) {
+      this.saleModalError = 'File code is required';
+      return;
+    }
+
+    if (!/^[A-Z0-9-]+$/.test(fileCode)) {
+      this.saleModalError = 'Use only letters, numbers, and hyphen';
+      return;
+    }
+
+    const notifyEmails = this.parseNotifyEmails(this.saleNotifyEmails);
+    const invalidEmail = notifyEmails.find((email) => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+    if (invalidEmail) {
+      this.saleModalError = `Invalid email: ${invalidEmail}`;
+      return;
+    }
+
+    this.saleModalError = '';
+    this.confirmSaleLoading.set(true);
+
     try {
-      const fileCode = String(result.value || '').trim().toUpperCase();
-      const response = await this.quoterV2Service.confirmSale(quoterId, fileCode);
+      const response = await this.quoterV2Service.confirmSale(quoterId, { fileCode, notifyEmails });
       await this.fetchContacts(this.currentPage(), this.itemsPerPage());
-      toast.success('Sale confirmed successfully');
+      const notification = response?.notification;
+      if (notification?.sent) {
+        toast.success(`Sale confirmed and notification sent to ${notification.recipients.length} recipient(s)`);
+      } else {
+        toast.success('Sale confirmed successfully');
+      }
+      this.closeConfirmSaleModal();
 
       const bookingFileId = response?.bookingFile?._id;
       if (bookingFileId) {
@@ -265,7 +305,9 @@ export class QuoterListComponent implements OnInit{
         response: error?.error,
         raw: error
       });
-      toast.error(backendMessage);
+      this.saleModalError = backendMessage;
+    } finally {
+      this.confirmSaleLoading.set(false);
     }
   }
 
@@ -279,15 +321,15 @@ export class QuoterListComponent implements OnInit{
 
   }
 
-  async generatePDF(id:string) {
+  async generatePDF(id: string) {
     const quoter = await this.quoterV2Service.getQuoterById(id)
     const dataURL = await this.pdfExportService.convertImageToDataURL('/images/image.png');
 
-    const docDefinition = this.pdfExportService.generatePdf(quoter,dataURL);
+    const docDefinition = this.pdfExportService.generatePdf(quoter, dataURL);
     this.pdfExportService.exportPdf(docDefinition);
 
   }
-  async generateExcel(id:string) {
+  async generateExcel(id: string) {
     const quoter = await this.quoterV2Service.getQuoterById(id)
     this.excelService.downloadQuotationAsExcel(quoter, `${quoter.guest}`);
 
@@ -311,7 +353,7 @@ export class QuoterListComponent implements OnInit{
 
     try {
       this.launchInProgressQuoterId = quoterId;
-      await this.launchAccessService.openItineraryBuilder(quoterId);
+      //await this.launchAccessService.openItineraryBuilder(quoterId);
     } catch (error) {
       console.error('Error opening itinerary builder with quoter:', error);
       toast.error('Could not open Itinerary Builder for this quoter');
@@ -336,16 +378,16 @@ export class QuoterListComponent implements OnInit{
     this.isModalAddContact.set(true);
 
   }
-  openmodaladdcontact(){
+  openmodaladdcontact() {
     this.isEdit.set(false);
     this.isModalAddContact.set(true);
   }
 
   saveContact() {
-    if(this.isEdit()){
+    if (this.isEdit()) {
       this.updateContact()
       console.log(this.isEdit())
-    }else{
+    } else {
       this.createContact()
     }
     this.closeModal();
@@ -360,7 +402,7 @@ export class QuoterListComponent implements OnInit{
     this.contactFormGroup.reset();
     this.cotizations.clear();
 
-   // this.currentContact = {null};
+    // this.currentContact = {null};
   }
 
   get totalPages(): number {
@@ -393,11 +435,11 @@ export class QuoterListComponent implements OnInit{
   async updateContact() {
 
     try {
-        const updatedContact = {...this.selectedContact,...this.contactFormGroup.value};
+      const updatedContact = { ...this.selectedContact, ...this.contactFormGroup.value };
 
-        await this.contactService.updateContact(updatedContact._id, updatedContact);
-        this.closeModal();
-        toast.success('Contact updated successfully');
+      await this.contactService.updateContact(updatedContact._id, updatedContact);
+      this.closeModal();
+      toast.success('Contact updated successfully');
     } catch (error) {
       toast.error(`Error updating contact: ${error}`);
     }
@@ -409,7 +451,7 @@ export class QuoterListComponent implements OnInit{
   }
 
 
- // inProgress: Contact[] = [{ _id: 'dwad', td_designed: 'dd', name: 'wdawdawd' },
+  // inProgress: Contact[] = [{ _id: 'dwad', td_designed: 'dd', name: 'wdawdawd' },
   //  { _id: 'aaaa', td_designed: 'aaaa', name: 'aaaaaa' }
   //]
 
@@ -419,42 +461,42 @@ export class QuoterListComponent implements OnInit{
 
   won: Contact[] = []
 
-async drop(event: CdkDragDrop<Contact[]>) {
-  if (event.previousContainer === event.container) {
-    /* Reordenar dentro de la MISMA columna */
-    moveItemInArray(
-      event.container.data,
-      event.previousIndex,
-      event.currentIndex
-    );
-  } else {
-    /* Pasar la tarjeta a OTRA columna */
-    transferArrayItem(
-      event.previousContainer.data, // array origen
-      event.container.data,         // array destino
-      event.previousIndex,
-      event.currentIndex
-    );
+  async drop(event: CdkDragDrop<Contact[]>) {
+    if (event.previousContainer === event.container) {
+      /* Reordenar dentro de la MISMA columna */
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    } else {
+      /* Pasar la tarjeta a OTRA columna */
+      transferArrayItem(
+        event.previousContainer.data, // array origen
+        event.container.data,         // array destino
+        event.previousIndex,
+        event.currentIndex
+      );
 
-     /* 2. Actualiza el campo status y lo envía a la API */
-    const moved = event.container.data[event.currentIndex] as Contact;
-    const newStatus = this.statusById(event.container.id);
-    moved.status = newStatus;
+      /* 2. Actualiza el campo status y lo envía a la API */
+      const moved = event.container.data[event.currentIndex] as Contact;
+      const newStatus = this.statusById(event.container.id);
+      moved.status = newStatus;
 
-    try {
-      if (typeof moved._id === 'string') {
-        await this.contactService.updateContact(moved._id, { status: newStatus });
-      } else {
-        throw new Error('Contact _id is missing or not a string');
+      try {
+        if (typeof moved._id === 'string') {
+          await this.contactService.updateContact(moved._id, { status: newStatus });
+        } else {
+          throw new Error('Contact _id is missing or not a string');
+        }
+      } catch (err) {
+        console.error('Error updating status', err);
+        // TODO: revertir cambio si falla
       }
-    } catch (err) {
-      console.error('Error updating status', err);
-      // TODO: revertir cambio si falla
     }
   }
-}
 
- trackById(index: number, item: Contact) {
+  trackById(index: number, item: Contact) {
     return item._id;
   }
   private statusById(id: string): 'WIP' | 'HOLD' | 'SOLD' | 'LOST' {

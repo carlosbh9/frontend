@@ -1,100 +1,115 @@
-<div class="rounded-2xl border border-gray-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-  <div class="border-b border-gray-100 p-4 sm:p-5 dark:border-slate-800">
+<div class="rounded-2xl border border-gray-100 bg-white shadow-sm ">
+  <div class="border-b border-gray-100 p-4 sm:p-5 ">
     <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
       <div>
-        <div class="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100 dark:bg-indigo-500/10 dark:text-indigo-300 dark:ring-indigo-500/20">
+        <div
+          class="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100">
           {{ 'tariff.header_badge' | translate }}
         </div>
-        <h3 class="mt-3 text-base font-semibold text-gray-900 sm:text-lg dark:text-slate-100">{{ 'tariff.header_title' | translate }}</h3>
-        <p class="mt-1 text-xs text-gray-500 sm:text-sm dark:text-slate-400">{{ 'tariff.header_description' | translate }}</p>
+        <h3 class="mt-3 text-base font-semibold text-gray-900 sm:text-lg ">{{ 'tariff.header_title' | translate }}</h3>
+        <p class="mt-1 text-xs text-gray-500 sm:text-sm ">{{ 'tariff.header_description' | translate }}</p>
       </div>
       <div class="flex flex-wrap items-center gap-3">
-        <label class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700">
+        <label
+          class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700">
           <span class="font-medium">{{ 'tariff.language' | translate }}</span>
-          <select [ngModel]="language()" (ngModelChange)="onLanguageChange($event)" class="rounded-lg border-0 bg-transparent pr-7 text-sm focus:outline-none">
+          <select [ngModel]="language()" (ngModelChange)="onLanguageChange($event)"
+            class="rounded-lg border-0 bg-transparent pr-7 text-sm focus:outline-none">
             <option value="en">{{ 'tariff.lang_en' | translate }}</option>
             <option value="es">{{ 'tariff.lang_es' | translate }}</option>
           </select>
         </label>
-      <div *hasPermission="['create_tariff']">
-        <button type="button" (click)="openCreateModal()" class="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700">
-          <i class="bx bx-plus text-lg"></i>
-          {{ 'tariff.add_item' | translate }}
-        </button>
-      </div>
+        <div *hasPermission="['create_tariff']">
+          <button type="button" (click)="openCreateModal()"
+            class="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700">
+            <i class="bx bx-plus text-lg"></i>
+            {{ 'tariff.add_item' | translate }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="p-4 sm:p-5 space-y-4">
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-5">
-      <input type="text" [ngModel]="query().q" (ngModelChange)="updateQuery('q', $event); onFilterChange()" placeholder="Search by name, code, provider..." class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 xl:col-span-2">
+      <input type="text" [ngModel]="query().q" (ngModelChange)="updateQuery('q', $event); onFilterChange()"
+        placeholder="Search by name, code, provider..."
+        class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 xl:col-span-2">
 
-      <select [ngModel]="query().type" (ngModelChange)="updateQuery('type', $event); onFilterChange()" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+      <select [ngModel]="query().type" (ngModelChange)="updateQuery('type', $event); onFilterChange()"
+        class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
         <option value="">All types</option>
         @for (type of options()?.types || []; track type) {
-          <option [value]="type">{{ type }}</option>
+        <option [value]="type">{{ type }}</option>
         }
       </select>
 
-      <select [ngModel]="query().category" (ngModelChange)="updateQuery('category', $event); onFilterChange()" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+      <select [ngModel]="query().category" (ngModelChange)="updateQuery('category', $event); onFilterChange()"
+        class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
         <option value="">All categories</option>
         @for (category of options()?.categories || []; track category) {
-          <option [value]="category">{{ category }}</option>
+        <option [value]="category">{{ category }}</option>
         }
       </select>
 
-      <select [ngModel]="query().status" (ngModelChange)="updateQuery('status', $event); onFilterChange()" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+      <select [ngModel]="query().status" (ngModelChange)="updateQuery('status', $event); onFilterChange()"
+        class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
         <option value="">All status</option>
         @for (status of options()?.statuses || []; track status) {
-          <option [value]="status">{{ status }}</option>
+        <option [value]="status">{{ status }}</option>
         }
       </select>
 
-      <select [ngModel]="query().provider" (ngModelChange)="updateQuery('provider', $event); onFilterChange()" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+      <select [ngModel]="query().provider" (ngModelChange)="updateQuery('provider', $event); onFilterChange()"
+        class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
         <option value="">All providers</option>
         @for (provider of filtersMeta().providers; track provider) {
-          <option [value]="provider">{{ provider }}</option>
+        <option [value]="provider">{{ provider }}</option>
         }
       </select>
 
-      <select [ngModel]="query().city" (ngModelChange)="updateQuery('city', $event); onFilterChange()" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+      <select [ngModel]="query().city" (ngModelChange)="updateQuery('city', $event); onFilterChange()"
+        class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
         <option value="">All cities</option>
         @for (city of filtersMeta().cities; track city) {
-          <option [value]="city">{{ city }}</option>
+        <option [value]="city">{{ city }}</option>
         }
       </select>
 
-      <select [ngModel]="query().year" (ngModelChange)="updateQuery('year', $event); onFilterChange()" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+      <select [ngModel]="query().year" (ngModelChange)="updateQuery('year', $event); onFilterChange()"
+        class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
         <option value="">All years</option>
         @for (year of filtersMeta().years; track year) {
-          <option [value]="year">{{ year }}</option>
+        <option [value]="year">{{ year }}</option>
         }
       </select>
 
-      <select [ngModel]="query().active" (ngModelChange)="updateQuery('active', $event); onFilterChange()" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+      <select [ngModel]="query().active" (ngModelChange)="updateQuery('active', $event); onFilterChange()"
+        class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
         <option value="">All activity</option>
         <option value="true">Active</option>
         <option value="false">Inactive</option>
       </select>
 
       <div class="grid grid-cols-2 gap-3">
-        <select [ngModel]="query().sortBy" (ngModelChange)="updateQuery('sortBy', $event); onFilterChange()" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+        <select [ngModel]="query().sortBy" (ngModelChange)="updateQuery('sortBy', $event); onFilterChange()"
+          class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
           @for (field of options()?.sortFields || []; track field) {
-            <option [value]="field">{{ field }}</option>
+          <option [value]="field">{{ field }}</option>
           }
         </select>
-        <select [ngModel]="query().sortDir" (ngModelChange)="updateQuery('sortDir', $event); onFilterChange()" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+        <select [ngModel]="query().sortDir" (ngModelChange)="updateQuery('sortDir', $event); onFilterChange()"
+          class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
           <option value="desc">Desc</option>
           <option value="asc">Asc</option>
         </select>
       </div>
     </div>
 
-    <div class="overflow-hidden rounded-2xl border border-gray-100 bg-white dark:border-slate-800 dark:bg-slate-900">
+    <div class="overflow-hidden rounded-2xl border border-gray-100 bg-white">
       <div class="overflow-x-auto">
         <table class="min-w-full">
-          <thead class="bg-gray-50 dark:bg-slate-800/60">
+          <thead class="bg-gray-50">
             <tr>
               <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Code</th>
               <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Name</th>
@@ -105,50 +120,57 @@
               <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Year</th>
               <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Pricing</th>
               <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Status</th>
-              <th *hasPermission="['actions_tariff']" class="w-40 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Actions</th>
+              <th *hasPermission="['actions_tariff']"
+                class="w-40 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Actions
+              </th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100 dark:divide-slate-800">
+          <tbody class="divide-y divide-gray-100">
             @if (loading()) {
-              <tr>
-                <td colspan="10" class="px-4 py-8 text-center text-sm text-gray-500">Loading tariff items...</td>
-              </tr>
+            <tr>
+              <td colspan="10" class="px-4 py-8 text-center text-sm text-gray-500">Loading tariff items...</td>
+            </tr>
             } @else if (items().length === 0) {
-              <tr>
-                <td colspan="10" class="px-4 py-8 text-center text-sm text-gray-500">No tariff items found.</td>
-              </tr>
+            <tr>
+              <td colspan="10" class="px-4 py-8 text-center text-sm text-gray-500">No tariff items found.</td>
+            </tr>
             } @else {
-              @for (item of items(); track item._id) {
-                <tr class="text-sm text-gray-700 transition-colors hover:bg-gray-50/70">
-                  <td class="px-4 py-4 align-top">{{ item.code || '-' }}</td>
-                  <td class="px-4 py-4 align-top font-medium text-gray-900">{{ item.name }}</td>
-                  <td class="px-4 py-4 align-top">{{ item.type }}</td>
-                  <td class="px-4 py-4 align-top">{{ item.category }}</td>
-                  <td class="px-4 py-4 align-top">{{ item.provider || '-' }}</td>
-                  <td class="px-4 py-4 align-top">{{ item.city || '-' }}</td>
-                  <td class="px-4 py-4 align-top">{{ item.validity.year || '-' }}</td>
-                  <td class="px-4 py-4 align-top">
-                    <div class="text-xs text-gray-600">{{ item.pricing.mode }}</div>
-                    <div class="font-medium text-gray-900">{{ item.pricing.currency || 'USD' }}</div>
-                  </td>
-                  <td class="px-4 py-4 align-top">
-                    <span class="inline-flex items-center rounded-full bg-gray-50 px-2.5 py-1 text-xs font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">{{ item.status }}</span>
-                  </td>
-                  <td *hasPermission="['actions_tariff']" class="px-4 py-4 align-top whitespace-nowrap">
-                    <div class="flex items-center gap-2">
-                      <button type="button" (click)="openDetailModal(item)" class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50">
-                        <i class="bx bx-show text-xl"></i>
-                      </button>
-                      <button type="button" (click)="openEditModal(item)" class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-indigo-50">
-                        <i class="bx bx-edit-alt text-xl"></i>
-                      </button>
-                      <button type="button" (click)="confirmDelete(item)" class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-red-600 ring-1 ring-inset ring-red-200 hover:bg-red-50">
-                        <i class="bx bx-trash text-xl"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              }
+            @for (item of items(); track item._id) {
+            <tr class="text-sm text-gray-700 transition-colors hover:bg-gray-50/70">
+              <td class="px-4 py-4 align-top">{{ item.code || '-' }}</td>
+              <td class="px-4 py-4 align-top font-medium text-gray-900">{{ item.name }}</td>
+              <td class="px-4 py-4 align-top">{{ item.type }}</td>
+              <td class="px-4 py-4 align-top">{{ item.category }}</td>
+              <td class="px-4 py-4 align-top">{{ item.provider || '-' }}</td>
+              <td class="px-4 py-4 align-top">{{ item.city || '-' }}</td>
+              <td class="px-4 py-4 align-top">{{ item.validity.year || '-' }}</td>
+              <td class="px-4 py-4 align-top">
+                <div class="text-xs text-gray-600">{{ item.pricing.mode }}</div>
+                <div class="font-medium text-gray-900">{{ item.pricing.currency || 'USD' }}</div>
+              </td>
+              <td class="px-4 py-4 align-top">
+                <span
+                  class="inline-flex items-center rounded-full bg-gray-50 px-2.5 py-1 text-xs font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">{{
+                  item.status }}</span>
+              </td>
+              <td *hasPermission="['actions_tariff']" class="px-4 py-4 align-top whitespace-nowrap">
+                <div class="flex items-center gap-2">
+                  <button type="button" (click)="openDetailModal(item)"
+                    class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50">
+                    <i class="bx bx-show text-xl"></i>
+                  </button>
+                  <button type="button" (click)="openEditModal(item)"
+                    class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-indigo-50">
+                    <i class="bx bx-edit-alt text-xl"></i>
+                  </button>
+                  <button type="button" (click)="confirmDelete(item)"
+                    class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-red-600 ring-1 ring-inset ring-red-200 hover:bg-red-50">
+                    <i class="bx bx-trash text-xl"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            }
             }
           </tbody>
         </table>
@@ -156,428 +178,485 @@
     </div>
 
     @if (pagination().totalPages > 1) {
-      <div class="flex items-center justify-between gap-3">
-        <p class="text-sm text-gray-500">{{ pagination().total }} records</p>
-        <div class="flex items-center gap-2">
-          <button type="button" (click)="onPageChange(pagination().page - 1)" [disabled]="pagination().page === 1" class="rounded-xl px-3 py-2 text-sm font-medium ring-1 ring-inset ring-gray-200 disabled:opacity-50">Previous</button>
-          @for (page of pages(); track page) {
-            <button type="button" (click)="onPageChange(page)" class="rounded-xl px-3 py-2 text-sm font-medium ring-1 ring-inset" [class.bg-indigo-600]="page === pagination().page" [class.text-white]="page === pagination().page" [class.ring-indigo-600]="page === pagination().page" [class.ring-gray-200]="page !== pagination().page">{{ page }}</button>
-          }
-          <button type="button" (click)="onPageChange(pagination().page + 1)" [disabled]="pagination().page === pagination().totalPages" class="rounded-xl px-3 py-2 text-sm font-medium ring-1 ring-inset ring-gray-200 disabled:opacity-50">Next</button>
-        </div>
+    <div class="flex items-center justify-between gap-3">
+      <p class="text-sm text-gray-500">{{ pagination().total }} records</p>
+      <div class="flex items-center gap-2">
+        <button type="button" (click)="onPageChange(pagination().page - 1)" [disabled]="pagination().page === 1"
+          class="rounded-xl px-3 py-2 text-sm font-medium ring-1 ring-inset ring-gray-200 disabled:opacity-50">Previous</button>
+        @for (page of pages(); track page) {
+        <button type="button" (click)="onPageChange(page)"
+          class="rounded-xl px-3 py-2 text-sm font-medium ring-1 ring-inset"
+          [class.bg-indigo-600]="page === pagination().page" [class.text-white]="page === pagination().page"
+          [class.ring-indigo-600]="page === pagination().page" [class.ring-gray-200]="page !== pagination().page">{{
+          page }}</button>
+        }
+        <button type="button" (click)="onPageChange(pagination().page + 1)"
+          [disabled]="pagination().page === pagination().totalPages"
+          class="rounded-xl px-3 py-2 text-sm font-medium ring-1 ring-inset ring-gray-200 disabled:opacity-50">Next</button>
       </div>
+    </div>
     }
   </div>
 </div>
 
 @if (showModal()) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div class="absolute inset-0 bg-black/70"></div>
-    <div class="relative flex max-h-[92vh] w-full max-w-7xl flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
-      <div class="flex items-start justify-between gap-3 border-b border-gray-100 p-4 sm:p-5">
-        <div>
-          <p class="text-base font-semibold text-gray-900 sm:text-lg">{{ editingId() ? 'Edit Tariff Item' : 'Add Tariff Item' }}</p>
-          <p class="text-xs text-gray-500">Single unified form for tariff-v2.</p>
-        </div>
-        <button type="button" (click)="closeModal()" class="inline-flex h-9 w-9 items-center justify-center rounded-xl ring-1 ring-inset ring-gray-200 hover:bg-gray-50"><i class="bx bx-x text-xl"></i></button>
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/70"></div>
+  <div
+    class="relative flex max-h-[92vh] w-full max-w-7xl flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
+    <div class="flex items-start justify-between gap-3 border-b border-gray-100 p-4 sm:p-5">
+      <div>
+        <p class="text-base font-semibold text-gray-900 sm:text-lg">{{ editingId() ? 'Edit Tariff Item' : 'Add Tariff
+          Item' }}</p>
+        <p class="text-xs text-gray-500">Single unified form for tariff-v2.</p>
       </div>
+      <button type="button" (click)="closeModal()"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-xl ring-1 ring-inset ring-gray-200 hover:bg-gray-50"><i
+          class="bx bx-x text-xl"></i></button>
+    </div>
 
-      <div class="overflow-y-auto p-4 sm:p-5">
-        <form [formGroup]="form" class="space-y-5">
-          <div class="rounded-2xl border border-indigo-100 bg-indigo-50/70 p-4">
-            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p class="text-sm font-semibold text-indigo-900">{{ typeSummary().title }}</p>
-                <p class="text-xs text-indigo-700">{{ typeSummary().description }}</p>
-              </div>
-              <div class="flex flex-wrap gap-2">
-                @if (selectedTypeRule()) {
-                  <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200">
-                    Categories: {{ getAvailableCategories().join(', ') }}
-                  </span>
-                  <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200">
-                    Modes: {{ getAvailablePricingModes().join(', ') }}
-                  </span>
-                }
-              </div>
+    <div class="overflow-y-auto p-4 sm:p-5">
+      <form [formGroup]="form" class="space-y-5">
+        <div class="rounded-2xl border border-indigo-100 bg-indigo-50/70 p-4">
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p class="text-sm font-semibold text-indigo-900">{{ typeSummary().title }}</p>
+              <p class="text-xs text-indigo-700">{{ typeSummary().description }}</p>
             </div>
-            <div class="mt-3 flex flex-wrap gap-2 text-xs">
-              <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-indigo-800 ring-1 ring-inset ring-indigo-200">Type defines the allowed categories and pricing modes.</span>
-              <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-indigo-800 ring-1 ring-inset ring-indigo-200">Provider is the commercial supplier, not the product category.</span>
-              <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-indigo-800 ring-1 ring-inset ring-indigo-200">This item will later feed Master Quoter V2 and Quoter V2 pricing.</span>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <input type="text" formControlName="code" placeholder="Code" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
-            <div class="space-y-1">
-              <input type="text" formControlName="name" placeholder="Name *" class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset" [class.ring-red-300]="isFieldInvalid('name')" [class.bg-red-50]="isFieldInvalid('name')" [class.ring-gray-300]="!isFieldInvalid('name')">
-              @if (getFieldError('name', 'Name')) {
-                <p class="text-xs font-medium text-red-600">{{ getFieldError('name', 'Name') }}</p>
+            <div class="flex flex-wrap gap-2">
+              @if (selectedTypeRule()) {
+              <span
+                class="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200">
+                Categories: {{ getAvailableCategories().join(', ') }}
+              </span>
+              <span
+                class="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200">
+                Modes: {{ getAvailablePricingModes().join(', ') }}
+              </span>
               }
             </div>
-            <div class="space-y-1">
-            <select formControlName="type" (change)="onTypeSelected()" class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset" [class.ring-red-300]="isFieldInvalid('type')" [class.bg-red-50]="isFieldInvalid('type')" [class.ring-gray-300]="!isFieldInvalid('type')">
+          </div>
+          <div class="mt-3 flex flex-wrap gap-2 text-xs">
+            <span
+              class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-indigo-800 ring-1 ring-inset ring-indigo-200">Type
+              defines the allowed categories and pricing modes.</span>
+            <span
+              class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-indigo-800 ring-1 ring-inset ring-indigo-200">Provider
+              is the commercial supplier, not the product category.</span>
+            <span
+              class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-indigo-800 ring-1 ring-inset ring-indigo-200">This
+              item will later feed Master Quoter V2 and Quoter V2 pricing.</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <input type="text" formControlName="code" placeholder="Code"
+            class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+          <div class="space-y-1">
+            <input type="text" formControlName="name" placeholder="Name *"
+              class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset"
+              [class.ring-red-300]="isFieldInvalid('name')" [class.bg-red-50]="isFieldInvalid('name')"
+              [class.ring-gray-300]="!isFieldInvalid('name')">
+            @if (getFieldError('name', 'Name')) {
+            <p class="text-xs font-medium text-red-600">{{ getFieldError('name', 'Name') }}</p>
+            }
+          </div>
+          <div class="space-y-1">
+            <select formControlName="type" (change)="onTypeSelected()"
+              class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset"
+              [class.ring-red-300]="isFieldInvalid('type')" [class.bg-red-50]="isFieldInvalid('type')"
+              [class.ring-gray-300]="!isFieldInvalid('type')">
               <option value="">Select type</option>
               @for (type of options()?.types || []; track type) {
-                <option [value]="type">{{ type }}</option>
+              <option [value]="type">{{ type }}</option>
               }
             </select>
             @if (getFieldError('type', 'Type')) {
-              <p class="text-xs font-medium text-red-600">{{ getFieldError('type', 'Type') }}</p>
+            <p class="text-xs font-medium text-red-600">{{ getFieldError('type', 'Type') }}</p>
             }
-            </div>
-            <div class="space-y-1">
-            <select formControlName="category" class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset" [class.ring-red-300]="isFieldInvalid('category')" [class.bg-red-50]="isFieldInvalid('category')" [class.ring-gray-300]="!isFieldInvalid('category')">
+          </div>
+          <div class="space-y-1">
+            <select formControlName="category" class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset"
+              [class.ring-red-300]="isFieldInvalid('category')" [class.bg-red-50]="isFieldInvalid('category')"
+              [class.ring-gray-300]="!isFieldInvalid('category')">
               <option value="">Select category</option>
               @for (category of getAvailableCategories(); track category) {
-                <option [value]="category">{{ category }}</option>
+              <option [value]="category">{{ category }}</option>
               }
             </select>
             @if (getFieldError('category', 'Category')) {
-              <p class="text-xs font-medium text-red-600">{{ getFieldError('category', 'Category') }}</p>
+            <p class="text-xs font-medium text-red-600">{{ getFieldError('category', 'Category') }}</p>
             }
-            </div>
-            <input type="text" formControlName="provider" [placeholder]="requiresProvider() ? 'Provider *' : 'Provider'" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset" [class.ring-amber-300]="requiresProvider()" [class.bg-amber-50]="requiresProvider()" [class.ring-gray-300]="!requiresProvider()">
-            <input type="text" formControlName="subtype" placeholder="Subtype" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
-            <input type="text" formControlName="city" placeholder="City" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
-            <input type="text" formControlName="location" placeholder="Location" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
-            <select formControlName="status" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
-              @for (status of options()?.statuses || []; track status) {
-                <option [value]="status">{{ status }}</option>
-              }
-            </select>
-            <label class="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
-              <input type="checkbox" formControlName="active">
-              Active
-            </label>
-            <input type="text" formControlName="tagsInput" placeholder="Tags separated by commas" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 md:col-span-2">
           </div>
+          <input type="text" formControlName="provider" [placeholder]="requiresProvider() ? 'Provider *' : 'Provider'"
+            class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset"
+            [class.ring-amber-300]="requiresProvider()" [class.bg-amber-50]="requiresProvider()"
+            [class.ring-gray-300]="!requiresProvider()">
+          <input type="text" formControlName="subtype" placeholder="Subtype"
+            class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+          <input type="text" formControlName="city" placeholder="City"
+            class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+          <input type="text" formControlName="location" placeholder="Location"
+            class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+          <select formControlName="status"
+            class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+            @for (status of options()?.statuses || []; track status) {
+            <option [value]="status">{{ status }}</option>
+            }
+          </select>
+          <label class="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+            <input type="checkbox" formControlName="active">
+            Active
+          </label>
+          <input type="text" formControlName="tagsInput" placeholder="Tags separated by commas"
+            class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300 md:col-span-2">
+        </div>
+
+        <div class="rounded-2xl border border-gray-200 bg-gray-50/70 p-4">
+          <p class="mb-3 text-sm font-semibold text-gray-900">{{ 'tariff.help_title' | translate }}</p>
+          <div class="flex flex-wrap gap-2 text-xs">
+            @for (hint of getGeneralFieldHints(); track hint) {
+            <span
+              class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">
+              {{ hint }}
+            </span>
+            }
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div class="rounded-2xl border border-gray-200 bg-gray-50/70 p-4" [formGroup]="pricingGroup">
+            <p class="mb-3 text-sm font-semibold text-gray-900">Pricing Header</p>
+            <div class="mb-3 flex flex-wrap gap-2 text-xs">
+              <span
+                class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">Pricing
+                mode tells the engine how to calculate this item later.</span>
+              <span
+                class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">Base
+                price is the reference amount for PER_PERSON or PER_GROUP items.</span>
+              <span
+                class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">Currency
+                is informative and should match the negotiated source tariff.</span>
+            </div>
+            <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+              <div class="space-y-1">
+                <select formControlName="mode" (change)="onPricingModeChange()"
+                  class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset"
+                  [class.ring-red-300]="isFieldInvalid('pricing.mode')"
+                  [class.bg-red-50]="isFieldInvalid('pricing.mode')"
+                  [class.ring-gray-300]="!isFieldInvalid('pricing.mode')">
+                  <option value="">Select pricing mode</option>
+                  @for (mode of getAvailablePricingModes(); track mode) {
+                  <option [value]="mode">{{ mode }}</option>
+                  }
+                </select>
+                @if (getFieldError('pricing.mode', 'Pricing mode')) {
+                <p class="text-xs font-medium text-red-600">{{ getFieldError('pricing.mode', 'Pricing mode') }}</p>
+                }
+              </div>
+              <input type="text" formControlName="currency" placeholder="Currency"
+                class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
+              @if (showGeneralPricingFields()) {
+              <div class="space-y-1">
+                <input type="number" formControlName="basePrice" placeholder="Base price *"
+                  class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset"
+                  [class.ring-red-300]="isFieldInvalid('pricing.basePrice')"
+                  [class.bg-red-50]="isFieldInvalid('pricing.basePrice')"
+                  [class.ring-gray-300]="!isFieldInvalid('pricing.basePrice')">
+                @if (getFieldError('pricing.basePrice', 'Base price')) {
+                <p class="text-xs font-medium text-red-600">{{ getFieldError('pricing.basePrice', 'Base price') }}</p>
+                }
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        @if (getSoftWarnings().length) {
+        <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+          <p class="text-sm font-semibold text-amber-900">{{ 'tariff.warnings_title' | translate }}</p>
+          <ul class="mt-2 space-y-1 text-sm text-amber-800">
+            @for (warning of getSoftWarnings(); track warning) {
+            <li>• {{ warning }}</li>
+            }
+          </ul>
+        </div>
+        }
+
+        @if (selectedFamily() === 'hotel') {
+        <app-tariff-v2-hotel-family [pricingGroup]="pricingGroup" [contentGroup]="contentGroup"
+          [childPoliciesArray]="childPoliciesArray" [occupancyTypes]="options()?.occupancyTypes || []"
+          [childPriceTypes]="options()?.childPriceTypes || []" [addRoom]="addRoom.bind(this)"
+          [removeRoom]="removeRoom.bind(this)" [addRoomOccupancy]="addRoomOccupancy.bind(this)"
+          [removeRoomOccupancy]="removeRoomOccupancy.bind(this)" [addChildPolicy]="addChildPolicy.bind(this)"
+          [removeChildPolicy]="removeChildPolicy.bind(this)">
+        </app-tariff-v2-hotel-family>
+        } @else if (selectedFamily() === 'train') {
+        <app-tariff-v2-train-family [pricingGroup]="pricingGroup" [contentGroup]="contentGroup"
+          [seasonTypes]="options()?.seasonTypes || []" [addSeason]="addSeason.bind(this)"
+          [removeSeason]="removeSeason.bind(this)">
+        </app-tariff-v2-train-family>
+        } @else if (selectedFamily() === 'transport') {
+        <app-tariff-v2-transport-family [pricingGroup]="pricingGroup" [contentGroup]="contentGroup"
+          [pricingMode]="selectedPricingMode()" [vehicleTypes]="options()?.vehicleTypes || []"
+          [addRange]="addRange.bind(this)" [removeRange]="removeRange.bind(this)"
+          [addVehicleRate]="addVehicleRate.bind(this)" [removeVehicleRate]="removeVehicleRate.bind(this)">
+        </app-tariff-v2-transport-family>
+        } @else if (selectedFamily() === 'activity') {
+        <app-tariff-v2-activity-family [pricingGroup]="pricingGroup" [contentGroup]="contentGroup"
+          [childPoliciesArray]="childPoliciesArray" [pricingMode]="selectedPricingMode()"
+          [vehicleTypes]="options()?.vehicleTypes || []" [childPriceTypes]="options()?.childPriceTypes || []"
+          [addRange]="addRange.bind(this)" [removeRange]="removeRange.bind(this)"
+          [addChildPolicy]="addChildPolicy.bind(this)" [removeChildPolicy]="removeChildPolicy.bind(this)">
+        </app-tariff-v2-activity-family>
+        }
+
+        <div class="grid grid-cols-1 gap-5 xl:grid-cols-2">
+          <app-tariff-v2-validity-section [validityGroup]="validityGroup"
+            [specialDateOperations]="options()?.specialDateOperations || []"
+            [addSpecialDate]="addSpecialDate.bind(this)" [removeSpecialDate]="removeSpecialDate.bind(this)"
+            [addClosingDate]="addClosingDate.bind(this)" [removeClosingDate]="removeClosingDate.bind(this)">
+          </app-tariff-v2-validity-section>
 
           <div class="rounded-2xl border border-gray-200 bg-gray-50/70 p-4">
-            <p class="mb-3 text-sm font-semibold text-gray-900">{{ 'tariff.help_title' | translate }}</p>
+            <p class="mb-4 text-sm font-semibold text-gray-900">Metadata</p>
+            <div class="mb-3 flex flex-wrap gap-2 text-xs">
+              <span
+                class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">Notes
+                are for your team and users inside the system.</span>
+              <span
+                class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">Metadata
+                JSON is optional and only for structured internal data.</span>
+            </div>
+            <div class="space-y-3">
+              <textarea rows="6" formControlName="notes" placeholder="Internal notes"
+                class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300"></textarea>
+              <textarea rows="8" formControlName="metadataText" placeholder='Metadata JSON, e.g. {"source":"manual"}'
+                class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-amber-100 bg-amber-50/70 p-4">
+          <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p class="text-sm font-semibold text-amber-900">Visual review checklist</p>
+              <p class="text-xs text-amber-700">Before saving, verify category, pricing mode, validity year, and
+                family-specific blocks.</p>
+            </div>
             <div class="flex flex-wrap gap-2 text-xs">
-              @for (hint of getGeneralFieldHints(); track hint) {
-                <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">
-                  {{ hint }}
-                </span>
-              }
+              <span
+                class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-amber-700 ring-1 ring-inset ring-amber-200">Family:
+                {{ selectedFamily() || 'not selected' }}</span>
+              <span
+                class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-amber-700 ring-1 ring-inset ring-amber-200">Dirty:
+                {{ form.dirty ? 'Yes' : 'No' }}</span>
             </div>
           </div>
+        </div>
+      </form>
+    </div>
 
-          <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <div class="rounded-2xl border border-gray-200 bg-gray-50/70 p-4" [formGroup]="pricingGroup">
-              <p class="mb-3 text-sm font-semibold text-gray-900">Pricing Header</p>
-              <div class="mb-3 flex flex-wrap gap-2 text-xs">
-                <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">Pricing mode tells the engine how to calculate this item later.</span>
-                <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">Base price is the reference amount for PER_PERSON or PER_GROUP items.</span>
-                <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">Currency is informative and should match the negotiated source tariff.</span>
-              </div>
-              <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-                <div class="space-y-1">
-                  <select formControlName="mode" (change)="onPricingModeChange()" class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset" [class.ring-red-300]="isFieldInvalid('pricing.mode')" [class.bg-red-50]="isFieldInvalid('pricing.mode')" [class.ring-gray-300]="!isFieldInvalid('pricing.mode')">
-                    <option value="">Select pricing mode</option>
-                    @for (mode of getAvailablePricingModes(); track mode) {
-                      <option [value]="mode">{{ mode }}</option>
-                    }
-                  </select>
-                  @if (getFieldError('pricing.mode', 'Pricing mode')) {
-                    <p class="text-xs font-medium text-red-600">{{ getFieldError('pricing.mode', 'Pricing mode') }}</p>
-                  }
-                </div>
-                <input type="text" formControlName="currency" placeholder="Currency" class="rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300">
-                @if (showGeneralPricingFields()) {
-                  <div class="space-y-1">
-                    <input type="number" formControlName="basePrice" placeholder="Base price *" class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset" [class.ring-red-300]="isFieldInvalid('pricing.basePrice')" [class.bg-red-50]="isFieldInvalid('pricing.basePrice')" [class.ring-gray-300]="!isFieldInvalid('pricing.basePrice')">
-                    @if (getFieldError('pricing.basePrice', 'Base price')) {
-                      <p class="text-xs font-medium text-red-600">{{ getFieldError('pricing.basePrice', 'Base price') }}</p>
-                    }
-                  </div>
-                }
-              </div>
-            </div>
-          </div>
-
-          @if (getSoftWarnings().length) {
-            <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4">
-              <p class="text-sm font-semibold text-amber-900">{{ 'tariff.warnings_title' | translate }}</p>
-              <ul class="mt-2 space-y-1 text-sm text-amber-800">
-                @for (warning of getSoftWarnings(); track warning) {
-                  <li>• {{ warning }}</li>
-                }
-              </ul>
-            </div>
-          }
-
-          @if (selectedFamily() === 'hotel') {
-            <app-tariff-v2-hotel-family
-              [pricingGroup]="pricingGroup"
-              [contentGroup]="contentGroup"
-              [childPoliciesArray]="childPoliciesArray"
-              [occupancyTypes]="options()?.occupancyTypes || []"
-              [childPriceTypes]="options()?.childPriceTypes || []"
-              [addRoom]="addRoom.bind(this)"
-              [removeRoom]="removeRoom.bind(this)"
-              [addRoomOccupancy]="addRoomOccupancy.bind(this)"
-              [removeRoomOccupancy]="removeRoomOccupancy.bind(this)"
-              [addChildPolicy]="addChildPolicy.bind(this)"
-              [removeChildPolicy]="removeChildPolicy.bind(this)">
-            </app-tariff-v2-hotel-family>
-          } @else if (selectedFamily() === 'train') {
-            <app-tariff-v2-train-family
-              [pricingGroup]="pricingGroup"
-              [contentGroup]="contentGroup"
-              [seasonTypes]="options()?.seasonTypes || []"
-              [addSeason]="addSeason.bind(this)"
-              [removeSeason]="removeSeason.bind(this)">
-            </app-tariff-v2-train-family>
-          } @else if (selectedFamily() === 'transport') {
-            <app-tariff-v2-transport-family
-              [pricingGroup]="pricingGroup"
-              [contentGroup]="contentGroup"
-              [pricingMode]="selectedPricingMode()"
-              [vehicleTypes]="options()?.vehicleTypes || []"
-              [addRange]="addRange.bind(this)"
-              [removeRange]="removeRange.bind(this)"
-              [addVehicleRate]="addVehicleRate.bind(this)"
-              [removeVehicleRate]="removeVehicleRate.bind(this)">
-            </app-tariff-v2-transport-family>
-          } @else if (selectedFamily() === 'activity') {
-            <app-tariff-v2-activity-family
-              [pricingGroup]="pricingGroup"
-              [contentGroup]="contentGroup"
-              [childPoliciesArray]="childPoliciesArray"
-              [pricingMode]="selectedPricingMode()"
-              [vehicleTypes]="options()?.vehicleTypes || []"
-              [childPriceTypes]="options()?.childPriceTypes || []"
-              [addRange]="addRange.bind(this)"
-              [removeRange]="removeRange.bind(this)"
-              [addChildPolicy]="addChildPolicy.bind(this)"
-              [removeChildPolicy]="removeChildPolicy.bind(this)">
-            </app-tariff-v2-activity-family>
-          }
-
-          <div class="grid grid-cols-1 gap-5 xl:grid-cols-2">
-            <app-tariff-v2-validity-section
-              [validityGroup]="validityGroup"
-              [specialDateOperations]="options()?.specialDateOperations || []"
-              [addSpecialDate]="addSpecialDate.bind(this)"
-              [removeSpecialDate]="removeSpecialDate.bind(this)"
-              [addClosingDate]="addClosingDate.bind(this)"
-              [removeClosingDate]="removeClosingDate.bind(this)">
-            </app-tariff-v2-validity-section>
-
-            <div class="rounded-2xl border border-gray-200 bg-gray-50/70 p-4">
-              <p class="mb-4 text-sm font-semibold text-gray-900">Metadata</p>
-              <div class="mb-3 flex flex-wrap gap-2 text-xs">
-                <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">Notes are for your team and users inside the system.</span>
-                <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">Metadata JSON is optional and only for structured internal data.</span>
-              </div>
-              <div class="space-y-3">
-                <textarea rows="6" formControlName="notes" placeholder="Internal notes" class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300"></textarea>
-                <textarea rows="8" formControlName="metadataText" placeholder='Metadata JSON, e.g. {"source":"manual"}' class="w-full rounded-xl bg-white px-3 py-2.5 text-sm ring-1 ring-inset ring-gray-300"></textarea>
-              </div>
-            </div>
-          </div>
-
-          <div class="rounded-2xl border border-amber-100 bg-amber-50/70 p-4">
-            <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p class="text-sm font-semibold text-amber-900">Visual review checklist</p>
-                <p class="text-xs text-amber-700">Before saving, verify category, pricing mode, validity year, and family-specific blocks.</p>
-              </div>
-              <div class="flex flex-wrap gap-2 text-xs">
-                <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-amber-700 ring-1 ring-inset ring-amber-200">Family: {{ selectedFamily() || 'not selected' }}</span>
-                <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 font-semibold text-amber-700 ring-1 ring-inset ring-amber-200">Dirty: {{ form.dirty ? 'Yes' : 'No' }}</span>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <div class="flex items-center justify-end gap-3 border-t border-gray-100 p-4 sm:p-5">
-        <button type="button" (click)="closeModal()" class="rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-gray-50">Cancel</button>
-        <button type="button" (click)="submit()" [disabled]="saving()" class="rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50">{{ saving() ? 'Saving...' : 'Confirm' }}</button>
-      </div>
+    <div class="flex items-center justify-end gap-3 border-t border-gray-100 p-4 sm:p-5">
+      <button type="button" (click)="closeModal()"
+        class="rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-gray-50">Cancel</button>
+      <button type="button" (click)="submit()" [disabled]="saving()"
+        class="rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50">{{
+        saving() ? 'Saving...' : 'Confirm' }}</button>
     </div>
   </div>
+</div>
 }
 
 @if (showDetailModal() && selectedItem(); as detail) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div class="absolute inset-0 bg-black/70"></div>
-    <div class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
-      <div class="flex items-start justify-between gap-3 border-b border-gray-100 p-4 sm:p-5">
-        <div>
-          <p class="text-base font-semibold text-gray-900 sm:text-lg">{{ detail.name }}</p>
-          <p class="text-xs text-gray-500">{{ detail.type }} · {{ detail.category }}</p>
-        </div>
-        <button type="button" (click)="closeDetailModal()" class="inline-flex h-9 w-9 items-center justify-center rounded-xl ring-1 ring-inset ring-gray-200 hover:bg-gray-50"><i class="bx bx-x text-xl"></i></button>
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/70"></div>
+  <div
+    class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
+    <div class="flex items-start justify-between gap-3 border-b border-gray-100 p-4 sm:p-5">
+      <div>
+        <p class="text-base font-semibold text-gray-900 sm:text-lg">{{ detail.name }}</p>
+        <p class="text-xs text-gray-500">{{ detail.type }} · {{ detail.category }}</p>
       </div>
+      <button type="button" (click)="closeDetailModal()"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-xl ring-1 ring-inset ring-gray-200 hover:bg-gray-50"><i
+          class="bx bx-x text-xl"></i></button>
+    </div>
 
-      <div class="overflow-y-auto p-4 sm:p-5 space-y-5">
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
-            <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Code</p>
-            <p class="mt-2 text-sm font-medium text-gray-900">{{ detail.code || '-' }}</p>
-          </div>
-          <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
-            <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Provider</p>
-            <p class="mt-2 text-sm font-medium text-gray-900">{{ detail.provider || '-' }}</p>
-          </div>
-          <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
-            <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">City</p>
-            <p class="mt-2 text-sm font-medium text-gray-900">{{ detail.city || '-' }}</p>
-          </div>
-          <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
-            <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Year</p>
-            <p class="mt-2 text-sm font-medium text-gray-900">{{ detail.validity.year || '-' }}</p>
-          </div>
+    <div class="overflow-y-auto p-4 sm:p-5 space-y-5">
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
+          <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Code</p>
+          <p class="mt-2 text-sm font-medium text-gray-900">{{ detail.code || '-' }}</p>
         </div>
-
-        <div class="grid grid-cols-1 gap-5 xl:grid-cols-2">
-          <div class="rounded-2xl border border-gray-200 bg-gray-50/70 p-4">
-            <p class="mb-4 text-sm font-semibold text-gray-900">Pricing</p>
-            <div class="space-y-2 text-sm text-gray-700">
-              <p><span class="font-semibold text-gray-900">Mode:</span> {{ detail.pricing.mode }}</p>
-              <p><span class="font-semibold text-gray-900">Currency:</span> {{ detail.pricing.currency || 'USD' }}</p>
-              @if (detail.pricing.basePrice !== undefined && detail.pricing.basePrice !== null) {
-                <p><span class="font-semibold text-gray-900">Base price:</span> {{ detail.pricing.basePrice }}</p>
-              }
-              @if (detail.pricing.soloTravelerPrice !== undefined && detail.pricing.soloTravelerPrice !== null) {
-                <p><span class="font-semibold text-gray-900">Solo traveler:</span> {{ detail.pricing.soloTravelerPrice }}</p>
-              }
-              @if (detail.pricing.guidePrice !== undefined && detail.pricing.guidePrice !== null) {
-                <p><span class="font-semibold text-gray-900">Guide:</span> {{ detail.pricing.guidePrice }}</p>
-              }
-              @if (detail.pricing.ranges?.length) {
-                <div>
-                  <p class="font-semibold text-gray-900">Ranges</p>
-                  <div class="mt-2 space-y-2">
-                    @for (range of detail.pricing.ranges; track $index) {
-                      <div class="rounded-xl border border-gray-200 bg-white p-3 text-xs text-gray-700">
-                        {{ range.minPax }} - {{ range.maxPax }} pax: {{ range.price }} {{ detail.pricing.currency || 'USD' }} @if (range.vehicleType) { · {{ range.vehicleType }} }
-                      </div>
-                    }
-                  </div>
-                </div>
-              }
-              @if (detail.pricing.rooms?.length) {
-                <div>
-                  <p class="font-semibold text-gray-900">Rooms</p>
-                  <div class="mt-2 space-y-2">
-                    @for (room of detail.pricing.rooms; track $index) {
-                      <div class="rounded-xl border border-gray-200 bg-white p-3">
-                        <p class="text-xs font-semibold text-gray-900">{{ room.roomName }}</p>
-                        <div class="mt-2 space-y-1 text-xs text-gray-700">
-                          @for (occ of room.occupancyRates; track $index) {
-                            <p>{{ occ.occupancy }} · CONF {{ occ.confidential }} · RACK {{ occ.rack }}</p>
-                          }
-                        </div>
-                      </div>
-                    }
-                  </div>
-                </div>
-              }
-              @if (detail.pricing.seasons?.length) {
-                <div>
-                  <p class="font-semibold text-gray-900">Seasons</p>
-                  <div class="mt-2 space-y-2">
-                    @for (season of detail.pricing.seasons; track $index) {
-                      <div class="rounded-xl border border-gray-200 bg-white p-3 text-xs text-gray-700">
-                        {{ season.season }} · Adult {{ season.adultPrice }} @if (season.childPrice !== undefined && season.childPrice !== null) { · Child {{ season.childPrice }} } @if (season.guidePrice !== undefined && season.guidePrice !== null) { · Guide {{ season.guidePrice }} }
-                      </div>
-                    }
-                  </div>
-                </div>
-              }
-              @if (detail.pricing.vehicleRates?.length) {
-                <div>
-                  <p class="font-semibold text-gray-900">Vehicle rates</p>
-                  <div class="mt-2 space-y-2">
-                    @for (rate of detail.pricing.vehicleRates; track $index) {
-                      <div class="rounded-xl border border-gray-200 bg-white p-3 text-xs text-gray-700">
-                        {{ rate.vehicleType }} · {{ rate.price }} {{ detail.pricing.currency || 'USD' }}
-                      </div>
-                    }
-                  </div>
-                </div>
-              }
-            </div>
-          </div>
-
-          <div class="rounded-2xl border border-gray-200 bg-gray-50/70 p-4">
-            <p class="mb-4 text-sm font-semibold text-gray-900">Content & Rules</p>
-            <div class="space-y-2 text-sm text-gray-700">
-              <p><span class="font-semibold text-gray-900">Location:</span> {{ detail.location || '-' }}</p>
-              <p><span class="font-semibold text-gray-900">Status:</span> {{ detail.status }}</p>
-              <p><span class="font-semibold text-gray-900">Active:</span> {{ detail.active ? 'Yes' : 'No' }}</p>
-              <p><span class="font-semibold text-gray-900">Date range:</span> {{ detail.validity.dateFrom || '-' }} to {{ detail.validity.dateTo || '-' }}</p>
-              @if (detail.tags?.length) {
-                <div>
-                  <p class="font-semibold text-gray-900">Tags</p>
-                  <div class="mt-2 flex flex-wrap gap-2">
-                    @for (tag of detail.tags; track tag) {
-                      <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">{{ tag }}</span>
-                    }
-                  </div>
-                </div>
-              }
-              @if (detail.content?.description) {
-                <div>
-                  <p class="font-semibold text-gray-900">Description</p>
-                  <p class="mt-1 text-sm text-gray-700">{{ detail.content?.description }}</p>
-                </div>
-              }
-              @if (detail.content?.remarks) {
-                <div>
-                  <p class="font-semibold text-gray-900">Remarks</p>
-                  <p class="mt-1 text-sm text-gray-700">{{ detail.content?.remarks }}</p>
-                </div>
-              }
-              @if (detail.childPolicies?.length) {
-                <div>
-                  <p class="font-semibold text-gray-900">Child policies</p>
-                  <div class="mt-2 space-y-2">
-                    @for (policy of detail.childPolicies; track $index) {
-                      <div class="rounded-xl border border-gray-200 bg-white p-3 text-xs text-gray-700">
-                        Ages {{ policy.minAge ?? '-' }} - {{ policy.maxAge ?? '-' }} · {{ policy.priceType }} · {{ policy.value }}
-                      </div>
-                    }
-                  </div>
-                </div>
-              }
-              @if (detail.validity.specialDates?.length) {
-                <div>
-                  <p class="font-semibold text-gray-900">Special dates</p>
-                  <div class="mt-2 space-y-2">
-                    @for (rule of detail.validity.specialDates || []; track $index) {
-                      <div class="rounded-xl border border-gray-200 bg-white p-3 text-xs text-gray-700">
-                        {{ rule.date }} · {{ rule.operation }} @if (rule.value !== undefined && rule.value !== null) { · {{ rule.value }} } @if (rule.note) { · {{ rule.note }} }
-                      </div>
-                    }
-                  </div>
-                </div>
-              }
-              @if (hasJsonContent(detail.metadata)) {
-                <div>
-                  <p class="font-semibold text-gray-900">Metadata</p>
-                  <div class="mt-2 rounded-xl border border-gray-200 bg-white p-3 text-xs text-gray-700">
-                    @for (entry of objectEntries(detail.metadata); track entry[0]) {
-                      <p><span class="font-semibold">{{ entry[0] }}:</span> {{ entry[1] }}</p>
-                    }
-                  </div>
-                </div>
-              }
-            </div>
-          </div>
+        <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
+          <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Provider</p>
+          <p class="mt-2 text-sm font-medium text-gray-900">{{ detail.provider || '-' }}</p>
+        </div>
+        <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
+          <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">City</p>
+          <p class="mt-2 text-sm font-medium text-gray-900">{{ detail.city || '-' }}</p>
+        </div>
+        <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
+          <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Year</p>
+          <p class="mt-2 text-sm font-medium text-gray-900">{{ detail.validity.year || '-' }}</p>
         </div>
       </div>
 
-      <div class="flex items-center justify-end gap-3 border-t border-gray-100 p-4 sm:p-5">
-        <button type="button" (click)="closeDetailModal()" class="rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-gray-50">Close</button>
-        <button *hasPermission="['actions_tariff']" type="button" (click)="closeDetailModal(); openEditModal(detail)" class="rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700">Edit</button>
+      <div class="grid grid-cols-1 gap-5 xl:grid-cols-2">
+        <div class="rounded-2xl border border-gray-200 bg-gray-50/70 p-4">
+          <p class="mb-4 text-sm font-semibold text-gray-900">Pricing</p>
+          <div class="space-y-2 text-sm text-gray-700">
+            <p><span class="font-semibold text-gray-900">Mode:</span> {{ detail.pricing.mode }}</p>
+            <p><span class="font-semibold text-gray-900">Currency:</span> {{ detail.pricing.currency || 'USD' }}</p>
+            @if (detail.pricing.basePrice !== undefined && detail.pricing.basePrice !== null) {
+            <p><span class="font-semibold text-gray-900">Base price:</span> {{ detail.pricing.basePrice }}</p>
+            }
+            @if (detail.pricing.soloTravelerPrice !== undefined && detail.pricing.soloTravelerPrice !== null) {
+            <p><span class="font-semibold text-gray-900">Solo traveler:</span> {{ detail.pricing.soloTravelerPrice }}
+            </p>
+            }
+            @if (detail.pricing.guidePrice !== undefined && detail.pricing.guidePrice !== null) {
+            <p><span class="font-semibold text-gray-900">Guide:</span> {{ detail.pricing.guidePrice }}</p>
+            }
+            @if (detail.pricing.ranges?.length) {
+            <div>
+              <p class="font-semibold text-gray-900">Ranges</p>
+              <div class="mt-2 space-y-2">
+                @for (range of detail.pricing.ranges; track $index) {
+                <div class="rounded-xl border border-gray-200 bg-white p-3 text-xs text-gray-700">
+                  {{ range.minPax }} - {{ range.maxPax }} pax: {{ range.price }} {{ detail.pricing.currency || 'USD' }}
+                  @if (range.vehicleType) { · {{ range.vehicleType }} }
+                </div>
+                }
+              </div>
+            </div>
+            }
+            @if (detail.pricing.rooms?.length) {
+            <div>
+              <p class="font-semibold text-gray-900">Rooms</p>
+              <div class="mt-2 space-y-2">
+                @for (room of detail.pricing.rooms; track $index) {
+                <div class="rounded-xl border border-gray-200 bg-white p-3">
+                  <p class="text-xs font-semibold text-gray-900">{{ room.roomName }}</p>
+                  <div class="mt-2 space-y-1 text-xs text-gray-700">
+                    @for (occ of room.occupancyRates; track $index) {
+                    <p>{{ occ.occupancy }} · CONF {{ occ.confidential }} · RACK {{ occ.rack }}</p>
+                    }
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+            }
+            @if (detail.pricing.seasons?.length) {
+            <div>
+              <p class="font-semibold text-gray-900">Seasons</p>
+              <div class="mt-2 space-y-2">
+                @for (season of detail.pricing.seasons; track $index) {
+                <div class="rounded-xl border border-gray-200 bg-white p-3 text-xs text-gray-700">
+                  {{ season.season }} · Adult {{ season.adultPrice }} @if (season.childPrice !== undefined &&
+                  season.childPrice !== null) { · Child {{ season.childPrice }} } @if (season.guidePrice !== undefined
+                  && season.guidePrice !== null) { · Guide {{ season.guidePrice }} }
+                </div>
+                }
+              </div>
+            </div>
+            }
+            @if (detail.pricing.vehicleRates?.length) {
+            <div>
+              <p class="font-semibold text-gray-900">Vehicle rates</p>
+              <div class="mt-2 space-y-2">
+                @for (rate of detail.pricing.vehicleRates; track $index) {
+                <div class="rounded-xl border border-gray-200 bg-white p-3 text-xs text-gray-700">
+                  {{ rate.vehicleType }} · {{ rate.price }} {{ detail.pricing.currency || 'USD' }}
+                </div>
+                }
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-gray-200 bg-gray-50/70 p-4">
+          <p class="mb-4 text-sm font-semibold text-gray-900">Content & Rules</p>
+          <div class="space-y-2 text-sm text-gray-700">
+            <p><span class="font-semibold text-gray-900">Location:</span> {{ detail.location || '-' }}</p>
+            <p><span class="font-semibold text-gray-900">Status:</span> {{ detail.status }}</p>
+            <p><span class="font-semibold text-gray-900">Active:</span> {{ detail.active ? 'Yes' : 'No' }}</p>
+            <p><span class="font-semibold text-gray-900">Date range:</span> {{ detail.validity.dateFrom || '-' }} to {{
+              detail.validity.dateTo || '-' }}</p>
+            @if (detail.tags?.length) {
+            <div>
+              <p class="font-semibold text-gray-900">Tags</p>
+              <div class="mt-2 flex flex-wrap gap-2">
+                @for (tag of detail.tags; track tag) {
+                <span
+                  class="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-700 ring-1 ring-inset ring-gray-200">{{
+                  tag }}</span>
+                }
+              </div>
+            </div>
+            }
+            @if (detail.content?.description) {
+            <div>
+              <p class="font-semibold text-gray-900">Description</p>
+              <p class="mt-1 text-sm text-gray-700">{{ detail.content?.description }}</p>
+            </div>
+            }
+            @if (detail.content?.remarks) {
+            <div>
+              <p class="font-semibold text-gray-900">Remarks</p>
+              <p class="mt-1 text-sm text-gray-700">{{ detail.content?.remarks }}</p>
+            </div>
+            }
+            @if (detail.childPolicies?.length) {
+            <div>
+              <p class="font-semibold text-gray-900">Child policies</p>
+              <div class="mt-2 space-y-2">
+                @for (policy of detail.childPolicies; track $index) {
+                <div class="rounded-xl border border-gray-200 bg-white p-3 text-xs text-gray-700">
+                  Ages {{ policy.minAge ?? '-' }} - {{ policy.maxAge ?? '-' }} · {{ policy.priceType }} · {{
+                  policy.value }}
+                </div>
+                }
+              </div>
+            </div>
+            }
+            @if (detail.validity.specialDates?.length) {
+            <div>
+              <p class="font-semibold text-gray-900">Special dates</p>
+              <div class="mt-2 space-y-2">
+                @for (rule of detail.validity.specialDates || []; track $index) {
+                <div class="rounded-xl border border-gray-200 bg-white p-3 text-xs text-gray-700">
+                  {{ rule.date }} · {{ rule.operation }} @if (rule.value !== undefined && rule.value !== null) { · {{
+                  rule.value }} } @if (rule.note) { · {{ rule.note }} }
+                </div>
+                }
+              </div>
+            </div>
+            }
+            @if (hasJsonContent(detail.metadata)) {
+            <div>
+              <p class="font-semibold text-gray-900">Metadata</p>
+              <div class="mt-2 rounded-xl border border-gray-200 bg-white p-3 text-xs text-gray-700">
+                @for (entry of objectEntries(detail.metadata); track entry[0]) {
+                <p><span class="font-semibold">{{ entry[0] }}:</span> {{ entry[1] }}</p>
+                }
+              </div>
+            </div>
+            }
+          </div>
+        </div>
       </div>
     </div>
+
+    <div class="flex items-center justify-end gap-3 border-t border-gray-100 p-4 sm:p-5">
+      <button type="button" (click)="closeDetailModal()"
+        class="rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-gray-50">Close</button>
+      <button *hasPermission="['actions_tariff']" type="button" (click)="closeDetailModal(); openEditModal(detail)"
+        class="rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700">Edit</button>
+    </div>
   </div>
+</div>
 }

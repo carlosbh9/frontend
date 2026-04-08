@@ -113,7 +113,7 @@ export class SidebarComponent {
 
     try {
       this.launchingItinerary.set(true);
-      await this.launchAccessService.openItineraryBuilder();
+      // await this.launchAccessService.openItineraryBuilder();
     } catch (error) {
       console.error('Error opening itinerary builder:', error);
       alert('Could not open Itinerary Builder. Please try again.');

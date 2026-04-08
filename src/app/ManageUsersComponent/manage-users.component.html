@@ -29,19 +29,16 @@
 
   <section class="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.55fr)_360px]">
     <article class="rounded-[28px] border border-slate-200 bg-white shadow-sm">
-      <div class="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+      <div
+        class="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
         <h2 class="text-base font-semibold text-slate-900">Usuarios</h2>
 
-        <label class="inline-flex w-full items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 sm:max-w-xs">
+        <label
+          class="inline-flex w-full items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 sm:max-w-xs">
           <i class="bx bx-search text-base"></i>
-          <input
-            [ngModel]="userSearch()"
-            (ngModelChange)="userSearch.set($event)"
-            [ngModelOptions]="{ standalone: true }"
-            type="text"
-            placeholder="Buscar"
-            class="w-full border-0 bg-transparent p-0 text-slate-700 outline-none placeholder:text-slate-400"
-          />
+          <input [ngModel]="userSearch()" (ngModelChange)="userSearch.set($event)"
+            [ngModelOptions]="{ standalone: true }" type="text" placeholder="Buscar"
+            class="w-full border-0 bg-transparent p-0 text-slate-700 outline-none placeholder:text-slate-400" />
         </label>
       </div>
 
@@ -49,63 +46,64 @@
         <table class="min-w-full divide-y divide-slate-200">
           <thead class="bg-slate-50">
             <tr>
-              <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Usuario</th>
-              <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Nombre</th>
-              <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Rol</th>
-              <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Areas</th>
-              <th class="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Acciones</th>
+              <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                Usuario</th>
+              <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                Nombre</th>
+              <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Rol
+              </th>
+              <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Areas
+              </th>
+              <th class="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                Acciones</th>
             </tr>
           </thead>
 
           <tbody class="divide-y divide-slate-100">
             @for (item of filteredUsers(); track item._id) {
-              <tr class="transition hover:bg-slate-50/80">
-                <td class="px-5 py-3.5 align-top">
-                  <div class="text-sm font-medium text-slate-900">{{ item.username }}</div>
-                </td>
-                <td class="px-5 py-3.5 align-top text-sm text-slate-600">{{ item.name }}</td>
-                <td class="px-5 py-3.5 align-top">
-                  <span class="inline-flex rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-700">
-                    {{ getRoleBadge(item.role) }}
+            <tr class="transition hover:bg-slate-50/80">
+              <td class="px-5 py-3.5 align-top">
+                <div class="text-sm font-medium text-slate-900">{{ item.username }}</div>
+              </td>
+              <td class="px-5 py-3.5 align-top text-sm text-slate-600">{{ item.name }}</td>
+              <td class="px-5 py-3.5 align-top">
+                <span
+                  class="inline-flex rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-700">
+                  {{ getRoleBadge(item.role) }}
+                </span>
+              </td>
+              <td class="px-5 py-3.5 align-top">
+                <div class="flex flex-wrap gap-1.5">
+                  @for (area of getRoleAreas(item.role); track area) {
+                  <span
+                    class="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 text-[10px] font-semibold tracking-[0.14em] text-emerald-700">
+                    {{ area }}
                   </span>
-                </td>
-                <td class="px-5 py-3.5 align-top">
-                  <div class="flex flex-wrap gap-1.5">
-                    @for (area of getRoleAreas(item.role); track area) {
-                      <span class="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 text-[10px] font-semibold tracking-[0.14em] text-emerald-700">
-                        {{ area }}
-                      </span>
-                    }
-                    @if (!getRoleAreas(item.role).length) {
-                      <span class="text-xs text-slate-400">-</span>
-                    }
-                  </div>
-                </td>
-                <td class="px-5 py-3.5 align-top">
-                  <div class="flex justify-end gap-2">
-                    <button
-                      type="button"
-                      (click)="editUser(item)"
-                      class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:border-emerald-300 hover:text-emerald-700"
-                    >
-                      <i class="bx bx-pencil text-base"></i>
-                    </button>
-                    <button
-                      type="button"
-                      (click)="confirmDelete(item._id)"
-                      class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-rose-200 bg-rose-50 text-rose-700 transition hover:bg-rose-100"
-                    >
-                      <i class="bx bx-trash text-base"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
+                  }
+                  @if (!getRoleAreas(item.role).length) {
+                  <span class="text-xs text-slate-400">-</span>
+                  }
+                </div>
+              </td>
+              <td class="px-5 py-3.5 align-top">
+                <div class="flex justify-end gap-2">
+                  <button type="button" (click)="editUser(item)"
+                    class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:border-emerald-300 hover:text-emerald-700">
+                    <i class="bx bx-pencil text-base"></i>
+                  </button>
+                  <button type="button" (click)="confirmDelete(item._id)"
+                    class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-rose-200 bg-rose-50 text-rose-700 transition hover:bg-rose-100">
+                    <i class="bx bx-trash text-base"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
             }
 
             @if (!filteredUsers().length) {
-              <tr>
-                <td colspan="5" class="px-5 py-10 text-center text-sm text-slate-500">Sin resultados</td>
-              </tr>
+            <tr>
+              <td colspan="5" class="px-5 py-10 text-center text-sm text-slate-500">Sin resultados</td>
+            </tr>
             }
           </tbody>
         </table>
@@ -117,61 +115,44 @@
         <div class="flex items-center justify-between gap-3">
           <h2 class="text-base font-semibold text-slate-900">{{ isEditing ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
           @if (isEditing) {
-            <span class="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-700">
-              Edit
-            </span>
+          <span
+            class="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-700">
+            Edit
+          </span>
           }
         </div>
 
         <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="mt-4 space-y-3">
-          <input
-            type="text"
-            formControlName="username"
-            placeholder="Usuario"
-            class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-400 focus:bg-white"
-          />
+          <input type="text" formControlName="username" placeholder="Usuario"
+            class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-400 focus:bg-white" />
 
-          <input
-            type="text"
-            formControlName="name"
-            placeholder="Nombre"
-            class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-400 focus:bg-white"
-          />
+          <input type="text" formControlName="name" placeholder="Nombre"
+            class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-400 focus:bg-white" />
 
-          <input
-            type="password"
-            formControlName="password"
+          <input type="password" formControlName="password"
             [placeholder]="isEditing ? 'Nueva contraseña' : 'Contraseña'"
-            class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-400 focus:bg-white"
-          />
+            class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-400 focus:bg-white" />
 
-          <select
-            formControlName="role"
-            class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-400 focus:bg-white"
-          >
+          <select formControlName="role"
+            class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-400 focus:bg-white">
             <option value="" disabled>Rol</option>
             @for (item of roles(); track item.name) {
-              <option [value]="item.name">{{ item.nameRole }} · {{ item.name }}</option>
+            <option [value]="item.name">{{ item.nameRole }} · {{ item.name }}</option>
             }
           </select>
 
           <div class="flex gap-2 pt-1">
-            <button
-              type="submit"
-              class="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
-            >
+            <button type="submit"
+              class="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800">
               <i class="bx" [class.bx-save]="!isEditing" [class.bx-refresh]="isEditing"></i>
               {{ isEditing ? 'Actualizar' : 'Crear' }}
             </button>
 
             @if (isEditing) {
-              <button
-                type="button"
-                (click)="cancelEdit()"
-                class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-              >
-                Cancelar
-              </button>
+            <button type="button" (click)="cancelEdit()"
+              class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+              Cancelar
+            </button>
             }
           </div>
         </form>
@@ -185,27 +166,29 @@
 
         <div class="mt-4 space-y-2.5">
           @for (scope of roleScopeCatalog; track scope.role) {
-            <article class="rounded-2xl border border-slate-200 bg-slate-50 px-3.5 py-3">
-              <div class="flex items-center justify-between gap-3">
-                <div class="flex items-center gap-2">
-                  <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-800">{{ scope.label }}</p>
-                  @if (scope.isAdmin) {
-                    <span class="rounded-full border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-indigo-700">
-                      global
-                    </span>
-                  }
-                </div>
-                <span class="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">{{ scope.role }}</span>
-              </div>
-
-              <div class="mt-2 flex flex-wrap gap-1.5">
-                @for (area of scope.serviceOrderAreas; track area) {
-                  <span class="rounded-full border border-slate-200 bg-white px-2 py-1 text-[10px] font-semibold tracking-[0.14em] text-slate-600">
-                    {{ area }}
-                  </span>
+          <article class="rounded-2xl border border-slate-200 bg-slate-50 px-3.5 py-3">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2">
+                <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-800">{{ scope.label }}</p>
+                @if (scope.isAdmin) {
+                <span
+                  class="rounded-full border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-indigo-700">
+                  global
+                </span>
                 }
               </div>
-            </article>
+              <span class="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">{{ scope.role }}</span>
+            </div>
+
+            <div class="mt-2 flex flex-wrap gap-1.5">
+              @for (area of scope.serviceOrderAreas; track area) {
+              <span
+                class="rounded-full border border-slate-200 bg-white px-2 py-1 text-[10px] font-semibold tracking-[0.14em] text-slate-600">
+                {{ area }}
+              </span>
+              }
+            </div>
+          </article>
           }
         </div>
       </article>
@@ -217,23 +200,16 @@
       <h2 class="text-base font-semibold text-slate-900">Roles</h2>
 
       <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <label class="inline-flex min-w-[220px] items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500">
+        <label
+          class="inline-flex min-w-[220px] items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500">
           <i class="bx bx-search text-base"></i>
-          <input
-            [ngModel]="roleSearch()"
-            (ngModelChange)="roleSearch.set($event)"
-            [ngModelOptions]="{ standalone: true }"
-            type="text"
-            placeholder="Buscar"
-            class="w-full border-0 bg-transparent p-0 text-slate-700 outline-none placeholder:text-slate-400"
-          />
+          <input [ngModel]="roleSearch()" (ngModelChange)="roleSearch.set($event)"
+            [ngModelOptions]="{ standalone: true }" type="text" placeholder="Buscar"
+            class="w-full border-0 bg-transparent p-0 text-slate-700 outline-none placeholder:text-slate-400" />
         </label>
 
-        <button
-          type="button"
-          (click)="openCreateModal()"
-          class="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
-        >
+        <button type="button" (click)="openCreateModal()"
+          class="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700">
           <i class="bx bx-plus"></i>
           Nuevo rol
         </button>
@@ -244,77 +220,80 @@
       <table class="min-w-full divide-y divide-slate-200">
         <thead class="bg-slate-50">
           <tr>
-            <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Clave</th>
-            <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Nombre</th>
-            <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Areas</th>
-            <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Permisos</th>
-            <th class="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Acciones</th>
+            <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Clave
+            </th>
+            <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Nombre
+            </th>
+            <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Areas
+            </th>
+            <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+              Permisos</th>
+            <th class="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+              Acciones</th>
           </tr>
         </thead>
 
         <tbody class="divide-y divide-slate-100">
           @for (item of filteredRoles(); track item._id || item.name) {
-            <tr class="transition hover:bg-slate-50/80">
-              <td class="px-5 py-3.5 align-top">
-                <span class="inline-flex rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-700">
-                  {{ item.name }}
+          <tr class="transition hover:bg-slate-50/80">
+            <td class="px-5 py-3.5 align-top">
+              <span
+                class="inline-flex rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-700">
+                {{ item.name }}
+              </span>
+            </td>
+            <td class="px-5 py-3.5 align-top text-sm font-medium text-slate-900">{{ item.nameRole }}</td>
+            <td class="px-5 py-3.5 align-top">
+              <div class="flex flex-wrap gap-1.5">
+                @for (area of getRoleAreas(item.name); track area) {
+                <span
+                  class="rounded-full border border-blue-200 bg-blue-50 px-2 py-1 text-[10px] font-semibold tracking-[0.14em] text-blue-700">
+                  {{ area }}
                 </span>
-              </td>
-              <td class="px-5 py-3.5 align-top text-sm font-medium text-slate-900">{{ item.nameRole }}</td>
-              <td class="px-5 py-3.5 align-top">
-                <div class="flex flex-wrap gap-1.5">
-                  @for (area of getRoleAreas(item.name); track area) {
-                    <span class="rounded-full border border-blue-200 bg-blue-50 px-2 py-1 text-[10px] font-semibold tracking-[0.14em] text-blue-700">
-                      {{ area }}
-                    </span>
-                  }
-                  @if (!getRoleAreas(item.name).length) {
-                    <span class="text-xs text-slate-400">-</span>
-                  }
-                </div>
-              </td>
-              <td class="px-5 py-3.5 align-top">
-                <div class="flex flex-wrap gap-1.5">
-                  @for (permission of getPermissionPreview(item.permissions); track permission) {
-                    <span class="rounded-full border border-slate-200 bg-white px-2 py-1 text-[10px] font-medium text-slate-600">
-                      {{ permission }}
-                    </span>
-                  }
-                  @if (getRemainingPermissionsCount(item.permissions) > 0) {
-                    <span class="rounded-full border border-slate-200 bg-white px-2 py-1 text-[10px] font-medium text-slate-600">
-                      +{{ getRemainingPermissionsCount(item.permissions) }}
-                    </span>
-                  }
-                  @if (!item.permissions.length) {
-                    <span class="text-xs text-slate-400">-</span>
-                  }
-                </div>
-              </td>
-              <td class="px-5 py-3.5 align-top">
-                <div class="flex justify-end gap-2">
-                  <button
-                    type="button"
-                    (click)="openEditModal(item)"
-                    class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:border-emerald-300 hover:text-emerald-700"
-                  >
-                    <i class="bx bx-pencil text-base"></i>
-                  </button>
-                  <button
-                    type="button"
-                    (click)="item._id ? confirmDeleteRole(item._id) : null"
-                    class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-rose-200 bg-rose-50 text-rose-700 transition hover:bg-rose-100"
-                  >
-                    <i class="bx bx-trash text-base"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
+                }
+                @if (!getRoleAreas(item.name).length) {
+                <span class="text-xs text-slate-400">-</span>
+                }
+              </div>
+            </td>
+            <td class="px-5 py-3.5 align-top">
+              <div class="flex flex-wrap gap-1.5">
+                @for (permission of getPermissionPreview(item.permissions); track permission) {
+                <span
+                  class="rounded-full border border-slate-200 bg-white px-2 py-1 text-[10px] font-medium text-slate-600">
+                  {{ permission }}
+                </span>
+                }
+                @if (getRemainingPermissionsCount(item.permissions) > 0) {
+                <span
+                  class="rounded-full border border-slate-200 bg-white px-2 py-1 text-[10px] font-medium text-slate-600">
+                  +{{ getRemainingPermissionsCount(item.permissions) }}
+                </span>
+                }
+                @if (!item.permissions.length) {
+                <span class="text-xs text-slate-400">-</span>
+                }
+              </div>
+            </td>
+            <td class="px-5 py-3.5 align-top">
+              <div class="flex justify-end gap-2">
+                <button type="button" (click)="openEditModal(item)"
+                  class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:border-emerald-300 hover:text-emerald-700">
+                  <i class="bx bx-pencil text-base"></i>
+                </button>
+                <button type="button" (click)="item._id ? confirmDeleteRole(item._id) : null"
+                  class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-rose-200 bg-rose-50 text-rose-700 transition hover:bg-rose-100">
+                  <i class="bx bx-trash text-base"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
           }
 
           @if (!filteredRoles().length) {
-            <tr>
-              <td colspan="5" class="px-5 py-10 text-center text-sm text-slate-500">Sin resultados</td>
-            </tr>
+          <tr>
+            <td colspan="5" class="px-5 py-10 text-center text-sm text-slate-500">Sin resultados</td>
+          </tr>
           }
         </tbody>
       </table>
@@ -323,165 +302,128 @@
 </div>
 
 @if (openModalRole()) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 px-4 py-5 backdrop-blur-sm">
-    <div class="max-h-[92vh] w-full max-w-4xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-2xl">
-      <div class="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4">
-        <div>
-          <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Roles</p>
-          <h2 class="mt-1 text-xl font-semibold text-slate-900">{{ isEditMode() ? 'Editar rol' : 'Nuevo rol' }}</h2>
-        </div>
-
-        <button
-          type="button"
-          (click)="closeModal()"
-          class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
-        >
-          <i class="bx bx-x text-xl"></i>
-        </button>
+<div class="modal-overlay fixed inset-0 z-50 flex items-center justify-center px-4 py-5">
+  <div
+    class="modal-panel max-h-[92vh] w-full max-w-4xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-2xl">
+    <div class="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Roles</p>
+        <h2 class="mt-1 text-xl font-semibold text-slate-900">{{ isEditMode() ? 'Editar rol' : 'Nuevo rol' }}</h2>
       </div>
 
-      <form (ngSubmit)="onSave()" [formGroup]="userFormRole" class="grid max-h-[calc(92vh-76px)] gap-0 overflow-y-auto lg:grid-cols-[280px_minmax(0,1fr)]">
-        <aside class="border-b border-slate-200 bg-slate-50 px-5 py-5 lg:border-b-0 lg:border-r">
-          <div class="space-y-3">
-            <input
-              type="text"
-              formControlName="nameRole"
-              placeholder="Nombre visible"
-              class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-400"
-            />
-
-            <input
-              type="text"
-              formControlName="name"
-              placeholder="Clave"
-              class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-400"
-            />
-          </div>
-
-          <div class="mt-4 rounded-2xl border border-slate-200 bg-white px-4 py-3">
-            <p class="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">Permisos</p>
-            <p class="mt-1 text-2xl font-semibold text-slate-900">{{ getSelectedPermissionsCount() }}</p>
-          </div>
-
-          <div class="mt-4 space-y-2">
-            @for (scope of roleScopeCatalog; track scope.role) {
-              <div class="rounded-2xl border border-slate-200 bg-white px-3 py-2.5">
-                <div class="flex items-center justify-between gap-3">
-                  <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-700">{{ scope.label }}</p>
-                  <span class="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">{{ scope.role }}</span>
-                </div>
-              </div>
-            }
-          </div>
-        </aside>
-
-        <section class="px-5 py-5">
-          <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-4">
-            <button
-              type="button"
-              (click)="toggleAllGroups(true)"
-              class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-            >
-              Expandir
-            </button>
-            <button
-              type="button"
-              (click)="toggleAllGroups(false)"
-              class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-            >
-              Colapsar
-            </button>
-            <button
-              type="button"
-              (click)="toggleAllPermissions(true)"
-              class="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100"
-            >
-              Todo
-            </button>
-            <button
-              type="button"
-              (click)="toggleAllPermissions(false)"
-              class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-            >
-              Limpiar
-            </button>
-          </div>
-
-          <div class="permission-scroll mt-4 grid gap-3 xl:grid-cols-2">
-            @for (node of permissionTree; track node.id || node.label) {
-              <article class="rounded-[24px] border border-slate-200 bg-slate-50 p-3.5">
-                <div class="flex items-start gap-3">
-                  <button
-                    type="button"
-                    class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-100"
-                    (click)="toggleExpand(node)"
-                  >
-                    {{ node.expanded ? '-' : '+' }}
-                  </button>
-
-                  <div class="min-w-0 flex-1">
-                    <div class="flex items-start justify-between gap-3">
-                      <div>
-                        <h4 class="text-sm font-semibold text-slate-900">{{ node.label }}</h4>
-                        <p class="mt-1 text-[11px] text-slate-500">{{ getGroupSelectionSummary(node) }}</p>
-                      </div>
-
-                      <input
-                        type="checkbox"
-                        [(ngModel)]="node.checked"
-                        [ngModelOptions]="{ standalone: true }"
-                        (change)="onParentChange(node)"
-                        name="parent-{{ node.id || node.label }}"
-                        class="mt-1 h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400"
-                      />
-                    </div>
-
-                    @if (node.expanded && node.children) {
-                      <div class="mt-3 space-y-2">
-                        @for (child of node.children; track child.value || child.label) {
-                          <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2.5 transition hover:border-slate-300 hover:bg-slate-50">
-                            <input
-                              type="checkbox"
-                              [(ngModel)]="child.checked"
-                              [ngModelOptions]="{ standalone: true }"
-                              (change)="onChildChange(node)"
-                              name="child-{{ child.value || child.label }}"
-                              class="mt-0.5 h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400"
-                            />
-
-                            <span class="min-w-0 flex-1">
-                              <span class="block text-sm font-medium text-slate-800">{{ child.label }}</span>
-                              @if (child.value) {
-                                <span class="mt-0.5 block break-all text-[11px] text-slate-500">{{ child.value }}</span>
-                              }
-                            </span>
-                          </label>
-                        }
-                      </div>
-                    }
-                  </div>
-                </div>
-              </article>
-            }
-          </div>
-
-          <div class="mt-5 flex flex-wrap justify-end gap-2 border-t border-slate-200 pt-4">
-            <button
-              type="button"
-              (click)="closeModal()"
-              class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              class="rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
-            >
-              {{ isEditMode() ? 'Guardar' : 'Crear' }}
-            </button>
-          </div>
-        </section>
-      </form>
+      <button type="button" (click)="closeModal()"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700">
+        <i class="bx bx-x text-xl"></i>
+      </button>
     </div>
+
+    <form (ngSubmit)="onSave()" [formGroup]="userFormRole"
+      class="grid max-h-[calc(92vh-76px)] gap-0 overflow-y-auto lg:grid-cols-[280px_minmax(0,1fr)]">
+      <aside class="border-b border-slate-200 bg-slate-50 px-5 py-5 lg:border-b-0 lg:border-r">
+        <div class="space-y-3">
+          <input type="text" formControlName="nameRole" placeholder="Nombre visible"
+            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-400" />
+
+          <input type="text" formControlName="name" placeholder="Clave"
+            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-400" />
+        </div>
+
+        <div class="mt-4 rounded-2xl border border-slate-200 bg-white px-4 py-3">
+          <p class="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">Permisos</p>
+          <p class="mt-1 text-2xl font-semibold text-slate-900">{{ getSelectedPermissionsCount() }}</p>
+        </div>
+
+        <div class="mt-4 space-y-2">
+          @for (scope of roleScopeCatalog; track scope.role) {
+          <div class="rounded-2xl border border-slate-200 bg-white px-3 py-2.5">
+            <div class="flex items-center justify-between gap-3">
+              <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-700">{{ scope.label }}</p>
+              <span class="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">{{ scope.role }}</span>
+            </div>
+          </div>
+          }
+        </div>
+      </aside>
+
+      <section class="px-5 py-5">
+        <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-4">
+          <button type="button" (click)="toggleAllGroups(true)"
+            class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50">
+            Expandir
+          </button>
+          <button type="button" (click)="toggleAllGroups(false)"
+            class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50">
+            Colapsar
+          </button>
+          <button type="button" (click)="toggleAllPermissions(true)"
+            class="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100">
+            Todo
+          </button>
+          <button type="button" (click)="toggleAllPermissions(false)"
+            class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50">
+            Limpiar
+          </button>
+        </div>
+
+        <div class="permission-scroll mt-4 grid gap-3 xl:grid-cols-2">
+          @for (node of permissionTree; track node.id || node.label) {
+          <article class="rounded-[24px] border border-slate-200 bg-slate-50 p-3.5">
+            <div class="flex items-start gap-3">
+              <button type="button"
+                class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-100"
+                (click)="toggleExpand(node)">
+                {{ node.expanded ? '-' : '+' }}
+              </button>
+
+              <div class="min-w-0 flex-1">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <h4 class="text-sm font-semibold text-slate-900">{{ node.label }}</h4>
+                    <p class="mt-1 text-[11px] text-slate-500">{{ getGroupSelectionSummary(node) }}</p>
+                  </div>
+
+                  <input type="checkbox" [(ngModel)]="node.checked" [ngModelOptions]="{ standalone: true }"
+                    (change)="onParentChange(node)" name="parent-{{ node.id || node.label }}"
+                    class="mt-1 h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400" />
+                </div>
+
+                @if (node.expanded && node.children) {
+                <div class="mt-3 space-y-2">
+                  @for (child of node.children; track child.value || child.label) {
+                  <label
+                    class="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2.5 transition hover:border-slate-300 hover:bg-slate-50">
+                    <input type="checkbox" [(ngModel)]="child.checked" [ngModelOptions]="{ standalone: true }"
+                      (change)="onChildChange(node)" name="child-{{ child.value || child.label }}"
+                      class="mt-0.5 h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400" />
+
+                    <span class="min-w-0 flex-1">
+                      <span class="block text-sm font-medium text-slate-800">{{ child.label }}</span>
+                      @if (child.value) {
+                      <span class="mt-0.5 block break-all text-[11px] text-slate-500">{{ child.value }}</span>
+                      }
+                    </span>
+                  </label>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+          </article>
+          }
+        </div>
+
+        <div class="mt-5 flex flex-wrap justify-end gap-2 border-t border-slate-200 pt-4">
+          <button type="button" (click)="closeModal()"
+            class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+            Cancelar
+          </button>
+          <button type="submit"
+            class="rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800">
+            {{ isEditMode() ? 'Guardar' : 'Crear' }}
+          </button>
+        </div>
+      </section>
+    </form>
   </div>
+</div>
 }

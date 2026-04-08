@@ -1,12 +1,9 @@
 <app-sidebar [isOpen]="isSidebarOpen" (closeSidebar)="closeSidebar()"></app-sidebar>
 
-<main
-  [ngClass]="isSidebarOpen ? 'md:pl-64' : 'md:pl-0'"
-  class="min-h-screen bg-slate-100 transition-all duration-200"
->
+<main [ngClass]="isSidebarOpen ? 'md:pl-64' : 'md:pl-0'" class="min-h-screen bg-slate-100 transition-all duration-200">
   <app-header (toggleSidebar)="toggleSidebar()"></app-header>
 
-  <div class="p-4 sm:p-6">
+  <div class="p-1 sm:p-2">
     <router-outlet></router-outlet>
   </div>
 </main>

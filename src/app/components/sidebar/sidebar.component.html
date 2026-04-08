@@ -1,32 +1,21 @@
-<aside
-  [ngClass]="isOpen ? 'translate-x-0 md:translate-x-0' : '-translate-x-full md:-translate-x-full'"
-  class="sidebar-shell fixed left-0 top-0 z-50 flex h-full w-64 flex-col bg-indigo-100 p-4"
->
+<aside [ngClass]="isOpen ? 'translate-x-0 md:translate-x-0' : '-translate-x-full md:-translate-x-full'"
+  class="sidebar-shell fixed left-0 top-0 z-50 flex h-full w-64 flex-col bg-indigo-100 p-4">
   <div class="grid grid-cols-1 items-center justify-center border-b border-b-gray-800 pb-4">
     <img src="/images/image.png" class="mx-auto h-10" alt="Quoter logo">
-    <h2 class="mx-auto text-2xl font-bold text-gray-900">Quoter</h2>
+    <h2 class="mx-auto text-2xl font-bold text-gray-900">System</h2>
   </div>
 
   <div class="mt-4 flex-1 overflow-y-auto">
     <nav class="space-y-2">
-      <section
-        *ngFor="let group of visibleGroups(); trackBy: trackByGroup"
-        class="group"
-      >
-        <button
-          type="button"
-          (click)="toggleGroup(group.id)"
+      <section *ngFor="let group of visibleGroups(); trackBy: trackByGroup" class="group">
+        <button type="button" (click)="toggleGroup(group.id)"
           class="flex w-full items-start gap-3 rounded-md px-4 py-2 text-left font-semibold text-gray-900 transition-colors duration-100 hover:bg-gray-950 hover:text-gray-100"
-          [ngClass]="isGroupActive(group) ? 'bg-white text-gray-800' : ''"
-        >
+          [ngClass]="isGroupActive(group) ? 'bg-white text-gray-800' : ''">
           <i [class]="group.icon + ' mt-0.5 text-lg'"></i>
           <div class="min-w-0 flex-1 pr-2">
             <div class="flex items-center justify-between gap-3">
               <h3 class="text-sm">{{ group.label }}</h3>
-              <i
-                class="bx bx-chevron-down text-lg transition-transform"
-                [class.rotate-180]="isGroupOpen(group.id)"
-              ></i>
+              <i class="bx bx-chevron-down text-lg transition-transform" [class.rotate-180]="isGroupOpen(group.id)"></i>
             </div>
           </div>
         </button>
@@ -34,13 +23,9 @@
         <div *ngIf="isGroupOpen(group.id)" class="pb-1 pl-4 pr-1 pt-1">
           <ul class="space-y-1">
             <li *ngFor="let item of group.items; trackBy: trackByItem">
-              <a
-                *ngIf="item.route; else actionItem"
-                [routerLink]="item.route"
-                (click)="handleItem(item)"
+              <a *ngIf="item.route; else actionItem" [routerLink]="item.route" (click)="handleItem(item)"
                 class="flex items-start gap-3 rounded-md px-4 py-2 text-gray-900 transition-colors duration-100 hover:bg-gray-950 hover:text-gray-100"
-                [ngClass]="isItemActive(item) ? 'bg-white text-gray-800' : ''"
-              >
+                [ngClass]="isItemActive(item) ? 'bg-white text-gray-800' : ''">
                 <i [class]="item.icon + ' mt-0.5 text-lg'"></i>
                 <span class="min-w-0 flex-1">
                   <span class="block text-sm font-semibold">{{ item.label }}</span>
@@ -48,12 +33,9 @@
               </a>
 
               <ng-template #actionItem>
-                <button
-                  type="button"
-                  (click)="handleItem(item)"
+                <button type="button" (click)="handleItem(item)"
                   [disabled]="launchingItinerary() && item.action === 'openItineraryBuilder'"
-                  class="flex w-full items-start gap-3 rounded-md px-4 py-2 text-left text-gray-900 transition-colors duration-100 hover:bg-gray-950 hover:text-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
-                >
+                  class="flex w-full items-start gap-3 rounded-md px-4 py-2 text-left text-gray-900 transition-colors duration-100 hover:bg-gray-950 hover:text-gray-100 disabled:cursor-not-allowed disabled:opacity-60">
                   <i [class]="item.icon + ' mt-0.5 text-lg'"></i>
                   <span class="min-w-0 flex-1">
                     <span class="block text-sm font-semibold">{{ item.label }}</span>
@@ -68,10 +50,6 @@
   </div>
 </aside>
 
-<button
-  *ngIf="isOpen"
-  type="button"
-  (click)="onCloseSidebar()"
+<button *ngIf="isOpen" type="button" (click)="onCloseSidebar()"
   class="sidebar-overlay fixed left-0 top-0 z-40 h-full w-full bg-black/50 md:hidden"
-  aria-label="Close sidebar"
-></button>
+  aria-label="Close sidebar"></button>
