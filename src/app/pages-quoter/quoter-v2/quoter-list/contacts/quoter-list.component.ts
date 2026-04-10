@@ -68,6 +68,7 @@ export class QuoterListComponent implements OnInit {
 
   statuses = ['WIP', 'HOLD', 'SOLD', 'LOST'];
   launchInProgressQuoterId: string | null = null;
+  reviewInProgressQuoterId: string | null = null;
   statusColors: { [key: string]: string } = {
     WIP: 'bg-blue-100', // Azul
     HOLD: 'bg-yellow-100', // Amarillo
@@ -184,7 +185,18 @@ export class QuoterListComponent implements OnInit {
       if (updatedCotization.status === 'SOLD') {
         return;
       }
+
       const contact = this.contacts.find((c) => c._id === contactId);
+
+      if (updatedCotization?.quoter_id && contact?.soldQuoterId === updatedCotization.quoter_id) {
+        await this.quoterV2Service.revertSale(updatedCotization.quoter_id, {
+          targetStatus: updatedCotization.status,
+          reason: `Quote reverted from SOLD to ${updatedCotization.status}`
+        });
+        await this.fetchContacts(this.currentPage(), this.itemsPerPage());
+        toast.success(`Quote updated to ${updatedCotization.status}`);
+        return;
+      }
 
       const updatedCotizations = contact?.cotizations?.map((cotization: Quoter) =>
         cotization.quoter_id === updatedCotization.quoter_id
@@ -207,8 +219,10 @@ export class QuoterListComponent implements OnInit {
       this.contacts = this.contacts.map((item) => item._id === contactId ? response : item);
       this.filteredContacts = this.filteredContacts.map((item) => item._id === contactId ? response : item);
       this.metodo();
+      toast.success(`Quote updated to ${updatedCotization.status}`);
     } catch (error) {
       console.error('Error al actualizar la cotización:', error);
+      toast.error('Could not update quote status');
     }
   }
 
@@ -343,6 +357,84 @@ export class QuoterListComponent implements OnInit {
   async generateExcelVersion(cotization: Quoter) {
     if (!cotization.quoter_id) return;
     await this.generateExcel(cotization.quoter_id);
+  }
+
+  private escapeHtml(value: unknown): string {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  private buildReviewHtml(result: any): string {
+    const findings = Array.isArray(result?.findings) ? result.findings : [];
+    const summary = result?.summary || {};
+    const aiReview = result?.review_context?.ai_review || {};
+
+    if (!findings.length) {
+      return `
+        <div class="text-left">
+          <p><strong>Assessment:</strong> ${this.escapeHtml(summary.overall_assessment || 'No major issues found.')}</p>
+          <p><strong>Risk level:</strong> ${this.escapeHtml(summary.risk_level || 'low')}</p>
+          <p><strong>Agent review:</strong> ${aiReview.used ? `completed (${this.escapeHtml(aiReview.model || 'model')})` : `not completed${aiReview.error ? `: ${this.escapeHtml(aiReview.error)}` : ''}`}</p>
+          <p style="margin-top:12px;">No inconsistencies were detected in this review.</p>
+        </div>
+      `;
+    }
+
+    const itemsHtml = findings.map((finding: any) => {
+      const evidence = Array.isArray(finding?.evidence) ? finding.evidence : [];
+      const evidenceHtml = evidence.length
+        ? `<ul style="margin:8px 0 0 18px; padding:0;">${evidence.map((item: string) => `<li>${this.escapeHtml(item)}</li>`).join('')}</ul>`
+        : '<p style="margin:8px 0 0 0;">No direct evidence provided.</p>';
+
+      return `
+        <div style="text-align:left; border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin-top:12px;">
+          <p style="margin:0 0 6px 0;"><strong>${this.escapeHtml(finding?.title || 'Finding')}</strong></p>
+          <p style="margin:0;"><strong>Type:</strong> ${this.escapeHtml(finding?.type || 'general')}</p>
+          <p style="margin:4px 0 0 0;"><strong>Severity:</strong> ${this.escapeHtml(finding?.severity || 'medium')} | <strong>Confidence:</strong> ${this.escapeHtml(finding?.confidence || 'medium')} | <strong>Source:</strong> ${this.escapeHtml(finding?.source || 'heuristic')}</p>
+          <p style="margin:8px 0 0 0;">${this.escapeHtml(finding?.description || '')}</p>
+          ${evidenceHtml}
+          <p style="margin:8px 0 0 0;"><strong>Suggestion:</strong> ${this.escapeHtml(finding?.suggestion || 'Review this area manually.')}</p>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="text-left">
+        <p><strong>Assessment:</strong> ${this.escapeHtml(summary.overall_assessment || 'Quote reviewed')}</p>
+        <p><strong>Risk level:</strong> ${this.escapeHtml(summary.risk_level || 'medium')}</p>
+        <p><strong>Findings:</strong> ${findings.length}</p>
+        <p><strong>Agent review:</strong> ${aiReview.used ? `completed (${this.escapeHtml(aiReview.model || 'model')})` : `not completed${aiReview.error ? `: ${this.escapeHtml(aiReview.error)}` : ''}`}</p>
+        ${itemsHtml}
+      </div>
+    `;
+  }
+
+  async reviewQuoterVersion(cotization: Quoter): Promise<void> {
+    const quoterId = String(cotization?.quoter_id || '').trim();
+    if (!quoterId || this.reviewInProgressQuoterId === quoterId) {
+      return;
+    }
+
+    try {
+      this.reviewInProgressQuoterId = quoterId;
+      const result = await this.quoterV2Service.reviewQuoter(quoterId);
+
+      await Swal.fire({
+        title: result?.summary?.overall_assessment || 'Quote review',
+        html: this.buildReviewHtml(result),
+        width: 900,
+        confirmButtonText: 'Close',
+      });
+    } catch (error: any) {
+      console.error('Error reviewing quoter', error);
+      toast.error(error?.error?.error || error?.error?.message || error?.message || 'Could not review this quoter');
+    } finally {
+      this.reviewInProgressQuoterId = null;
+    }
   }
 
   async openInItineraryBuilder(cotization: Quoter): Promise<void> {
@@ -514,4 +606,7 @@ export class QuoterListComponent implements OnInit {
     }
   }
 }
+
+
+
 

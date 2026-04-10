@@ -46,6 +46,14 @@ export class QuoterV2Service {
     return firstValueFrom(this.http.post<any>(`${this.baseUrl}/quoters/${id}/confirm-sale`, payload));
   }
 
+  async revertSale(id: string, payload: { targetStatus: 'WIP' | 'HOLD' | 'LOST'; reason?: string }): Promise<any> {
+    return firstValueFrom(this.http.post<any>(`${this.baseUrl}/quoters/${id}/revert-sale`, payload));
+  }
+
+  async reviewQuoter(id: string): Promise<any> {
+    return firstValueFrom(this.http.post<any>(`${this.baseUrl}/quoters/${id}/review`, {}));
+  }
+
   async calculatePrices(payload: any): Promise<any> {
     return firstValueFrom(this.http.post<any>(`${this.baseUrl}/calculate-prices`, payload));
   }
