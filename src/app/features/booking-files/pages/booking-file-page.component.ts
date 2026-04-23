@@ -20,9 +20,11 @@ export class BookingFilePageComponent implements OnInit {
   readonly bookingFile = signal<BookingFile | null>(null);
   readonly loading = signal(false);
   readonly error = signal('');
-  readonly activeTab = signal<'overview' | 'summary' | 'orders' | 'detailed'>('overview');
+  readonly activeTab = signal<'summary' | 'itinerary' | 'orders' | 'operations'>('summary');
   readonly savingDetail = signal(false);
   readonly rebuildingItinerary = signal(false);
+  readonly showActionsMenu = signal(false);
+  readonly expandedOperationalDays = signal<string[]>([]);
   readonly editingItemId = signal('');
   readonly editingDayLabel = signal('');
   readonly editingItemTitle = signal('');
@@ -76,6 +78,16 @@ export class BookingFilePageComponent implements OnInit {
       { label: 'Passenger Info', value: file.passenger_info_status?.status || 'NOT_SENT', tone: 'indigo' }
     ];
   });
+  readonly summaryContextCards = computed(() => {
+    const context = this.bookingFile()?.summary_context;
+    if (!context) return [];
+    return [
+      { label: 'Open Orders', value: context.open_orders, helper: 'Orders still pending execution or follow-up.' },
+      { label: 'Blocked Orders', value: context.blocked_orders, helper: 'Orders paused waiting for missing information.' },
+      { label: 'Overdue Orders', value: context.overdue_orders, helper: 'Open orders already past their due date.' },
+      { label: 'Due Today', value: context.due_today_orders, helper: 'Open orders that should move today.' },
+    ];
+  });
   readonly attentionCards = computed(() => {
     const orders = this.orders();
     const now = new Date();
@@ -125,14 +137,27 @@ export class BookingFilePageComponent implements OnInit {
       };
     });
   });
+  readonly ordersByType = computed(() => {
+    const grouped = new Map<string, number>();
+
+    this.orders().forEach((order) => {
+      const rawType = String(order.type || 'OTHER');
+      const label = rawType.replace(/_/g, ' ');
+      grouped.set(label, (grouped.get(label) || 0) + 1);
+    });
+
+    return Array.from(grouped.entries())
+      .map(([label, total]) => ({ label, total }))
+      .sort((a, b) => b.total - a.total || a.label.localeCompare(b.label));
+  });
   readonly tabItems = computed(() => {
     const orderCount = this.orders().length;
     const operational = this.operationalStats();
     return [
-      { id: 'overview' as const, label: 'Overview', meta: this.itineraryLines().length ? `${this.itineraryLines().length} itinerary lines` : 'Trip baseline' },
-      { id: 'summary' as const, label: 'Summary', meta: this.summaryCards().length ? `${this.summaryCards().length} summary signals` : 'Master statuses' },
+      { id: 'summary' as const, label: 'Summary', meta: orderCount ? `${orderCount} service orders` : 'Service order overview' },
+      { id: 'itinerary' as const, label: 'Itinerary', meta: this.itineraryLines().length ? `${this.itineraryLines().length} itinerary lines` : 'Trip baseline' },
       { id: 'orders' as const, label: 'Orders', meta: `${orderCount} related orders` },
-      { id: 'detailed' as const, label: 'Detailed Itinerary', meta: operational.total ? `${operational.ready}/${operational.total} ready` : 'Operational timeline' }
+      { id: 'operations' as const, label: 'Operations Detail', meta: operational.total ? `${operational.ready}/${operational.total} ready` : 'Operational timeline' }
     ];
   });
 
@@ -233,6 +258,7 @@ export class BookingFilePageComponent implements OnInit {
         ? await this.api.getById(id)
         : await this.api.getByQuoter(quoterId);
       this.bookingFile.set(bookingFile);
+      this.syncExpandedOperationalDays(bookingFile?.operational_itinerary?.days || []);
     } catch (error: any) {
       this.bookingFile.set(null);
       this.error.set(error?.error?.message || 'Could not load booking file');
@@ -254,8 +280,16 @@ export class BookingFilePageComponent implements OnInit {
     }
   }
 
-  setTab(tab: 'overview' | 'summary' | 'orders' | 'detailed'): void {
+  setTab(tab: 'summary' | 'itinerary' | 'orders' | 'operations'): void {
     this.activeTab.set(tab);
+  }
+
+  toggleActionsMenu(): void {
+    this.showActionsMenu.update((current) => !current);
+  }
+
+  closeActionsMenu(): void {
+    this.showActionsMenu.set(false);
   }
 
   beginEditItem(dayLabel: string, item: OperationalItineraryItem): void {
@@ -297,6 +331,7 @@ export class BookingFilePageComponent implements OnInit {
         detail: this.detailDraft()
       });
       this.bookingFile.update((current) => current ? { ...current, operational_itinerary: nextItinerary } : current);
+      this.syncExpandedOperationalDays(nextItinerary?.days || []);
       this.cancelEditItem();
       toast.success('Detailed itinerary item updated');
     } catch (error: any) {
@@ -325,6 +360,7 @@ export class BookingFilePageComponent implements OnInit {
     try {
       const nextItinerary = await this.api.rebuildOperationalItinerary(fileId);
       this.bookingFile.update((current) => current ? { ...current, operational_itinerary: nextItinerary } : current);
+      this.syncExpandedOperationalDays(nextItinerary?.days || []);
       this.cancelEditItem();
       toast.success('Operational itinerary rebuilt from the sold snapshot');
     } catch (error: any) {
@@ -336,6 +372,21 @@ export class BookingFilePageComponent implements OnInit {
 
   isEditingItem(itemId: string): boolean {
     return this.editingItemId() === itemId;
+  }
+
+  buildOperationalDayKey(day: { day?: number; date?: string | null; city?: string | null }): string {
+    return `${day.day || 0}-${day.date || ''}-${day.city || ''}`;
+  }
+
+  toggleOperationalDay(day: { day?: number; date?: string | null; city?: string | null }): void {
+    const key = this.buildOperationalDayKey(day);
+    this.expandedOperationalDays.update((current) =>
+      current.includes(key) ? current.filter((item) => item !== key) : [...current, key]
+    );
+  }
+
+  isOperationalDayExpanded(day: { day?: number; date?: string | null; city?: string | null }): boolean {
+    return this.expandedOperationalDays().includes(this.buildOperationalDayKey(day));
   }
 
   openServiceOrders(): void {
@@ -360,5 +411,15 @@ export class BookingFilePageComponent implements OnInit {
     if (!value) return '';
     if (typeof value === 'string') return value;
     return value._id || '';
+  }
+
+  private syncExpandedOperationalDays(days: Array<{ day?: number; date?: string | null; city?: string | null }> = []): void {
+    const validKeys = days.map((day) => this.buildOperationalDayKey(day));
+    const current = this.expandedOperationalDays().filter((key) => validKeys.includes(key));
+    if (current.length) {
+      this.expandedOperationalDays.set(current);
+      return;
+    }
+    this.expandedOperationalDays.set(validKeys[0] ? [validKeys[0]] : []);
   }
 }

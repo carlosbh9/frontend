@@ -92,6 +92,13 @@ export interface ServiceOrder {
   financials?: ServiceOrderFinancials;
   attachments?: ServiceOrderAttachment[];
   auditLogs: ServiceOrderAuditLog[];
+  lastStatusChangeAt?: string | null;
+  lastStageChangeAt?: string | null;
+  completedAt?: string | null;
+  completedBy?: string | null;
+  cancelledAt?: string | null;
+  cancelledBy?: string | null;
+  cancellationReason?: string;
   createdBy?: string | null;
   updatedBy?: string | null;
   createdAt: string;

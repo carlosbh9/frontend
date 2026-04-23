@@ -1,24 +1,25 @@
 import { CommonModule } from '@angular/common';
-import { Component, input,OnInit,Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { FlightItem } from '../../../../interfaces/quoter-models.interface';
+
+type FlightDraft = Omit<FlightItem, 'price'> & {
+  price: number | string;
+};
 
 @Component({
   selector: 'app-flights',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './flights-v2.component.html',
   styleUrl: './flights-v2.component.css'
 })
 export class FlightsV2Component implements OnInit {
+  paxs = input.required<number>();
+  @Input() flights: FlightItem[] = [];
+  @Output() flightsChange = new EventEmitter<FlightItem[]>();
+  @Output() totalPricesChange = new EventEmitter<number>();
 
- // datosFlight = output<any[]>();
-  paxs = input.required<number[]>();
-  @Input() flights: any[] = [];
- // flights = input<any[]>();
-  @Output() flightsChange = new EventEmitter<any[]>();
-  @Output() totalPricesChange = new EventEmitter<number[]>();
-  //editFlight: boolean = false;
-  //flights: any[] = [];
   routes: { route: string, price: number }[] = [
     { route: 'LIM/CUZ', price: 210 },
     { route: 'CUZ/LIM', price: 210 },
@@ -40,98 +41,65 @@ export class FlightsV2Component implements OnInit {
   ];
   selectedRoute: { route: string, price: number } = { route: '', price: 0 };
 
-  originalItem: any = {};
-  newFlight: any = {
-    date: '',
-    route: '',
-    price_conf: 0,
-    prices:[],
-    notes: '',
-    editFlight: false
+  originalItem: Record<number, FlightItem> = {};
+  newFlight: FlightDraft = this.emptyFlight();
+
+  ngOnInit(): void {}
+
+  emptyFlight(): FlightDraft {
+    return {
+      date: '',
+      route: '',
+      price_base: 0,
+      price: 0,
+      notes: '',
+      editFlight: false,
+    };
   }
 
- 
-
-  ngOnInit(): void {
-  
-
+  onSubmitFlight() {
+    if (this.selectedRoute.route && this.selectedRoute.price > 0) {
+      const flightToAdd: FlightItem = {
+        ...this.newFlight,
+        route: this.selectedRoute.route,
+        price_base: this.selectedRoute.price,
+        price: this.selectedRoute.price * this.paxs(),
+      };
+      this.flights.push(flightToAdd);
+      this.emitFlights();
+      this.newFlight = this.emptyFlight();
+    }
   }
-emtyFlight(){
-  return this.newFlight = {
-    date: '',
-    route: '',
-    price_conf: 0,
-    prices:[],
-    notes: '',
-    editFlight: false
+
+  onEdit(item: FlightItem, index: number) {
+    this.originalItem[index] = { ...item };
+    item.editFlight = true;
+    this.emitFlights();
   }
-}
-onSubmitFlight() {
-  this.newFlight.price_conf = this.newFlight.prices[0]
- //   this.flights.push(this.newFlight);
- if (this.selectedRoute.route && this.selectedRoute.price > 0) {
-  // Multiplicar el precio seleccionado por cada uno de los elementos de number_paxs
-  const calculatedPrices = this.paxs().map(pax => this.selectedRoute.price * pax);
-  
-  // Crear el objeto newFlight con el array prices
-  const flightToAdd = {
-    ...this.newFlight,
-    route: this.selectedRoute.route,
-    price_conf: this.selectedRoute.price,
-    prices: calculatedPrices
-  };
-  console.log(this.flights);
-  this.flights.push(flightToAdd);
-  this.emitFlights(); 
-  this.emtyFlight();
-}
-}
-    
 
-onEdit(item: any, index: number) {
-  this.originalItem[index] = { ...item };
-  item.editFlight = true;
-  console.log('editando item', item, index);
-  this.emitFlights(); 
-
-}
-onClose(item: any, index: number){
-    // Revertir el item al estado original
+  onClose(item: FlightItem, index: number) {
     this.flights[index] = { ...this.originalItem[index] };
     item.editFlight = false;
-    this.emitFlights(); 
-}
-onSave(item: any){
-  item.editFlight= false
-  this.originalItem = {};
-  this.emitFlights(); 
-}
-onDelete(index: number){
-  this.flights.splice(index, 1); 
-  this.emitFlights(); 
-}
+    this.emitFlights();
+  }
 
-private emitFlights() {
-  this.flightsChange.emit(this.flights);
-  this.totalPricesChange.emit(this.getTotalPrices())
-}
-getTotalPrices(): number[] {
-  const totalPrices: number[] = [];
-  // Recorrer cada vuelo (flight) en la tabla
-  this.flights.forEach((flight: { prices: number[] }) => {
-    // Recorrer cada precio dentro del array 'prices' del vuelo
-    flight.prices.forEach((price: number, index: number) => {
-      // Si ya existe un valor en 'totalPrices' para ese índice, lo suma
-      if (totalPrices[index]) {
-        totalPrices[index] += price;
-      } else {
-        // Si no existe valor aún, lo inicializa con el precio actual
-        totalPrices[index] = price;
-      }
-    });
-  });
+  onSave(item: FlightItem) {
+    item.editFlight = false;
+    this.originalItem = {};
+    this.emitFlights();
+  }
 
-  return totalPrices;
-}
+  onDelete(index: number) {
+    this.flights.splice(index, 1);
+    this.emitFlights();
+  }
 
+  private emitFlights() {
+    this.flightsChange.emit(this.flights);
+    this.totalPricesChange.emit(this.getTotalPrices());
+  }
+
+  getTotalPrices(): number {
+    return this.flights.reduce((total, flight) => total + (Number(flight.price) || 0), 0);
+  }
 }

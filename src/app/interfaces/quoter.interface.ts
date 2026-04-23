@@ -1,16 +1,17 @@
 
 export interface Quoter {
-    name_version: string;
+    name_quoter: string;
+    name_version?: string;
     guest: string;
     destinations:string[];
-    children_ages: number[];
+    children_ages: number[] | null;
     FileCode: string;
     travelDate: {
       start: string;
       end: string;
     };
     accomodations: string;
-    totalNights: number;
+    totalNights: string;
     number_paxs: number;
     travel_agent: string;
     exchange_rate: string;

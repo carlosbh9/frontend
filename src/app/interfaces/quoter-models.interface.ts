@@ -11,6 +11,12 @@ export interface ServiceItem {
   price_base: number;
   price: number;
   notes: string;
+  tariff_item_id?: string;
+  placement?: 'services' | 'options';
+  pricing_meta?: {
+    auto_vehicle_type?: string;
+    alerts?: string[];
+  };
   day?: number;
   service_id?: string;
   service_type?: string;
@@ -40,14 +46,21 @@ export interface HotelItem {
   price: number;
   accomodatios_category: string;
   notes: string;
+  tariff_item_id?: string;
+  placement?: 'services' | 'options';
+  room_name?: string;
+  occupancy?: string;
+  room_rate_type?: 'confidential' | 'rack';
+  price_source?: 'tariff' | 'manual';
 }
 
 export interface FlightItem {
   date: string;
   route: string;
-  price_conf: number;
+  price_base: number;
   price: number;
   notes: string;
+  editFlight?: boolean;
 }
 
 export interface OperatorItem {
@@ -55,14 +68,16 @@ export interface OperatorItem {
   name_operator: string;
   price: number;
   notes: string;
+  editOperator?: boolean;
 }
 
 export interface CruiseItem {
   name: string;
   operator: string;
-  price_conf: number;
+  price_base: number;
   price: number;
   notes: string;
+  editCruise?: boolean;
 }
 
 export interface TotalPrices {
@@ -84,15 +99,17 @@ export interface TotalPrices {
 
 export interface Quoter {
   _id?: string;
+  id?: string;
   contact_id?: string;
-  name_version: string;
+  name_quoter: string;
+  name_version?: string;
   guest: string;
   destinations: string[];
-  children_ages: number[];
+  children_ages: number[] | null;
   FileCode: string;
   travelDate: TravelDate;
   accomodations: string;
-  totalNights: number | string;
+  totalNights: string;
   number_paxs: number;
   travel_agent: string;
   exchange_rate: string;
@@ -102,6 +119,10 @@ export interface Quoter {
   operators: OperatorItem[];
   cruises: CruiseItem[];
   total_prices: TotalPrices;
+  status?: string;
+  soldAt?: string | null;
+  soldBy?: string | null;
+  booking_file_id?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }

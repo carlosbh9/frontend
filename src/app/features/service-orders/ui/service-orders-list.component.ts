@@ -1,23 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ServiceOrder } from '../data-access/service-orders.types';
 
 @Component({
   selector: 'app-service-orders-list',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="space-y-4">
+    <div class="space-y-3">
       <!-- FILTER BAR -->
-      <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
-        <div class="grid grid-cols-1 gap-3 xl:grid-cols-4">
+      <div class="rounded-xl border border-slate-200 bg-slate-50/80 p-2.5">
+        <div class="grid grid-cols-1 gap-2 xl:grid-cols-4">
           <div>
             <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
               Area
             </label>
             <select
-              class="block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900
+              class="block w-full rounded-lg bg-white px-3 py-1.5 text-sm text-slate-900
                      ring-1 ring-inset ring-slate-300
                      focus:outline-none focus:ring-2 focus:ring-indigo-600"
               [ngModel]="area"
@@ -36,7 +37,7 @@ import { ServiceOrder } from '../data-access/service-orders.types';
               Status
             </label>
             <select
-              class="block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900
+              class="block w-full rounded-lg bg-white px-3 py-1.5 text-sm text-slate-900
                      ring-1 ring-inset ring-slate-300
                      focus:outline-none focus:ring-2 focus:ring-indigo-600"
               [ngModel]="status"
@@ -56,7 +57,7 @@ import { ServiceOrder } from '../data-access/service-orders.types';
               Type
             </label>
             <select
-              class="block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-slate-900
+              class="block w-full rounded-lg bg-white px-3 py-1.5 text-sm text-slate-900
                      ring-1 ring-inset ring-slate-300
                      focus:outline-none focus:ring-2 focus:ring-indigo-600"
               [ngModel]="type"
@@ -74,7 +75,7 @@ import { ServiceOrder } from '../data-access/service-orders.types';
 
           <div class="flex items-end">
             <button
-              class="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold
+              class="inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-1.5 text-sm font-semibold
                      text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-white"
               type="button"
               (click)="reload.emit()"
@@ -89,8 +90,8 @@ import { ServiceOrder } from '../data-access/service-orders.types';
       </div>
 
       <!-- TABLE CARD -->
-      <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-        <div class="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
+      <div class="overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <div class="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-2.5">
           <div>
             <h3 class="text-sm font-semibold text-slate-900">Orders List</h3>
             <p class="text-xs text-slate-500">Operational queue by service, status, and due date.</p>
@@ -105,25 +106,21 @@ import { ServiceOrder } from '../data-access/service-orders.types';
           <table class="min-w-full text-sm">
             <thead class="bg-slate-50 text-slate-500">
               <tr>
-                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Actions</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Type</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Service</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Stage</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Area</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Status</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Priority</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Amount</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Finance</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">Docs</th>
-                <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide">Due</th>
-                <!-- <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide">Actions</th> -->
+                <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide">Actions</th>
+                <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide">Type</th>
+                <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide">Service</th>
+                <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide">Stage</th>
+                <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide">Status</th>
+                <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide">Priority</th>
+                <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide">Docs</th>
+                <th class="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wide">Due</th>
               </tr>
             </thead>
 
             <tbody class="divide-y divide-slate-100">
               @if (!orders?.length) {
                 <tr>
-                  <td colspan="11" class="px-4 py-10 text-center">
+                  <td colspan="8" class="px-4 py-10 text-center">
                     <div class="mx-auto max-w-sm">
                       <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -139,10 +136,10 @@ import { ServiceOrder } from '../data-access/service-orders.types';
                 </tr>
               } @else {
                 @for (order of orders; track order._id) {
-                  <tr class="hover:bg-slate-50/70 transition-colors">
-                    <td class="px-4 py-3 text-left">
+                  <tr class="transition-colors hover:bg-slate-50/70">
+                    <td class="px-4 py-2.5 text-left">
                       <button
-                        class="inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold
+                        class="inline-flex items-center justify-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold
                                text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
                         (click)="openDetail.emit(order._id)"
                       >
@@ -153,93 +150,73 @@ import { ServiceOrder } from '../data-access/service-orders.types';
                         Detail
                       </button>
                     </td>
-                    <td class="px-4 py-3">
+                    <td class="px-4 py-2.5">
                       <span
-                        class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
+                        class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ring-inset"
                         [ngClass]="typeClass(order.type)"
                       >
                         {{ order.type }}
                       </span>
                     </td>
 
-                    <td class="px-4 py-3">
-                      <div class="min-w-[200px]">
-                        <p class="font-medium text-slate-900">
-                          {{ getServiceLabel(order) }}
-                        </p>
+                    <td class="px-4 py-2.5">
+                      <div class="min-w-[220px]">
+                        <div class="flex flex-wrap items-center gap-2">
+                          <p class="text-sm font-medium text-slate-900">
+                            {{ getServiceLabel(order) }}
+                          </p>
+                          <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700">
+                            {{ order.area }}
+                          </span>
+                        </div>
                         <p class="mt-0.5 text-xs text-slate-500">
                           {{ order._id }}
                         </p>
-                      </div>
-                    </td>
-
-                    <td class="px-4 py-3">
-                      <div class="min-w-[170px]">
-                        <span
-                          class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
-                          [ngClass]="stageClass(order)"
-                        >
-                          {{ order.currentStageLabel || order.currentStageCode || 'No stage' }}
-                        </span>
                         @if (order.workflowTemplateName || order.workflowTemplateCode) {
-                          <p class="mt-1 text-xs text-slate-500">
+                          <p class="mt-0.5 text-[11px] text-slate-400">
                             {{ order.workflowTemplateName || order.workflowTemplateCode }}
                           </p>
                         }
                       </div>
                     </td>
 
-                    <td class="px-4 py-3">
-                      <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
-                        {{ order.area }}
-                      </span>
+                    <td class="px-4 py-2.5">
+                      <div class="min-w-[150px]">
+                        <span
+                          class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ring-inset"
+                          [ngClass]="stageClass(order)"
+                        >
+                          {{ order.currentStageLabel || order.currentStageCode || 'No stage' }}
+                        </span>
+                      </div>
                     </td>
 
-                    <td class="px-4 py-3">
-                      <span
-                        class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
-                        [ngClass]="statusClass(order.status)"
-                      >
-                        {{ prettify(order.status) }}
-                      </span>
+                    <td class="px-4 py-2.5">
+                      <div class="space-y-0.5">
+                        <span
+                          class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ring-inset"
+                          [ngClass]="statusClass(order.status)"
+                        >
+                          {{ prettify(order.status) }}
+                        </span>
+                        @if (isOverdue(order.dueDate, order.status)) {
+                          <p class="text-[11px] font-medium text-rose-600">Overdue</p>
+                        }
+                      </div>
                     </td>
 
-                    <td class="px-4 py-3">
+                    <td class="px-4 py-2.5">
                       <span
-                        class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
+                        class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ring-inset"
                         [ngClass]="priorityClass(order.priority)"
                       >
                         {{ prettify(order.priority) }}
                       </span>
                     </td>
 
-                    <td class="px-4 py-3">
-                      <p class="font-semibold text-slate-900">
-                        {{ getAmount(order) | number:'1.2-2' }}
-                      </p>
-                    </td>
-
-                    <td class="px-4 py-3">
-                      <div class="min-w-[140px]">
-                        <span
-                          class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
-                          [ngClass]="paymentStatusClass(order.financials?.paymentStatus)"
-                        >
-                          {{ prettify(order.financials?.paymentStatus || 'NOT_REQUIRED') }}
-                        </span>
-                        <p class="mt-1 text-xs text-slate-500">
-                          {{ order.financials?.currency || 'USD' }} {{ getPaidAmount(order) | number:'1.2-2' }}
-                          / {{ getExpectedCost(order) | number:'1.2-2' }}
-                        </p>
-                        @if (order.financials?.invoiceNumber) {
-                          <p class="mt-1 text-xs text-slate-500">Inv: {{ order.financials?.invoiceNumber }}</p>
-                        }
-                      </div>
-                    </td>
-
-                    <td class="px-4 py-3">
-                      <div class="flex min-w-[140px] flex-wrap items-center gap-1.5">
-                        <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
+                    <td class="px-4 py-2.5">
+                      <div class="flex min-w-[120px] flex-wrap items-center gap-1.5">
+                        <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
                           {{ getAttachmentCount(order) }} docs
                         </span>
                         <span *ngIf="hasAttachmentType(order, 'VOUCHER')" class="inline-flex items-center rounded-full bg-indigo-50 px-2 py-1 text-[11px] font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100">
@@ -257,21 +234,29 @@ import { ServiceOrder } from '../data-access/service-orders.types';
                         <span *ngIf="hasAttachmentType(order, 'TICKET')" class="inline-flex items-center rounded-full bg-sky-50 px-2 py-1 text-[11px] font-semibold text-sky-700 ring-1 ring-inset ring-sky-100">
                           T
                         </span>
-                      </div>
-                    </td>
-
-                    <td class="px-4 py-3 text-right">
-                      <div class="text-sm">
-                        <p class="font-medium text-slate-900">
-                          {{ order.dueDate ? (order.dueDate | date:'dd/MM/yyyy') : '-' }}
-                        </p>
-                        @if (isOverdue(order.dueDate, order.status)) {
-                          <p class="mt-0.5 text-xs font-medium text-rose-600">Overdue</p>
+                        @if (order.financials?.paymentStatus) {
+                          <span
+                            class="inline-flex items-center rounded-full px-2 py-1 text-[11px] font-semibold ring-1 ring-inset"
+                            [ngClass]="paymentStatusClass(order.financials?.paymentStatus)"
+                          >
+                            {{ prettify(order.financials?.paymentStatus) }}
+                          </span>
                         }
                       </div>
                     </td>
 
-
+                    <td class="px-4 py-2.5 text-right">
+                      <div class="text-sm">
+                        <p class="font-medium text-slate-900">
+                          {{ order.dueDate ? (order.dueDate | date:'dd/MM/yyyy') : '-' }}
+                        </p>
+                        @if (getAmount(order)) {
+                          <p class="mt-0.5 text-[11px] text-slate-500">
+                            {{ getAmount(order) | number:'1.2-2' }}
+                          </p>
+                        }
+                      </div>
+                    </td>
                   </tr>
                 }
               }
@@ -279,7 +264,7 @@ import { ServiceOrder } from '../data-access/service-orders.types';
           </table>
         </div>
 
-        <div class="flex flex-col gap-3 border-t border-slate-100 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex flex-col gap-3 border-t border-slate-100 px-4 py-2.5 sm:flex-row sm:items-center sm:justify-between">
           <div class="text-xs text-slate-500">
             Showing
             <span class="font-semibold text-slate-700">{{ pageStart }}</span>
@@ -294,7 +279,7 @@ import { ServiceOrder } from '../data-access/service-orders.types';
             <div class="flex items-center gap-2">
               <label class="text-xs font-semibold uppercase tracking-wide text-slate-500">Page size</label>
               <select
-                class="rounded-xl bg-white px-3 py-2 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                class="rounded-lg bg-white px-3 py-1.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                 [ngModel]="pageSize"
                 (ngModelChange)="changePageSize($event)"
               >
@@ -308,18 +293,18 @@ import { ServiceOrder } from '../data-access/service-orders.types';
             <div class="flex items-center gap-2">
               <button
                 type="button"
-                class="inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                class="inline-flex items-center justify-center rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
                 [disabled]="page <= 1"
                 (click)="changePage(page - 1)"
               >
                 Prev
               </button>
-              <div class="rounded-xl bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700">
+              <div class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700">
                 Page {{ page }} / {{ totalPages }}
               </div>
               <button
                 type="button"
-                class="inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                class="inline-flex items-center justify-center rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
                 [disabled]="page >= totalPages"
                 (click)="changePage(page + 1)"
               >
@@ -383,16 +368,6 @@ export class ServiceOrdersListComponent {
 
   getAmount(order: ServiceOrder): number {
     const amount = Number(order?.sourceSnapshot?.estimatedTotal ?? 0);
-    return Number.isFinite(amount) ? amount : 0;
-  }
-
-  getExpectedCost(order: ServiceOrder): number {
-    const amount = Number(order?.financials?.expectedCost ?? 0);
-    return Number.isFinite(amount) ? amount : 0;
-  }
-
-  getPaidAmount(order: ServiceOrder): number {
-    const amount = Number(order?.financials?.paidAmount ?? 0);
     return Number.isFinite(amount) ? amount : 0;
   }
 

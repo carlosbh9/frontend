@@ -1,12 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, inject, input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { toast } from 'ngx-sonner';
 import { TariffV2Service } from '../../../../Services/tariff-v2.service';
+import { HotelItem } from '../../../../interfaces/quoter-models.interface';
 import { OccupancyRate, RoomRate, TariffItemV2 } from '../../../../interfaces/tariff-v2.interface';
 
 type RateType = 'confidential' | 'rack';
 type PriceSource = 'tariff' | 'manual';
+type HotelDraft = {
+  day: number | string;
+  date: string;
+  city: string;
+  notes: string;
+};
 
 @Component({
   selector: 'app-hotels-v2',
@@ -18,12 +25,10 @@ type PriceSource = 'tariff' | 'manual';
 export class HotelsV2Component implements OnInit {
   private readonly tariffV2Service = inject(TariffV2Service);
 
-  @Output() hotelsChange = new EventEmitter<any[]>();
-  @Output() totalPricesChange = new EventEmitter<number[]>();
+  @Output() hotelsChange = new EventEmitter<HotelItem[]>();
+  @Output() totalPricesChange = new EventEmitter<number>();
 
-  @Input() hotels: any[] = [];
-  number_paxs = input<number[]>([]);
-  children_ages = input<number[]>([]);
+  @Input() hotels: HotelItem[] = [];
 
   hotelCatalog: TariffItemV2[] = [];
   filteredHotels: TariffItemV2[] = [];
@@ -42,7 +47,7 @@ export class HotelsV2Component implements OnInit {
   manualPrice: number | null = null;
   showResults = false;
 
-  newHotel: any = {
+  newHotel: HotelDraft = {
     day: '',
     date: '',
     city: '',
@@ -50,29 +55,33 @@ export class HotelsV2Component implements OnInit {
   };
 
   editingIndex: number | null = null;
-  editingSnapshot: any = null;
+  editingSnapshot: HotelItem | null = null;
 
   ngOnInit(): void {
     this.loadHotelCatalog();
   }
 
-  private toDayNumber(value: any): number {
+  private toDayNumber(value: unknown): number {
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : 0;
   }
 
-  private sortHotelsAscending(hotels: any[]) {
+  private sortHotelsAscending(hotels: HotelItem[]) {
     return [...hotels].sort((left, right) => this.toDayNumber(left.day) - this.toDayNumber(right.day));
   }
 
   private emitHotels() {
     const sortedHotels = this.sortHotelsAscending(this.hotels);
     this.hotelsChange.emit(sortedHotels);
-    this.totalPricesChange.emit([this.getTotalHotelsPrice(sortedHotels)]);
+    this.totalPricesChange.emit(this.getTotalHotelsPrice(sortedHotels));
   }
 
-  getTotalHotelsPrice(hotels: any[] = this.hotels): number {
+  getTotalHotelsPrice(hotels: HotelItem[] = this.hotels): number {
     return hotels.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
+  }
+
+  hasTariffReference(hotel: HotelItem): boolean {
+    return !!String(hotel?.tariff_item_id || '').trim();
   }
 
   private getSelectedRoomRate(): OccupancyRate | null {

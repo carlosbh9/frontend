@@ -8,6 +8,7 @@ export class ServiceOrdersStore {
 
   readonly orders = signal<ServiceOrder[]>([]);
   readonly loading = signal(false);
+  readonly detailLoading = signal(false);
   readonly error = signal<string | null>(null);
   readonly selectedOrder = signal<ServiceOrder | null>(null);
   readonly total = signal(0);
@@ -71,17 +72,29 @@ export class ServiceOrdersStore {
   }
 
   async selectById(id: string): Promise<void> {
-    this.loading.set(true);
     this.error.set(null);
+    const cachedOrder = this.orders().find((order) => order._id === id) || null;
+    if (cachedOrder) {
+      this.selectedOrder.set(cachedOrder);
+    }
+
+    this.detailLoading.set(true);
     try {
       const order = await this.api.getById(id);
       this.selectedOrder.set(order);
     } catch (error: any) {
       this.error.set(error?.error?.message || 'Could not load service order detail');
-      this.selectedOrder.set(null);
+      if (!cachedOrder) {
+        this.selectedOrder.set(null);
+      }
     } finally {
-      this.loading.set(false);
+      this.detailLoading.set(false);
     }
+  }
+
+  clearSelection(): void {
+    this.selectedOrder.set(null);
+    this.detailLoading.set(false);
   }
 
   setFilter<K extends keyof ServiceOrderFilters>(key: K, value: ServiceOrderFilters[K]): void {
@@ -105,9 +118,9 @@ export class ServiceOrdersStore {
   async updateStatus(orderId: string, status: ServiceOrder['status'], reason = ''): Promise<void> {
     this.error.set(null);
     try {
-      await this.api.updateStatus(orderId, status, reason);
+      const updated = await this.api.updateStatus(orderId, status, reason);
+      this.patchOrder(updated);
       await this.load();
-      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
     } catch (error: any) {
       this.error.set(error?.error?.error || error?.error?.message || 'Could not update status');
     }
@@ -116,9 +129,9 @@ export class ServiceOrdersStore {
   async assign(orderId: string, assigneeId: string | null): Promise<void> {
     this.error.set(null);
     try {
-      await this.api.assign(orderId, assigneeId);
+      const updated = await this.api.assign(orderId, assigneeId);
+      this.patchOrder(updated);
       await this.load();
-      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
     } catch (error: any) {
       this.error.set(error?.error?.error || error?.error?.message || 'Could not assign order');
     }
@@ -127,9 +140,9 @@ export class ServiceOrdersStore {
   async toggleChecklist(orderId: string, itemId: string, done: boolean): Promise<void> {
     this.error.set(null);
     try {
-      await this.api.updateChecklistItem(orderId, itemId, done);
+      const updated = await this.api.updateChecklistItem(orderId, itemId, done);
+      this.patchOrder(updated);
       await this.load();
-      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
     } catch (error: any) {
       this.error.set(error?.error?.error || error?.error?.message || 'Could not update checklist');
     }
@@ -138,9 +151,9 @@ export class ServiceOrdersStore {
   async updateStage(orderId: string, stageCode: string, comment = ''): Promise<void> {
     this.error.set(null);
     try {
-      await this.api.updateStage(orderId, stageCode, comment);
+      const updated = await this.api.updateStage(orderId, stageCode, comment);
+      this.patchOrder(updated);
       await this.load();
-      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
     } catch (error: any) {
       this.error.set(error?.error?.error || error?.error?.message || 'Could not update stage');
     }
@@ -149,9 +162,9 @@ export class ServiceOrdersStore {
   async updateFinancials(orderId: string, payload: any): Promise<void> {
     this.error.set(null);
     try {
-      await this.api.updateFinancials(orderId, payload);
+      const updated = await this.api.updateFinancials(orderId, payload);
+      this.patchOrder(updated);
       await this.load();
-      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
     } catch (error: any) {
       this.error.set(error?.error?.error || error?.error?.message || 'Could not update financials');
     }
@@ -160,9 +173,9 @@ export class ServiceOrdersStore {
   async addAttachment(orderId: string, payload: any): Promise<void> {
     this.error.set(null);
     try {
-      await this.api.addAttachment(orderId, payload);
+      const updated = await this.api.addAttachment(orderId, payload);
+      this.patchOrder(updated);
       await this.load();
-      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
     } catch (error: any) {
       this.error.set(error?.error?.error || error?.error?.message || 'Could not add attachment');
     }
@@ -177,15 +190,15 @@ export class ServiceOrdersStore {
         type: payload.type || 'OTHER'
       });
       await this.api.uploadToS3(presign.uploadUrl, file);
-      await this.api.addAttachment(orderId, {
+      const updated = await this.api.addAttachment(orderId, {
         ...payload,
         fileName: payload.fileName || file.name,
         contentType: file.type,
         storageKey: presign.key,
         url: presign.fileUrl
       });
+      this.patchOrder(updated);
       await this.load();
-      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
     } catch (error: any) {
       this.error.set(error?.error?.error || error?.error?.message || 'Could not upload attachment');
     }
@@ -205,9 +218,9 @@ export class ServiceOrdersStore {
   async removeAttachment(orderId: string, attachmentId: string): Promise<void> {
     this.error.set(null);
     try {
-      await this.api.removeAttachment(orderId, attachmentId);
+      const updated = await this.api.removeAttachment(orderId, attachmentId);
+      this.patchOrder(updated);
       await this.load();
-      if (this.selectedOrder()?._id === orderId) await this.selectById(orderId);
     } catch (error: any) {
       this.error.set(error?.error?.error || error?.error?.message || 'Could not remove attachment');
     }
@@ -220,6 +233,18 @@ export class ServiceOrdersStore {
       await this.load();
     } catch (error: any) {
       this.error.set(error?.error?.error || error?.error?.message || 'Could not sync service orders');
+    }
+  }
+
+  private patchOrder(updated: ServiceOrder): void {
+    if (!updated?._id) return;
+
+    this.orders.update((current) =>
+      current.map((order) => order._id === updated._id ? updated : order)
+    );
+
+    if (this.selectedOrder()?._id === updated._id) {
+      this.selectedOrder.set(updated);
     }
   }
 }

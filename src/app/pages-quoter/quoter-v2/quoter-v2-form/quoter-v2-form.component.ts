@@ -10,6 +10,16 @@ import { ContactService } from '../../../Services/contact/contact.service';
 import { ExportExcelService } from '../../../Services/exportExcel/export-excel.service';
 import { PdfexportService } from '../../../Services/pdfexport/pdfexport.service';
 import { QuoterV2Service } from '../../../Services/quoter-v2.service';
+import {
+  CruiseItem,
+  FlightItem,
+  HotelItem,
+  OperatorItem,
+  Quoter,
+  ServiceDay,
+  ServiceItem,
+  TotalPrices,
+} from '../../../interfaces/quoter-models.interface';
 import { CrucerosV2Component } from './cruceros-v2/cruceros-v2.component';
 import { ExtOperatorV2Component } from './ext-operator-v2/ext-operator-v2.component';
 import { FlightsV2Component } from './flights-v2/flights-v2.component';
@@ -17,6 +27,20 @@ import { HotelsV2Component } from './hotels-v2/hotels-v2.component';
 import { ServicesV2Component } from './services-v2/services-v2.component';
 
 (pdfMake as any).addVirtualFileSystem(pdfFonts);
+
+type ContactOption = {
+  _id: string;
+  name: string;
+};
+
+type QuoterFormState = Quoter & {
+  services: ServiceDay[];
+  hotels: HotelItem[];
+  flights: FlightItem[];
+  operators: OperatorItem[];
+  cruises: CruiseItem[];
+  total_prices: TotalPrices;
+};
 
 @Component({
   selector: 'app-quoter-v2-form',
@@ -43,31 +67,30 @@ export class QuoterV2FormComponent implements OnInit {
   constructor() {
     effect(() => {
       this.numberPaxsVersion();
-      this.prueba();
-      this.prueba2();
-      this.prueba3();
-      this.prueba4();
-      this.prueba5();
-      this.prueba6();
+      this.hotelsTotal();
+      this.servicesTotal();
+      this.operatorsTotal();
+      this.flightsTotal();
+      this.cruisesTotal();
+      this.externalUtility();
       this.syncDerivedTotals();
     });
   }
 
-  private blurTimeout: any;
+  private blurTimeout?: ReturnType<typeof setTimeout>;
   modalOpen = signal(false);
-  modalData = signal<any[]>([]);
-  filteredOptions: any[] = [];
+  filteredOptions: ContactOption[] = [];
   showOptions = false;
   showVersion = false;
   showUpdate = false;
   idQuoter = '';
 
-  prueba = signal<number[]>([0]);
-  prueba2 = signal<number[]>([0]);
-  prueba3 = signal<number[]>([0]);
-  prueba4 = signal<number[]>([0]);
-  prueba5 = signal<number[]>([0]);
-  prueba6 = signal<number[]>([0]);
+  hotelsTotal = signal(0);
+  servicesTotal = signal(0);
+  operatorsTotal = signal(0);
+  flightsTotal = signal(0);
+  cruisesTotal = signal(0);
+  externalUtility = signal(0);
   numberPaxsVersion = signal(0);
 
   destinations: string[] = ['PERU', 'BOLIVIA', 'ECUADOR', 'COLOMBIA', 'ARGENTINA', 'CHILE'];
@@ -78,7 +101,7 @@ export class QuoterV2FormComponent implements OnInit {
     'Saving keeps the same final quoter schema used by the rest of the system.',
   ];
 
-  newQuoter: any = this.createEmptyQuoter();
+  newQuoter: QuoterFormState = this.createEmptyQuoter();
 
   ngOnInit(): void {
     this.loadContacts();
@@ -91,16 +114,16 @@ export class QuoterV2FormComponent implements OnInit {
     });
   }
 
-  createEmptyQuoter() {
+  createEmptyQuoter(): QuoterFormState {
     return {
       name_quoter: 'version 1',
       guest: '',
       destinations: [],
-      children_ages: [0],
+      children_ages: null,
       FileCode: '',
       travelDate: { start: '', end: '' },
       accomodations: '',
-      totalNights: 0,
+      totalNights: '',
       number_paxs: 0,
       travel_agent: '',
       exchange_rate: '',
@@ -110,36 +133,100 @@ export class QuoterV2FormComponent implements OnInit {
       operators: [],
       cruises: [],
       total_prices: {
-        total_hoteles: [0],
-        total_services: [0],
-        total_cost: [0],
-        external_utility: [0],
-        cost_external_taxes: [0],
-        total_cost_external: [0],
-        total_ext_operator: [0],
-        total_ext_cruises: [0],
-        total_flights: [0],
-        subtotal: [0],
-        cost_transfers: [0],
-        final_cost: [0],
-        price_pp: [0],
+        total_hoteles: 0,
+        total_services: 0,
+        total_cost: 0,
+        external_utility: 0,
+        cost_external_taxes: 0,
+        total_cost_external: 0,
+        total_ext_operator: 0,
+        total_ext_cruises: 0,
+        total_flights: 0,
+        subtotal: 0,
+        cost_transfers: 0,
+        final_cost: 0,
+        price_pp: 0,
         porcentajeTD: 0
       }
     };
   }
 
-  toNumber(value: any): number {
+  toNumber(value: unknown): number {
     if (Array.isArray(value)) return Number(value[0]) || 0;
     return Number(value) || 0;
   }
 
-  toSingleArray(value: any): number[] {
-    if (Array.isArray(value)) return value.length ? [Number(value[0]) || 0] : [0];
-    return [Number(value) || 0];
+  private normalizeServiceItem(service: Partial<ServiceItem> & { prices?: unknown; price?: unknown }): ServiceItem {
+    return {
+      city: service.city || '',
+      name_service: service.name_service || '',
+      type: service.type || '',
+      price_base: this.toNumber(service.price_base),
+      price: this.toNumber(service.price ?? service.prices),
+      notes: service.notes || '',
+      tariff_item_id: service.tariff_item_id,
+      placement: service.placement,
+      pricing_meta: service.pricing_meta,
+      day: service.day,
+      service_id: service.service_id,
+      service_type: service.service_type,
+      type_service: service.type_service,
+      operator_service_id: service.operator_service_id,
+      train_service_id: service.train_service_id,
+      editService: service.editService,
+      selected: service.selected,
+    };
   }
 
-  getNumberPaxsArray(): number[] {
-    return [this.toNumber(this.newQuoter.number_paxs)];
+  private normalizeHotelItem(hotel: Partial<HotelItem> & { prices?: unknown; price?: unknown }): HotelItem {
+    return {
+      day: this.toNumber(hotel.day),
+      date: hotel.date || '',
+      city: hotel.city || '',
+      name_hotel: hotel.name_hotel || '',
+      price_base: this.toNumber(hotel.price_base),
+      price: this.toNumber(hotel.price ?? hotel.prices),
+      accomodatios_category: hotel.accomodatios_category || '',
+      notes: hotel.notes || '',
+      tariff_item_id: hotel.tariff_item_id,
+      placement: hotel.placement,
+      room_name: hotel.room_name,
+      occupancy: hotel.occupancy,
+      room_rate_type: hotel.room_rate_type,
+      price_source: hotel.price_source,
+    };
+  }
+
+  private normalizeFlightItem(flight: Partial<FlightItem> & { prices?: unknown; price_conf?: unknown; price?: unknown }): FlightItem {
+    return {
+      date: flight.date || '',
+      route: flight.route || '',
+      price_base: this.toNumber(flight.price_base ?? flight.price_conf),
+      price: this.toNumber(flight.price ?? flight.prices),
+      notes: flight.notes || '',
+      editFlight: flight.editFlight,
+    };
+  }
+
+  private normalizeOperatorItem(operator: Partial<OperatorItem> & { prices?: unknown; price?: unknown }): OperatorItem {
+    return {
+      country: operator.country || '',
+      name_operator: operator.name_operator || '',
+      price: this.toNumber(operator.price ?? operator.prices),
+      notes: operator.notes || '',
+      editOperator: operator.editOperator,
+    };
+  }
+
+  private normalizeCruiseItem(cruise: Partial<CruiseItem> & { prices?: unknown; price_conf?: unknown; price?: unknown }): CruiseItem {
+    return {
+      name: cruise.name || '',
+      operator: cruise.operator || '',
+      price_base: this.toNumber(cruise.price_base ?? cruise.price_conf),
+      price: this.toNumber(cruise.price ?? cruise.prices),
+      notes: cruise.notes || '',
+      editCruise: cruise.editCruise,
+    };
   }
 
   getQuoteValidationIssues(): string[] {
@@ -153,88 +240,81 @@ export class QuoterV2FormComponent implements OnInit {
     return issues;
   }
 
-  private getErrorMessage(error: any, fallback: string): string {
-    return error?.error?.error || error?.error?.message || error?.message || fallback;
+  private getErrorMessage(error: unknown, fallback: string): string {
+    const candidate = error as { error?: { error?: string; message?: string }; message?: string } | undefined;
+    if (!candidate) return fallback;
+    return candidate.error?.error || candidate.error?.message || candidate.message || fallback;
   }
 
-  denormalizeQuoterForForm(quoter: any) {
+  private buildNormalizedTotalPrices(totalPrices: Partial<TotalPrices> = {}): TotalPrices {
+    return {
+      ...this.createEmptyQuoter().total_prices,
+      ...totalPrices,
+      total_hoteles: this.toNumber(totalPrices.total_hoteles),
+      total_services: this.toNumber(totalPrices.total_services),
+      total_cost: this.toNumber(totalPrices.total_cost),
+      external_utility: this.toNumber(totalPrices.external_utility),
+      cost_external_taxes: this.toNumber(totalPrices.cost_external_taxes),
+      total_cost_external: this.toNumber(totalPrices.total_cost_external),
+      total_ext_operator: this.toNumber(totalPrices.total_ext_operator),
+      total_ext_cruises: this.toNumber(totalPrices.total_ext_cruises),
+      total_flights: this.toNumber(totalPrices.total_flights),
+      subtotal: this.toNumber(totalPrices.subtotal),
+      cost_transfers: this.toNumber(totalPrices.cost_transfers),
+      final_cost: this.toNumber(totalPrices.final_cost),
+      price_pp: this.toNumber(totalPrices.price_pp),
+      porcentajeTD: this.toNumber(totalPrices.porcentajeTD),
+    };
+  }
+
+  denormalizeQuoterForForm(quoter: Partial<QuoterFormState> & { name_version?: string }): QuoterFormState {
     const totalPrices = quoter?.total_prices || {};
     return {
       ...this.createEmptyQuoter(),
       ...quoter,
-      name_version: quoter?.name_quoter || 'version 1',
+      name_quoter: quoter?.name_quoter || quoter?.name_version || 'version 1',
+      totalNights: String(quoter?.totalNights ?? ''),
+      children_ages: Array.isArray(quoter?.children_ages) && quoter.children_ages.length ? quoter.children_ages : null,
       number_paxs: this.toNumber(quoter?.number_paxs),
-      services: (quoter?.services || []).map((day: any) => ({
+      services: (quoter?.services || []).map((day) => ({
         ...day,
-        number_paxs: this.toSingleArray(day?.number_paxs ?? quoter?.number_paxs),
-        services: (day?.services || []).map((service: any) => ({
-          ...service,
-          prices: this.toSingleArray(service?.price),
-        }))
+        day: this.toNumber(day?.day),
+        number_paxs: this.toNumber(day?.number_paxs ?? quoter?.number_paxs),
+        children_ages: Array.isArray(day?.children_ages) ? day.children_ages : [],
+        services: (day?.services || []).map((service) => this.normalizeServiceItem(service)),
       })),
-      hotels: (quoter?.hotels || []).map((hotel: any) => ({ ...hotel, prices: this.toSingleArray(hotel?.price) })),
-      flights: (quoter?.flights || []).map((flight: any) => ({ ...flight, prices: this.toSingleArray(flight?.price) })),
-      operators: (quoter?.operators || []).map((operator: any) => ({ ...operator, prices: this.toSingleArray(operator?.price) })),
-      cruises: (quoter?.cruises || []).map((cruise: any) => ({ ...cruise, prices: this.toSingleArray(cruise?.price) })),
-      total_prices: {
-        ...this.createEmptyQuoter().total_prices,
-        ...totalPrices,
-        total_hoteles: this.toSingleArray(totalPrices.total_hoteles),
-        total_services: this.toSingleArray(totalPrices.total_services),
-        total_cost: this.toSingleArray(totalPrices.total_cost),
-        external_utility: this.toSingleArray(totalPrices.external_utility),
-        cost_external_taxes: this.toSingleArray(totalPrices.cost_external_taxes),
-        total_cost_external: this.toSingleArray(totalPrices.total_cost_external),
-        total_ext_operator: this.toSingleArray(totalPrices.total_ext_operator),
-        total_ext_cruises: this.toSingleArray(totalPrices.total_ext_cruises),
-        total_flights: this.toSingleArray(totalPrices.total_flights),
-        subtotal: this.toSingleArray(totalPrices.subtotal),
-        cost_transfers: this.toSingleArray(totalPrices.cost_transfers),
-        final_cost: this.toSingleArray(totalPrices.final_cost),
-        price_pp: this.toSingleArray(totalPrices.price_pp),
-        porcentajeTD: this.toNumber(totalPrices.porcentajeTD),
-      }
+      hotels: (quoter?.hotels || []).map((hotel) => this.normalizeHotelItem(hotel)),
+      flights: (quoter?.flights || []).map((flight) => this.normalizeFlightItem(flight)),
+      operators: (quoter?.operators || []).map((operator) => this.normalizeOperatorItem(operator)),
+      cruises: (quoter?.cruises || []).map((cruise) => this.normalizeCruiseItem(cruise)),
+      total_prices: this.buildNormalizedTotalPrices(totalPrices),
     };
   }
 
-  normalizeQuoterForPersistence(quoter: any) {
+  normalizeQuoterForPersistence(quoter: QuoterFormState): QuoterFormState {
+    const { name_version, ...rest } = quoter;
+
     return {
-      ...quoter,
-      name_quoter: quoter.name_version || quoter.name_quoter || 'version 1',
+      ...rest,
+      name_quoter: quoter.name_quoter || quoter.name_version || 'version 1',
+      totalNights: String(quoter?.totalNights ?? '').trim(),
+      children_ages: Array.isArray(quoter.children_ages) && quoter.children_ages.length ? [...quoter.children_ages] : null,
       number_paxs: this.toNumber(quoter.number_paxs),
-      services: (quoter.services || []).map((day: any) => ({
+      services: (quoter.services || []).map((day) => ({
         ...day,
+        day: this.toNumber(day.day),
         number_paxs: this.toNumber(quoter.number_paxs),
-        services: (day.services || []).map((service: any) => ({
-          ...service,
-          price: this.toNumber(service?.prices ?? service?.price),
-        }))
+        services: (day.services || []).map((service) => this.normalizeServiceItem(service)),
       })),
-      hotels: (quoter.hotels || []).map((hotel: any) => ({ ...hotel, price: this.toNumber(hotel?.prices ?? hotel?.price) })),
-      flights: (quoter.flights || []).map((flight: any) => ({ ...flight, price: this.toNumber(flight?.prices ?? flight?.price) })),
-      operators: (quoter.operators || []).map((operator: any) => ({ ...operator, price: this.toNumber(operator?.prices ?? operator?.price) })),
-      cruises: (quoter.cruises || []).map((cruise: any) => ({ ...cruise, price: this.toNumber(cruise?.prices ?? cruise?.price) })),
-      total_prices: {
-        ...quoter.total_prices,
-        total_hoteles: this.toNumber(quoter.total_prices.total_hoteles),
-        total_services: this.toNumber(quoter.total_prices.total_services),
-        total_cost: this.toNumber(quoter.total_prices.total_cost),
-        external_utility: this.toNumber(quoter.total_prices.external_utility),
-        cost_external_taxes: this.toNumber(quoter.total_prices.cost_external_taxes),
-        total_cost_external: this.toNumber(quoter.total_prices.total_cost_external),
-        total_ext_operator: this.toNumber(quoter.total_prices.total_ext_operator),
-        total_ext_cruises: this.toNumber(quoter.total_prices.total_ext_cruises),
-        total_flights: this.toNumber(quoter.total_prices.total_flights),
-        subtotal: this.toNumber(quoter.total_prices.subtotal),
-        cost_transfers: this.toNumber(quoter.total_prices.cost_transfers),
-        final_cost: this.toNumber(quoter.total_prices.final_cost),
-        price_pp: this.toNumber(quoter.total_prices.price_pp),
-        porcentajeTD: this.toNumber(quoter.total_prices.porcentajeTD),
-      }
+      hotels: (quoter.hotels || []).map((hotel) => this.normalizeHotelItem(hotel)),
+      flights: (quoter.flights || []).map((flight) => this.normalizeFlightItem(flight)),
+      operators: (quoter.operators || []).map((operator) => this.normalizeOperatorItem(operator)),
+      cruises: (quoter.cruises || []).map((cruise) => this.normalizeCruiseItem(cruise)),
+      total_prices: this.buildNormalizedTotalPrices(quoter.total_prices),
     };
   }
 
-  private buildCreatePayload(quoter: any) {
+  private buildCreatePayload(quoter: QuoterFormState) {
     const normalized = this.normalizeQuoterForPersistence(quoter);
     const {
       _id,
@@ -260,7 +340,7 @@ export class QuoterV2FormComponent implements OnInit {
   async loadContacts() {
     try {
       const result = await this.contactService.getAllContacts();
-      this.filteredOptions = result.contacts;
+      this.filteredOptions = result.contacts as ContactOption[];
     } catch (error) {
       console.log('Error loading contacts', error);
     }
@@ -268,10 +348,10 @@ export class QuoterV2FormComponent implements OnInit {
 
   async filterOptions() {
     const result = await this.contactService.getAllContacts(this.newQuoter.guest);
-    this.filteredOptions = result.contacts;
+    this.filteredOptions = result.contacts as ContactOption[];
   }
 
-  selectOption(option: any): void {
+  selectOption(option: ContactOption): void {
     this.newQuoter.guest = option.name;
     this.newQuoter.contact_id = option._id;
     this.showOptions = false;
@@ -282,12 +362,12 @@ export class QuoterV2FormComponent implements OnInit {
       const quoter = await this.quoterService.getQuoterById(id);
       this.newQuoter = this.denormalizeQuoterForForm(quoter);
       toast.success('Quoter V2 loaded successfully');
-      this.prueba.set(this.newQuoter.total_prices.total_hoteles);
-      this.prueba2.set(this.newQuoter.total_prices.total_services);
-      this.prueba3.set(this.newQuoter.total_prices.total_ext_operator);
-      this.prueba4.set(this.newQuoter.total_prices.total_flights);
-      this.prueba5.set(this.newQuoter.total_prices.total_ext_cruises);
-      this.prueba6.set(this.newQuoter.total_prices.external_utility);
+      this.hotelsTotal.set(this.newQuoter.total_prices.total_hoteles);
+      this.servicesTotal.set(this.newQuoter.total_prices.total_services);
+      this.operatorsTotal.set(this.newQuoter.total_prices.total_ext_operator);
+      this.flightsTotal.set(this.newQuoter.total_prices.total_flights);
+      this.cruisesTotal.set(this.newQuoter.total_prices.total_ext_cruises);
+      this.externalUtility.set(this.newQuoter.total_prices.external_utility);
       this.numberPaxsVersion.update(value => value + 1);
     } catch (error) {
       console.error(error);
@@ -303,6 +383,7 @@ export class QuoterV2FormComponent implements OnInit {
   removeChildrenAges(indexToRemove: number): void {
     if (Array.isArray(this.newQuoter.children_ages) && indexToRemove >= 0 && indexToRemove < this.newQuoter.children_ages.length) {
       this.newQuoter.children_ages.splice(indexToRemove, 1);
+      if (this.newQuoter.children_ages.length === 0) this.newQuoter.children_ages = null;
     }
   }
 
@@ -318,11 +399,9 @@ export class QuoterV2FormComponent implements OnInit {
     }
   }
 
-  onInputChange(event: Event, index: number) {
+  onInputChange(event: Event) {
     const input = event.target as HTMLInputElement;
-    const updatedValues = [...this.prueba6()];
-    updatedValues[index] = parseFloat(input.value);
-    this.prueba6.set(updatedValues);
+    this.externalUtility.set(this.toNumber(input.value));
   }
 
   onNumberPaxsChange() {
@@ -330,50 +409,29 @@ export class QuoterV2FormComponent implements OnInit {
     this.numberPaxsVersion.update(value => value + 1);
   }
 
-  onCruiseUpdate(cruises: any[]) { this.newQuoter.cruises = cruises; }
-  onFlightsUpdate(flights: any[]) { this.newQuoter.flights = flights; }
-  onServicesUpdate(services: any[]) { this.newQuoter.services = services; }
-  onOperatorsUpdate(operators: any[]) { this.newQuoter.operators = operators; }
-  onHotelsUpdate(hotels: any[]) { this.newQuoter.hotels = hotels; }
+  onCruiseUpdate(cruises: CruiseItem[]) { this.newQuoter.cruises = cruises; }
+  onFlightsUpdate(flights: FlightItem[]) { this.newQuoter.flights = flights; }
+  onServicesUpdate(services: ServiceDay[]) { this.newQuoter.services = services; }
+  onOperatorsUpdate(operators: OperatorItem[]) { this.newQuoter.operators = operators; }
+  onHotelsUpdate(hotels: HotelItem[]) { this.newQuoter.hotels = hotels; }
   onPorcentajeTDUpdate(porcentaje: number) { this.newQuoter.total_prices.porcentajeTD = porcentaje; }
   onPorcentajeTD(porcentaje: number) { this.newQuoter.total_prices.porcentajeTD = porcentaje; }
-  onTotalPricesCruiseChange(prices: number[]) { this.prueba5.set(prices); this.newQuoter.total_prices.total_ext_cruises = prices; }
-  onTotalPricesServicesChange(prices: number[]) { this.prueba2.set(prices); this.newQuoter.total_prices.total_services = prices; }
-  onTotalPricesHotelsChange(prices: number[]) { this.prueba.set(prices); this.newQuoter.total_prices.total_hoteles = prices; }
-  onTotalPricesOperatorsChange(prices: any[]) { this.prueba3.set(prices); this.newQuoter.total_prices.total_ext_operator = prices; }
-  onTotalPricesFligtsChange(prices: number[]) { this.prueba4.set(prices); this.newQuoter.total_prices.total_flights = prices; }
+  onTotalPricesCruiseChange(price: number) { this.cruisesTotal.set(price); this.newQuoter.total_prices.total_ext_cruises = price; }
+  onTotalPricesServicesChange(price: number) { this.servicesTotal.set(price); this.newQuoter.total_prices.total_services = price; }
+  onTotalPricesHotelsChange(price: number) { this.hotelsTotal.set(price); this.newQuoter.total_prices.total_hoteles = price; }
+  onTotalPricesOperatorsChange(price: number) { this.operatorsTotal.set(price); this.newQuoter.total_prices.total_ext_operator = price; }
+  onTotalPricesFligtsChange(price: number) { this.flightsTotal.set(price); this.newQuoter.total_prices.total_flights = price; }
 
-  private sumPricesByIndex(...priceGroups: number[][]): number[] {
-    const totals: number[] = [];
-    const maxLength = 1;
-    for (let i = 0; i < maxLength; i++) {
-      totals[i] = priceGroups.reduce((sum, prices) => sum + (prices[i] || 0), 0);
-    }
-    return totals;
-  }
-
-  private mapPricesByIndex(source: number[], mapper: (value: number, index: number) => number): number[] {
-    const totals: number[] = [];
-    const maxLength = 1;
-    for (let i = 0; i < maxLength; i++) totals[i] = mapper(source[i] || 0, i);
-    return totals;
-  }
-
-  private buildDerivedTotals() {
-    const total_cost = this.sumPricesByIndex(this.prueba(), this.prueba2());
-    const external_utility = [...this.prueba6()];
-    const cost_external_taxes = this.mapPricesByIndex(total_cost, (value, index) => {
-      const utility = external_utility[index] || 0;
-      return (value + utility) * 0.15;
-    });
-    const total_cost_external = this.sumPricesByIndex(total_cost, cost_external_taxes, external_utility);
-    const subtotal = this.sumPricesByIndex(total_cost_external, this.prueba3(), this.prueba4(), this.prueba5());
-    const cost_transfers = this.mapPricesByIndex(subtotal, value => value * 0.04);
-    const final_cost = this.sumPricesByIndex(subtotal, cost_transfers);
-    const price_pp = this.mapPricesByIndex(final_cost, value => {
-      const paxCount = this.toNumber(this.newQuoter.number_paxs);
-      return paxCount > 0 ? value / paxCount : 0;
-    });
+  private buildDerivedTotals(): Pick<TotalPrices, 'total_cost' | 'external_utility' | 'cost_external_taxes' | 'total_cost_external' | 'subtotal' | 'cost_transfers' | 'final_cost' | 'price_pp'> {
+    const total_cost = this.hotelsTotal() + this.servicesTotal();
+    const external_utility = this.externalUtility();
+    const cost_external_taxes = (total_cost + external_utility) * 0.15;
+    const total_cost_external = total_cost + cost_external_taxes + external_utility;
+    const subtotal = total_cost_external + this.operatorsTotal() + this.flightsTotal() + this.cruisesTotal();
+    const cost_transfers = subtotal * 0.04;
+    const final_cost = subtotal + cost_transfers;
+    const paxCount = this.toNumber(this.newQuoter.number_paxs);
+    const price_pp = paxCount > 0 ? final_cost / paxCount : 0;
 
     return { total_cost, external_utility, cost_external_taxes, total_cost_external, subtotal, cost_transfers, final_cost, price_pp };
   }
@@ -433,7 +491,7 @@ export class QuoterV2FormComponent implements OnInit {
   final_cost = computed(() => { this.numberPaxsVersion(); return this.buildDerivedTotals().final_cost; });
   price_per_person = computed(() => { this.numberPaxsVersion(); return this.buildDerivedTotals().price_pp; });
 
-  openModal() { this.modalOpen.set(true); this.modalData.set(this.getNumberPaxsArray()); }
+  openModal() { this.modalOpen.set(true); }
   closeModal() { this.modalOpen.set(false); }
   openModalVersion() { this.showVersion = true; }
   closeModalVersion() { this.showVersion = false; }

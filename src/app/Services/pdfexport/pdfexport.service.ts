@@ -79,11 +79,11 @@ export class PdfexportService {
         ),
         { text: '\nFlights', style: 'subtitles' },
         this.buildTable(
-          ['Date', 'Route', 'Conf. Price', 'Price', 'Notes'],
+          ['Date', 'Route', 'Base Price', 'Price', 'Notes'],
           (data.flights || []).map((flight: any) => [
             flight.date,
             flight.route,
-            this.money(flight.price_conf),
+            this.money(flight.price_base ?? flight.price_conf ?? 0),
             this.money(flight.price),
             flight.notes || '',
           ]),
@@ -106,7 +106,7 @@ export class PdfexportService {
           (data.cruises || []).map((cruise: any) => [
             cruise.name,
             cruise.operator,
-            this.money(cruise.price_conf),
+            this.money(cruise.price_base ?? cruise.price_conf ?? 0),
             this.money(cruise.price),
             cruise.notes || '',
           ]),

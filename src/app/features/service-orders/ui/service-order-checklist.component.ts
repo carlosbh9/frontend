@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ServiceOrderChecklistItem } from '../data-access/service-orders.types';
 
 @Component({
   selector: 'app-service-order-checklist',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
-    <div class="space-y-3">
-      <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
+    <div class="space-y-2.5">
+      <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
         <div class="flex flex-wrap items-center gap-2">
           <span class="inline-flex items-center rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-700 ring-1 ring-inset ring-rose-200">
             Required
@@ -30,7 +31,7 @@ import { ServiceOrderChecklistItem } from '../data-access/service-orders.types';
         } @else {
           @for (item of items; track item.itemId) {
             <label
-              class="flex gap-3 rounded-xl border px-4 py-3 transition-colors"
+              class="flex gap-3 rounded-xl border px-3 py-2.5 transition-colors"
               [ngClass]="{
                 'border-emerald-200 bg-emerald-50': item.status === 'DONE',
                 'border-rose-200 bg-rose-50/70': item.status !== 'DONE' && item.required,

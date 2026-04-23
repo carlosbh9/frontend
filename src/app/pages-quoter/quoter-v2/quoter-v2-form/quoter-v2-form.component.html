@@ -1,404 +1,517 @@
-<div class="space-y-4">
-  <!-- GRID PRINCIPAL -->
-  <div class="grid grid-cols-1 gap-4">
-
-    <!-- CARD 1: FORM + RESUMEN -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-      <!-- FORM CARD -->
-      <div class="bg-white rounded-xl border border-gray-100 shadow-sm">
-        <div class="p-4 sm:p-5">
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-              <h2 class="text-base sm:text-lg font-semibold text-gray-900">Quote Details</h2>
-              <p class="text-xs sm:text-sm text-gray-500">Guest, dates and basic configuration.</p>
+<div class="space-y-6">
+  <section class="overflow-hidden rounded-[28px] border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50 shadow-sm">
+    <div class="border-b border-slate-200/80 px-5 py-5 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+        <div class="min-w-0 space-y-4">
+          <div class="space-y-2">
+            <div class="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+              <span>Ventas</span>
+              <span class="h-1 w-1 rounded-full bg-slate-300"></span>
+              <span>Quoter</span>
+            </div>
+            <div class="space-y-2">
+              <h1 class="text-2xl font-semibold tracking-tight text-slate-900 sm:text-[2rem]">
+                {{ newQuoter.name_quoter || 'Quote workspace' }}
+              </h1>
+              <p class="max-w-3xl text-sm leading-6 text-slate-600">
+                Administra guest, pricing blocks y exportaciones del quoter en un workspace visual más claro, manteniendo intacta la operativa actual.
+              </p>
             </div>
           </div>
 
-          <!-- <div class="mt-4 rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-3">
-            <p class="text-sm font-semibold text-indigo-900">How this quote behaves</p>
-            <div class="mt-2 flex flex-wrap gap-2">
-              @for (rule of quoteRules; track rule) {
-                <span class="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-medium text-indigo-800 ring-1 ring-inset ring-indigo-200">
-                  {{ rule }}
-                </span>
-              }
-            </div>
-          </div> -->
+          <div class="flex flex-wrap items-center gap-2.5">
+            <span class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+              {{ showUpdate ? 'Editing existing quote' : 'Creating new quote' }}
+            </span>
+            <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600">
+              {{ newQuoter.number_paxs || 0 }} pax
+            </span>
+            <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600">
+              {{ newQuoter.destinations.length || 0 }} destinations
+            </span>
+            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+              [class.border]="true"
+              [class.bg-emerald-50]="getQuoteValidationIssues().length === 0"
+              [class.text-emerald-700]="getQuoteValidationIssues().length === 0"
+              [class.border-emerald-200]="getQuoteValidationIssues().length === 0"
+              [class.bg-amber-50]="getQuoteValidationIssues().length > 0"
+              [class.text-amber-700]="getQuoteValidationIssues().length > 0"
+              [class.border-amber-200]="getQuoteValidationIssues().length > 0">
+              {{ getQuoteValidationIssues().length === 0 ? 'Ready to save' : getQuoteValidationIssues().length + ' pending checks' }}
+            </span>
+          </div>
+        </div>
 
+        <div class="xl:max-w-[32rem] xl:min-w-[28rem]">
+          <div class="rounded-3xl border border-slate-200 bg-white/90 p-4 shadow-sm backdrop-blur">
+            <div class="flex flex-col gap-3">
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <p class="text-sm font-semibold text-slate-900">Workspace Actions</p>
+                  <p class="text-xs text-slate-500">Mismas acciones funcionales, con una jerarquía visual más clara.</p>
+                </div>
+                <span class="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                  Tools
+                </span>
+              </div>
+
+              <div class="grid gap-2 sm:grid-cols-2">
+                @if (showUpdate == false) {
+                <button (click)="openModalVersion()" type="button"
+                  class="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-indigo-200 transition hover:bg-indigo-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="h-5 w-5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+                  </svg>
+                  Save
+                </button>
+                } @else {
+                <button type="button" (click)="onUpdate()"
+                  class="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-emerald-200 transition hover:bg-emerald-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="h-5 w-5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                  </svg>
+                  Update
+                </button>
+
+                <button type="button" (click)="openModalVersion()"
+                  class="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="h-5 w-5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                  </svg>
+                  Create new version
+                </button>
+                }
+
+                <button type="button"
+                  class="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                  (click)="generateExcel()">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 48 48">
+                    <path fill="#169154" d="M29,6H15.744C14.781,6,14,6.781,14,7.744v7.259h15V6z"></path>
+                    <path fill="#18482a" d="M14,33.054v7.202C14,41.219,14.781,42,15.743,42H29v-8.946H14z"></path>
+                    <path fill="#0c8045" d="M14 15.003H29V24.005000000000003H14z"></path>
+                    <path fill="#17472a" d="M14 24.005H29V33.055H14z"></path>
+                    <g>
+                      <path fill="#29c27f" d="M42.256,6H29v9.003h15V7.744C44,6.781,43.219,6,42.256,6z"></path>
+                      <path fill="#27663f" d="M29,33.054V42h13.257C43.219,42,44,41.219,44,40.257v-7.202H29z"></path>
+                      <path fill="#19ac65" d="M29 15.003H44V24.005000000000003H29z"></path>
+                      <path fill="#129652" d="M29 24.005H44V33.055H29z"></path>
+                    </g>
+                    <path fill="#0c7238"
+                      d="M22.319,34H5.681C4.753,34,4,33.247,4,32.319V15.681C4,14.753,4.753,14,5.681,14h16.638C23.247,14,24,14.753,24,15.681v16.638C24,33.247,23.247,34,22.319,34z">
+                    </path>
+                    <path fill="#fff"
+                      d="M9.807 19L12.193 19 14.129 22.754 16.175 19 18.404 19 15.333 24 18.474 29 16.123 29 14.013 25.07 11.912 29 9.526 29 12.719 23.982z">
+                    </path>
+                  </svg>
+                  Excel
+                </button>
+
+                <button type="button"
+                  class="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                  (click)="generatePDF()">
+                  <img class="h-5 w-5" src="https://img.icons8.com/color/48/pdf.png" alt="pdf" />
+                  PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
+    <div class="space-y-6">
+      <section class="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
+        <div class="border-b border-slate-200 bg-slate-50/60 px-5 py-4 sm:px-6">
+          <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div class="space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-700">
+                  <svg fill="none" height="20" width="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M3 7.5A2.25 2.25 0 0 1 5.25 5.25h13.5A2.25 2.25 0 0 1 21 7.5v9A2.25 2.25 0 0 1 18.75 18.75H5.25A2.25 2.25 0 0 1 3 16.5v-9Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75h18" />
+                  </svg>
+                </span>
+                <div>
+                  <h2 class="text-lg font-semibold text-slate-900">Quote Details</h2>
+                  <p class="text-sm text-slate-500">Guest, dates, occupancy setup y configuración base del quoter.</p>
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600">
+                  {{ newQuoter.guest || 'Guest pending' }}
+                </span>
+                <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600">
+                  {{ newQuoter.travelDate.start || 'No start date' }}
+                </span>
+                <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600">
+                  {{ newQuoter.travelDate.end || 'No end date' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6 px-5 py-5 sm:px-6">
           @if (getQuoteValidationIssues().length) {
-          <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
-            <p class="text-sm font-semibold text-amber-900">Before saving this quote</p>
-            <ul class="mt-2 space-y-1 text-sm text-amber-800">
-              @for (issue of getQuoteValidationIssues(); track issue) {
-              <li>• {{ issue }}</li>
-              }
-            </ul>
+          <div class="rounded-2xl border border-amber-200 bg-amber-50/80 px-4 py-4">
+            <div class="flex items-start gap-3">
+              <span class="mt-0.5 inline-flex h-8 w-8 flex-none items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+                <svg viewBox="0 0 24 24" fill="none" class="h-4 w-4" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86l-7.12 12.3A2 2 0 0 0 4.88 19h14.24a2 2 0 0 0 1.71-2.84l-7.12-12.3a2 2 0 0 0-3.42 0Z" />
+                </svg>
+              </span>
+              <div class="min-w-0">
+                <p class="text-sm font-semibold text-amber-900">Before saving this quote</p>
+                <ul class="mt-2 list-disc space-y-1 pl-4 text-sm text-amber-800">
+                  @for (issue of getQuoteValidationIssues(); track issue) {
+                  <li>{{ issue }}</li>
+                  }
+                </ul>
+              </div>
+            </div>
           </div>
           }
 
-          <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- Guest -->
-            <div class="relative">
-              <label for="guest" class="block text-sm font-medium text-gray-700">Guest</label>
+          <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-12">
+            <div class="xl:col-span-6">
+              <label for="guest" class="mb-1.5 block text-sm font-semibold text-slate-700">Guest</label>
+              <div class="relative">
+                <input id="searchInput" type="text" autocomplete="off" [(ngModel)]="newQuoter.guest"
+                  (input)="filterOptions()" (focus)="showOptions = true" (blur)="onInputBlur()" name="search"
+                  placeholder="Search guest..."
+                  class="block min-h-11 w-full rounded-2xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100" />
 
-              <input id="searchInput" type="text" autocomplete="off" [(ngModel)]="newQuoter.guest"
-                (input)="filterOptions()" (focus)="showOptions = true" (blur)="onInputBlur()" name="search"
-                placeholder="Search guest..." class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm text-gray-900
-                       ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
-                       focus:outline-none focus:ring-2 focus:ring-indigo-600" />
-
-              <!-- Opciones filtradas -->
-              <ul id="optionsDropdown" *ngIf="showOptions && filteredOptions.length"
-                class="absolute left-0 right-0 mt-2 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg z-20">
-                <div class="max-h-48 overflow-auto py-1">
-                  <li *ngFor="let option of filteredOptions" (click)="selectOption(option)"
-                    class="px-3 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 cursor-pointer">
-                    {{ option.name }}
-                  </li>
-                </div>
-              </ul>
+                <ul id="optionsDropdown" *ngIf="showOptions && filteredOptions.length"
+                  class="absolute left-0 right-0 z-20 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50">
+                  <div class="max-h-48 overflow-auto py-1.5">
+                    <li *ngFor="let option of filteredOptions" (click)="selectOption(option)"
+                      class="cursor-pointer px-3.5 py-2.5 text-sm text-slate-700 transition hover:bg-indigo-50 hover:text-indigo-700">
+                      {{ option.name }}
+                    </li>
+                  </div>
+                </ul>
+              </div>
             </div>
 
-            <!-- Travel Dates -->
-            <div>
-              <label for="travel-start-date" class="block text-sm font-medium text-gray-700">Travel Dates</label>
-
-              <div class="mt-1 grid grid-cols-2 gap-2">
+            <div class="xl:col-span-6">
+              <label for="travel-start-date" class="mb-1.5 block text-sm font-semibold text-slate-700">Travel Dates</label>
+              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <input type="date" [(ngModel)]="newQuoter.travelDate.start" name="newQuoter.travelDate.start"
-                  id="travel-start-date" class="block w-full rounded-lg bg-white px-3 py-2 text-sm text-gray-900
-                         ring-1 ring-inset ring-gray-300
-                         focus:outline-none focus:ring-2 focus:ring-indigo-600" />
+                  id="travel-start-date"
+                  class="block min-h-11 w-full rounded-2xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100" />
 
                 <input type="date" [(ngModel)]="newQuoter.travelDate.end" name="newQuoter.travelDate.end"
-                  id="travel-end-date" class="block w-full rounded-lg bg-white px-3 py-2 text-sm text-gray-900
-                         ring-1 ring-inset ring-gray-300
-                         focus:outline-none focus:ring-2 focus:ring-indigo-600" />
+                  id="travel-end-date"
+                  class="block min-h-11 w-full rounded-2xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100" />
               </div>
             </div>
 
-            <!-- Type of accommodations -->
-            <div class="sm:col-span-1">
-              <label for="accommodations" class="block text-sm font-medium text-gray-700">
-                Type of Accommodations
-              </label>
+            <div class="xl:col-span-7">
+              <label for="accommodations" class="mb-1.5 block text-sm font-semibold text-slate-700">Type of Accommodations</label>
               <input type="text" autocomplete="off" [(ngModel)]="newQuoter.accomodations" name="newQuoter.acomodations"
-                id="accommodations" placeholder="Accommodations" class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm text-gray-900
-                       ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
-                       focus:outline-none focus:ring-2 focus:ring-indigo-600" />
+                id="accommodations" placeholder="Accommodations"
+                class="block min-h-11 w-full rounded-2xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100" />
             </div>
 
-            <!-- Number of Guests -->
-            <div class="sm:col-span-1">
-              <label class="block text-sm font-medium text-gray-700">Number of Guest</label>
+            <div class="xl:col-span-5">
+              <label class="mb-1.5 block text-sm font-semibold text-slate-700">Number of Guest</label>
+              <div class="flex min-h-11 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2.5 shadow-sm">
+                <input type="number" [(ngModel)]="newQuoter.number_paxs" (ngModelChange)="onNumberPaxsChange()"
+                  name="newQuoter.number_paxs" id="number_paxs" placeholder="0" required
+                  class="block w-28 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100" />
+                <span class="text-xs font-medium uppercase tracking-wide text-slate-500">Passengers</span>
+              </div>
+            </div>
+          </div>
 
-              <div class="mt-1 flex flex-wrap items-center gap-3">
-                <div class="flex items-center gap-2">
-                  <input type="number" [(ngModel)]="newQuoter.number_paxs" (ngModelChange)="onNumberPaxsChange()"
-                    name="newQuoter.number_paxs" id="number_paxs" placeholder="0" required class="block w-24 rounded-lg bg-white px-3 py-2 text-sm text-gray-900
-                           ring-1 ring-inset ring-gray-300
-                           focus:outline-none focus:ring-2 focus:ring-indigo-600" />
+          <details class="group overflow-hidden rounded-[24px] border border-slate-200 bg-slate-50/70">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5 sm:px-5">
+              <div class="flex min-w-0 items-center gap-3">
+                <span class="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-white text-slate-500 shadow-sm transition-transform duration-200 group-open:rotate-180">
+                  <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="1.8" viewBox="0 0 24 24" width="20">
+                    <path d="M6 9l6 6 6-6"></path>
+                  </svg>
+                </span>
+                <div class="min-w-0">
+                  <p class="text-sm font-semibold text-slate-900">Other options</p>
+                  <p class="text-xs text-slate-500">Children ages, destinations y ajustes auxiliares del quote.</p>
                 </div>
               </div>
-            </div>
 
-            <!-- Other Options -->
-            <div class="sm:col-span-2">
-              <details class="group rounded-xl border border-gray-200 bg-gray-50/50">
-                <summary class="flex items-center justify-between gap-3 px-4 py-3 cursor-pointer list-none">
-                  <div class="flex items-center gap-2 min-w-0">
-                    <span class="transition-transform duration-200 group-open:rotate-180 text-gray-600">
-                      <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                        stroke-width="1.8" viewBox="0 0 24 24" width="20">
-                        <path d="M6 9l6 6 6-6"></path>
-                      </svg>
-                    </span>
-                    <div class="min-w-0">
-                      <p class="text-sm font-semibold text-gray-900">Other options</p>
-                      <p class="text-xs text-gray-500">Children ages, destinations and export tools.</p>
+              <div class="hidden flex-wrap items-center gap-2 md:flex">
+                <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-600">
+                  {{ (newQuoter.children_ages || []).length }} children
+                </span>
+                <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-600">
+                  {{ newQuoter.destinations.length || 0 }} destinations
+                </span>
+              </div>
+            </summary>
+
+            <div class="space-y-6 border-t border-slate-200 bg-white px-4 py-5 sm:px-5">
+              <div class="grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
+                <div class="rounded-3xl border border-slate-200 bg-slate-50/60 p-4">
+                  <div class="flex items-center justify-between gap-3">
+                    <div>
+                      <p class="text-sm font-semibold text-slate-900">Children Ages</p>
+                      <p class="text-xs text-slate-500">Agrega o quita edades sin cambiar la lógica del quote.</p>
                     </div>
-                  </div>
-
-                  <!-- Actions toolbar (wrap friendly) -->
-                  <div class="flex flex-wrap items-center justify-end gap-2">
-                    @if (showUpdate== false) {
-                    <button (click)="openModalVersion()" type="button" class="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold
-                               text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-gray-100">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="h-5 w-5">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                      </svg>
-                      Save
-                    </button>
-                    } @else {
-                    <button type="button" (click)="onUpdate()" class="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold
-                               text-white bg-green-600 hover:bg-green-700">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="h-5 w-5">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                      </svg>
-                      Update
-                    </button>
-
-                    <button type="button" (click)="openModalVersion()" class="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold
-                               text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-gray-100">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="h-5 w-5">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                      </svg>
-                      Create new version
-                    </button>
-                    }
-
-                    <button type="button" class="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold
-                             text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-gray-100"
-                      (click)="generateExcel()">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 48 48">
-                        <path fill="#169154" d="M29,6H15.744C14.781,6,14,6.781,14,7.744v7.259h15V6z"></path>
-                        <path fill="#18482a" d="M14,33.054v7.202C14,41.219,14.781,42,15.743,42H29v-8.946H14z"></path>
-                        <path fill="#0c8045" d="M14 15.003H29V24.005000000000003H14z"></path>
-                        <path fill="#17472a" d="M14 24.005H29V33.055H14z"></path>
-                        <g>
-                          <path fill="#29c27f" d="M42.256,6H29v9.003h15V7.744C44,6.781,43.219,6,42.256,6z"></path>
-                          <path fill="#27663f" d="M29,33.054V42h13.257C43.219,42,44,41.219,44,40.257v-7.202H29z"></path>
-                          <path fill="#19ac65" d="M29 15.003H44V24.005000000000003H29z"></path>
-                          <path fill="#129652" d="M29 24.005H44V33.055H29z"></path>
-                        </g>
-                        <path fill="#0c7238"
-                          d="M22.319,34H5.681C4.753,34,4,33.247,4,32.319V15.681C4,14.753,4.753,14,5.681,14h16.638C23.247,14,24,14.753,24,15.681v16.638C24,33.247,23.247,34,22.319,34z">
-                        </path>
-                        <path fill="#fff"
-                          d="M9.807 19L12.193 19 14.129 22.754 16.175 19 18.404 19 15.333 24 18.474 29 16.123 29 14.013 25.07 11.912 29 9.526 29 12.719 23.982z">
-                        </path>
-                      </svg>
-                      Excel
-                    </button>
-
-                    <button type="button" class="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold
-                             text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-gray-100" (click)="generatePDF()">
-                      <img class="h-5 w-5" src="https://img.icons8.com/color/48/pdf.png" alt="pdf" />
-                      PDF
+                    <button type="button"
+                      class="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-600 transition hover:bg-emerald-100"
+                      (click)="addChildrenAges()" aria-label="Add age" title="Add">
+                      <i class="bx bxs-plus-circle text-2xl"></i>
                     </button>
                   </div>
-                </summary>
 
-                <div class="px-4 pb-4 pt-2 space-y-4">
-                  <!-- Children ages -->
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700">Children Ages</label>
-                    <div class="mt-1 flex flex-wrap items-center gap-3">
-                      @for (item of newQuoter.children_ages; track $index) {
-                      <div class="flex items-center gap-2">
-                        <input type="number" [(ngModel)]="newQuoter.children_ages[$index]"
-                          name="newQuoter.children_ages-{{$index}}" id="children_ages-{{$index}}" placeholder="0"
-                          required class="block w-20 rounded-lg bg-white px-3 py-2 text-sm text-gray-900
-                                   ring-1 ring-inset ring-gray-300
-                                   focus:outline-none focus:ring-2 focus:ring-indigo-600" />
-                        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-lg
-                                   ring-1 ring-inset ring-red-200 text-red-600 hover:bg-red-50"
-                          (click)="removeChildrenAges($index)" aria-label="Remove age" title="Remove">
-                          <i class="bx bx-minus-circle text-2xl"></i>
-                        </button>
-                      </div>
-                      }
-
-                      <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-lg
-                               ring-1 ring-inset ring-green-200 text-green-600 hover:bg-green-50"
-                        (click)="addChildrenAges()" aria-label="Add age" title="Add">
-                        <i class="bx bxs-plus-circle text-2xl"></i>
+                  <div class="mt-4 flex flex-wrap items-center gap-3">
+                    @for (item of (newQuoter.children_ages || []); track $index) {
+                    <div class="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-2.5 py-2 shadow-sm">
+                      <input type="number" [(ngModel)]="newQuoter.children_ages![$index]"
+                        name="newQuoter.children_ages-{{$index}}" id="children_ages-{{$index}}" placeholder="0" required
+                        class="block w-20 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100" />
+                      <button type="button"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-red-200 bg-red-50 text-red-600 transition hover:bg-red-100"
+                        (click)="removeChildrenAges($index)" aria-label="Remove age" title="Remove">
+                        <i class="bx bx-minus-circle text-2xl"></i>
                       </button>
                     </div>
-                  </div>
-
-                  <!-- Destinations -->
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700">Destinations</label>
-
-                    <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                      @for (item of destinations; track $index) {
-                      <label
-                        class="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                        <input type="checkbox"
-                          class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" [value]="item"
-                          name="Destinations" (change)="onCheckboxChange($event)"
-                          [checked]="newQuoter.destinations.includes(item)" />
-                        <span class="truncate">{{item}}</span>
-                      </label>
-                      }
+                    } @empty {
+                    <div class="rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-5 text-sm text-slate-500">
+                      No children ages added yet.
                     </div>
+                    }
                   </div>
                 </div>
-              </details>
+
+                <div class="rounded-3xl border border-slate-200 bg-slate-50/60 p-4">
+                  <div class="mb-4">
+                    <p class="text-sm font-semibold text-slate-900">Destinations</p>
+                    <p class="text-xs text-slate-500">Selecciona los destinos activos del quote.</p>
+                  </div>
+
+                  <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    @for (item of destinations; track $index) {
+                    <label
+                      class="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
+                      <input type="checkbox"
+                        class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-600" [value]="item"
+                        name="Destinations" (change)="onCheckboxChange($event)"
+                        [checked]="newQuoter.destinations.includes(item)" />
+                      <span class="truncate font-medium">{{ item }}</span>
+                    </label>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="overflow-hidden rounded-[28px] border border-slate-200 bg-gradient-to-br from-white to-slate-50 shadow-sm">
+        <div class="border-b border-slate-200 bg-slate-50/60 px-5 py-4 sm:px-6">
+          <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h2 class="text-lg font-semibold text-slate-900">Core Pricing Blocks</h2>
+              <p class="text-sm text-slate-500">Services, hotels y el consolidado intermedio del quote.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600">
+                Total cost {{ getTotalCosts() | currency }}
+              </span>
+              <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600">
+                External taxes {{ getExternalTaxes() | currency }}
+              </span>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- RESUMEN CARD -->
-      <div class="bg-white rounded-xl border border-gray-100 shadow-sm">
-        <div class="p-4 sm:p-5">
-          <h2 class="text-base sm:text-lg font-semibold text-gray-900">Summary</h2>
-          <p class="text-xs sm:text-sm text-gray-500">Calculated values by pax group.</p>
+        <div class="space-y-5 px-5 py-5 sm:px-6">
+          <app-services-v2 [number_paxs]="newQuoter.number_paxs" [services]="newQuoter.services"
+            (servicesChange)="onServicesUpdate($event)"
+            (totalPricesChange)="onTotalPricesServicesChange($event)" [children_ages]="newQuoter.children_ages || []"
+            [startDateQuoter]="newQuoter.travelDate.start">
+          </app-services-v2>
 
-          <div class="mt-4 overflow-x-auto">
-            <table class="min-w-max w-full text-sm text-left text-gray-600">
-              <tbody class="divide-y divide-gray-100">
-                <tr class="hover:bg-gray-50">
-                  <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">Subtotal</td>
-                  @for (price of subTotal(); track $index) {
-                  <td class="px-4 py-3 whitespace-nowrap">{{price | currency}}</td>
-                  }@empty {
-                  <td class="px-4 py-3 whitespace-nowrap">$0.00</td>
-                  }
-                </tr>
+          <app-hotels-v2 [hotels]="newQuoter.hotels" (hotelsChange)="onHotelsUpdate($event)"
+            (totalPricesChange)="onTotalPricesHotelsChange($event)">
+          </app-hotels-v2>
 
-                <tr class="hover:bg-gray-50">
-                  <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">Cost of Transfers</td>
-                  @for (price of costOfTransfers(); track $index) {
-                  <td class="px-4 py-3 whitespace-nowrap">{{price | currency}}</td>
-                  }@empty {
-                  <td class="px-4 py-3 whitespace-nowrap">$0.00</td>
-                  }
-                </tr>
+          <div class="rounded-[26px] border border-slate-200 bg-white p-4 shadow-sm">
+            <div class="flex flex-col gap-3 border-b border-slate-200 pb-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <h3 class="text-sm font-semibold text-slate-900">Financial Recap</h3>
+                <p class="text-xs text-slate-500">Resumen visual del bloque intermedio, con el mismo cálculo actual.</p>
+              </div>
+              <span class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+                Total cost external {{ getTotalCostExternal() | currency }}
+              </span>
+            </div>
 
-                <tr class="hover:bg-gray-50">
-                  <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">Final Cost</td>
-                  @for (price of final_cost(); track $index) {
-                  <td class="px-4 py-3 whitespace-nowrap">{{price | currency}}</td>
-                  }@empty {
-                  <td class="px-4 py-3 whitespace-nowrap">$0.00</td>
-                  }
-                </tr>
+            <div class="mt-4 grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
+              <div class="rounded-3xl border border-slate-200 bg-slate-50/70 p-4">
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Total Cost</p>
+                <p class="mt-2 text-2xl font-semibold tracking-tight text-slate-900">{{ getTotalCosts() | currency }}</p>
+              </div>
 
-                <tr class="hover:bg-gray-50">
-                  <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
-                    Cost Per Person
-                    <div class="text-xs text-gray-400">Reference prices</div>
-                  </td>
-                  @for (price of price_per_person(); track $index) {
-                  <td class="px-4 py-3 whitespace-nowrap">{{ price | currency:'USD':'symbol':'1.2-2' }}</td>
-                  }@empty {
-                  <td class="px-4 py-3 whitespace-nowrap">$0.00</td>
-                  }
-                </tr>
-              </tbody>
-            </table>
+              <div class="rounded-3xl border border-slate-200 bg-white p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">External Utility</p>
+                    <p class="mt-2 text-2xl font-semibold tracking-tight text-slate-900">{{ externalUtility() | currency }}</p>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <label for="price" class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">Manual value</label>
+                  <div class="relative">
+                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                      <span class="text-sm text-slate-500">$</span>
+                    </div>
+                    <input [value]="externalUtility()" (input)="onInputChange($event)" type="number"
+                      name="price" id="price" placeholder="0.00"
+                      class="block min-h-11 w-full rounded-2xl border border-slate-200 bg-white py-2.5 pl-7 pr-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-3xl border border-slate-200 bg-slate-50/70 p-4">
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">External Taxes</p>
+                <p class="mt-2 text-2xl font-semibold tracking-tight text-slate-900">{{ getExternalTaxes() | currency }}</p>
+              </div>
+
+              <div class="rounded-3xl border border-indigo-200 bg-indigo-50 p-4">
+                <p class="text-xs font-semibold uppercase tracking-wide text-indigo-600">Total Cost External</p>
+                <p class="mt-2 text-2xl font-semibold tracking-tight text-indigo-900">{{ getTotalCostExternal() | currency }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <app-ext-operator [operators]="newQuoter.operators" [porcentajeTd]="newQuoter.total_prices.porcentajeTD"
+          (porcentajeChange)="onPorcentajeTDUpdate($event)" (operatorsChange)="onOperatorsUpdate($event)"
+          (totalPricesChange)="onTotalPricesOperatorsChange($event)">
+        </app-ext-operator>
+      </section>
+
+      <section class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <app-cruceros [cruises]="newQuoter.cruises" (cruisesChange)="onCruiseUpdate($event)"
+          (totalPricesChange)="onTotalPricesCruiseChange($event)">
+        </app-cruceros>
+      </section>
+
+      <section class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <app-flights [paxs]="newQuoter.number_paxs" [flights]="newQuoter.flights" (flightsChange)="onFlightsUpdate($event)"
+          (totalPricesChange)="onTotalPricesFligtsChange($event)">
+        </app-flights>
+      </section>
+    </div>
+
+    <aside class="xl:sticky xl:top-6 xl:self-start">
+      <section class="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
+        <div class="bg-gradient-to-br from-indigo-600 via-indigo-600 to-sky-600 px-5 py-5 text-white sm:px-6">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.24em] text-indigo-100">Summary</p>
+              <h2 class="mt-2 text-xl font-semibold tracking-tight">Quote financial overview</h2>
+              <p class="mt-2 text-sm leading-6 text-indigo-100">
+                Calculated values by pax group con más jerarquía visual para revisión rápida.
+              </p>
+            </div>
+            <span class="rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white/90">
+              Live
+            </span>
+          </div>
+        </div>
+
+        <div class="space-y-4 px-5 py-5 sm:px-6">
+          <div class="grid gap-3">
+            <div class="rounded-3xl border border-slate-200 bg-slate-50/80 p-4">
+              <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Final Cost</p>
+              <p class="mt-2 text-3xl font-semibold tracking-tight text-slate-900">{{ final_cost() | currency }}</p>
+            </div>
+
+            <div class="rounded-3xl border border-indigo-200 bg-indigo-50 p-4">
+              <p class="text-xs font-semibold uppercase tracking-wide text-indigo-600">Cost Per Person</p>
+              <p class="mt-2 text-3xl font-semibold tracking-tight text-indigo-900">{{ price_per_person() | currency:'USD':'symbol':'1.2-2' }}</p>
+              <p class="mt-1 text-xs font-medium text-indigo-700">Reference prices</p>
+            </div>
           </div>
 
+          <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+            <div class="rounded-3xl border border-slate-200 bg-white p-4">
+              <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Subtotal</p>
+              <p class="mt-2 text-xl font-semibold tracking-tight text-slate-900">{{ subTotal() | currency }}</p>
+            </div>
+
+            <div class="rounded-3xl border border-slate-200 bg-white p-4">
+              <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Cost of Transfers</p>
+              <p class="mt-2 text-xl font-semibold tracking-tight text-slate-900">{{ costOfTransfers() | currency }}</p>
+            </div>
+          </div>
+
+          <div class="rounded-3xl border border-slate-200 bg-slate-50/70 p-4">
+            <div class="flex items-center justify-between gap-3">
+              <div>
+                <p class="text-sm font-semibold text-slate-900">Support values</p>
+                <p class="text-xs text-slate-500">Mismos datos actuales, presentados con más contraste.</p>
+              </div>
+            </div>
+
+            <div class="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+              <table class="min-w-full text-left text-sm text-slate-600">
+                <tbody class="divide-y divide-slate-100">
+                  <tr>
+                    <td class="px-4 py-3 font-medium text-slate-900">Subtotal</td>
+                    <td class="px-4 py-3 text-right font-semibold text-slate-700">{{ subTotal() | currency }}</td>
+                  </tr>
+                  <tr>
+                    <td class="px-4 py-3 font-medium text-slate-900">Cost of Transfers</td>
+                    <td class="px-4 py-3 text-right font-semibold text-slate-700">{{ costOfTransfers() | currency }}</td>
+                  </tr>
+                  <tr class="bg-slate-50/70">
+                    <td class="px-4 py-3 font-semibold text-slate-900">Final Cost</td>
+                    <td class="px-4 py-3 text-right font-semibold text-indigo-700">{{ final_cost() | currency }}</td>
+                  </tr>
+                  <tr class="bg-indigo-50/70">
+                    <td class="px-4 py-3 font-semibold text-slate-900">Cost Per Person</td>
+                    <td class="px-4 py-3 text-right font-semibold text-indigo-700">{{ price_per_person() | currency:'USD':'symbol':'1.2-2' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-
-    <!-- CARD 2: SERVICES + HOTELS + TOTALS -->
-    <div class="bg-white rounded-xl border border-gray-100 p-4 sm:p-5 shadow-sm space-y-4">
-      <app-services-v2 [number_paxs]="getNumberPaxsArray()" [services]="newQuoter.services"
-        (servicesChange)="onServicesUpdate($event)" (openModalEvent)="openModal()"
-        (totalPricesChange)="onTotalPricesServicesChange($event)" [children_ages]=" newQuoter.children_ages"
-        [startDateQuoter]="newQuoter.travelDate.start">
-      </app-services-v2>
-
-      <app-hotels-v2 [hotels]="newQuoter.hotels" [number_paxs]="getNumberPaxsArray()"
-        [children_ages]="newQuoter.children_ages" (hotelsChange)="onHotelsUpdate($event)"
-        (totalPricesChange)="onTotalPricesHotelsChange($event)">
-      </app-hotels-v2>
-
-      <div class="w-full">
-        <div class="overflow-x-auto">
-          <table class="min-w-max w-full text-sm text-left text-gray-600">
-            <tbody class="divide-y divide-gray-100">
-              <tr class="hover:bg-gray-50">
-                <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">Total Cost</td>
-                @for (price of getTotalCosts(); track $index) {
-                <td class="px-4 py-3 whitespace-nowrap">{{price | currency}}</td>
-                }@empty {
-                <td class="px-4 py-3 whitespace-nowrap">$0.00</td>
-                }
-              </tr>
-
-              <tr class="hover:bg-gray-50">
-                <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">EXTERNAL UTILITY</td>
-                @for (price of [0]; track $index) {
-                <td class="px-4 py-3 whitespace-nowrap">
-                  <div class="relative rounded-lg">
-                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      <span class="text-gray-500 text-sm">$</span>
-                    </div>
-                    <input [value]="prueba6()[$index]" (input)="onInputChange($event, $index)" type="number"
-                      name="price" id="price" placeholder="0.00" class="block w-40 rounded-lg bg-white py-2 pl-7 pr-3 text-sm text-gray-900
-                               ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
-                               focus:outline-none focus:ring-2 focus:ring-indigo-600" />
-                  </div>
-                </td>
-                }@empty {
-                <td class="px-4 py-3 whitespace-nowrap">$0.00</td>
-                }
-              </tr>
-
-              <tr class="hover:bg-gray-50">
-                <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">EXTERNAL TAXES</td>
-                @for (price of getExternalTaxes(); track $index) {
-                <td class="px-4 py-3 whitespace-nowrap">{{price | currency}}</td>
-                }@empty {
-                <td class="px-4 py-3 whitespace-nowrap">$0.00</td>
-                }
-              </tr>
-
-              <tr class="hover:bg-gray-50">
-                <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">TOTAL COST EXTERNAL</td>
-                @for (price of getTotalCostExternal(); track $index) {
-                <td class="px-4 py-3 whitespace-nowrap">{{price | currency}}</td>
-                }@empty {
-                <td class="px-4 py-3 whitespace-nowrap">$0.00</td>
-                }
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- EXT OPERATOR -->
-    <div class="bg-white rounded-xl border border-gray-100 p-4 sm:p-5 shadow-sm">
-      <app-ext-operator [priceLength]="1" [operators]="newQuoter.operators"
-        [porcentajeTd]="newQuoter.total_prices.porcentajeTD" (porcentajeChange)="onPorcentajeTDUpdate($event)"
-        (operatorsChange)="onOperatorsUpdate($event)" (totalPricesChange)="onTotalPricesOperatorsChange($event)">
-      </app-ext-operator>
-    </div>
-
-    <!-- CRUISES -->
-    <div class="bg-white rounded-xl border border-gray-100 p-4 sm:p-5 shadow-sm">
-      <app-cruceros [paxs]="getNumberPaxsArray()" [cruises]="newQuoter.cruises" (cruisesChange)="onCruiseUpdate($event)"
-        (totalPricesChange)="onTotalPricesCruiseChange($event)">
-      </app-cruceros>
-    </div>
-
-    <!-- FLIGHTS -->
-    <div class="bg-white rounded-xl border border-gray-100 p-4 sm:p-5 shadow-sm">
-      <app-flights [paxs]="getNumberPaxsArray()" [flights]="newQuoter.flights" (flightsChange)="onFlightsUpdate($event)"
-        (totalPricesChange)="onTotalPricesFligtsChange($event)">
-      </app-flights>
-    </div>
-
+      </section>
+    </aside>
   </div>
 </div>
 
-<!-- MODAL VERSION -->
 @if (showVersion) {
-<div class="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-3 sm:p-6 bg-black/60">
+<div class="fixed inset-0 z-50 flex items-start justify-center bg-slate-950/65 p-3 sm:items-center sm:p-6">
   <div
-    class="w-[95vw] sm:w-[32rem] lg:w-[36rem] max-h-[85vh] overflow-hidden rounded-2xl bg-white shadow-xl border border-gray-200">
-    <div class="p-4 sm:p-5 border-b border-gray-100 flex items-center justify-between">
+    class="max-h-[85vh] w-[95vw] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-2xl sm:w-[32rem] lg:w-[36rem]">
+    <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4 sm:px-6">
       <div>
-        <p class="text-lg font-semibold text-gray-900">Quoter V2</p>
-        <p class="text-sm text-gray-500">Create a new version name.</p>
+        <p class="text-lg font-semibold text-slate-900">Quoter V2</p>
+        <p class="text-sm text-slate-500">Create a new version name.</p>
       </div>
 
-      <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-lg hover:bg-gray-100"
+      <button type="button"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50"
         (click)="closeModalVersion()" aria-label="Close">
-        <svg class="text-gray-700" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"
+        <svg class="text-current" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"
           fill="currentColor">
           <path
             d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
@@ -407,26 +520,25 @@
       </button>
     </div>
 
-    <div class="p-4 sm:p-5 overflow-y-auto max-h-[60vh]">
+    <div class="max-h-[60vh] overflow-y-auto px-5 py-5 sm:px-6">
       <form id="add_mquoter" (submit)="onSubmit()" class="w-full space-y-3">
         <div>
-          <label for="name_mq" class="block text-sm font-medium text-gray-700">Name Version</label>
-          <input id="name_mq" type="text" [(ngModel)]="newQuoter.name_version" name="search" autocomplete="off"
-            placeholder="e.g. Version Feb 2026" class="mt-1 block w-full rounded-lg bg-white px-3 py-2 text-sm text-gray-900
-                     ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
-                     focus:outline-none focus:ring-2 focus:ring-indigo-600" />
+          <label for="name_mq" class="mb-1.5 block text-sm font-semibold text-slate-700">Name Version</label>
+          <input id="name_mq" type="text" [(ngModel)]="newQuoter.name_quoter" name="search" autocomplete="off"
+            placeholder="e.g. Version Feb 2026"
+            class="block min-h-11 w-full rounded-2xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100" />
         </div>
       </form>
     </div>
 
-    <div class="p-4 sm:p-5 border-t border-gray-100 flex flex-col sm:flex-row gap-2 sm:justify-end">
-      <button type="button" (click)="closeModalVersion()" class="inline-flex justify-center rounded-lg px-4 py-2 text-sm font-semibold
-                 ring-1 ring-inset ring-gray-200 text-gray-700 hover:bg-gray-50">
+    <div class="flex flex-col gap-2 border-t border-slate-200 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
+      <button type="button" (click)="closeModalVersion()"
+        class="inline-flex justify-center rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
         Cancel
       </button>
 
-      <button type="submit" form="add_mquoter" class="inline-flex justify-center rounded-lg px-4 py-2 text-sm font-semibold
-                 bg-indigo-600 text-white hover:bg-indigo-700">
+      <button type="submit" form="add_mquoter"
+        class="inline-flex justify-center rounded-2xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700">
         Create new version
       </button>
     </div>

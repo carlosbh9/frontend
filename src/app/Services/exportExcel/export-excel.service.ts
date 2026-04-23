@@ -85,11 +85,11 @@ export class ExportExcelService {
     currentRow++;
     this.addTable(
       worksheet,
-      ['Date', 'Route', 'Price Conf.', 'Price', 'Notes'],
+      ['Date', 'Route', 'Price Base', 'Price', 'Notes'],
       (data.flights || []).map((flight: any) => [
         flight.date,
         flight.route,
-        flight.price_conf,
+        flight.price_base ?? flight.price_conf ?? 0,
         flight.price,
         flight.notes || '',
       ]),
@@ -122,7 +122,7 @@ export class ExportExcelService {
       (data.cruises || []).map((cruise: any) => [
         cruise.name,
         cruise.operator,
-        cruise.price_conf,
+        cruise.price_base ?? cruise.price_conf ?? 0,
         cruise.price,
         cruise.notes || '',
       ]),

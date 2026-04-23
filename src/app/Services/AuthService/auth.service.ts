@@ -9,7 +9,7 @@ import { UserPayload } from '../../interfaces/user.interface';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = `${environment.apiUrl}/login`
+  private baseUrl = `${environment.apiUrl}/auth/login`
   private tokenKey = 'authorization';
   constructor(private http: HttpClient, private router: Router) { }
 

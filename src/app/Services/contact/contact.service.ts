@@ -87,15 +87,4 @@ export class ContactService {
       throw error;
     }
   }
-
-  async getAllContactsWithCotizations() {
-    try {
-      const res = await firstValueFrom(this.http.get<any>(`${this.baseUrl}/idquoter`));
-      return res;
-    } catch (error) {
-      console.log('Error while trying to get all Contacts and QuoterId: ', error);
-      throw error;
-    }
-
-  }
 }

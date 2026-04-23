@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, input,Input,output, Output, EventEmitter, signal, computed,effect, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, effect, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { OperatorItem } from '../../../../interfaces/quoter-models.interface';
+
+type OperatorDraft = Omit<OperatorItem, 'price'> & {
+  price: number | string;
+};
 
 @Component({
   selector: 'app-ext-operator',
@@ -10,168 +15,96 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './ext-operator-v2.component.css'
 })
 export class ExtOperatorV2Component implements OnInit {
- 
-  priceLength = input.required<number>();
-  porcentajeTd =  input.required<number>()
-  porcentajeChange = output<number>()
- // @Input( ) porcentajeTd: number = 0
-  @Input() operators: any[]=[]
-  @Output() operatorsChange = new EventEmitter<any[]>();
- 
-  @Output() totalPricesChange = new EventEmitter<number[]>();
-  //editFlight: boolean = false;
- // operators: any[] = [];
-  countries: string[] = ["ARGENTINA","BOLIVIA","BRAZIL","COLOMBIA","CHILE","ECUADOR"]
-  operatorsList: string[]=["Sayhueque","Uncover Colombia","Unic","Southbound","Pure Brazil","Surtrek"]
-  originalItem: any = {};
-  newExternalOpe: any = {
-    country: '',
-    name_operator: '',
-    prices:[],
-    notes: '',
-    editOperator: false,
-  
-  }
-  prices: any[]=[]
-  porcentajeTD = signal<number>(0)  
+  porcentajeTd = input.required<number>();
+  porcentajeChange = output<number>();
+  @Input() operators: OperatorItem[] = [];
+  @Output() operatorsChange = new EventEmitter<OperatorItem[]>();
+  @Output() totalPricesChange = new EventEmitter<number>();
 
+  countries: string[] = ['ARGENTINA', 'BOLIVIA', 'BRAZIL', 'COLOMBIA', 'CHILE', 'ECUADOR'];
+  operatorsList: string[] = ['Sayhueque', 'Uncover Colombia', 'Unic', 'Southbound', 'Pure Brazil', 'Surtrek'];
+  originalItem: Record<number, OperatorItem> = {};
+  newExternalOpe: OperatorDraft = this.emptyOperator();
+  porcentajeTD = signal<number>(0);
 
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
- 
-  }
-
-  constructor(){
-   // this.porcentajeTD.set(this.porcentajeTd() || 0);
+  constructor() {
     effect(() => {
-      const total = this.totalCostExternal();
-      this.totalPricesChange.emit(total); // Emitir al componente padre
-     
+      this.porcentajeTD.set(Number(this.porcentajeTd()) || 0);
+      this.totalPricesChange.emit(this.getTotalCostExternal());
     });
-  
   }
+
   onInputPorcentaje(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.porcentajeTD.set(parseFloat(input.value));
-    this.emitOperator(); 
+    const inputElement = event.target as HTMLInputElement;
+    const nextValue = Number(inputElement.value) || 0;
+    this.porcentajeTD.set(nextValue);
+    this.porcentajeChange.emit(nextValue);
+    this.totalPricesChange.emit(this.getTotalCostExternal());
   }
 
-emtyFlight(){
-  return this.newExternalOpe = {
-    country: '',
-    name_operator: '',
-    prices:[],
-    notes: '',
-    editOperator: false,
-
+  emptyOperator(): OperatorDraft {
+    return {
+      country: '',
+      name_operator: '',
+      price: 0,
+      notes: '',
+      editOperator: false,
+    };
   }
-}
 
-onSubmitOperator() {
+  onSubmitOperator() {
+    this.operators.push({
+      ...this.newExternalOpe,
+      price: Number(this.newExternalOpe.price) || 0,
+    });
+    this.newExternalOpe = this.emptyOperator();
+    this.emitOperator();
+  }
 
-    this.operators.push(this.newExternalOpe);
-    console.log(this.operators);
-    this.emtyFlight();
-    this.emitOperator(); 
-}
+  onEdit(item: OperatorItem, index: number) {
+    this.originalItem[index] = { ...item };
+    item.editOperator = true;
+    this.emitOperator();
+  }
 
-onEdit(item: any, index: number) {
-  this.originalItem[index] = { ...item };
-  item.editOperator = true;
-  console.log('editando item', item, index);
-  this.emitOperator(); 
-
-}
-onClose(item: any, index: number){
-    // Revertir el item al estado original
+  onClose(item: OperatorItem, index: number) {
     this.operators[index] = { ...this.originalItem[index] };
     item.editOperator = false;
-    this.emitOperator(); 
-}
-onSave(item: any){
-  item.editOperator= false
-  this.originalItem = {};
-  this.emitOperator(); 
-}
-onDelete(index: number){
-  this.operators.splice(index, 1); 
-  this.emitOperator(); 
-}
+    this.emitOperator();
+  }
 
-private emitOperator() {
- 
-  this.porcentajeChange.emit(this.porcentajeTD()); 
-  this.operatorsChange.emit(this.operators);
- 
-}
-externalUtilityPrices = computed(() =>  {
-  const totalPrices: number[] = [];
-  const td = this.porcentajeTD() 
+  onSave(item: OperatorItem) {
+    item.editOperator = false;
+    this.originalItem = {};
+    this.emitOperator();
+  }
 
-  // Recorrer cada vuelo (flight) en la tabla
-  this.operators.forEach((flight: { prices: number[] }) => {
-    // Recorrer cada precio dentro del array 'prices' del vuelo
-    flight.prices.forEach((price: number, index: number) => {
-      // Si ya existe un valor en 'totalPrices' para ese índice, lo suma
-      if (totalPrices[index]) {
-        totalPrices[index] += price ;
-      } else {
-        // Si no existe valor aún, lo inicializa con el precio actual
-        totalPrices[index] = price;
-      }
-    });
-  });
-  
-  const totalWithMultiplier = totalPrices.map(price => price * (td/100));
+  onDelete(index: number) {
+    this.operators.splice(index, 1);
+    this.emitOperator();
+  }
 
-  return totalWithMultiplier;
-})
+  private emitOperator() {
+    this.operatorsChange.emit(this.operators);
+    this.totalPricesChange.emit(this.getTotalCostExternal());
+  }
 
-externalTaxesPrices = computed(() => {
-  const calculatedPrices: number[] = [];
-  const externalPrices = this.externalUtilityPrices();
- // const maxLength = this.externalUtilityPrices().length;
- // Iterar sobre cada operador
- this.operators.forEach((flight: { prices: number[] }) => {
-  // Recorrer cada precio dentro del array 'prices' del vuelo
-  flight.prices.forEach((price: number, index: number) => {
-    // Si ya existe un valor en 'totalPrices' para ese índice, lo suma
-    if (calculatedPrices[index]) {
-      calculatedPrices[index] += price ;
-    } else {
-      // Si no existe valor aún, lo inicializa con el precio actual
-      calculatedPrices[index] = price;
-    }
-  });
-});
-const totalPrices = calculatedPrices.map((price, index) => price + externalPrices[index]);
+  getOperatorBaseTotal(): number {
+    return this.operators.reduce((total, operator) => total + (Number(operator.price) || 0), 0);
+  }
 
-  const totalWithMultiplier = totalPrices.map(price => price < 5000 ? price * 0.05 : price * 0.03);
+  getExternalUtilityPrice(): number {
+    return this.getOperatorBaseTotal() * (this.porcentajeTD() / 100);
+  }
 
+  getExternalTaxesPrice(): number {
+    const totalBeforeTaxes = this.getOperatorBaseTotal() + this.getExternalUtilityPrice();
+    return totalBeforeTaxes < 5000 ? totalBeforeTaxes * 0.05 : totalBeforeTaxes * 0.03;
+  }
 
-return totalWithMultiplier;
-});
-
-totalCostExternal= computed(() => {
-  const totalCostExternal: number[]=[]
-  const utility = this.externalUtilityPrices();
-  const taxes = this.externalTaxesPrices();
-  //const maxLength = this.priceLength();
-
-  this.operators.forEach((flight: { prices: number[] }) => {
-    // Recorrer cada precio dentro del array 'prices' del vuelo
-    flight.prices.forEach((price: number, index: number) => {
-      // Si ya existe un valor en 'totalPrices' para ese índice, lo suma
-      if (totalCostExternal[index]) {
-        totalCostExternal[index] += price ;
-      } else {
-        // Si no existe valor aún, lo inicializa con el precio actual
-        totalCostExternal[index] = price;
-      }
-    });
-  });
-
-  const hh = totalCostExternal.map((price, index) => price + utility[index] + taxes[index]);
-  return hh
-})
+  getTotalCostExternal(): number {
+    return this.getOperatorBaseTotal() + this.getExternalUtilityPrice() + this.getExternalTaxesPrice();
+  }
 }

@@ -90,6 +90,19 @@ export interface BookingFilePassengerInfoStatus {
   notes?: string;
 }
 
+export interface BookingFileSummaryContext {
+  orders_total: number;
+  open_orders: number;
+  completed_orders: number;
+  blocked_orders: number;
+  overdue_orders: number;
+  due_today_orders: number;
+  passenger_info_ready: boolean;
+  all_required_areas_completed: boolean;
+  overall_reason?: string;
+  risk_reason?: string;
+}
+
 export interface BibliaDailyItem {
   file_id: string;
   contact_id?: string;
@@ -142,6 +155,7 @@ export interface BookingFile {
   payments_status: FileAreaStatus;
   deliverables_status: FileAreaStatus;
   passenger_info_status?: BookingFilePassengerInfoStatus;
+  summary_context?: BookingFileSummaryContext;
   owner_user_id?: string | null;
   risk_level: FileRiskLevel;
   next_action?: string;

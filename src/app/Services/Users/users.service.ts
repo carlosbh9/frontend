@@ -7,10 +7,8 @@ import { firstValueFrom } from 'rxjs';
   providedIn: 'root'
 })
 export class UsersService {
-private baseUrl = `${environment.apiUrl}/all-users`
-private deleteUrl =  `${environment.apiUrl}/delete-user`
-private updateUrl = `${environment.apiUrl}/update-user`
-private signupUrl = `${environment.apiUrl}/signup`
+private baseUrl = `${environment.apiUrl}/users`
+private signupUrl = `${environment.apiUrl}/auth/signup`
 constructor(private http: HttpClient) { }
 
 
@@ -26,7 +24,7 @@ async getAllUsers(): Promise<User[]>{
 // Método para actualizar una entrada existente
 async updateUser(id: string, user: any): Promise<any> {
   try {
-    const res = await firstValueFrom(this.http.patch<any>(`${this.updateUrl}/${id}`, user));
+    const res = await firstValueFrom(this.http.patch<any>(`${this.baseUrl}/${id}`, user));
     return res;
   } catch (error) {
     console.log('Error while trying to update User: ', error);
@@ -35,7 +33,7 @@ async updateUser(id: string, user: any): Promise<any> {
 }
 async deleteUser(id: string): Promise<any> {
   try {
-    const res = await firstValueFrom(this.http.delete<any>(`${this.deleteUrl}/${id}`));
+    const res = await firstValueFrom(this.http.delete<any>(`${this.baseUrl}/${id}`));
     return res;
   } catch (error) {
     console.log('Error while trying to delete User: ', error);
