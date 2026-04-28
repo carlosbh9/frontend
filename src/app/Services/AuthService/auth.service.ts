@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../enviroments/environment';
 //import { environment } from '../../../environment/environment';
 import { UserPayload } from '../../interfaces/user.interface';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -14,23 +15,22 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) { }
 
   login(username: string, password: string) {
-    return this.http.post<{ token: string,tokenPermission: string }>(this.baseUrl, { username, password }).subscribe(
-      (response) => {
-        const token = response.token; // Obtener el token de la respuesta
-        //const tokepermission = response.tokenPermission
-        if (token) { // Verificar que el token exista antes de proceder
-          localStorage.setItem(this.tokenKey, token); // Guardar el token en localStorage
-  
-          // Decodificar el token y guardar los datos del usuario
+    return this.http.post<{ token: string,tokenPermission: string }>(this.baseUrl, { username, password }).pipe(
+      tap((response) => {
+        const token = response.token;
+
+        if (token) {
+          localStorage.setItem(this.tokenKey, token);
+
           const payload = JSON.parse(atob(token.split('.')[1]));
           localStorage.setItem('UserData', JSON.stringify(payload));
         } else {
           console.error('Error: Token no encontrado en la respuesta.');
         }
-      
-      this.router.navigate(['/dashboard/quoter-main/quoter-list']);
-    }
-  );
+
+        this.router.navigate(['/dashboard/quoter-main/quoter-list']);
+      })
+    );
   }
 
   getToken() {

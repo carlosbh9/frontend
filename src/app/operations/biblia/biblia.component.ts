@@ -31,14 +31,16 @@ export class BibliaComponent implements OnInit {
   readonly loading = signal(false);
   readonly error = signal('');
   readonly dateFilter = signal(this.todayString());
+  readonly startDateFilter = signal(this.todayString());
+  readonly rangeDaysFilter = signal(7);
   readonly areaFilter = signal('');
   readonly statusFilter = signal('');
   readonly rows = signal<BibliaDailyItem[]>([]);
 
   readonly weekDays = computed<WeekDayItem[]>(() => {
-    const selected = this.parseDate(this.dateFilter() || this.todayString());
-    return Array.from({ length: 7 }).map((_, index) => {
-      const date = this.addDays(selected, index - 3);
+    const start = this.parseDate(this.startDateFilter() || this.todayString());
+    const days = Array.from({ length: this.getRangeLengthInDays() }).map((_, index) => this.addDays(start, index));
+    return days.map((date) => {
       const iso = this.toIsoDate(date);
       return {
         iso,
@@ -138,11 +140,34 @@ export class BibliaComponent implements OnInit {
 
   async moveSelectedDay(offset: number): Promise<void> {
     const next = this.toIsoDate(this.addDays(this.parseDate(this.dateFilter() || this.todayString()), offset));
+    if (this.isOutsideCurrentRange(next)) {
+      this.shiftRange(offset);
+    }
     await this.selectDay(next);
   }
 
   async jumpToToday(): Promise<void> {
-    await this.selectDay(this.todayString());
+    const today = this.todayString();
+    this.startDateFilter.set(today);
+    await this.selectDay(today);
+  }
+
+  async onStartDateChange(value: string): Promise<void> {
+    const nextStart = value || this.todayString();
+    this.startDateFilter.set(nextStart);
+
+    if (this.isOutsideCurrentRange(this.dateFilter() || this.todayString())) {
+      await this.selectDay(this.startDateFilter());
+    }
+  }
+
+  async onRangeDaysChange(value: number | string): Promise<void> {
+    const nextRange = Math.max(1, Number(value) || 1);
+    this.rangeDaysFilter.set(nextRange);
+
+    if (this.isOutsideCurrentRange(this.dateFilter() || this.todayString())) {
+      await this.selectDay(this.startDateFilter());
+    }
   }
 
   openBookingFile(row: BibliaDailyItem | { file_id: string }): void {
@@ -216,6 +241,24 @@ export class BibliaComponent implements OnInit {
     if (!a) return 1;
     if (!b) return -1;
     return String(a).localeCompare(String(b));
+  }
+
+  private compareIsoDates(left: string, right: string): number {
+    return left.localeCompare(right);
+  }
+
+  private getRangeLengthInDays(): number {
+    return Math.max(1, Number(this.rangeDaysFilter()) || 1);
+  }
+
+  private isOutsideCurrentRange(iso: string): boolean {
+    const startIso = this.startDateFilter() || this.todayString();
+    const endIso = this.toIsoDate(this.addDays(this.parseDate(startIso), this.getRangeLengthInDays() - 1));
+    return this.compareIsoDates(iso, startIso) < 0 || this.compareIsoDates(iso, endIso) > 0;
+  }
+
+  private shiftRange(offset: number): void {
+    this.startDateFilter.set(this.toIsoDate(this.addDays(this.parseDate(this.startDateFilter()), offset)));
   }
 
   private parseDate(value: string): Date {
